@@ -1,5 +1,14 @@
-# Gestor_De_Finanzas
-hola mundo prueba
+<h1> Gestor de finanzas </h1>
+<h3> Descripción del problema </h3> 
+
+Muchas personas se enfrentan a la problemática del manejo correcto de sus finanzas personales. Es común tener problemas para recordar todos los pagos pendientes de servicios como agua potable, luz, electricidad, etc. Tener registrado los gastos e ingresos que se tienen en un solo lugar deja de ser un capricho y se convierte en una necesidad para poder vivir en el mundo moderno donde tenemos que estar al pendiente de tantas cosas. 
+
+<h3> Descripción del Sistema </h3>
+
+El sistema consiste en un gestor de finanzas personales. En este programa el usuario podrá ingresas información (con el fin de tenerla centralizada en un solo lugar) sobre sus ingresos y gastos, permitiendo gestionar de mejor forma su vida financiera en todos los aspectos. Se busca que el sistema permita manejar diferentes tipos de cuentas de finanzas, así como ofrecerles a los usuarios la posibilidad de visualizar la información de sus finanzas de forma intuitiva.
+
+<h3> Tabla de requerimientos </h3>
+
 | Requerimiento Funcional (RF) | Requerimiento No Funcional (RNF) |
 |------------------------------|---------------------------------|
 | El sistema permite al usuario registrar y gestionar más de una cuenta financiera. | El sistema deberá mostrar el balance total del usuario y los gráficos financieros en menos de 5 segundos tras seleccionar un rango de fechas. |
