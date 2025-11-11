@@ -14,8 +14,11 @@ public class AccountView implements AccountObserver{
     }
 
     public void showAccounts(List<Account> accounts){
-        for (Account account : accounts) {
-            System.out.println(account);
-        }
+
+            System.out.println(accounts);
+
     }
+
+
+
 }
