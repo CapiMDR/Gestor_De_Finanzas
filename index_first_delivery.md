@@ -10,7 +10,7 @@
     
 
 3.  [design](https://github.com/CapiMDR/Gestor_De_Finanzas/blob/First_Delivery/Delivery/Design)
-    -   [Class_Diagrams](https://github.com/CapiMDR/Gestor_De_Finanzas/blob/First_Delivery/Delivery/Design/Class_Diagram.md)
+    -   [Class_Diagrams](https://github.com/CapiMDR/Gestor_De_Finanzas/blob/First_Delivery/Delivery/Design/Class_Diagrams)
     -   [MockUps](https://github.com/CapiMDR/Gestor_De_Finanzas/blob/First_Delivery/Delivery/Design/MockUps.md)
     
 
