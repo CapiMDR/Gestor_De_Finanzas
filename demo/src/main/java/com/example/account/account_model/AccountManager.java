@@ -21,6 +21,10 @@ public class AccountManager {
         subject.notifyObservers();
     }
 
+    public void addObserver(AccountObserver observer){
+        subject.addObserver(observer);
+    }
+
     public List<Account> getAccounts() {
         return accounts;
     }

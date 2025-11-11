@@ -21,8 +21,6 @@ public class App
         AccountView view = new AccountView();
         AccountController controller = new AccountController(model, view);
 
-        subject.addObserver(view);
-
         String name = "Cuenta principal";
         String typeString = "CASH";
         String coinString = "USD";

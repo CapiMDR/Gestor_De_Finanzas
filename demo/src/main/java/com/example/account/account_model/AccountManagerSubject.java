@@ -9,6 +9,7 @@ public class AccountManagerSubject implements AccountObservable{
     public void addObserver(AccountObserver observer){
         observers.add(observer);
     }
+    
     public void removeObserver(AccountObserver observer){
         observers.remove(observer);
     }
