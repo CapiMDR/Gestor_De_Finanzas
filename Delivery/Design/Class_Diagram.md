@@ -1,0 +1,8 @@
+![AccountManager](https://github.com/CapiMDR/Gestor_De_Finanzas/blob/First_Delivery/Artifacts/AccountManager.png)
+![Filter](https://github.com/CapiMDR/Gestor_De_Finanzas/blob/First_Delivery/Artifacts/Filter.png)
+![Goals](https://github.com/CapiMDR/Gestor_De_Finanzas/blob/First_Delivery/Artifacts/Goals.png)
+![MovementManager](https://github.com/CapiMDR/Gestor_De_Finanzas/blob/First_Delivery/Artifacts/MovementManager.png)
+![RecurrentPayments](https://github.com/CapiMDR/Gestor_De_Finanzas/blob/First_Delivery/Artifacts/RecurrentPayments.png)
+![Reminders](https://github.com/CapiMDR/Gestor_De_Finanzas/blob/First_Delivery/Artifacts/Reminders.png)
+![Report](https://github.com/CapiMDR/Gestor_De_Finanzas/blob/First_Delivery/Artifacts/Report.png)
+![Settings](https://github.com/CapiMDR/Gestor_De_Finanzas/blob/First_Delivery/Artifacts/Settings.png)
