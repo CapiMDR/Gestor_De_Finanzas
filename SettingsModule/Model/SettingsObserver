@@ -1,0 +1,13 @@
+package SettingsModule.Model;
+
+/**
+ * Interface for the Observer pattern in the Settings module.
+ * Classes implementing this interface will be notified when
+ * system configurations (like theme or notifications) change.
+ *
+ * @author Jose Pablo Martinez
+ */
+
+public interface SettingsObserver {
+    void onSettingsChanged(Settings config);
+}

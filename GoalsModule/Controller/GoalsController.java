@@ -3,6 +3,7 @@ package GoalsModule.Controller;
 import GoalsModule.Model.Goal;
 import GoalsModule.View.GoalsView;
 import GoalsModule.View.GoalEditView;
+//Asumes that exists in AccountsModule.Model
 import FinancialManager.AccountsModule.Model.Account;
 import FinancialManager.AccountsModule.Model.AccountManager;
 
