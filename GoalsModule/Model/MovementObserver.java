@@ -1,4 +1,4 @@
-package GoalsModule.Model;
+package com.example.GoalsModule.Model;
 
 import java.util.List;
 

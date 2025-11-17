@@ -1,7 +1,7 @@
-package GoalsModule.Controller;
+package com.example.GoalsModule.Controller;
 
-import GoalsModule.Model.Goal;
-import GoalsModule.View.GoalDetailView;
+import com.example.GoalsModule.Model.Goal;
+import com.example.GoalsModule.View.GoalDetailView;
 
 /**
  * Manages the navigation and data presentation for the Goal Detail View.
@@ -26,8 +26,6 @@ public class GoalDetailController {
         if (objGoal != null) {
             //Update UI components
             view.showProgress(objGoal);
-            view.setVisible(true);
-            view.toFrontfront();
         }
     }
 }

@@ -1,7 +1,7 @@
-package SettingsModule.Controller;
+package com.example.SettingsModule.Controller;
 
-import SettingsModule.Model.SettingsManager;
-import SettingsModule.View.SettingsView;
+import com.example.SettingsModule.Model.SettingsManager;
+import com.example.SettingsModule.View.SettingsView;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 

@@ -1,4 +1,4 @@
-package GoalsModule.Model;
+package coma.example.GoalsModule.Model;
 import java.math.BigDecimal;
 
 /**

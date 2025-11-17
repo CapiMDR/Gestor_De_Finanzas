@@ -1,4 +1,4 @@
-package SettingsModule.Model;
+package com.example.SettingsModule.Model;
 
 /**
  * Represents the configuration state of the application.

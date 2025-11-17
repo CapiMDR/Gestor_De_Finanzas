@@ -1,4 +1,4 @@
-package SettingsModule.Model;
+package com.example.SettingsModule.Model;
 
 import org.json.JSONObject;
 import java.io.FileWriter;

@@ -1,4 +1,4 @@
-package SettingsModule.Model;
+package com.example.SettingsModule.Model;
 
 /**
  * Interface for the Observer pattern in the Settings module.

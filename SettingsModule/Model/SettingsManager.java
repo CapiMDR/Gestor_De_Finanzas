@@ -1,4 +1,4 @@
-package SettingsModule.Model;
+package com.example.SettingsModule.Model;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,12 +1,13 @@
-package GoalsModule.Controller;
+package com.example.GoalsModule.Controller;
 
-import GoalsModule.Model.Goal;
-import GoalsModule.View.GoalsView;
-import GoalsModule.View.GoalEditView;
+import com.example.GoalsModule.Model.Goal;
+import com.example.GoalsModule.View.GoalsView;
+import com.example.GoalsModule.View.GoalEditView;
 //Asumes that exists in AccountsModule.Model
-import FinancialManager.AccountsModule.Model.Account;
-import FinancialManager.AccountsModule.Model.AccountManager;
+import com.example.AccountsModule.Model.Account;
+import com.example.AccountsModule.Model.AccountManager;
 
+import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
@@ -19,7 +20,6 @@ import javax.swing.JOptionPane;
  * @author Jose Pablo Martinez
  * @version 1.0
  */
-
 public class GoalsController implements ActionListener {
 
     private final GoalsView view;
@@ -27,12 +27,6 @@ public class GoalsController implements ActionListener {
     private Account currentAccount;
     private final AccountManager accountManager;
 
-    /**
-     * Initializes the controller with necessary views and the global manager.
-     * @param view           Main interface for the goals list.
-     * @param editView       Popup interface for editing goals.
-     * @param accountManager External manager handling JSON persistence.
-     */
 
     public GoalsController(GoalsView view, GoalEditView editView, AccountManager accountManager) {
         this.view = view;
@@ -72,7 +66,7 @@ public class GoalsController implements ActionListener {
         try {
             // Extract raw data directly from the View
             String name = view.getGoalName();
-            BigDecimal target = view.getTargetAmount();
+            BigDecimal target = view.getTargetAmount(); 
             String desc = view.getDescription();
 
             createNewGoal(name, target, desc);
@@ -88,7 +82,6 @@ public class GoalsController implements ActionListener {
      * @param target Monetary target.
      * @param desc   Additional notes.
      */
-
     public void createNewGoal(String name, BigDecimal target, String desc) {
         Goal newGoal = new Goal(name, target, desc);
         
@@ -103,7 +96,7 @@ public class GoalsController implements ActionListener {
     public void deleteSelectedGoal() {
         Goal selected = view.getSelectedGoal();
         if (selected != null) {
-            removeGoalFromAccount(selected);
+            removeGoalFromAccount(selected); 
             accountManager.saveAll();
             view.updateGoalList(currentAccount.getGoals());
         }
@@ -116,7 +109,6 @@ public class GoalsController implements ActionListener {
      * @param target       New target amount.
      * @param desc         New description.
      */
-
     public void saveGoalData(Goal originalGoal, String name, BigDecimal target, String desc) {
         if (originalGoal != null) {
             originalGoal.setName(name);
@@ -132,16 +124,15 @@ public class GoalsController implements ActionListener {
      * Prepares and displays the editing popup.
      * Connects the Save button of the popup to the saveGoalData logic.
      */
-
     private void openEditDialog(Goal goal) {
         // Push data to the view (populate fields)
         editView.populateFields(goal.getName(), goal.getTargetAmount(), goal.getDescription());
-
+        
         // Using a lambda to capture the specific 'goal' instance being edited
-        editView.addSaveListener(e -> {
+        editView.addSaveListener(e -> { // <--- ERROR 2 (Línea 139)
             try {
                 String newName = editView.getEditedName();
-                BigDecimal newTarget = editView.getEditedTarget();
+                BigDecimal newTarget = editView.getEditedTarget(); 
                 String newDesc = editView.getEditedDescription();
 
                 saveGoalData(goal, newName, newTarget, newDesc);
@@ -152,7 +143,7 @@ public class GoalsController implements ActionListener {
         });
 
         editView.showDialog();
-    }
+    } 
 
     // --- Internal List Management ---
     // The Account class is passive; this controller manages the list logic.
@@ -162,8 +153,8 @@ public class GoalsController implements ActionListener {
             currentAccount.getGoals().add(goal);
         }
     }
-
-    private void removeGoalFromAccount(Goal goal) {
+ 
+    private void removeGoalFromAccount(Goal goal) { 
         if (currentAccount != null) {
             currentAccount.getGoals().remove(goal);
         }
