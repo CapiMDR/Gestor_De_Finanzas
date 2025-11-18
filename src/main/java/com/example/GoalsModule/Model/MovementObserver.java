@@ -15,13 +15,5 @@ import com.example.MovementsModule.Model.MovementCategory;
  */
 
 public interface MovementObserver {
-
-    /**
-     * Triggered when the observable subject notifies a change.
-     *
-     * @param movements  The updated list of all movements.
-     * @param categories The updated list of movement categories.
-     */
-    
     void onNotify(List<Movement> movements, List<MovementCategory> categories);
 }

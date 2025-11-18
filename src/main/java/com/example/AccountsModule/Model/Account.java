@@ -6,12 +6,11 @@ import java.util.List;
 
 /**
  * Represents a user's financial account within the system.
- * <p>
- * <b>NOTE:</b> This class acts as a <b>STUB</b> (Dummy implementation) representing 
+ * 
+ * This class acts as a STUB (Dummy implementation) representing 
  * the external {@code AccountsModule}. It is currently provided to facilitate 
  * the compilation and testing of the {@code GoalsModule} without requiring 
  * the full integration of the Accounts subsystem.
- * </p>
  * @author Jose Pablo Martinez
  */
 

@@ -24,6 +24,14 @@ public class SettingsManager {
         this.currentSettings = persistence.loadSettings();
     }
 
+    //Constructor for test
+    public SettingsManager(JSONPersistenceSettings persistence) {
+        this.persistence = persistence;
+        this.observers = new ArrayList<>();
+        this.currentSettings = persistence.loadSettings();//mock state
+    }
+
+
     //Business Logic Methods 
 
     /**

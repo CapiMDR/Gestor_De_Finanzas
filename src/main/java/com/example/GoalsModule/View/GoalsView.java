@@ -6,6 +6,11 @@ import com.example.GoalsModule.Model.Goal;
 import java.math.BigDecimal;
 import java.util.List;
 
+/**
+ * Dummy class for testing
+ * @author Jose Pablo Martinez
+ */
+
 public class GoalsView {
     public JButton getBtnAddGoal() { return new JButton(); }
     public JButton getBtnDeleteGoal() { return new JButton(); }
