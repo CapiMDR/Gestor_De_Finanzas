@@ -1,0 +1,3 @@
+com\example\GoalsModule\Model\GoalTest.class
+com\example\GoalsModule\Controller\GoalDetailControllerTest.class
+com\example\GoalsModule\Controller\GoalsControllerTest.class

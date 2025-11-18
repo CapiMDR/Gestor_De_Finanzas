@@ -1,0 +1,17 @@
+com\example\GoalsModule\Controller\GoalDetailController.class
+com\example\SettingsModule\Model\SettingsManager.class
+com\example\GoalsModule\Model\MovementObserver.class
+com\example\MovementsModule\Model\Movement.class
+com\example\SettingsModule\View\SettingsView.class
+com\example\AccountsModule\Model\Account.class
+com\example\GoalsModule\Controller\GoalsController.class
+com\example\MovementsModule\Model\MovementCategory.class
+com\example\SettingsModule\Model\JSONPersistenceSettings.class
+com\example\GoalsModule\View\GoalsView.class
+com\example\AccountsModule\Model\AccountManager.class
+com\example\GoalsModule\View\GoalDetailView.class
+com\example\SettingsModule\Controller\SettingsController.class
+com\example\GoalsModule\Model\Goal.class
+com\example\SettingsModule\Model\Settings.class
+com\example\GoalsModule\View\GoalEditView.class
+com\example\SettingsModule\Model\SettingsObserver.class
