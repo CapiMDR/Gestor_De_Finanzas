@@ -1,8 +1,11 @@
 package com.example.movement.movement_model;
 
-import com.example.movement.movement_model.Movement.MovementType;
-
 public class MovementCategory {
+    public enum MovementType{
+    INCOME, EXPENSE
+    }
+
+    
     private String name;
     private MovementType type;
 

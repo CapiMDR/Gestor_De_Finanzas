@@ -1,5 +1,7 @@
 package com.example.account.account_model;
 
+import java.util.List;
+
 public interface AccountObserver {
-    void update();
+    void onNotify(List<Account> accountsList);
 }

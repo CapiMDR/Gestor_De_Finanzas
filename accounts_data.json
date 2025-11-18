@@ -1,0 +1,35 @@
+[
+  {
+    "initialBalance": 500,
+    "name": "Cuenta de Ahorros",
+    "movements": [
+      {
+        "date": "2025-11-16T18:28:03.814611300",
+        "categoryType": "INCOME",
+        "amount": "2500.00",
+        "description": "Pago de la quincena",
+        "idMovement": 1,
+        "categoryName": "Salario"
+      },
+      {
+        "date": "2025-11-16T18:28:03.815615500",
+        "categoryType": "EXPENSE",
+        "amount": "150.00",
+        "description": "Cena en restaurante",
+        "idMovement": 2,
+        "categoryName": "Comida"
+      }
+    ],
+    "id": 1,
+    "type": "DIGITAL",
+    "coin": "USD"
+  },
+  {
+    "initialBalance": 1000,
+    "name": "Efectivo MXN",
+    "movements": [],
+    "id": 2,
+    "type": "CASH",
+    "coin": "MXN"
+  }
+]

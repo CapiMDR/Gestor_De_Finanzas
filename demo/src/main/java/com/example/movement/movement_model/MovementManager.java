@@ -1,45 +1,59 @@
 package com.example.movement.movement_model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MovementManager {
     private List<Movement> movements;
-    private List<MovementCategory> categories;
+    private HashMap<String, MovementCategory> categories;
     private MovementManagerSubject subject;
 
     public MovementManager(MovementManagerSubject subject){
     this.subject = subject;
     this.movements = new ArrayList<>();
-    this.categories = new ArrayList<>();
+    this.categories = new HashMap<>();
     }
 
 
     public void addMovement(Movement movement){
+        movement.setIdMovement(generateUniqueId());
         movements.add(movement);
-        subject.notifyObservers();
+        subject.notifyObservers(new ArrayList<>(categories.values()));
     }
 
-    public void removeMovement(Movement movement){
-        movements.remove(movement);
-        subject.notifyObservers();
+    private int generateUniqueId() {
+        return movements.size() > 0 ? movements.get(movements.size() - 1).getIdMovement() + 1 : 1;
     }
+
 
     public void addCategory(MovementCategory category){
-        categories.add(category);
-        subject.notifyObservers();
+        categories.put(category.getName(), category);
+        subject.notifyObservers(new ArrayList<>(categories.values()));
     }
 
     public void removeCategory(MovementCategory category){
-        categories.remove(category);
-        subject.notifyObservers();
+        categories.remove(category.getName());
+        subject.notifyObservers(new ArrayList<>(categories.values()));
     }
+
+    public MovementCategory getCategoryByName(String name) {
+    return categories.get(name);
+    }
+
+    public void addOserver(MovementObserver observer){
+        subject.addObserver(observer);
+    }
+    public void removeObserver(MovementObserver observer){
+        subject.removeObserver(observer);
+    }
+
 
     public List<Movement> getMovements() {
         return movements;
     }
 
-    public List<MovementCategory> getCategories() {
+    public HashMap<String, MovementCategory> getCategories() {
         return categories;
     }
 

@@ -1,5 +1,7 @@
 package com.example.movement.movement_model;
 
+import java.util.List;
+
 public interface MovementObserver {
-    void update();
+    void onNotify(List<MovementCategory> categories);
 }

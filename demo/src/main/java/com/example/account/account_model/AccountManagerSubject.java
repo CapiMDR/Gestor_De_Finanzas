@@ -3,7 +3,7 @@ package com.example.account.account_model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AccountManagerSubject implements AccountObservable{
+public class AccountManagerSubject{
     private List<AccountObserver> observers = new ArrayList<>();
 
     public void addObserver(AccountObserver observer){
@@ -14,9 +14,9 @@ public class AccountManagerSubject implements AccountObservable{
         observers.remove(observer);
     }
 
-    public void notifyObservers() {
+    public void notifyObservers(List<Account> accountsList) {
         for (AccountObserver observer : observers){
-            observer.update();
+            observer.onNotify(accountsList);
         } 
     }
     
