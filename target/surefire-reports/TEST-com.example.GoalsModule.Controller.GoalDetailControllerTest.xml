@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.example.GoalsModule.Controller.GoalDetailControllerTest" time="0.811" tests="2" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.example.GoalsModule.Controller.GoalDetailControllerTest" time="0.797" tests="2" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="21"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -15,7 +15,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="MX"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-21\bin"/>
-    <property name="sun.java.command" value="C:\Users\j_pab\AppData\Local\Temp\surefire11329458586940305285\surefirebooter6311054340681570264.jar C:\Users\j_pab\AppData\Local\Temp\surefire11329458586940305285 2025-11-18T12-38-39_966-jvmRun1 surefire932146223685233977tmp surefire_08579602317981610250tmp"/>
+    <property name="sun.java.command" value="C:\Users\j_pab\AppData\Local\Temp\surefire3932714020380830548\surefirebooter8089793646630402629.jar C:\Users\j_pab\AppData\Local\Temp\surefire3932714020380830548 2025-11-18T14-10-38_491-jvmRun1 surefire14777139332527222174tmp surefire_09364374148078564802tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="c:\Users\j_pab\Documents\FACULTAD (Ingeniería de Software)\Semestre 5\MATERIAS REGULARES\Construcción de Software\financial-manager\target\test-classes;c:\Users\j_pab\Documents\FACULTAD (Ingeniería de Software)\Semestre 5\MATERIAS REGULARES\Construcción de Software\financial-manager\target\classes;C:\Users\j_pab\.m2\repository\org\json\json\20240303\json-20240303.jar;C:\Users\j_pab\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.10.2\junit-jupiter-engine-5.10.2.jar;C:\Users\j_pab\.m2\repository\org\junit\platform\junit-platform-engine\1.10.2\junit-platform-engine-1.10.2.jar;C:\Users\j_pab\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\j_pab\.m2\repository\org\junit\platform\junit-platform-commons\1.10.2\junit-platform-commons-1.10.2.jar;C:\Users\j_pab\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.10.2\junit-jupiter-api-5.10.2.jar;C:\Users\j_pab\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\j_pab\.m2\repository\org\mockito\mockito-core\5.11.0\mockito-core-5.11.0.jar;C:\Users\j_pab\.m2\repository\net\bytebuddy\byte-buddy\1.14.12\byte-buddy-1.14.12.jar;C:\Users\j_pab\.m2\repository\net\bytebuddy\byte-buddy-agent\1.14.12\byte-buddy-agent-1.14.12.jar;C:\Users\j_pab\.m2\repository\org\objenesis\objenesis\3.3\objenesis-3.3.jar;C:\Users\j_pab\.m2\repository\org\mockito\mockito-junit-jupiter\5.11.0\mockito-junit-jupiter-5.11.0.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -30,7 +30,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\j_pab\AppData\Local\Temp\surefire11329458586940305285\surefirebooter6311054340681570264.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\j_pab\AppData\Local\Temp\surefire3932714020380830548\surefirebooter8089793646630402629.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="21.0.1+12-LTS-29"/>
@@ -58,6 +58,6 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="65.0"/>
   </properties>
-  <testcase name="testShowDetailsNull" classname="com.example.GoalsModule.Controller.GoalDetailControllerTest" time="0.729"/>
-  <testcase name="testShowDetails" classname="com.example.GoalsModule.Controller.GoalDetailControllerTest" time="0.037"/>
+  <testcase name="testShowDetailsNull" classname="com.example.GoalsModule.Controller.GoalDetailControllerTest" time="0.718"/>
+  <testcase name="testShowDetails" classname="com.example.GoalsModule.Controller.GoalDetailControllerTest" time="0.032"/>
 </testsuite>
