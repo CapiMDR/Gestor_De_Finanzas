@@ -1,16 +1,23 @@
 package reminder_model;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Reminder {
     private String name;
     private String message;
-    private Date date;
+    private LocalDateTime date;
 
-    public Reminder(String name, String message, Date date) {
+    public Reminder(String name, String message, LocalDateTime date) {
         this.name = name;
         this.message = message;
         this.date = date;
+    }
+
+    public Reminder(String name, String message) {
+        this.name = name;
+        this.message = message;
+        this.date = LocalDateTime.now();
     }
 
     public String getName() {
@@ -21,7 +28,7 @@ public class Reminder {
         return message;
     }
 
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
@@ -33,7 +40,12 @@ public class Reminder {
         this.message = message;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    // Sin método setDate para asegurar que el orden correcto se mantenga en la
+    // lista de recordatorios
+
+    @Override
+    public String toString() {
+        return "Name: " + name + " Message: " + message + " Date "
+                + date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm"));
     }
 }

@@ -1,8 +1,10 @@
 package reminder_view;
 
+import reminder_controller.RemindersController;
+
 public class RemindersModule {
 
     public static void main(String[] args) {
-        System.out.println("hola mundo!!!!!");
+        RemindersController controller = new RemindersController();
     }
 }

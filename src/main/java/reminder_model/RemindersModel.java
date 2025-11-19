@@ -1,29 +1,41 @@
 package reminder_model;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.TreeSet;
 
 public class RemindersModel {
-    private HashSet<Reminder> remindersList = new HashSet<>();
+    // Manteniendo a los recordatorios en un TreeSet para rápido ordenamiento en
+    // inserción/eliminación y eficiencia al buscar existencia
+    private TreeSet<Reminder> allReminders = ReminderJSONHandler.loadReminders();
+
     private HashSet<ReminderObserver> observerList = new HashSet<>();
 
-    public void addReminder(Reminder reminder) {
-        remindersList.add(reminder);
+    public void addReminder(String name, String message, LocalDateTime date) {
+        Reminder reminder = new Reminder(name, message, date);
+        allReminders.add(reminder);
+        notifyObservers();
+    }
+
+    public void addReminder(String name, String message) {
+        Reminder reminder = new Reminder(name, message);
+        allReminders.add(reminder);
         notifyObservers();
     }
 
     public void deleteReminder(Reminder reminder) {
-        if (remindersList.contains(reminder))
-            remindersList.remove(reminder);
+        if (allReminders.contains(reminder))
+            allReminders.remove(reminder);
         notifyObservers();
     }
 
-    public void editReminder(Reminder reminder, String name, String message, Date date) {
-        if (!remindersList.contains(reminder))
+    public void editReminder(Reminder oldReminder, String newName, String newMessage, LocalDateTime newDate) {
+        // Eliminando al recordatorio que se editó y creando uno nuevo para preservar el
+        // orden cronológico en el treeset
+        if (!allReminders.contains(oldReminder))
             return;
-        reminder.setName(name);
-        reminder.setMessage(message);
-        reminder.setDate(date);
+        deleteReminder(oldReminder);
+        addReminder(newName, newMessage, newDate);
         notifyObservers();
 
     }
@@ -43,7 +55,11 @@ public class RemindersModel {
             observerList.remove(observer);
     }
 
-    public HashSet<Reminder> getReminders() {
-        return remindersList;
+    public TreeSet<Reminder> getReminders() {
+        return allReminders;
+    }
+
+    public void saveReminders() {
+        ReminderJSONHandler.saveReminders(allReminders);
     }
 }
