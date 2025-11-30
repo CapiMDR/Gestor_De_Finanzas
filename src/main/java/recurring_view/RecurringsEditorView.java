@@ -1,31 +1,33 @@
-package reminder_view;
+package recurring_view;
 
 import javax.swing.*;
+
+import recurring_model.RecurringMove;
+
 import java.awt.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import reminder_model.Reminder;
 
-public class RemindersEditorView extends JDialog {
+public class RecurringsEditorView extends JDialog {
     private JTextField nameField;
     private JTextArea descriptionArea;
     private JTextField dateField;
-    private Reminder resultReminder = null;
+    private RecurringMove resultReminder = null;
 
     private static final DateTimeFormatter FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-    public RemindersEditorView(Frame parent, Reminder reminder) {
-        super(parent, "Edit Reminder", true);
+    public RecurringsEditorView(Frame parent, RecurringMove recMove) {
+        super(parent, "Editar movimiento recurrente", true);
         setLayout(new BorderLayout(10, 10));
 
         // Input de texto
-        nameField = new JTextField(reminder.getName(), 20);
+        nameField = new JTextField(recMove.getName(), 20);
 
-        descriptionArea = new JTextArea(reminder.getMessage(), 5, 20);
+        descriptionArea = new JTextArea(recMove.getMessage(), 5, 20);
         descriptionArea.setLineWrap(true);
         descriptionArea.setWrapStyleWord(true);
 
-        dateField = new JTextField(reminder.getDate().format(FORMAT), 20);
+        dateField = new JTextField(recMove.getDate().format(FORMAT), 20);
 
         // Panel principal
         JPanel form = new JPanel(new GridBagLayout());
@@ -63,7 +65,7 @@ public class RemindersEditorView extends JDialog {
 
         saveBtn.addActionListener(e -> {
             try {
-                Reminder r = new Reminder(
+                RecurringMove r = new RecurringMove(
                         nameField.getText().trim(),
                         descriptionArea.getText().trim(),
                         LocalDateTime.parse(dateField.getText().trim(), FORMAT));
@@ -91,7 +93,7 @@ public class RemindersEditorView extends JDialog {
         setLocationRelativeTo(parent);
     }
 
-    public Reminder getEditedReminder() {
+    public RecurringMove getEditedRecMove() {
         return resultReminder;
     }
 }

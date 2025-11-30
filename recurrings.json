@@ -10,8 +10,8 @@
         "message": "No olvidar pagar agua"
     },
     {
-        "date": "2026-11-29T14:00",
-        "name": "Pago de coche",
-        "message": "Este recordatorio no ocurrirá"
+        "date": "2026-11-29T19:04",
+        "name": "Pagar coche",
+        "message": "Esta alerta nunca ocurrirá"
     }
 ]

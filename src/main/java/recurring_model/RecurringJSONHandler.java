@@ -1,4 +1,4 @@
-package reminder_model;
+package recurring_model;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -12,20 +12,20 @@ import java.util.TreeSet;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class ReminderJSONHandler {
-    private ReminderJSONHandler() {
+public class RecurringJSONHandler {
+    private RecurringJSONHandler() {
     }
 
-    private static final String FILE_NAME = "reminders.json";
+    private static final String FILE_NAME = "recurrings.json";
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
     // Ordenando a los recordatorios primero por su fecha, luego por su nombre
-    public static Comparator<Reminder> REMINDER_COMPARATOR = Comparator.comparing(Reminder::getDate)
-            .thenComparing(Reminder::getName);
+    public static Comparator<RecurringMove> REMINDER_COMPARATOR = Comparator.comparing(RecurringMove::getDate)
+            .thenComparing(RecurringMove::getName);
 
-    public static void saveReminders(TreeSet<Reminder> remindersList) {
+    public static void saveReminders(TreeSet<RecurringMove> remindersList) {
         JSONArray arr = new JSONArray();
 
-        for (Reminder reminder : remindersList) {
+        for (RecurringMove reminder : remindersList) {
             JSONObject obj = new JSONObject();
             obj.put("name", reminder.getName());
             obj.put("message", reminder.getMessage());
@@ -40,8 +40,8 @@ public class ReminderJSONHandler {
         }
     }
 
-    public static TreeSet<Reminder> loadReminders() {
-        TreeSet<Reminder> reminders = new TreeSet<>(REMINDER_COMPARATOR);
+    public static TreeSet<RecurringMove> loadReminders() {
+        TreeSet<RecurringMove> reminders = new TreeSet<>(REMINDER_COMPARATOR);
         StringBuilder jsonText = new StringBuilder();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))) {
@@ -61,7 +61,7 @@ public class ReminderJSONHandler {
 
                 LocalDateTime date = LocalDateTime.parse(dateStr, FORMATTER);
 
-                reminders.add(new Reminder(name, message, date));
+                reminders.add(new RecurringMove(name, message, date));
             }
 
         } catch (IOException e) {
