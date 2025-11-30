@@ -275,7 +275,7 @@
                       <Color blue="3c" green="2b" red="11" type="rgb"/>
                     </Property>
                     <Property name="horizontalAlignment" type="int" value="2"/>
-                    <Property name="text" type="java.lang.String" value="Descripci&#xf3;n"/>
+                    <Property name="text" type="java.lang.String" value="Descripci&#xf3;n:"/>
                   </Properties>
                 </Component>
                 <Container class="javax.swing.JPanel" name="jPanel5">
@@ -291,13 +291,13 @@
                           <Group type="102" alignment="1" attributes="0">
                               <EmptySpace pref="16" max="32767" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="recurrenceCombo" min="-2" max="-2" attributes="0"/>
+                                  <Component id="recMoveCombo" min="-2" max="-2" attributes="0"/>
                                   <Component id="recMoveDateSpinner" min="-2" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="reminderNameTXT" alignment="1" min="-2" pref="258" max="-2" attributes="0"/>
-                                      <Component id="reminderMsgTXT" alignment="1" min="-2" pref="258" max="-2" attributes="0"/>
+                                      <Component id="recMoveConceptTXT" alignment="1" min="-2" pref="258" max="-2" attributes="0"/>
+                                      <Component id="recMoveDescTXT" alignment="1" min="-2" pref="258" max="-2" attributes="0"/>
                                   </Group>
-                                  <Component id="reminderNameTXT2" alignment="0" min="-2" pref="130" max="-2" attributes="0"/>
+                                  <Component id="recMoveAmountTXT" alignment="0" min="-2" pref="130" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>
@@ -307,28 +307,28 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
-                              <Component id="reminderNameTXT" min="-2" max="-2" attributes="0"/>
+                              <Component id="recMoveConceptTXT" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
-                              <Component id="reminderNameTXT2" min="-2" max="-2" attributes="0"/>
+                              <Component id="recMoveAmountTXT" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="32767" attributes="0"/>
                               <Component id="recMoveDateSpinner" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
-                              <Component id="recurrenceCombo" min="-2" max="-2" attributes="0"/>
+                              <Component id="recMoveCombo" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
-                              <Component id="reminderMsgTXT" min="-2" pref="59" max="-2" attributes="0"/>
+                              <Component id="recMoveDescTXT" min="-2" pref="59" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
                   </Layout>
                   <SubComponents>
-                    <Component class="javax.swing.JTextField" name="reminderNameTXT">
+                    <Component class="javax.swing.JTextField" name="recMoveConceptTXT">
                       <Properties>
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="d2" green="d2" red="d2" type="rgb"/>
                         </Property>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JTextField" name="reminderMsgTXT">
+                    <Component class="javax.swing.JTextField" name="recMoveDescTXT">
                       <Properties>
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="d2" green="d2" red="d2" type="rgb"/>
@@ -337,14 +337,14 @@
                     </Component>
                     <Component class="javax.swing.JSpinner" name="recMoveDateSpinner">
                     </Component>
-                    <Component class="javax.swing.JTextField" name="reminderNameTXT2">
+                    <Component class="javax.swing.JTextField" name="recMoveAmountTXT">
                       <Properties>
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="d2" green="d2" red="d2" type="rgb"/>
                         </Property>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JComboBox" name="recurrenceCombo">
+                    <Component class="javax.swing.JComboBox" name="recMoveCombo">
                       <Properties>
                         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                           <Connection code="new DefaultComboBoxModel&lt;&gt;(RecurrenceType.values())" type="code"/>
@@ -365,7 +365,7 @@
                       <Color blue="3c" green="2b" red="11" type="rgb"/>
                     </Property>
                     <Property name="horizontalAlignment" type="int" value="2"/>
-                    <Property name="text" type="java.lang.String" value="Monto"/>
+                    <Property name="text" type="java.lang.String" value="Monto:"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel7">

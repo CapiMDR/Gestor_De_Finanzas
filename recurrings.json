@@ -1,17 +1,7 @@
-[
-    {
-        "date": "2025-11-29T18:00",
-        "name": "Pagar gas",
-        "message": "No olvidar pagar gas"
-    },
-    {
-        "date": "2025-11-30T12:02",
-        "name": "Pagar agua",
-        "message": "No olvidar pagar agua"
-    },
-    {
-        "date": "2026-11-29T19:04",
-        "name": "Pagar coche",
-        "message": "Esta alerta nunca ocurrirá"
-    }
-]
+[{
+    "recurrence": "Mensual",
+    "amount": 100,
+    "concept": "Pago de Netflix",
+    "description": "Pagar mi suscripción de Netflix",
+    "initialDate": "2025-12-30T03:02"
+}]

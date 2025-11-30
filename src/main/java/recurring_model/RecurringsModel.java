@@ -1,5 +1,6 @@
 package recurring_model;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.TreeSet;
@@ -11,8 +12,9 @@ public class RecurringsModel {
 
     private final HashSet<RecurringObserver> observerList = new HashSet<>();
 
-    public void addRecurring(String name, String message, LocalDateTime date) {
-        RecurringMove reminder = new RecurringMove(name, message, date);
+    public void addRecurring(String concept, BigDecimal amount, String description, LocalDateTime initialDate,
+            RecurrenceType recurrence) {
+        RecurringMove reminder = new RecurringMove(concept, amount, description, initialDate, recurrence);
         allRecurrings.add(reminder);
         notifyObservers();
     }

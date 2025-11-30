@@ -3,31 +3,31 @@ package recurring_view;
 import javax.swing.*;
 
 import recurring_model.RecurringMove;
+import recurring_model.RecurrenceType;
 
 import java.awt.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class RecurringsEditorView extends JDialog {
-    private JTextField nameField;
+    private JTextField conceptField;
     private JTextArea descriptionArea;
-    private JTextField dateField;
-    private RecurringMove resultReminder = null;
+    private JTextField amountField;
+    private JComboBox<RecurrenceType> recurrenceCombo;
 
-    private static final DateTimeFormatter FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    private RecurringMove resultRecMove = null;
 
     public RecurringsEditorView(Frame parent, RecurringMove recMove) {
         super(parent, "Editar movimiento recurrente", true);
         setLayout(new BorderLayout(10, 10));
 
-        // Input de texto
-        nameField = new JTextField(recMove.getName(), 20);
-
-        descriptionArea = new JTextArea(recMove.getMessage(), 5, 20);
+        conceptField = new JTextField(recMove.getConcept(), 20);
+        descriptionArea = new JTextArea(recMove.getDescription(), 5, 20);
         descriptionArea.setLineWrap(true);
         descriptionArea.setWrapStyleWord(true);
-
-        dateField = new JTextField(recMove.getDate().format(FORMAT), 20);
+        amountField = new JTextField(recMove.getAmount().toPlainString(), 20);
+        recurrenceCombo = new JComboBox<>(RecurrenceType.values());
+        recurrenceCombo.setSelectedItem(recMove.getRecurrence());
 
         // Panel principal
         JPanel form = new JPanel(new GridBagLayout());
@@ -39,48 +39,60 @@ public class RecurringsEditorView extends JDialog {
         c.gridy = 0;
         form.add(new JLabel("Nombre:"), c);
         c.gridx = 1;
-        c.gridy = 0;
-        form.add(nameField, c);
+        form.add(conceptField, c);
 
         c.gridx = 0;
         c.gridy = 1;
-        form.add(new JLabel("Mensaje:"), c);
+        form.add(new JLabel("Descripción:"), c);
         c.gridx = 1;
-        c.gridy = 1;
         form.add(new JScrollPane(descriptionArea), c);
 
         c.gridx = 0;
         c.gridy = 2;
-        form.add(new JLabel("Fecha (aaaa-MM-dd HH:mm):"), c);
+        form.add(new JLabel("Cantidad:"), c);
         c.gridx = 1;
-        c.gridy = 2;
-        form.add(dateField, c);
+        form.add(amountField, c);
+
+        c.gridx = 0;
+        c.gridy = 3;
+        form.add(new JLabel("Recurrencia:"), c);
+        c.gridx = 1;
+        form.add(recurrenceCombo, c);
 
         add(form, BorderLayout.CENTER);
 
         // Botones
         JPanel buttons = new JPanel();
-        JButton saveBtn = new JButton("Save");
-        JButton cancelBtn = new JButton("Cancel");
+        JButton saveBtn = new JButton("Guardar");
+        JButton cancelBtn = new JButton("Cancelar");
 
         saveBtn.addActionListener(e -> {
             try {
+                BigDecimal amount = new BigDecimal(amountField.getText().trim());
+
+                RecurrenceType recurrence = (RecurrenceType) recurrenceCombo.getSelectedItem();
+
                 RecurringMove r = new RecurringMove(
-                        nameField.getText().trim(),
+                        conceptField.getText().trim(),
+                        amount,
                         descriptionArea.getText().trim(),
-                        LocalDateTime.parse(dateField.getText().trim(), FORMAT));
-                resultReminder = r;
+                        LocalDateTime.now(),
+                        recurrence);
+
+                resultRecMove = r;
                 dispose();
+
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this,
-                        "Invalid date format. Use yyyy-MM-dd HH:mm",
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Error en los datos. Verifica:\n- Cantidad válida\n- Campos vacíos",
                         "Error",
                         JOptionPane.ERROR_MESSAGE);
             }
         });
 
         cancelBtn.addActionListener(e -> {
-            resultReminder = null;
+            resultRecMove = null;
             dispose();
         });
 
@@ -94,6 +106,6 @@ public class RecurringsEditorView extends JDialog {
     }
 
     public RecurringMove getEditedRecMove() {
-        return resultReminder;
+        return resultRecMove;
     }
 }

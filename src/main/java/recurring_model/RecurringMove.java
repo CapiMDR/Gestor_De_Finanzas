@@ -2,63 +2,76 @@ package recurring_model;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class RecurringMove {
+
     private String concept;
     private BigDecimal amount;
     private String description;
-    private LocalDateTime initialDate;
-    private RecurrenceType recurrence; //Diario/Mensual/Anual
-    private boolean triggered = false; // Indica si el recordatorio ya fue disparado en esta ejecución
+    private final LocalDateTime initialDate; // Fecha de la primera ocurrencia del movimiento recurrente
+    private RecurrenceType recurrence; // Diario/Mensual/Anual
 
-    public RecurringMove(String name, String message, LocalDateTime date) {
-        this.concept = name;
-        this.description = message;
-        this.initialDate = date;
+    public RecurringMove(String concept, BigDecimal amount, String description,
+                         LocalDateTime initialDate, RecurrenceType recurrence) {
+
+        this.concept = concept;
+        this.amount = amount;
+        this.description = description;
+
+        this.initialDate = initialDate;
+        this.recurrence = recurrence;
     }
 
-    public RecurringMove(String name, String message) {
-        this.concept = name;
-        this.description = message;
-        this.initialDate = LocalDateTime.now();
-    }
+    public String getConcept() { return concept; }
+    public BigDecimal getAmount() { return amount; }
+    public String getDescription() { return description; }
+    public LocalDateTime getInitialDate() { return initialDate; }
+    public RecurrenceType getRecurrence() { return recurrence; }
 
-    public String getName() {
-        return concept;
-    }
-
-    public String getMessage() {
-        return description;
-    }
-
-    public LocalDateTime getDate() {
-        return initialDate;
-    }
-
-    public void setName(String name) {
-        this.concept = name;
-    }
-
-    public void setMessage(String message) {
-        this.description = message;
-    }
-
-    // Sin método setDate para asegurar que el orden correcto se mantenga en la
-    // lista de recordatorios
-
-    public void setTriggered(boolean t) {
-        triggered = t;
-    }
+    public void setConcept(String concept) { this.concept = concept; }
+    public void setAmount(BigDecimal amount) { this.amount = amount; }
+    public void setDescription(String description) { this.description = description; }
+    public void setRecurrence(RecurrenceType recurrence) { this.recurrence = recurrence; }
 
     public boolean shouldTrigger() {
         LocalDateTime now = LocalDateTime.now();
-        return !triggered && initialDate.isBefore(now);
+        return !initialDate.isAfter(now);
+    }
+
+
+    public RecurringMove createNextOccurrence() {
+        LocalDateTime nextDate = computeNextDate(initialDate, recurrence);
+        if (nextDate == null) return null;
+
+        return new RecurringMove(
+                concept,
+                amount,
+                description,
+                nextDate,
+                recurrence
+        );
+    }
+
+    //Devuelve la siguiente ocasión en la que se enviará la notificación del pago según la frecuencia
+    private LocalDateTime computeNextDate(LocalDateTime t, RecurrenceType type) {
+        return switch (type) {
+            case Diario     -> t.plusDays(1);
+            case Semanal    -> t.plusWeeks(1);
+            case Quincenal  -> t.plusWeeks(2);
+            case Mensual    -> t.plusMonths(1);
+            case Anual      -> t.plusYears(1);
+            default         -> t;
+        };
     }
 
     @Override
     public String toString() {
-        return "Name: " + concept + " Message: " + description + " Date "
-                + initialDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm"));
+        return "RecurringMove{" +
+                "concept='" + concept + '\'' +
+                ", amount=" + amount +
+                ", description='" + description + '\'' +
+                ", initialDate=" + initialDate +
+                ", recurrence=" + recurrence +
+                '}';
     }
 }

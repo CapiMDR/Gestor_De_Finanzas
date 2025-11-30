@@ -5,5 +5,5 @@ public enum RecurrenceType {
     Semanal,
     Quincenal,
     Mensual,
-    Anual
+    Anual,
 }

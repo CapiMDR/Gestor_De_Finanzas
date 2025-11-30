@@ -1,10 +1,12 @@
 package recurring_controller;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import recurring_model.RecurrenceType;
 import recurring_model.RecurringMove;
 import recurring_model.RecurringsModel;
 import recurring_view.RecurringsEditorView;
@@ -24,9 +26,9 @@ public class RecurringsController {
     // Revisando los recordatorios cada segundo y activando aquellos que deban ser
     // activados
     private void watchRecurrings() {
-        for (RecurringMove reminder : recurringsModel.getRecurrings()) {
-            if (reminder.shouldTrigger()) {
-                triggerRecurring(reminder);
+        for (RecurringMove recMove : recurringsModel.getRecurrings()) {
+            if (recMove.shouldTrigger()) {
+                triggerRecurring(recMove);
             } else {
                 // Como los recordatorios están ordenados por su fecha, si el actual no ha
                 // llegado a su tiempo, los demás tampoco
@@ -35,26 +37,46 @@ public class RecurringsController {
         }
     }
 
+    // Cuando se activa la notificación de un pago recurrente se elimina y se crea
+    // la siguiente instancia según su frecuencia
     private void triggerRecurring(RecurringMove recMove) {
-        recMove.setTriggered(true);
+        recurringsModel.deleteRecurring(recMove);
+        RecurringMove next = recMove.createNextOccurrence();
+        recurringsModel.addRecurring(next);
+
+        recurringsModel.saveRecurrings();
+
         javax.swing.SwingUtilities.invokeLater(() -> {
             recurringsView.showRecMoveAlert(recMove);
         });
     }
 
-    public void handleRecurringrAddition(String name, String message, LocalDateTime date) {
-        if (!isValidRecurring(name, message, date))
+    public void handleRecurringAddition(String concept, BigDecimal amount, String description,
+            LocalDateTime initialDate, RecurrenceType recurrence) {
+        if (!isValidRecurring(concept, amount, description, initialDate, recurrence))
             return;
 
-        recurringsModel.addRecurring(name, message, date);
+        recurringsModel.addRecurring(concept, amount, description, initialDate, recurrence);
         recurringsModel.saveRecurrings();
     }
 
-    private boolean isValidRecurring(String name, String message, LocalDateTime date) {
-        if (name == null || name.isEmpty())
+    private boolean isValidRecurring(String concept, BigDecimal amount, String description,
+            LocalDateTime initialDate, RecurrenceType recurrence) {
+        if (concept == null || concept.isEmpty())
             return false;
-        if (date == null)
+
+        // Validate BigDecimal
+        if (amount == null)
             return false;
+
+        // Amount must be positive
+        if (amount.compareTo(BigDecimal.ZERO) <= 0)
+            return false;
+
+        // (Optional) Ensure scale is reasonable, e.g. max 2 decimal places
+        if (amount.scale() > 2)
+            return false;
+
         return true;
     }
 
