@@ -6,31 +6,47 @@ import java.util.List;
 
 /**
  * Represents a user's financial account within the system.
- * 
- * This class acts as a STUB (Dummy implementation) representing 
- * the external {@code AccountsModule}. It is currently provided to facilitate 
- * the compilation and testing of the {@code GoalsModule} without requiring 
- * the full integration of the Accounts subsystem.
- * @author Jose Pablo Martinez
+ * (Stub updated with Coin support)
  */
 
 public class Account {
 
     private int idAccount;
     private String name;
-
+    
+    private Coin coin; 
+    
     private List<Goal> goals;
+    //private List<Movement> movements; 
 
     public Account() {
-
         this.goals = new ArrayList<>();
+        //this.movements = new ArrayList<>();
+        
+        this.coin = Coin.MXN;
+    }
+    
+    //Getters and setters
+    public Coin getCoin() {
+        return coin;
     }
 
+    public void setCoin(Coin coin) {
+        this.coin = coin;
+    }
+    
     public List<Goal> getGoals() {
         return this.goals;
     }
 
     public void setGoals(List<Goal> goals) {
         this.goals = goals;
+    }
+
+    public String getName() {
+        return this.name; 
+    }
+    public void setName(String name) {
+        this.name = name;
     }
 }

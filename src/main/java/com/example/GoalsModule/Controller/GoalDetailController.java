@@ -4,28 +4,33 @@ import com.example.GoalsModule.Model.Goal;
 import com.example.GoalsModule.View.GoalDetailView;
 
 /**
- * Manages the navigation and data presentation for the Goal Detail View.
- * * @author Jose Pablo Martinez
+ * Controller specifically for managing the Goal Detail View.
+ * Handles the logic for displaying the progress of a specific goal.
+ *
+ * @author Jose Pablo Martinez
  */
 
 public class GoalDetailController {
 
     private final GoalDetailView view;
-
-
+    
     public GoalDetailController(GoalDetailView view) {
         this.view = view;
     }
 
     /**
-     * Configures the view to display the progress of a specific goal and makes it visible.
-     * @param objGoal The goal to be visualized.
+     * Receives a request to show details for a goal and updates the view.
+     * @param objGoal The goal object to visualize.
      */
 
     public void showDetails(Goal objGoal) {
         if (objGoal != null) {
-            //Update UI components
+            //Update UI Components
             view.showProgress(objGoal);
+            
+            if (!view.isVisible()) {
+                view.setVisible(true);
+            }
         }
     }
 }

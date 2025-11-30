@@ -1,124 +1,124 @@
 package com.example.GoalsModule.Controller;
 
-import com.example.AccountsModule.Model.Account;
-import com.example.AccountsModule.Model.AccountManager;
 import com.example.GoalsModule.Model.Goal;
 import com.example.GoalsModule.View.GoalEditView;
 import com.example.GoalsModule.View.GoalsView;
+import com.example.AccountsModule.Model.Account;
+import com.example.AccountsModule.Model.AccountManager;
+import com.example.AccountsModule.Model.Coin; // Importante para el test de moneda
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JButton;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for GoalsController.
- * Tests business logic in isolation by mocking Accounts and Views.
+ * Unit tests for the main GoalsController.
+ * Updated to reflect the new UI logic (Currency, Account Name).
+ *
  * @author Jose Pablo Martinez
  */
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("Goals Controller Test")
 class GoalsControllerTest {
 
-    @Mock
-    private GoalsView view;
-    @Mock
-    private GoalEditView editView;
-    @Mock
-    private AccountManager accountManager;
-    @Mock
-    private Account currentAccount;
+    @Mock private GoalsView view;
+    @Mock private GoalEditView editView;
+    @Mock private GoalDetailController detailController;
+    @Mock private AccountManager accountManager;
+    @Mock private Account currentAccount;
+    
+    // Mock Buttons
+    @Mock private JButton btnAdd;
 
-    @InjectMocks
+    // Spy List
+    @Spy private List<Goal> goalList = new ArrayList<>();
+
     private GoalsController controller;
-
-    // We need a real list to simulate the Account's internal list
-    private List<Goal> mockGoalsList;
 
     @BeforeEach
     void setUp() {
-        // Initialize a real list to act as the Account's storage
-        mockGoalsList = new ArrayList<>();
+        // Stubbing View
+        lenient().when(view.getBtnAddGoal()).thenReturn(btnAdd);
         
-        // Tell the Mock Account to return our list when getGoals() is called
-        // This allows us to check if items were added/removed
-        lenient().when(currentAccount.getGoals()).thenReturn(mockGoalsList);
+        // Stubbing Account
+        lenient().when(currentAccount.getGoals()).thenReturn(goalList);
+        lenient().when(currentAccount.getName()).thenReturn("Test Account"); // Para setAccountName
+        lenient().when(currentAccount.getCoin()).thenReturn(Coin.USD);       // Para setCurrencyLabel
         
-        // Set the context
+        // Initialize Controller
+        controller = new GoalsController(view, editView, detailController, accountManager);
+        
+        // Set Account (Triggers logic we want to test separately, so we reset after)
         controller.setAccount(currentAccount);
-        reset(view);
+        
+        // Clean slate for tests
+        reset(view); 
     }
 
     @Test
-    @DisplayName("CreateNewGoal should add to account list and save")
-    void testCreateNewGoal() {
-        // Arrange
-        String name = "New Car";
-        BigDecimal target = new BigDecimal("20000");
-        String desc = "Saving";
-
+    @DisplayName("SetAccount should update view with Name, Currency, and List")
+    void testSetAccount() {
         // Act
+        controller.setAccount(currentAccount);
+        
+        // Assert
+        verify(view).setAccountName("Test Account");
+        verify(view).setCurrencyLabel("$"); // Assumes Coin.USD.toString() returns "$"
+        verify(view).updateGoalList(goalList);
+    }
+
+    @Test
+    @DisplayName("CreateNewGoal should add to list and save")
+    void testCreateNewGoal() {
+        String name = "New Goal";
+        BigDecimal target = new BigDecimal("100.00");
+        String desc = "Desc";
+        
         controller.createNewGoal(name, target, desc);
 
-        // Assert
-        // 1. Verify it was added to the list
-        assertEquals(1, mockGoalsList.size());
-        assertEquals("New Car", mockGoalsList.get(0).getName());
-
-        // 2. Verify it called saveAll on the external manager
-        verify(accountManager, times(1)).saveAll();
-
-        // 3. Verify it updated the view
-        verify(view, times(1)).updateGoalList(mockGoalsList);
+        ArgumentCaptor<Goal> captor = ArgumentCaptor.forClass(Goal.class);
+        verify(goalList).add(captor.capture());
+        
+        Goal added = captor.getValue();
+        assertEquals(name, added.getName());
+        assertEquals(target, added.getTargetAmount());
+        
+        verify(accountManager).saveAll();
+        verify(view).updateGoalList(goalList);
     }
 
     @Test
-    @DisplayName("DeleteSelectedGoal should remove from list and save")
-    void testDeleteSelectedGoal() {
-        // Arrange: Prepare a goal in the list
-        Goal goalToDelete = new Goal("Old Goal", BigDecimal.TEN, "Desc");
-        mockGoalsList.add(goalToDelete);
-        
-        // Mock user selection in the view
-        when(view.getSelectedGoal()).thenReturn(goalToDelete);
-
-        // Act
-        controller.deleteSelectedGoal();
-
-        // Assert
-        assertEquals(0, mockGoalsList.size(), "List should be empty after delete");
-        verify(accountManager, times(1)).saveAll();
-        verify(view, times(1)).updateGoalList(mockGoalsList);
+    @DisplayName("OnViewDetails should delegate to DetailController")
+    void testOnViewDetails() {
+        Goal goal = new Goal();
+        controller.onViewDetails(goal);
+        verify(detailController).showDetails(goal);
     }
 
     @Test
-    @DisplayName("SaveGoalData should update existing goal object")
-    void testSaveGoalData() {
-        // Arrange
-        Goal existingGoal = new Goal("Old Name", BigDecimal.ONE, "Old Desc");
+    @DisplayName("OnEdit should populate edit view")
+    void testOnEdit() {
+        Goal goal = new Goal("Test", BigDecimal.TEN, "Desc");
+        controller.onEdit(goal);
         
-        String newName = "Updated Name";
-        BigDecimal newTarget = new BigDecimal("500");
-        String newDesc = "Updated Desc";
-
-        // Act
-        controller.saveGoalData(existingGoal, newName, newTarget, newDesc);
-
-        // Assert
-        assertEquals(newName, existingGoal.getName());
-        assertEquals(newTarget, existingGoal.getTargetAmount());
-        
-        verify(accountManager, times(1)).saveAll();
-        verify(view, times(1)).updateGoalList(mockGoalsList);
+        verify(editView).populateFields("Test", BigDecimal.TEN, "Desc");
+        verify(editView).addSaveListener(any(ActionListener.class));
+        verify(editView).showDialog();
     }
+    
 }

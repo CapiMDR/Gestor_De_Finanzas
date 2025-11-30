@@ -1,152 +1,139 @@
 package com.example.GoalsModule.Controller;
 
-import com.example.GoalsModule.Model.Goal;
-import com.example.GoalsModule.View.GoalsView;
-import com.example.GoalsModule.View.GoalEditView;
-// Assumes that these exist in AccountsModule.Model
 import com.example.AccountsModule.Model.Account;
 import com.example.AccountsModule.Model.AccountManager;
+import com.example.GoalsModule.Model.Goal;
+import com.example.GoalsModule.View.GoalEditView;
+import com.example.GoalsModule.View.GoalActionListener;
+import com.example.GoalsModule.View.GoalsView;
+import com.example.MovementsModule.Model.Movement;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.util.List;
-import javax.swing.JOptionPane; 
+import javax.swing.JOptionPane;
 
 /**
- * Coordinates the interaction between the Goals View and the Data Model.
- * Responsible for the lifecycle of Goal objects (Create, Update, Delete) and 
- * delegating persistence to the global AccountManager.
+ * Main Controller for the Goals Module.
+ * Manages interaction between the split-screen Main View, Models, and Popups.
+ *
  * @author Jose Pablo Martinez
- * @version 1.0
  */
 
-public class GoalsController implements ActionListener {
+public class GoalsController implements GoalActionListener {
 
-    private final GoalsView view;
-    private final GoalEditView editView;
+    private final GoalsView mainView;
+    private final GoalEditView editView;      
+    private final GoalDetailController detailController;
+    
     private Account currentAccount;
     private final AccountManager accountManager;
 
-
-    public GoalsController(GoalsView view, GoalEditView editView, AccountManager accountManager) {
-        this.view = view;
+    public GoalsController(GoalsView mainView, 
+                           GoalEditView editView, 
+                           GoalDetailController detailController, 
+                           AccountManager accountManager) {
+        this.mainView = mainView;
         this.editView = editView;
+        this.detailController = detailController;
         this.accountManager = accountManager;
-    }
 
+        //Add Button
+        this.mainView.getBtnAddGoal().addActionListener(e -> handleAddGoalFromMainView());
+        //Card Actions
+        this.mainView.setCardActionListener(this);
+        this.mainView.setController(this);
+    }
 
     public void setAccount(Account account) {
         this.currentAccount = account;
         if (currentAccount != null) {
-            // Assuming Account has getGoals()
-            view.updateGoalList(currentAccount.getGoals());
+            // Set Currency Label based on Account
+            String currency = "USD"; 
+            if (currentAccount.getCoin() != null) {
+                currency = currentAccount.getCoin().toString(); 
+            }
+            mainView.setCurrencyLabel(currency);
+            
+            refreshView();
+        }
+    }
+
+    private void refreshView() {
+        if (currentAccount != null) {
+            mainView.updateGoalList(currentAccount.getGoals());
+        }
+    }
+
+    //Goal management functionalities
+
+    private void handleAddGoalFromMainView() {
+        //Extract Data 
+        String name = mainView.getGoalName();
+        BigDecimal target = mainView.getTargetAmount();
+        String desc = mainView.getDescription();
+        if (name.isEmpty() || target.compareTo(BigDecimal.ZERO) <= 0) {
+            JOptionPane.showMessageDialog(mainView, "Invalid data. Please check name and amount.");
+            return;
+        }
+        createNewGoal(name, target, desc); //Tested with JUnit
+        mainView.clearForm(); 
+    }
+
+    //Public for Testing in JUnit
+    public void createNewGoal(String name, BigDecimal target, String desc) {
+        Goal newGoal = new Goal(name, target, desc);
+        
+        if (currentAccount != null) {
+            currentAccount.getGoals().add(newGoal);
+            accountManager.saveAll(); // Persist
+            refreshView();            // Update UI
         }
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        Object source = e.getSource();
-
-        if (source == view.getBtnAddGoal()) {
-            handleAddGoal();
-        } else if (source == view.getBtnDeleteGoal()) {
-            deleteSelectedGoal();
-        } else if (source == view.getBtnEditGoal()) {
-            // Logic to open the edit dialog for the selected item
-            Goal selected = view.getSelectedGoal();
-            if (selected != null) {
-                openEditDialog(selected);
-            }
-        }
+    public void onViewDetails(Goal goal) {
+        detailController.showDetails(goal);
     }
 
-    private void handleAddGoal() {
-        try {
-            // Extract raw data directly from the View
-            String name = view.getGoalName();
-            BigDecimal target = view.getTargetAmount(); 
-            String desc = view.getDescription();
-
-            createNewGoal(name, target, desc);
-        } catch (NumberFormatException ex) {
-            System.err.println("Invalid number format: " + ex.getMessage());
-            // In a real application, display error to user via JOptionPane
-        }
-    }
-
-  
-    public void createNewGoal(String name, BigDecimal target, String desc) {
-        Goal newGoal = new Goal(name, target, desc);
-        
-        // Manipulate the list
-        addGoalToAccount(newGoal);
-        
-        // Delegate persistence to the external manager
-        accountManager.saveAll();
-        
-        // Update the main view list
-        view.updateGoalList(currentAccount.getGoals());
-    }
-
-    public void deleteSelectedGoal() {
-        Goal selected = view.getSelectedGoal();
-        if (selected != null) {
-            removeGoalFromAccount(selected); 
-            accountManager.saveAll();
-            view.updateGoalList(currentAccount.getGoals());
-        }
-    }
-
-
-    public void saveGoalData(Goal originalGoal, String name, BigDecimal target, String desc) {
-        if (originalGoal != null) {
-            originalGoal.setName(name);
-            originalGoal.setTargetAmount(target);
-            originalGoal.setDescription(desc);
-
-            accountManager.saveAll();
-            view.updateGoalList(currentAccount.getGoals());
-        }
-    }
-
-    /**
-     * Prepares and displays the editing popup.
-     * Connects the Save button of the popup to the saveGoalData logic.
-     */
-    
-    private void openEditDialog(Goal goal) {
-        // Push data to the view (populate fields)
+    @Override
+    public void onEdit(Goal goal) {
         editView.populateFields(goal.getName(), goal.getTargetAmount(), goal.getDescription());
         
-        // Using a lambda to capture the specific 'goal' instance being edited
-        editView.addSaveListener(e -> { 
-            try {
-                String newName = editView.getEditedName();
-                BigDecimal newTarget = editView.getEditedTarget(); 
-                String newDesc = editView.getEditedDescription();
-
-                saveGoalData(goal, newName, newTarget, newDesc);
-                editView.closeDialog(); 
-            } catch (NumberFormatException ex) {
-                System.err.println("Error updating goal: Invalid number format.");
+        editView.addSaveListener(e -> {
+            String newName = editView.getNameInput();
+            BigDecimal newTarget = editView.getTargetInput();
+            
+            if (newName.isEmpty() || newTarget.compareTo(BigDecimal.ZERO) <= 0) {
+                 JOptionPane.showMessageDialog(editView, "Invalid Data.");
+                 return;
             }
+            
+            // Business Logic for Update
+            goal.setName(newName);
+            goal.setTargetAmount(newTarget);
+            goal.setDescription(editView.getDescriptionInput());
+            
+            accountManager.saveAll();
+            refreshView();
+            editView.closeDialog();
         });
-
         editView.showDialog();
-    } 
+    }
 
-    // The Account class is passive; this controller manages the list logic.
-
-    private void addGoalToAccount(Goal goal) {
-        if (currentAccount != null) {
-            currentAccount.getGoals().add(goal);
+    @Override
+    public void onDelete(Goal goal) {
+        int confirm = JOptionPane.showConfirmDialog(mainView, 
+                "Delete goal: " + goal.getName() + "?", 
+                "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+        
+        if (confirm == JOptionPane.YES_OPTION && currentAccount != null) {
+            currentAccount.getGoals().remove(goal);
+            accountManager.saveAll();
+            refreshView();
         }
     }
- 
-    private void removeGoalFromAccount(Goal goal) { 
-        if (currentAccount != null) {
-            currentAccount.getGoals().remove(goal);
-        }
+    
+    public void handleExternalUpdates(List<Movement> movements) {
+        refreshView();
     }
 }

@@ -12,39 +12,41 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.mockito.Mockito.*;
 
 /**
- * Unit tests for GoalDetailController.
- * Uses Mockito to simulate the View interaction.
+ * Unit tests for the GoalDetailController.
+ * Uses Mockito to verify that the controller correctly updates the view.
  * @author Jose Pablo Martinez
  */
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("Goal Detail Controller Test")
 class GoalDetailControllerTest {
 
     @Mock
-    private GoalDetailView view; // Mock of the View (doesn't need to exist functionally)
+    private GoalDetailView view; // Mock the view dependency
 
     @InjectMocks
-    private GoalDetailController controller;
+    private GoalDetailController controller; // Inject mock into the controller
 
     @Test
-    @DisplayName("Should update view when goal is provided")
+    @DisplayName("Should call view.showProgress when goal is valid")
     void testShowDetails() {
-        Goal goal = new Goal();
+        // Arrange
+        Goal testGoal = new Goal();
         
-        // Act
-        controller.showDetails(goal);
-
-        // Assert: Verify that view.showProgress() was called exactly once
-        verify(view, times(1)).showProgress(goal);
+        // Act: Execute the method to be tested
+        controller.showDetails(testGoal);
+        
+        // Assert: Verify that the controller called the view's method exactly once
+        verify(view, times(1)).showProgress(testGoal);
     }
 
     @Test
-    @DisplayName("Should do nothing if goal is null")
-    void testShowDetailsNull() {
+    @DisplayName("Should not do anything if goal is null")
+    void testShowDetailsWithNull() {
         // Act
         controller.showDetails(null);
-
-        // Assert: Verify no interaction with view
+        
+        // Assert: Verify that no methods on the view were called
         verifyNoInteractions(view);
     }
 }

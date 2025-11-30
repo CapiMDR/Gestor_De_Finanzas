@@ -1,23 +1,275 @@
 package com.example.GoalsModule.View;
 
-import java.awt.event.ActionListener;
-import javax.swing.JButton;
+import com.example.GoalsModule.Controller.GoalsController;
 import com.example.GoalsModule.Model.Goal;
+import com.example.GoalsModule.Model.MovementObserver;
+import com.example.MovementsModule.Model.Movement;
+import com.example.MovementsModule.Model.MovementCategory;
+
+import java.awt.*;
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.List;
+import javax.swing.*;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 
 /**
- * Dummy class for testing
+ * Main view for the Goals Module.
+ * Refined Layout: Split screen (Wider Orange Form, Blue List).
+ * Visual improvements: Better spacing, styled circular eye button.
+ *
  * @author Jose Pablo Martinez
  */
+public class GoalsView extends JPanel implements MovementObserver {
 
-public class GoalsView {
-    public JButton getBtnAddGoal() { return new JButton(); }
-    public JButton getBtnDeleteGoal() { return new JButton(); }
-    public JButton getBtnEditGoal() { return new JButton(); }
-    public String getGoalName() { return ""; }
-    public BigDecimal getTargetAmount() { return BigDecimal.ZERO; }
-    public String getDescription() { return ""; }
-    public void updateGoalList(List<Goal> goals) {}
-    public Goal getSelectedGoal() { return null; }
+    private GoalsController controller;
+    private JTextField txtName;
+    private JTextField txtTargetAmount;
+    private JTextField txtDestinationAccount; 
+    private JTextArea txtDescription; 
+    private JLabel lblTargetAmount; 
+    private JButton btnAddGoal;
+
+    private final JPanel cardsContainer; 
+
+    private static final Color FORM_BG_COLOR = new Color(255, 178, 102); // Orange
+    private static final Color LIST_BG_COLOR = new Color(52, 101, 164);  // Blue Turkey
+    private static final Color HEADER_COLOR = Color.WHITE;
+    private static final Color TEXT_PRIMARY = new Color(51, 51, 51);
+    private static final Color CARD_BG = Color.WHITE;
+    private static final Color BTN_ADD_BG = new Color(0, 100, 0); 
+    private static final Color BTN_ADD_TEXT = Color.WHITE;
+    private static final Color EYE_BTN_COLOR = new Color(41, 128, 185); // Blue for Eye Circle
+
+    private GoalActionListener cardActionListener;
+
+    public GoalsView() {
+        setLayout(new BorderLayout(0, 0));
+        
+        //HEADER
+        JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        headerPanel.setBackground(new Color(255, 140, 0)); 
+        
+        JLabel lblTitle = new JLabel("METAS FINANCIERAS");
+        lblTitle.setFont(new Font("SansSerif", Font.BOLD, 24));
+        lblTitle.setForeground(HEADER_COLOR);
+        headerPanel.add(lblTitle);
+
+        add(headerPanel, BorderLayout.NORTH);
+
+        //MAIN CONTENT
+        JPanel contentPanel = new JPanel(new BorderLayout()); 
+
+        //Form for new Gaols
+        JPanel leftPanel = buildFormPanel();
+        leftPanel.setPreferredSize(new Dimension(300, 0)); 
+        
+        //Goal List
+        JPanel rightPanel = new JPanel(new BorderLayout());
+        rightPanel.setBackground(LIST_BG_COLOR);
+        rightPanel.setBorder(new EmptyBorder(15, 15, 15, 15));
+        
+        cardsContainer = new JPanel();
+        cardsContainer.setLayout(new BoxLayout(cardsContainer, BoxLayout.Y_AXIS));
+        cardsContainer.setBackground(LIST_BG_COLOR); 
+        
+        JScrollPane scrollPane = new JScrollPane(cardsContainer);
+        scrollPane.setBorder(null);
+        scrollPane.setBackground(LIST_BG_COLOR);
+        scrollPane.getViewport().setBackground(LIST_BG_COLOR);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        
+        rightPanel.add(scrollPane, BorderLayout.CENTER);
+        
+        contentPanel.add(leftPanel, BorderLayout.WEST);   
+        contentPanel.add(rightPanel, BorderLayout.CENTER); 
+
+        add(contentPanel, BorderLayout.CENTER);
+    }
+
+    private JPanel buildFormPanel() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBackground(FORM_BG_COLOR);
+        panel.setBorder(new EmptyBorder(20, 20, 20, 20));
+
+        // Init Components
+        txtName = new JTextField();
+        txtTargetAmount = new JTextField();
+        txtDestinationAccount = new JTextField();
+        txtDestinationAccount.setEditable(false); 
+        txtDestinationAccount.setBackground(new Color(240, 240, 240)); 
+        
+        txtDescription = new JTextArea(3, 15); 
+        txtDescription.setLineWrap(true);
+        txtDescription.setWrapStyleWord(true);
+        
+        btnAddGoal = new JButton("Agregar Meta");
+        btnAddGoal.setBackground(BTN_ADD_BG);
+        btnAddGoal.setForeground(BTN_ADD_TEXT);
+        btnAddGoal.setFont(new Font("SansSerif", Font.BOLD, 14));
+        btnAddGoal.setFocusPainted(false);
+        btnAddGoal.setContentAreaFilled(false);
+        btnAddGoal.setOpaque(true); 
+        btnAddGoal.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
+        btnAddGoal.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+        lblTargetAmount = new JLabel("Monto Objetivo ($):");
+
+        addFormField(panel, "Nombre:", txtName);
+        addFormField(panel, lblTargetAmount, txtTargetAmount);
+        addFormField(panel, "Cuenta destino:", txtDestinationAccount);
+        
+        //Description
+        JLabel lblDesc = new JLabel("Nota/Descripción:");
+        lblDesc.setFont(new Font("SansSerif", Font.BOLD, 12));
+        lblDesc.setAlignmentX(Component.LEFT_ALIGNMENT); 
+        panel.add(lblDesc);
+        panel.add(Box.createVerticalStrut(5));
+        
+        JScrollPane scrollDesc = new JScrollPane(txtDescription);
+        scrollDesc.setAlignmentX(Component.LEFT_ALIGNMENT);
+        scrollDesc.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80));
+        panel.add(scrollDesc);
+        panel.add(Box.createVerticalStrut(30)); 
+        panel.add(btnAddGoal); 
+        panel.add(Box.createVerticalGlue()); 
+
+        return panel;
+    }
+
+    private void addFormField(JPanel panel, JLabel label, JTextField field) {
+        label.setFont(new Font("SansSerif", Font.BOLD, 12));
+        label.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        //Force text fields to expand horizontally
+        field.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
+        field.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        panel.add(label);
+        panel.add(Box.createVerticalStrut(5));
+        panel.add(field);
+        panel.add(Box.createVerticalStrut(15));
+    }
+    
+    private void addFormField(JPanel panel, String text, JTextField field) {
+        addFormField(panel, new JLabel(text), field);
+    }
+
+    //Setters and getters to gather information
+    public void setController(GoalsController controller) { this.controller = controller; }
+    public void setCardActionListener(GoalActionListener listener) { this.cardActionListener = listener; }
+    public String getGoalName() { return txtName.getText().trim(); }
+    public String getDescription() { return txtDescription.getText().trim(); }
+    public BigDecimal getTargetAmount() { 
+        try {
+            return new BigDecimal(txtTargetAmount.getText().trim());
+        } catch (Exception e) { return BigDecimal.ZERO; }
+    }
+    public JButton getBtnAddGoal() { return btnAddGoal; }
+    public void setAccountName(String name) { txtDestinationAccount.setText(name); }
+    public void setCurrencyLabel(String currencySymbol) { lblTargetAmount.setText("Monto Objetivo (" + currencySymbol + "):"); }
+    public void clearForm() {
+        txtName.setText("");
+        txtTargetAmount.setText("");
+        txtDescription.setText("");
+    }
+
+    public void updateGoalList(List<Goal> goals) {
+        cardsContainer.removeAll();
+        int index = 1;
+        for (Goal goal : goals) {
+            GoalCardPanel card = new GoalCardPanel(goal, index++);
+            cardsContainer.add(card);
+            cardsContainer.add(Box.createVerticalStrut(10));
+        }
+        cardsContainer.revalidate();
+        cardsContainer.repaint();
+    }
+
+    @Override
+    public void onNotify(List<Movement> movements, List<MovementCategory> categories) {
+        if (controller != null) {
+            controller.handleExternalUpdates(movements);
+        }
+    }
+
+    /*Inner Class*/
+    private class GoalCardPanel extends JPanel {
+        
+        public GoalCardPanel(Goal goal, int order) {
+            setLayout(new BorderLayout(10, 5));
+            setBackground(CARD_BG);
+            setBorder(new CompoundBorder(
+                new LineBorder(Color.LIGHT_GRAY, 1, true),
+                new EmptyBorder(8, 10, 8, 10)
+            ));
+            setMinimumSize(new Dimension(200, 90)); 
+            setMaximumSize(new Dimension(Integer.MAX_VALUE, 110));
+
+            //For center info
+            JPanel infoPanel = new JPanel(new GridLayout(2, 1));
+            infoPanel.setBackground(CARD_BG);
+            
+            String nameHtml = "<html><body style='width: 160px'><b>#" + order + " " + goal.getName() + "</b></body></html>";
+            JLabel lblName = new JLabel(nameHtml);
+            lblName.setForeground(TEXT_PRIMARY);
+            lblName.setFont(new Font("SansSerif", Font.PLAIN, 14));
+            
+            NumberFormat currency = NumberFormat.getCurrencyInstance();
+            JLabel lblAmount = new JLabel("Meta: " + currency.format(goal.getTargetAmount()));
+            lblAmount.setForeground(Color.GRAY);
+            
+            infoPanel.add(lblName);
+            infoPanel.add(lblAmount);
+
+            // Eye button
+            JPanel rightPanel = new JPanel(new GridBagLayout());
+            rightPanel.setBackground(CARD_BG);
+            JButton btnView = new JButton("👁");
+            btnView.setFont(new Font("Segoe UI Symbol", Font.BOLD, 20));
+            btnView.setForeground(EYE_BTN_COLOR);
+            btnView.setFocusPainted(false);
+            btnView.setContentAreaFilled(false);
+            btnView.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            btnView.setBorder(new CompoundBorder(
+                new LineBorder(EYE_BTN_COLOR, 2, true), // Rounded border (almost circle)
+                new EmptyBorder(5, 10, 5, 10)
+            ));
+            
+            
+            rightPanel.add(btnView);
+
+            // Edit/Delete
+            JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+            bottomPanel.setBackground(CARD_BG);
+            JButton btnEdit = createIconBtn("✎", "Editar", 18);
+            JButton btnDelete = createIconBtn("🗑", "Eliminar", 18);
+            bottomPanel.add(btnEdit);
+            bottomPanel.add(Box.createHorizontalStrut(15));
+            bottomPanel.add(btnDelete);
+
+            // Listeners
+            btnView.addActionListener(e -> { if (cardActionListener != null) cardActionListener.onViewDetails(goal); });
+            btnEdit.addActionListener(e -> { if (cardActionListener != null) cardActionListener.onEdit(goal); });
+            btnDelete.addActionListener(e -> { if (cardActionListener != null) cardActionListener.onDelete(goal); });
+
+            add(infoPanel, BorderLayout.CENTER);
+            add(rightPanel, BorderLayout.EAST);
+            add(bottomPanel, BorderLayout.SOUTH);
+        }
+        
+        private JButton createIconBtn(String text, String tooltip, int size) {
+            JButton btn = new JButton(text);
+            btn.setToolTipText(tooltip);
+            btn.setBorderPainted(false);
+            btn.setContentAreaFilled(false);
+            btn.setFocusPainted(false);
+            btn.setFont(new Font("Segoe UI Symbol", Font.PLAIN, size));
+            btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            return btn;
+        }
+    }
 }
