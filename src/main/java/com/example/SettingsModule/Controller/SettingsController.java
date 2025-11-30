@@ -1,27 +1,28 @@
 package com.example.SettingsModule.Controller;
 
-import com.example.SettingsModule.Model.Settings; 
-import com.example.SettingsModule.View.SettingsView; 
 import com.example.SettingsModule.Model.SettingsManager;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import com.example.SettingsModule.View.SettingsView;
 
 /**
  * Controller for the Settings module.
- * Processes user actions from the SettingsView and invokes logic in the SettingsManager.
+ * Manages the interaction between the Settings UI and the application state.
  *
  * @author Jose Pablo Martinez
  */
 
-public class SettingsController implements ActionListener {
+public class SettingsController {
 
     private final SettingsView view;
     private final SettingsManager manager;
 
-  
     public SettingsController(SettingsView view, SettingsManager manager) {
         this.view = view;
         this.manager = manager;
+
+        this.view.addThemeListener(e -> handleThemeChange());
+        this.view.addNotificationListener(e -> handleNotificationChange());
+        this.view.addBackListener(e -> handleBackNavigation());
+
         loadSettings();
     }
 
@@ -31,34 +32,23 @@ public class SettingsController implements ActionListener {
         }
     }
 
-    /**
-     * Handles action events from the View components.
-     *
-     * @param e The event triggered by the user.
-     */
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        // Identify which component triggered the event
-        if (e.getSource() == view.getBtnTheme()) {
-            handleThemeChange();
-        } else if (e.getSource() == view.getCheckNotifications()) {
-            handleNotificationChange();
-        }
-    }
-
-    public void handleThemeChange() {
-        // Assuming getThemeSelected returns true for Dark, false for Light
+    private void handleThemeChange() {
         boolean isDark = view.getThemeSelected(); 
         String newTheme = isDark ? "DARK" : "LIGHT";
-        
         manager.changeTheme(newTheme);
     }
 
-    public void handleNotificationChange() {
-        // Assuming isNotificationSelected returns the checkbox state
+    private void handleNotificationChange() {
         boolean isEnabled = view.isNotificationSelected(); 
-        
         manager.changeNotification(isEnabled);
+    }
+
+    /**
+     * Handles the navigation back to the Account View.
+     * Updated: Prints to console instead of showing a popup.
+     */
+
+    private void handleBackNavigation() {
+        System.out.println("DEBUG: Navegando de vuelta a la vista principal...");
     }
 }
