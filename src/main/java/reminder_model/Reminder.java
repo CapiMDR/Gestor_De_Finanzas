@@ -7,6 +7,7 @@ public class Reminder {
     private String name;
     private String message;
     private LocalDateTime date;
+    private boolean triggered = false; // Indica si el recordatorio ya fue disparado en esta ejecución
 
     public Reminder(String name, String message, LocalDateTime date) {
         this.name = name;
@@ -42,6 +43,15 @@ public class Reminder {
 
     // Sin método setDate para asegurar que el orden correcto se mantenga en la
     // lista de recordatorios
+
+    public void setTriggered(boolean t) {
+        triggered = t;
+    }
+
+    public boolean shouldTrigger() {
+        LocalDateTime now = LocalDateTime.now();
+        return !triggered && date.isBefore(now);
+    }
 
     @Override
     public String toString() {

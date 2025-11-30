@@ -1,27 +1,17 @@
 [
     {
-        "date": "2024-11-19T09:59",
-        "name": "Pago 3",
-        "message": "No olvidar pagar 3"
+        "date": "2025-11-29T18:00",
+        "name": "Pagar gas",
+        "message": "No olvidar pagar gas"
     },
     {
-        "date": "2024-11-19T09:59",
-        "name": "Pago 4",
-        "message": "No olvidar pagar 4"
+        "date": "2025-11-30T12:02",
+        "name": "Pagar agua",
+        "message": "No olvidar pagar agua"
     },
     {
-        "date": "2025-11-18T21:07",
-        "name": "Pago5",
-        "message": "No olvidar pagar 5"
-    },
-    {
-        "date": "2025-11-18T21:08",
-        "name": "Pago1",
-        "message": "No olvidar pagar 1"
-    },
-    {
-        "date": "2025-11-19T09:59",
-        "name": "Pago2",
-        "message": "No olvidar pagar 2"
+        "date": "2026-11-29T14:00",
+        "name": "Pago de coche",
+        "message": "Este recordatorio no ocurrirá"
     }
 ]
