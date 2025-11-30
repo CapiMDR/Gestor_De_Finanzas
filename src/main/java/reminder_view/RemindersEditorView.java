@@ -15,7 +15,7 @@ public class RemindersEditorView extends JDialog {
     private static final DateTimeFormatter FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     public RemindersEditorView(Frame parent, Reminder reminder) {
-        super(parent, "Edit Reminder", true);
+        super(parent, "Editar recordatorio", true);
         setLayout(new BorderLayout(10, 10));
 
         // Input de texto
