@@ -75,7 +75,7 @@ public class AccountManagerTest {
     void testAddAccount_GeneratesId_Saves_AndNotifies(){
         accountManager.addAccount("Ahorro", AccountType.DIGITAL, Coin.USD, new BigDecimal("100.00"));
 
-        assertEquals(1, accountManager.getAccountById(1).getId(), "genereted ID must be: 1.");
+        assertEquals(1, accountManager.getAccountByIndex(1).getId(), "genereted ID must be: 1.");
         assertEquals(1, accountManager.getAccounts().size());
         
         assertEquals(1, dataHandlerStub.getSaveCallCount(), "must be 1 call to saveAccounts.");

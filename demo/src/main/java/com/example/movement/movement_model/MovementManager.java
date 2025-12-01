@@ -4,22 +4,29 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.example.account.account_model.JsonDataHandler;
+
 public class MovementManager {
     private List<Movement> movements;
     private HashMap<String, MovementCategory> categories;
     private MovementManagerSubject subject;
+    private JsonDataHandler dataHandler;
 
-    public MovementManager(MovementManagerSubject subject){
+    public MovementManager(MovementManagerSubject subject, JsonDataHandler dataHandler){
     this.subject = subject;
+    this.dataHandler = dataHandler;
     this.movements = new ArrayList<>();
-    this.categories = new HashMap<>();
+    this.categories = dataHandler.loadCategories();
+    if (this.categories == null){
+            this.categories = new HashMap<>();
+        }
     }
 
 
     public void addMovement(Movement movement){
         movement.setIdMovement(generateUniqueId());
         movements.add(movement);
-        subject.notifyObservers(new ArrayList<>(categories.values()));
+        notifyObservers();
     }
 
     private int generateUniqueId() {
@@ -29,12 +36,14 @@ public class MovementManager {
 
     public void addCategory(MovementCategory category){
         categories.put(category.getName(), category);
-        subject.notifyObservers(new ArrayList<>(categories.values()));
+        dataHandler.saveCategories(categories);
+        notifyObservers();
     }
 
     public void removeCategory(MovementCategory category){
         categories.remove(category.getName());
-        subject.notifyObservers(new ArrayList<>(categories.values()));
+        dataHandler.saveCategories(categories);
+        notifyObservers();
     }
 
     public MovementCategory getCategoryByName(String name) {
@@ -46,6 +55,9 @@ public class MovementManager {
     }
     public void removeObserver(MovementObserver observer){
         subject.removeObserver(observer);
+    }
+    public void notifyObservers(){
+        subject.notifyObservers(new ArrayList<>(categories.values()));
     }
 
 

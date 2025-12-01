@@ -13,16 +13,20 @@ public class AccountManager {
     private JsonDataHandler dataHandler;
 
     
-    //public AccountManager(AccountManagerSubject subject) {
+    //public AccountManager(AccountManagerSubject subject){
     //    this.dataHandler = new JsonDataHandler();
     //    this.accounts = dataHandler.loadAccounts();
     //    this.subject = subject;
     //}
 
-    public AccountManager(AccountManagerSubject subject, JsonDataHandler dataHandler) {
+    public AccountManager(AccountManagerSubject subject, JsonDataHandler dataHandler){
         this.dataHandler = dataHandler;
         this.accounts = dataHandler.loadAccounts();
         this.subject = subject;
+    }
+
+    public void loadInitialData(){
+        notifyObservers();
     }
 
     public void saveAccountsData(){
@@ -60,11 +64,18 @@ public class AccountManager {
         return maxId + 1;
     }
 
+    public Account getAccountByIndex(int index){
+        if (index >= 0 && index < accounts.size()) {
+            return accounts.get(index);
+        }
+        return null;
+    }
+
     public Account getAccountById(int id){
         return accounts.stream()
                         .filter(a -> a.getId() == id)
                         .findFirst()
-                        .orElse(null);
+                        .orElse(null);    
     }
         
     public void addObserver(AccountObserver observer){

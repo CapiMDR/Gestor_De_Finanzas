@@ -16,10 +16,12 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class JsonDataHandler {
     private static final String FILE_PATH = "accounts_data.json";
+    private static final String CATEGORIES_FILE_PATH = "categories_data.json";
 
     //SERIALIZATION
 
@@ -57,6 +59,20 @@ public class JsonDataHandler {
         }
         return jsonArray;
     }
+
+    //categories to hashMap
+    public JSONArray categoriesToJson(HashMap<String, MovementCategory> categories) {
+        JSONArray jsonArray = new JSONArray();
+
+        for (MovementCategory category : categories.values()) {
+            JSONObject categoryJson = new JSONObject();
+            categoryJson.put("name", category.getName());
+            categoryJson.put("type", category.getType().name());
+            jsonArray.put(categoryJson);
+        }
+        return jsonArray;
+    }
+
     //DESERIALIZATION
 
     //JSONArray to acount list
@@ -119,14 +135,37 @@ public class JsonDataHandler {
         }
         return movements;
     }
+    //HashMap to categories
+    public HashMap<String, MovementCategory> jsonToCategories(JSONArray jsonArray) {
+        HashMap<String, MovementCategory> categories = new HashMap<>();
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject categoryJson = jsonArray.getJSONObject(i);
+
+            String name = categoryJson.getString("name");
+            MovementType type = MovementType.valueOf(categoryJson.getString("type"));
+            
+            MovementCategory category = new MovementCategory(name, type);
+            categories.put(name, category);
+        }
+        return categories;
+    }
 
     //file operations
     public void saveAccounts(List<Account> accounts){
         JSONArray jsonArray = accountsToJson(accounts);
         try (FileWriter file = new FileWriter(FILE_PATH)) {
-            // Se guarda la representación como un array de objetos
-            file.write(jsonArray.toString(2)); // toString(2) para un formato legible
+            file.write(jsonArray.toString(2));
             System.out.println("Cuentas guardadas en " + FILE_PATH);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void saveCategories(HashMap<String, MovementCategory> categories) {
+        JSONArray jsonArray = categoriesToJson(categories);
+        try (FileWriter file = new FileWriter(CATEGORIES_FILE_PATH)) {
+            file.write(jsonArray.toString(2));
+            System.out.println("Categorías guardadas en " + CATEGORIES_FILE_PATH);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -149,5 +188,24 @@ public class JsonDataHandler {
              System.err.println("Error al parsear el JSON: " + e.getMessage());
         }
         return new ArrayList<>();
+    }
+
+    public HashMap<String, MovementCategory> loadCategories() {
+        File file = new File(CATEGORIES_FILE_PATH);
+        if (!file.exists() || file.length() == 0) {
+            System.out.println("Archivo de categorías no encontrado o vacío. Iniciando con lista vacía.");
+            return new HashMap<>();
+        }
+        
+        try {
+            String content = new String(Files.readAllBytes(Paths.get(CATEGORIES_FILE_PATH)));
+            JSONArray jsonArray = new JSONArray(content);
+            return jsonToCategories(jsonArray);
+        } catch (IOException e) {
+            System.err.println("Error al leer el archivo de categorías: " + e.getMessage());
+        } catch (Exception e) {
+             System.err.println("Error al parsear el JSON de categorías: " + e.getMessage());
+        }
+        return new HashMap<>();
     }
 }

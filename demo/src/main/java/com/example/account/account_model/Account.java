@@ -44,11 +44,11 @@ public class Account {
         
         switch (movement.getCategory().getType()) {
             case INCOME:
-                this.currentBalance = this.currentBalance.add(movement.getAmount());
+                updateBalance(getCurrentBalance().add(movement.getAmount()));
                 break;
             
             case EXPENSE:
-                this.currentBalance = this.currentBalance.subtract(movement.getAmount());
+                updateBalance(getCurrentBalance().subtract(movement.getAmount()));
                 break;
             default:
                 break;
