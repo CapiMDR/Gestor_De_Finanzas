@@ -12,12 +12,31 @@ import recurring_model.RecurringsModel;
 import recurring_view.RecurringsEditorView;
 import recurring_view.RecurringsView;
 
+/**
+ * Controlador principal encargado de coordinar la interacción entre la vista,
+ * el modelo y la lógica de notificaciones de los pagos recurrentes.
+ *
+ * <p>
+ * Administra la creación, edición, eliminación y monitoreo automático
+ * de {@link RecurringMove} utilizando un {@link ScheduledExecutorService}.
+ * </p>
+ */
 public class RecurringsController {
 
+    /** Modelo que contiene todas las operaciones recurrentes. */
     private final RecurringsModel recurringsModel = new RecurringsModel();
+
+    /** Vista principal encargada de mostrar los recordatorios recurrentes. */
     private final RecurringsView recurringsView = new RecurringsView(this, recurringsModel);
+
+    /** Servicio ejecutor para revisar periódicamente los recordatorios. */
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
+    /**
+     * Construye el controlador, inicializa la vista y comienza el monitoreo
+     * periódico
+     * de los recordatorios.
+     */
     public RecurringsController() {
         recurringsView.setVisible(true);
         scheduler.scheduleAtFixedRate(this::watchRecurrings, 0, 1, TimeUnit.SECONDS);
@@ -25,6 +44,13 @@ public class RecurringsController {
 
     // Revisando los recordatorios cada segundo y activando aquellos que deban ser
     // activados
+
+    /**
+     * Revisa todos los recordatorios ordenados y activa aquellos cuya fecha ya
+     * pasó.
+     * Como los recordatorios están ordenados, la revisión termina cuando uno aún no
+     * debe ser disparado.
+     */
     private void watchRecurrings() {
         for (RecurringMove recMove : recurringsModel.getRecurrings()) {
             if (recMove.shouldTrigger()) {
@@ -39,6 +65,21 @@ public class RecurringsController {
 
     // Cuando se activa la notificación de un pago recurrente se elimina y se crea
     // la siguiente instancia según su frecuencia
+
+    /**
+     * Maneja la activación de un recordatorio recurrente.
+     * <p>
+     * El proceso consiste en:
+     * </p>
+     * <ul>
+     * <li>Eliminar el recordatorio actual.</li>
+     * <li>Crear su siguiente instancia dependiendo de la frecuencia.</li>
+     * <li>Guardar los cambios.</li>
+     * <li>Mostrar una alerta en la vista.</li>
+     * </ul>
+     *
+     * @param recMove el recordatorio que debe ser activado
+     */
     private void triggerRecurring(RecurringMove recMove) {
         recurringsModel.deleteRecurring(recMove);
         RecurringMove next = recMove.createNextOccurrence();
@@ -51,6 +92,15 @@ public class RecurringsController {
         });
     }
 
+    /**
+     * Procesa la solicitud de creación de un nuevo recordatorio.
+     *
+     * @param concept     nombre del recordatorio
+     * @param amount      monto asociado
+     * @param description descripción opcional
+     * @param initialDate fecha inicial
+     * @param recurrence  tipo de repetición
+     */
     public void handleRecurringAddition(String concept, BigDecimal amount, String description,
             LocalDateTime initialDate, RecurrenceType recurrence) {
         if (!isValidRecurring(concept, amount, description, initialDate, recurrence))
@@ -60,36 +110,56 @@ public class RecurringsController {
         recurringsModel.saveRecurrings();
     }
 
+    /**
+     * Valida los campos necesarios para crear o editar un recordatorio recurrente.
+     *
+     * @return true si los datos son válidos, false en caso contrario
+     */
     private boolean isValidRecurring(String concept, BigDecimal amount, String description,
             LocalDateTime initialDate, RecurrenceType recurrence) {
         if (concept == null || concept.isEmpty())
             return false;
 
-        // Validate BigDecimal
         if (amount == null)
             return false;
 
-        // Amount must be positive
         if (amount.compareTo(BigDecimal.ZERO) <= 0)
             return false;
 
-        // (Optional) Ensure scale is reasonable, e.g. max 2 decimal places
         if (amount.scale() > 2)
             return false;
 
         return true;
     }
 
+    /**
+     * Maneja la eliminación de un recordatorio recurrente.
+     *
+     * @param recMove el recordatorio a eliminar
+     */
     public void handleRecurringDeletion(RecurringMove recMove) {
         recurringsModel.deleteRecurring(recMove);
         recurringsModel.saveRecurrings();
     }
 
+    /**
+     * Procesa la edición de un recordatorio recurrente dado uno antiguo y uno
+     * nuevo.
+     *
+     * @param oldRecMove recordatorio original
+     * @param newRecMove recordatorio ya editado
+     */
     public void handleRecurringEdit(RecurringMove oldRecMove, RecurringMove newRecMove) {
         recurringsModel.editRecurring(oldRecMove, newRecMove);
         recurringsModel.saveRecurrings();
     }
 
+    /**
+     * Abre la ventana de edición para un recordatorio y procesa el resultado si el
+     * usuario confirma los cambios.
+     *
+     * @param recMove recordatorio a editar
+     */
     public void onEditRequest(RecurringMove recMove) {
         RecurringsEditorView editor = new RecurringsEditorView(null, recMove);
         editor.setVisible(true);

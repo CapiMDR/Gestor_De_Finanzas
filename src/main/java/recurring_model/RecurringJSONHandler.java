@@ -13,16 +13,37 @@ import java.util.TreeSet;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+/**
+ * Utilidad encargada de guardar y cargar los objetos {@link RecurringMove}
+ * desde y hacia un archivo JSON.
+ *
+ * Esta clase es estática y no puede ser instanciada.
+ */
 public class RecurringJSONHandler {
+
+    /** Constructor privado para evitar instanciación. */
     private RecurringJSONHandler() {
     }
 
+    /** Nombre del archivo donde se guardan los recordatorios. */
     private static final String FILE_NAME = "recurrings.json";
+
+    /** Formato estándar utilizado para serializar y deserializar fechas. */
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+
     // Ordenando a los recordatorios primero por su fecha, luego por su nombre
+    /**
+     * Comparador utilizado para ordenar los recordatorios por fecha y luego por
+     * concepto.
+     */
     public static Comparator<RecurringMove> REMINDER_COMPARATOR = Comparator.comparing(RecurringMove::getInitialDate)
             .thenComparing(RecurringMove::getConcept);
 
+    /**
+     * Guarda una colección de recordatorios recurrentes dentro de un archivo JSON.
+     *
+     * @param recurrentsList Lista ordenada de {@link RecurringMove} a guardar.
+     */
     public static void saveReminders(TreeSet<RecurringMove> recurrentsList) {
         JSONArray arr = new JSONArray();
 
@@ -43,6 +64,12 @@ public class RecurringJSONHandler {
         }
     }
 
+    /**
+     * Carga los recordatorios recurrentes almacenados en el archivo JSON.
+     *
+     * @return Un {@link TreeSet} ordenado mediante {@link #REMINDER_COMPARATOR}
+     *         conteniendo todos los objetos {@link RecurringMove} cargados.
+     */
     public static TreeSet<RecurringMove> loadReminders() {
         TreeSet<RecurringMove> recMoves = new TreeSet<>(REMINDER_COMPARATOR);
         StringBuilder jsonText = new StringBuilder();
@@ -62,6 +89,7 @@ public class RecurringJSONHandler {
                 BigDecimal amount = obj.getBigDecimal("amount");
                 String description = obj.getString("description");
                 String initialDateStr = obj.getString("initialDate");
+
                 RecurrenceType recurrence;
                 try {
                     recurrence = RecurrenceType.valueOf(obj.optString("recurrence", "NONE"));
