@@ -12,16 +12,41 @@ import java.util.TreeSet;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+/**
+ * Clase utilitaria para manejar la carga y guardado de recordatorios en un
+ * archivo JSON.
+ * 
+ * <p>
+ * Esta clase no puede ser instanciada ya que únicamente ofrece métodos
+ * estáticos para la persistencia de objetos {@link Reminder}.
+ * </p>
+ */
 public class ReminderJSONHandler {
+
+    /**
+     * Constructor privado para evitar la creación de instancias.
+     */
     private ReminderJSONHandler() {
     }
 
+    /** Nombre del archivo JSON donde se almacenan los recordatorios. */
     private static final String FILE_NAME = "reminders.json";
+
+    /** Formato de fecha utilizado para guardar y leer fechas en el archivo JSON. */
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-    // Ordenando a los recordatorios primero por su fecha, luego por su nombre
+
+    /**
+     * Comparador para ordenar los recordatorios primero por su fecha,
+     * y luego por su nombre.
+     */
     public static Comparator<Reminder> REMINDER_COMPARATOR = Comparator.comparing(Reminder::getDate)
             .thenComparing(Reminder::getName);
 
+    /**
+     * Guarda la lista de recordatorios en un archivo JSON.
+     * 
+     * @param remindersList Conjunto ordenado de recordatorios que serán guardados.
+     */
     public static void saveReminders(TreeSet<Reminder> remindersList) {
         JSONArray arr = new JSONArray();
 
@@ -40,6 +65,12 @@ public class ReminderJSONHandler {
         }
     }
 
+    /**
+     * Carga los recordatorios desde el archivo JSON.
+     * 
+     * @return Un {@link TreeSet} con los recordatorios cargados, ordenados
+     *         por fecha y nombre.
+     */
     public static TreeSet<Reminder> loadReminders() {
         TreeSet<Reminder> reminders = new TreeSet<>(REMINDER_COMPARATOR);
         StringBuilder jsonText = new StringBuilder();
