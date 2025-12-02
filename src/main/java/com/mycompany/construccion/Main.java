@@ -1,14 +1,9 @@
 package com.mycompany.construccion;
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
-import controllerReport.ReportController;
-import modelReport.JSONControllerPersistence;
-import modelReport.ReportGenerator;
-import modelReport.ReportSubject;
+import reports.controllerReport.ReportController;
+import reports.modelReport.JSONControllerPersistence;
+import reports.modelReport.ReportGenerator;
+import reports.modelReport.ReportSubject;
 
 /**
  *
