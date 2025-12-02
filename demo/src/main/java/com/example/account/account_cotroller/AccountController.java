@@ -25,8 +25,7 @@ public class AccountController implements AccountObserver{
     }
 
     private void AssignEvents(){
-
-        this.view.getBtnAccessAccount().addActionListener(e -> {
+this.view.getBtnAccessAccount().addActionListener(e -> {
             int selectedIndex = view.getListAccounts().getSelectedIndex();
             
             if (selectedIndex < 0){
@@ -47,6 +46,7 @@ public class AccountController implements AccountObserver{
             accessAccount(selectedAccount);
         });
 
+        
         this.view.getBtnAddAccount().addActionListener(e -> {
 
             String name = view.getAccountName();
