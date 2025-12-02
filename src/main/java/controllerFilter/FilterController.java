@@ -5,11 +5,9 @@
 package controllerFilter;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import javax.swing.table.DefaultTableModel;
 import modelFilter.FilterModel;
 import modelFilter.FilterObserver;
-import modelFilter.FilterSubject;
 import modelReport.Movement;
 import viewReport.FrmMain;
 
@@ -69,11 +67,11 @@ public class FilterController implements FilterObserver {
         tm.setRowCount(0);
 
         for (Movement m : filtered) {
-            tm.addRow(new Object[]{
-                m.getDescription(), // Nombre
-                m.getCategoryName(), // Type
-                m.getAmount(), // Amount
-                m.getDate().toLocalDate().toString() // Date
+            tm.addRow(new Object[] {
+                    m.getDescription(), // Nombre
+                    m.getCategoryName(), // Type
+                    m.getAmount(), // Amount
+                    m.getDate().toLocalDate().toString() // Date
             });
         }
     }

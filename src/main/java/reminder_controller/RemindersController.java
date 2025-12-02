@@ -4,6 +4,9 @@ import java.time.LocalDateTime;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import javax.swing.JOptionPane;
+
 import reminder_model.RemindersModel;
 import reminder_model.Reminder;
 import reminder_view.RemindersEditorView;
@@ -41,8 +44,11 @@ public class RemindersController {
      * periódica de vigilancia de recordatorios.
      */
     public RemindersController() {
-        remindersView.setVisible(true);
         scheduler.scheduleAtFixedRate(this::watchReminders, 0, 1, TimeUnit.SECONDS);
+    }
+
+    public void showRemindersView() {
+        remindersView.setVisible(true);
     }
 
     /**
@@ -74,8 +80,15 @@ public class RemindersController {
     private void triggerReminder(Reminder reminder) {
         reminder.setTriggered(true);
         javax.swing.SwingUtilities.invokeLater(() -> {
-            remindersView.showReminderAlert(reminder);
+            showReminderAlert(reminder);
         });
+    }
+
+    private void showReminderAlert(Reminder reminder) {
+        JOptionPane.showMessageDialog(remindersView,
+                reminder.getMessage(),
+                reminder.getName() + " - Recordatorio",
+                JOptionPane.INFORMATION_MESSAGE);
     }
 
     /**

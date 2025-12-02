@@ -4,7 +4,6 @@
  */
 package controllerReport;
 
-import java.time.LocalDate;
 import modelReport.Movement;
 import modelReport.ReportData;
 import modelReport.ReportGenerator;
@@ -31,32 +30,34 @@ public class ReportController implements ReportObserver {
         assignActions();
     }
 
-   private void assignActions() {
+    private void assignActions() {
 
-    view.btnToday.addMouseListener(new java.awt.event.MouseAdapter() {
-        @Override
-        public void mouseClicked(java.awt.event.MouseEvent e) {
-            reportGenerator.today();
-        }
-    });
+        view.btnToday.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                reportGenerator.today();
+            }
+        });
 
-    view.btnWeek.addMouseListener(new java.awt.event.MouseAdapter() {
-        @Override
-        public void mouseClicked(java.awt.event.MouseEvent e) {
-            reportGenerator.weekAgo();
-        }
-    });
+        view.btnWeek.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                reportGenerator.weekAgo();
+            }
+        });
 
-   /* view.btnCustom.addMouseListener(new java.awt.event.MouseAdapter() {
-        @Override
-        public void mouseClicked(java.awt.event.MouseEvent e) {
-            LocalDate s = LocalDate.parse(view.txtStartDate.getText());
-            LocalDate e2 = LocalDate.parse(view.txtEndDate.getText());
-            reportGenerator.selectPeriod(s, e2);
-        }
-    });*/
-}
-
+        /*
+         * view.btnCustom.addMouseListener(new java.awt.event.MouseAdapter() {
+         * 
+         * @Override
+         * public void mouseClicked(java.awt.event.MouseEvent e) {
+         * LocalDate s = LocalDate.parse(view.txtStartDate.getText());
+         * LocalDate e2 = LocalDate.parse(view.txtEndDate.getText());
+         * reportGenerator.selectPeriod(s, e2);
+         * }
+         * });
+         */
+    }
 
     @Override
     public void onNotify(ReportData data) {
@@ -82,7 +83,6 @@ public class ReportController implements ReportObserver {
 
         view.updateCharts(dataset);
 
-        
         DefaultCategoryDataset barDataset = new DefaultCategoryDataset();
 
         barDataset.addValue(income, "INCOME", "INCOME");

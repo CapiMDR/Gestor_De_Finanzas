@@ -89,13 +89,6 @@ public class RemindersView extends javax.swing.JFrame implements ReminderObserve
                 return row;
         }
 
-        public void showReminderAlert(Reminder reminder) {
-                JOptionPane.showMessageDialog(this,
-                                reminder.getMessage(),
-                                reminder.getName() + " - Recordatorio",
-                                JOptionPane.INFORMATION_MESSAGE);
-        }
-
         @SuppressWarnings("unchecked")
         // <editor-fold defaultstate="collapsed" desc="Generated
         // Code">//GEN-BEGIN:initComponents
@@ -120,8 +113,6 @@ public class RemindersView extends javax.swing.JFrame implements ReminderObserve
                 reminderTimeSpinner = new javax.swing.JSpinner();
                 jPanel7 = new javax.swing.JPanel();
                 addBTN = new javax.swing.JButton();
-
-                setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
                 jPanel2.setBackground(new java.awt.Color(246, 107, 14));
 
