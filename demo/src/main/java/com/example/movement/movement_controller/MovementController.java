@@ -117,7 +117,7 @@ public class MovementController implements MovementObserver{
         accountManager.getSubject().notifyObservers(accountManager.getAccounts());
         model.notifyObservers();
     }
-
+    
     private void loadInitialData() {
         view.getTxtAccountIncome().setText(currentAccount.getName());
         view.getTxtAccountExpense().setText(currentAccount.getName());

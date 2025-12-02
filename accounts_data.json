@@ -1,33 +1,51 @@
-[{
-  "initialBalance": 1200,
-  "name": "Canelo cuenta",
-  "movements": [
-    {
-      "date": "2025-11-29T17:42:56.930",
-      "categoryType": "INCOME",
-      "amount": "200",
-      "description": "sii",
-      "idMovement": 1,
-      "categoryName": "Salario"
-    },
-    {
-      "date": "2025-11-30T17:43:13.408",
-      "categoryType": "EXPENSE",
-      "amount": "400",
-      "description": "chale",
-      "idMovement": 2,
-      "categoryName": "Comida"
-    },
-    {
-      "date": "2025-11-30T00:00",
-      "categoryType": "EXPENSE",
-      "amount": "50",
-      "description": "1234",
-      "idMovement": 1,
-      "categoryName": "Canelo comida"
-    }
-  ],
-  "id": 2,
-  "type": "DIGITAL",
-  "coin": "MXN"
-}]
+[
+  {
+    "initialBalance": 1200,
+    "name": "Canelo cuenta",
+    "movements": [
+      {
+        "date": "2025-11-29T17:42:56.930",
+        "categoryType": "INCOME",
+        "amount": "200",
+        "description": "sii",
+        "idMovement": 1,
+        "categoryName": "Salario"
+      },
+      {
+        "date": "2025-11-30T17:43:13.408",
+        "categoryType": "EXPENSE",
+        "amount": "400",
+        "description": "chale",
+        "idMovement": 2,
+        "categoryName": "Comida"
+      },
+      {
+        "date": "2025-11-30T00:00",
+        "categoryType": "EXPENSE",
+        "amount": "50",
+        "description": "1234",
+        "idMovement": 1,
+        "categoryName": "Canelo comida"
+      }
+    ],
+    "id": 2,
+    "type": "DIGITAL",
+    "coin": "MXN"
+  },
+  {
+    "initialBalance": 1000,
+    "name": "mau",
+    "movements": [],
+    "id": 3,
+    "type": "DIGITAL",
+    "coin": "MXN"
+  },
+  {
+    "initialBalance": 50,
+    "name": "pablo",
+    "movements": [],
+    "id": 4,
+    "type": "CASH",
+    "coin": "USD"
+  }
+]

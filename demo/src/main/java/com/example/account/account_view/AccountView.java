@@ -40,7 +40,7 @@ public class AccountView extends javax.swing.JFrame {
         listAccounts = new javax.swing.JList<>();
         btnEditAccount = new javax.swing.JButton();
         btnDeleteAccount = new javax.swing.JButton();
-        btnDeleteAccount1 = new javax.swing.JButton();
+        btnAccessAccount = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         lblTittle = new javax.swing.JLabel();
 
@@ -229,11 +229,11 @@ public class AccountView extends javax.swing.JFrame {
         btnDeleteAccount.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/example/images/image 25.png"))); // NOI18N
         btnDeleteAccount.setBorder(null);
 
-        btnDeleteAccount1.setBackground(new java.awt.Color(32, 83, 117));
-        btnDeleteAccount1.setFont(new java.awt.Font("Inter", 1, 28)); // NOI18N
-        btnDeleteAccount1.setForeground(new java.awt.Color(239, 239, 239));
-        btnDeleteAccount1.setText("Entrar");
-        btnDeleteAccount1.setBorder(null);
+        btnAccessAccount.setBackground(new java.awt.Color(32, 83, 117));
+        btnAccessAccount.setFont(new java.awt.Font("Inter", 1, 28)); // NOI18N
+        btnAccessAccount.setForeground(new java.awt.Color(239, 239, 239));
+        btnAccessAccount.setText("Entrar");
+        btnAccessAccount.setBorder(null);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -247,7 +247,7 @@ public class AccountView extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnDeleteAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(btnDeleteAccount1, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btnAccessAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 449, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(27, Short.MAX_VALUE))
         );
@@ -260,7 +260,7 @@ public class AccountView extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnEditAccount, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnDeleteAccount, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnDeleteAccount1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnAccessAccount, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(41, 41, 41))
         );
 
@@ -369,7 +369,7 @@ public class AccountView extends javax.swing.JFrame {
     // Variables declaration - do not modify                     
     public javax.swing.JButton btnAddAccount;
     private javax.swing.JButton btnDeleteAccount;
-    private javax.swing.JButton btnDeleteAccount1;
+    private javax.swing.JButton btnAccessAccount;
     private javax.swing.JButton btnEditAccount;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -390,6 +390,10 @@ public class AccountView extends javax.swing.JFrame {
     public javax.swing.JTextField txtInitialBalance;
     public javax.swing.JTextField txtNameAccount;
     // End of variables declaration     
+
+    public javax.swing.JButton getBtnAccessAccount(){
+        return btnAccessAccount;
+    }
     
     public javax.swing.JButton getBtnAddAccount() {
         return btnAddAccount;

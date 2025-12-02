@@ -25,6 +25,11 @@ public class AccountController implements AccountObserver{
     }
 
     private void AssignEvents(){
+
+        this.view.getBtnAccessAccount().addActionListener(e -> {
+            accessAccount();
+        });
+
         this.view.getBtnAddAccount().addActionListener(e -> {
 
             String name = view.getAccountName();
@@ -188,6 +193,11 @@ public class AccountController implements AccountObserver{
                 "Error inesperado al editar la cuenta: " + ex.getMessage(), 
                 "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    public void accessAccount(){
+        //mau aquí llamo a tu coso
+        System.out.println("accediendo al módulo de mau");
     }
 
    @Override
