@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 controllerFilter\FilterController.class
 com\mycompany\construccion\FrmMain.class
 viewReport\FrmMain$1.class
@@ -15,3 +16,14 @@ modelReport\JSONControllerPersistence.class
 modelReport\ReportGenerator.class
 com\mycompany\construccion\Main.class
 modelReport\ReportData.class
+=======
+reminder_view\RemindersEditorView.class
+reminder_controller\RemindersController.class
+reminder_view\RemindersModule.class
+reminder_model\RemindersModel.class
+reminder_view\RemindersView.class
+reminder_model\ReminderObserver.class
+reminder_model\Reminder.class
+reminder_model\ReminderJSONHandler.class
+reminder_view\RemindersView$1.class
+>>>>>>> reminders-module
