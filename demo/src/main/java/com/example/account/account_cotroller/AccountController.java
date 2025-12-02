@@ -27,7 +27,24 @@ public class AccountController implements AccountObserver{
     private void AssignEvents(){
 
         this.view.getBtnAccessAccount().addActionListener(e -> {
-            accessAccount();
+            int selectedIndex = view.getListAccounts().getSelectedIndex();
+            
+            if (selectedIndex < 0){
+                JOptionPane.showMessageDialog(view, 
+                    "Debe seleccionar una cuenta para acceder a ella", 
+                    "Advertencia", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            Account selectedAccount = model.getAccountByIndex(selectedIndex);
+
+            if (selectedAccount == null){
+                JOptionPane.showMessageDialog(view, 
+                    "Error al acceder la cuenta seleccionada. Intente de nuevo.", 
+                    "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            accessAccount(selectedAccount);
         });
 
         this.view.getBtnAddAccount().addActionListener(e -> {
@@ -195,7 +212,7 @@ public class AccountController implements AccountObserver{
         }
     }
 
-    public void accessAccount(){
+    public void accessAccount(Account selectedAccount){
         //mau aquí llamo a tu coso
         System.out.println("accediendo al módulo de mau");
     }

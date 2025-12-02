@@ -9,7 +9,7 @@ import com.example.account.account_view.AccountView;
 public class Main {
 
     public static void main(String args[]) {
-        JsonDataHandler dataHandler = new JsonDataHandler(); 
+        JsonDataHandler dataHandler = new JsonDataHandler();
         AccountManagerSubject subject = new AccountManagerSubject();
         AccountManager model = new AccountManager(subject, dataHandler);
 
