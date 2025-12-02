@@ -1,9 +1,10 @@
 package com.example.account.account_model;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-
 import com.example.movement.movement_model.Movement;
+import com.example.goals.goals_model.Goal; 
 
 public class Account {
 
@@ -23,7 +24,10 @@ public class Account {
     private Coin coin;
     private BigDecimal initialBalance;
     private BigDecimal currentBalance;
+    
+    // Lists
     private List<Movement> movements;
+    private List<Goal> goals;
 
     public Account(int id, String name, AccountType type, Coin coin, BigDecimal initialBalance) {
         this.id = id;
@@ -33,6 +37,7 @@ public class Account {
         this.initialBalance = initialBalance;
         this.currentBalance = initialBalance;
         this.movements = new ArrayList<>();
+        this.goals = new ArrayList<>(); //Initialize goals
     }
 
     public void updateBalance(BigDecimal currentBalance){
@@ -55,10 +60,20 @@ public class Account {
         }
     }
 
-    //getters, setters  and toString method
+    //Getters and Setters
+
     public List<Movement> getMovements() {
         return movements;
     }
+    
+    public List<Goal> getGoals() {
+        return goals;
+    }
+
+    public void setGoals(List<Goal> goals) {
+        this.goals = goals;
+    }
+
     public BigDecimal getInitialBalance() {
         return initialBalance;
     }
@@ -67,7 +82,7 @@ public class Account {
         return currentBalance;
     }
     
-        public int getId() {
+    public int getId() {
         return id;
     }
 
@@ -94,10 +109,10 @@ public class Account {
     public void setCoin(Coin coin) {
         this.coin = coin;
     }
+    
     public void setMovements(List<Movement> movements) {
         this.movements = movements;
     }
-
 
     @Override
     public String toString() {
@@ -105,10 +120,4 @@ public class Account {
                 + ", getId()=" + getId() + ", getName()=" + getName() + ", getType()=" + getType() + ", getCoin()="
                 + getCoin() + "]";
     }
-
-    
-
-    
-    
-        
 }

@@ -1,13 +1,19 @@
 package com.example.movement.movement_controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JButton;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.example.account.account_model.Account;
 import com.example.account.account_model.Account.AccountType;
@@ -20,8 +26,9 @@ import com.example.movement.movement_model.MovementCategory;
 import com.example.movement.movement_model.MovementCategory.MovementType;
 import com.example.movement.movement_model.MovementManager;
 import com.example.movement.movement_model.MovementManagerSubject;
+import com.example.movement.movement_view.MovementManagerView;
 
-class TestDataHandlerStub extends JsonDataHandler{
+class TestDataHandlerStub extends JsonDataHandler {
     public List<Account> inMemoryAccounts = new ArrayList<>();
     public int saveCallCount = 0;
 
@@ -41,12 +48,12 @@ class TestDataHandlerStub extends JsonDataHandler{
     }
 }
 
-class TestMovementManagerStub extends MovementManager{
+class TestMovementManagerStub extends MovementManager {
     private int addMovementCallCount = 0;
     private List<Movement> movements = new ArrayList<>();
     
-    public TestMovementManagerStub(MovementManagerSubject subject){
-        super(subject);
+    public TestMovementManagerStub(MovementManagerSubject subject, JsonDataHandler dataHandler){
+        super(subject, dataHandler);
     }
 
     @Override
@@ -65,6 +72,7 @@ class TestMovementManagerStub extends MovementManager{
     }
 }
 
+@ExtendWith(MockitoExtension.class)
 public class MovementControllerTest {
     
     private TestDataHandlerStub dataHandlerStub;
@@ -74,25 +82,37 @@ public class MovementControllerTest {
     private MovementManagerSubject movementSubject;
     private TestMovementManagerStub movementManagerStub;
     
+    @Mock
+    private MovementManagerView view;
+    
+    @Mock private JButton btnAddIncome;
+    @Mock private JButton btnAddExpense;
+    @Mock private JButton btnAddCategoryIncome;
+    @Mock private JButton btnAddCategoryExpense;
+
     private MovementController controller;
     private Account testAccount;
     private MovementCategory incomeCategory;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         dataHandlerStub = new TestDataHandlerStub();
         accountSubject = new AccountManagerSubject();
-
         accountManager = new AccountManager(accountSubject, dataHandlerStub); 
         
         movementSubject = new MovementManagerSubject();
-        movementManagerStub = new TestMovementManagerStub(movementSubject);
+        movementManagerStub = new TestMovementManagerStub(movementSubject, dataHandlerStub);
         
-        controller = new MovementController(movementManagerStub, accountManager);
+        lenient().when(view.getBtnAddIncome()).thenReturn(btnAddIncome);
+        lenient().when(view.getBtnAddExpense()).thenReturn(btnAddExpense);
+        lenient().when(view.getBtnAddCategoryIncome()).thenReturn(btnAddCategoryIncome);
+        lenient().when(view.getBtnAddCategoryExpense()).thenReturn(btnAddCategoryExpense);
         
         testAccount = new Account(1, "Test Account", AccountType.CASH, Coin.USD, new BigDecimal("100.00"));
         accountManager.getAccounts().add(testAccount);
         incomeCategory = new MovementCategory("Salary", MovementType.INCOME);
+
+        controller = new MovementController(movementManagerStub, accountManager, view, testAccount);
     }
 
     @Test
@@ -101,15 +121,13 @@ public class MovementControllerTest {
         BigDecimal expectedBalance = new BigDecimal("600.00");
         
         dataHandlerStub.saveCallCount = 0; 
-        
-        controller.addMovement("Test Income", movementAmount, incomeCategory, testAccount);
 
-        assertEquals(expectedBalance, testAccount.getCurrentBalance(), "balance must be 600.00");
-        assertEquals(1, testAccount.getMovements().size(), "The account must have 1 associated transaction");
+        controller.addMovement("Test Income", movementAmount, incomeCategory, testAccount, java.time.LocalDateTime.now());
+
+        assertEquals(expectedBalance, testAccount.getCurrentBalance(), "El balance debe ser 600.00");
+        assertEquals(1, testAccount.getMovements().size(), "La cuenta debe tener 1 movimiento asociado");
         
-        assertEquals(1, movementManagerStub.getAddMovementCallCount(), "The MovementController must call addMovement once in the MovementManager");
-            
-        assertEquals(1, dataHandlerStub.getSaveCallCount(), "There must be 1 call to saveAccountsData() in AccountManager");
-        
+        assertEquals(1, movementManagerStub.getAddMovementCallCount(), "El controlador debe llamar a addMovement en el manager");
+        assertEquals(1, dataHandlerStub.getSaveCallCount(), "Debe haber 1 llamada a saveAccountsData");
     }
 }

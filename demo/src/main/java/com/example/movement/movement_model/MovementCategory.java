@@ -26,7 +26,4 @@ public class MovementCategory {
     public String toString() {
         return "MovementCategory [name=" + name + ", type=" + type + "]";
     }
-
-    
-    
 }

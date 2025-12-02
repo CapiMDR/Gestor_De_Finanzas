@@ -10,7 +10,7 @@ public class MovementManager {
     private List<Movement> movements;
     private HashMap<String, MovementCategory> categories;
     private MovementManagerSubject subject;
-    private JsonDataHandler dataHandler;
+    protected JsonDataHandler dataHandler;
 
     public MovementManager(MovementManagerSubject subject, JsonDataHandler dataHandler){
     this.subject = subject;
@@ -72,6 +72,4 @@ public class MovementManager {
     public MovementManagerSubject getSubject() {
         return subject;
     }
-    
-    
 }
