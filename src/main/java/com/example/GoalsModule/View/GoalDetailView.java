@@ -97,7 +97,7 @@ public class GoalDetailView extends JDialog implements MovementObserver {
     }
 
     @Override
-    public void onNotify(List<Movement> movements, List<MovementCategory> categories) {
+    public void onNotify(List<MovementCategory> categories) {
         if (this.isVisible() && currentGoal != null) {
             showProgress(currentGoal); 
         }

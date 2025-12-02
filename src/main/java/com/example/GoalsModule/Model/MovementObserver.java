@@ -15,5 +15,5 @@ import com.example.MovementsModule.Model.MovementCategory;
  */
 
 public interface MovementObserver {
-    void onNotify(List<Movement> movements, List<MovementCategory> categories);
+    void onNotify(List<MovementCategory> categories);
 }

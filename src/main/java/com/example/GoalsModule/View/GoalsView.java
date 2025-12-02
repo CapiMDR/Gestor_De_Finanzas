@@ -190,9 +190,9 @@ public class GoalsView extends JPanel implements MovementObserver {
     }
 
     @Override
-    public void onNotify(List<Movement> movements, List<MovementCategory> categories) {
+    public void onNotify(List<MovementCategory> categories) {
         if (controller != null) {
-            controller.handleExternalUpdates(movements);
+            controller.handleExternalUpdates();
         }
     }
 

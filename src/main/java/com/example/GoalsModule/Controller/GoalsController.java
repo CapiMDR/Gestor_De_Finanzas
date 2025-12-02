@@ -7,6 +7,7 @@ import com.example.GoalsModule.View.GoalEditView;
 import com.example.GoalsModule.View.GoalActionListener;
 import com.example.GoalsModule.View.GoalsView;
 import com.example.MovementsModule.Model.Movement;
+import com.example.MovementsModule.Model.MovementCategory.MovementType;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -14,11 +15,11 @@ import javax.swing.JOptionPane;
 
 /**
  * Main Controller for the Goals Module.
- * Manages interaction between the split-screen Main View, Models, and Popups.
+ * Coordinates interaction between Views, Models, and Persistence.
+ * Implements GoalActionListener to handle events from Goal Cards.
  *
  * @author Jose Pablo Martinez
  */
-
 public class GoalsController implements GoalActionListener {
 
     private final GoalsView mainView;
@@ -37,22 +38,28 @@ public class GoalsController implements GoalActionListener {
         this.detailController = detailController;
         this.accountManager = accountManager;
 
-        //Add Button
         this.mainView.getBtnAddGoal().addActionListener(e -> handleAddGoalFromMainView());
-        //Card Actions
         this.mainView.setCardActionListener(this);
         this.mainView.setController(this);
     }
 
+    /**
+     * Sets the active account context and refreshes the view.
+     * @param account The selected account.
+     */
+
     public void setAccount(Account account) {
         this.currentAccount = account;
         if (currentAccount != null) {
-            // Set Currency Label based on Account
             String currency = "USD"; 
             if (currentAccount.getCoin() != null) {
                 currency = currentAccount.getCoin().toString(); 
             }
             mainView.setCurrencyLabel(currency);
+            
+            // Auto-fill account name in the form
+            String accName = (currentAccount.getName() != null) ? currentAccount.getName() : "Current Account";
+            mainView.setAccountName(accName);
             
             refreshView();
         }
@@ -64,34 +71,67 @@ public class GoalsController implements GoalActionListener {
         }
     }
 
-    //Goal management functionalities
+
+    /**
+     * Handles updates triggered by external modules (like Movements).
+     */
+
+    public void handleExternalUpdates() {
+        if (currentAccount != null) {
+            List<Movement> movements = currentAccount.getMovements(); 
+            recalculateGoalsProgress(currentAccount.getGoals(), movements);
+            accountManager.saveAll();
+            refreshView();
+            System.out.println("CONTROLLER: Goals refreshed based on external movements.");
+        }
+    }
+
+    private void recalculateGoalsProgress(List<Goal> goals, List<Movement> movements) {
+        for (Goal goal : goals) {
+        BigDecimal totalSaved = BigDecimal.ZERO;
+        for (Movement m : movements) {
+            if (m.getCategory().getType() == MovementType.EXPENSE && m.getDescription().equals(goal.getName())) {
+            totalSaved = totalSaved.add(m.getAmount());
+            }
+        }
+        goal.setCurrentAmount(totalSaved);
+        }
+    }
+
 
     private void handleAddGoalFromMainView() {
-        //Extract Data 
         String name = mainView.getGoalName();
         BigDecimal target = mainView.getTargetAmount();
         String desc = mainView.getDescription();
+
+        //Validate
         if (name.isEmpty() || target.compareTo(BigDecimal.ZERO) <= 0) {
-            JOptionPane.showMessageDialog(mainView, "Invalid data. Please check name and amount.");
+            JOptionPane.showMessageDialog(mainView, "Please enter a valid name and target amount.");
             return;
         }
-        createNewGoal(name, target, desc); //Tested with JUnit
+
+        createNewGoal(name, target, desc); //Testing in JUnit
         mainView.clearForm(); 
     }
 
-    //Public for Testing in JUnit
+    /**
+     * Creates a new goal and saves it to the account.
+     */
+
     public void createNewGoal(String name, BigDecimal target, String desc) {
         Goal newGoal = new Goal(name, target, desc);
         
         if (currentAccount != null) {
             currentAccount.getGoals().add(newGoal);
-            accountManager.saveAll(); // Persist
+            accountManager.saveAll(); // Persist to JSON
             refreshView();            // Update UI
         }
     }
 
+
     @Override
     public void onViewDetails(Goal goal) {
+        //Delegate visualization to the Detail Controller
         detailController.showDetails(goal);
     }
 
@@ -108,7 +148,6 @@ public class GoalsController implements GoalActionListener {
                  return;
             }
             
-            // Business Logic for Update
             goal.setName(newName);
             goal.setTargetAmount(newTarget);
             goal.setDescription(editView.getDescriptionInput());
@@ -117,13 +156,14 @@ public class GoalsController implements GoalActionListener {
             refreshView();
             editView.closeDialog();
         });
+        
         editView.showDialog();
     }
 
     @Override
     public void onDelete(Goal goal) {
         int confirm = JOptionPane.showConfirmDialog(mainView, 
-                "Delete goal: " + goal.getName() + "?", 
+                "Are you sure you want to delete: " + goal.getName() + "?", 
                 "Confirm Deletion", JOptionPane.YES_NO_OPTION);
         
         if (confirm == JOptionPane.YES_OPTION && currentAccount != null) {
@@ -131,9 +171,5 @@ public class GoalsController implements GoalActionListener {
             accountManager.saveAll();
             refreshView();
         }
-    }
-    
-    public void handleExternalUpdates(List<Movement> movements) {
-        refreshView();
     }
 }

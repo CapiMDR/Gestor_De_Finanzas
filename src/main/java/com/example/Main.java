@@ -56,7 +56,8 @@ public class Main {
         //Dummy dates
         myAccount.getGoals().add(new Goal("PC Gamer", new BigDecimal("25000.00"), "RTX 4090"));
         myAccount.getGoals().add(new Goal("Viaje Japón", new BigDecimal("80000.00"), "2026"));
-
+        
+        //GoalsModule
         GoalsView goalsView = new GoalsView();
         GoalEditView editView = new GoalEditView(frame);
         GoalDetailView detailView = new GoalDetailView(frame);
@@ -68,6 +69,7 @@ public class Main {
         
         goalsController.setAccount(myAccount);
 
+        //SettingsModule 
         SettingsManager settingsManager = new SettingsManager();
         SettingsView settingsView = new SettingsView();
         SettingsController settingsController = new SettingsController(settingsView, settingsManager);
