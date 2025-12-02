@@ -24,7 +24,7 @@ import accounts.account_model.Account.Coin;
 import movements.movement_controller.MovementController;
 import movements.movement_model.Movement;
 import movements.movement_model.MovementCategory;
-import movements.movement_model.MovementManager;
+import movements.movement_model.CategoryManager;
 import movements.movement_model.MovementManagerSubject;
 import movements.movement_model.MovementCategory.MovementType;
 import movements.movement_view.MovementManagerView;
@@ -49,7 +49,7 @@ class TestDataHandlerStub extends JsonDataHandler {
     }
 }
 
-class TestMovementManagerStub extends MovementManager {
+class TestMovementManagerStub extends CategoryManager {
     private int addMovementCallCount = 0;
     private List<Movement> movements = new ArrayList<>();
 

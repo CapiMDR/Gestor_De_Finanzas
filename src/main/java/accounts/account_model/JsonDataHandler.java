@@ -9,6 +9,7 @@ import movements.movement_model.MovementCategory.MovementType;
 
 import accounts.account_model.Account.AccountType;
 import accounts.account_model.Account.Coin;
+import goals.goals_model.Goal;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -20,6 +21,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 public class JsonDataHandler {
     private static final String FILE_PATH = "accounts_data.json";
@@ -40,6 +42,7 @@ public class JsonDataHandler {
             accountJson.put("initialBalance", account.getInitialBalance());
 
             accountJson.put("movements", movementsToJson(account.getMovements()));
+            accountJson.put("goals", goalsToJson(account.getGoals()));
 
             jsonArray.put(accountJson);
         }
@@ -60,6 +63,24 @@ public class JsonDataHandler {
 
             jsonArray.put(movementJson);
         }
+        return jsonArray;
+    }
+
+    // goals list to JSONArray
+    private JSONArray goalsToJson(List<Goal> goals){
+        JSONArray jsonArray = new JSONArray();
+
+        for (Goal goal : goals) {
+            JSONObject goalJson = new JSONObject();
+            goalJson.put("name", goal.getName());
+            goalJson.put("targetAmount", goal.getTargetAmount());
+            goalJson.put("amount", goal.getCurrentAmount());
+            goalJson.put("currentAmount", goal.getCurrentAmount());
+            goalJson.put("description", goal.getDescription());
+
+            jsonArray.put(goalJson);
+        }
+
         return jsonArray;
     }
 
@@ -96,7 +117,12 @@ public class JsonDataHandler {
 
             JSONArray movementsJson = accountJson.getJSONArray("movements");
             List<Movement> movements = jsonToMovements(movementsJson, account);
+
+            JSONArray goalsJson = accountJson.getJSONArray("goals");
+            List<Goal> goals = jsonToGoals(goalsJson);
+
             account.setMovements(movements);
+            account.setGoals(goals);
 
             BigDecimal balance = account.getInitialBalance();
             for (Movement mov : movements) {
@@ -114,13 +140,13 @@ public class JsonDataHandler {
         return accounts;
     }
 
-    // JSONArray to movemet list
+    // JSONArray to movement list
     private List<Movement> jsonToMovements(JSONArray movementsJson, Account account) {
         List<Movement> movements = new ArrayList<>();
-        for (int i = 0; i < movementsJson.length(); i++) {
+        for (int i = 0; i < movementsJson.length(); i++){
             JSONObject movementJson = movementsJson.getJSONObject(i);
 
-            int idMovement = movementJson.getInt("idMovement");
+            UUID idMovement = UUID.fromString(movementJson.getString("idMovement"));
             String description = movementJson.getString("description");
 
             String amountStr = movementJson.get("amount").toString();
@@ -139,6 +165,25 @@ public class JsonDataHandler {
         return movements;
     }
 
+    //JSONArray to goals list
+    private List<Goal> jsonToGoals(JSONArray goalsJson){
+        List<Goal> goals = new ArrayList<>();
+        for (int i = 0; i < goalsJson.length(); i++){
+            JSONObject goalJson = goalsJson.getJSONObject(i);
+
+            String name = goalJson.getString("name");
+            
+            String targetAmountStr = goalJson.get("targetAmount").toString();
+            BigDecimal targetAmount = new BigDecimal(targetAmountStr);
+
+            String description = goalJson.getString("description");
+
+            Goal goal = new Goal(name, targetAmount, description);
+
+            goals.add(goal);
+        }
+        return goals;
+    }
     // HashMap to categories
     public HashMap<String, MovementCategory> jsonToCategories(JSONArray jsonArray) {
         HashMap<String, MovementCategory> categories = new HashMap<>();

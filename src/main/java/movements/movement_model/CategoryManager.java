@@ -2,34 +2,21 @@ package movements.movement_model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import accounts.account_model.JsonDataHandler;
 
-public class MovementManager {
-    private List<Movement> movements;
+public class CategoryManager {
     private HashMap<String, MovementCategory> categories;
     private MovementManagerSubject subject;
     protected JsonDataHandler dataHandler;
 
-    public MovementManager(MovementManagerSubject subject, JsonDataHandler dataHandler) {
+    public CategoryManager(MovementManagerSubject subject, JsonDataHandler dataHandler) {
         this.subject = subject;
         this.dataHandler = dataHandler;
-        this.movements = new ArrayList<>();
         this.categories = dataHandler.loadCategories();
         if (this.categories == null) {
             this.categories = new HashMap<>();
         }
-    }
-
-    public void addMovement(Movement movement) {
-        movement.setIdMovement(generateUniqueId());
-        movements.add(movement);
-        notifyObservers();
-    }
-
-    private int generateUniqueId() {
-        return movements.size() > 0 ? movements.get(movements.size() - 1).getIdMovement() + 1 : 1;
     }
 
     public void addCategory(MovementCategory category) {
@@ -60,9 +47,6 @@ public class MovementManager {
         subject.notifyObservers(new ArrayList<>(categories.values()));
     }
 
-    public List<Movement> getMovements() {
-        return movements;
-    }
 
     public HashMap<String, MovementCategory> getCategories() {
         return categories;

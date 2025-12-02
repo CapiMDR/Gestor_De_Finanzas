@@ -5,7 +5,7 @@ import accounts.account_model.AccountManager;
 import accounts.account_model.AccountManagerSubject;
 import accounts.account_model.JsonDataHandler;
 import movements.movement_controller.MovementController;
-import movements.movement_model.MovementManager;
+import movements.movement_model.CategoryManager;
 import movements.movement_model.MovementManagerSubject;
 import movements.movement_view.MovementManagerView;
 
@@ -21,11 +21,11 @@ public class Main {
         // **ELIMINAR:** Account testAccount = new Account(1, "Braulio regalo", ...);
 
         // **NUEVO:** OBTENER LA CUENTA REAL DEL MODELO (AccountManager)
-        Account testAccount = accountModel.getAccountById(2);
+        Account testAccount = accountModel.getAccountById(1);
 
         // 3. CREACIÓN DEL MODELO DE MOVIMIENTOS
         MovementManagerSubject movementSubject = new MovementManagerSubject();
-        MovementManager movementModel = new MovementManager(
+        CategoryManager movementModel = new CategoryManager(
                 movementSubject,
                 testDataHandler);
 

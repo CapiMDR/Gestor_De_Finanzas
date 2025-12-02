@@ -13,13 +13,13 @@ import accounts.account_model.Account.AccountType;
 import accounts.account_model.Account.Coin;
 import movements.movement_model.Movement;
 import movements.movement_model.MovementCategory;
-import movements.movement_model.MovementManager;
+import movements.movement_model.CategoryManager;
 import movements.movement_model.MovementManagerSubject;
 import movements.movement_model.MovementCategory.MovementType;
 
 public class MovementManagerTest {
 
-    private MovementManager movementManager;
+    private CategoryManager movementManager;
     private MovementManagerSubject subject;
     private Account testAccount;
     private MovementCategory incomeCategory;
@@ -28,7 +28,7 @@ public class MovementManagerTest {
     @BeforeEach
     void setUp() {
         subject = new MovementManagerSubject();
-        movementManager = new MovementManager(subject, null);
+        movementManager = new CategoryManager(subject, null);
 
         testAccount = new Account(1, "Test Account", AccountType.CASH, Coin.USD, new BigDecimal("100.00"));
         incomeCategory = new MovementCategory("Salary", MovementType.INCOME);

@@ -166,7 +166,7 @@ public class MovementCategoriesView extends javax.swing.JFrame {
         btnDeleteCategory.setFont(new java.awt.Font("Inter", 1, 28)); // NOI18N
         btnDeleteCategory.setForeground(new java.awt.Color(255, 255, 255));
         btnDeleteCategory
-                .setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/example/images/image 25.png"))); // NOI18N
+                .setIcon(new javax.swing.ImageIcon(getClass().getResource("../../images/image 25.png"))); // NOI18N
         btnDeleteCategory.setBorder(null);
 
         listCategories.setBackground(new java.awt.Color(179, 65, 65));

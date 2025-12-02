@@ -2,20 +2,21 @@ package movements.movement_model;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import accounts.account_model.Account;
 
 public class Movement {
 
-    private int idMovement;
+    private UUID idMovement;
     private String description;
     private BigDecimal amount;
     private LocalDateTime date;
     private MovementCategory category;
     Account account;
 
-    public Movement(int idMovement, String description, BigDecimal amount, MovementCategory category, Account account) {
-        this.idMovement = idMovement;
+    public Movement(UUID idMovement, String description, BigDecimal amount, MovementCategory category, Account account) {
+        this.idMovement = UUID.randomUUID();
         this.description = description;
         this.amount = amount;
         this.category = category;
@@ -24,8 +25,7 @@ public class Movement {
     }
 
     // construct for load a JSON
-    public Movement(int idMovement, String description, BigDecimal amount, MovementCategory category, Account account,
-            LocalDateTime date) {
+    public Movement(UUID idMovement, String description, BigDecimal amount, MovementCategory category, Account account, LocalDateTime date) {
         this.idMovement = idMovement;
         this.description = description;
         this.amount = amount;
@@ -54,11 +54,11 @@ public class Movement {
         return account;
     }
 
-    public int getIdMovement() {
+    public UUID getIdMovement() {
         return idMovement;
     }
 
-    public void setIdMovement(int idMovement) {
+    public void setIdMovement(UUID idMovement) {
         this.idMovement = idMovement;
     }
 

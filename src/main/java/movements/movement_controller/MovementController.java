@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.swing.DefaultListModel;
@@ -14,20 +15,20 @@ import accounts.account_model.Account;
 import accounts.account_model.AccountManager;
 import movements.movement_model.Movement;
 import movements.movement_model.MovementCategory;
-import movements.movement_model.MovementManager;
+import movements.movement_model.CategoryManager;
 import movements.movement_model.MovementObserver;
 import movements.movement_model.MovementCategory.MovementType;
 import movements.movement_view.MovementCategoriesView;
 import movements.movement_view.MovementManagerView;
 
 public class MovementController implements MovementObserver {
-    private MovementManager model;
+    private CategoryManager model;
     private MovementManagerView view;
     private MovementCategoriesView categoriesManagerView;
     private AccountManager accountManager;
     private Account currentAccount;
 
-    public MovementController(MovementManager model, AccountManager accountManager, MovementManagerView view,
+    public MovementController(CategoryManager model, AccountManager accountManager, MovementManagerView view,
             Account currentAccount) {
         this.model = model;
         this.view = view;
@@ -108,13 +109,10 @@ public class MovementController implements MovementObserver {
         }
     }
 
-    public void addMovement(String description, BigDecimal amount, MovementCategory category, Account account,
-            LocalDateTime date) {
-        Movement movement = new Movement(model.getMovements().size(), description, amount, category, account, date);
+    public void addMovement(String description, BigDecimal amount, MovementCategory category, Account account, LocalDateTime date) {
+        Movement movement = new Movement(UUID.randomUUID(), description, amount, category, account, date);
 
         account.addMovement(movement);
-        model.addMovement(movement);
-
         accountManager.saveAccountsData();
 
         accountManager.getSubject().notifyObservers(accountManager.getAccounts());
