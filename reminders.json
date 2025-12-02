@@ -1,0 +1,17 @@
+[
+    {
+        "date": "2025-11-29T18:00",
+        "name": "Pagar gas",
+        "message": "No olvidar pagar gas"
+    },
+    {
+        "date": "2025-11-30T12:02",
+        "name": "Pagar agua",
+        "message": "No olvidar pagar agua"
+    },
+    {
+        "date": "2026-11-29T14:00",
+        "name": "Pago de coche",
+        "message": "Este recordatorio no ocurrirá"
+    }
+]
