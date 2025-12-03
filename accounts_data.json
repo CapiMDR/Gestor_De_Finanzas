@@ -20,7 +20,7 @@
     }
   ],
   "id": 1,
-  "type": "CASH",
+  "type": "DIGITAL",
   "coin": "MXN",
   "goals": [{
     "amount": -33276,

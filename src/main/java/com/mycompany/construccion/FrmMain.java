@@ -88,7 +88,7 @@ public class FrmMain extends javax.swing.JFrame {
                                 Image.SCALE_SMOOTH);
                 // Escalar la imagen
                 btnWeek.setIcon(new ImageIcon(imgWeek));
-              
+
                 // Credit
                 ImageIcon iconCredit = (ImageIcon) credit.getIcon();
                 Image imgCredit = iconCredit.getImage().getScaledInstance(
@@ -193,7 +193,6 @@ public class FrmMain extends javax.swing.JFrame {
                 btnWeek = new javax.swing.JLabel();
                 credit = new javax.swing.JLabel();
 
-                setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
                 setMinimumSize(new java.awt.Dimension(1012, 720));
                 setSize(new java.awt.Dimension(1012, 720));
 
