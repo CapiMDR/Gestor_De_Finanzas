@@ -3,6 +3,8 @@ package com.mycompany.construccion;
 import java.awt.BorderLayout;
 import java.awt.Image;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -12,6 +14,15 @@ import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 
+import accounts.account_model.Account;
+import accounts.account_model.AccountManager;
+import goals.GoalsModule;
+import goals.goals_controller.GoalDetailController;
+import goals.goals_controller.GoalsController;
+import goals.goals_view.GoalDetailView;
+import goals.goals_view.GoalEditView;
+import goals.goals_view.GoalsView;
+import movements.movement_view.MovementsModule;
 import recurringMoves.recurring_view.RecurringsModule;
 import reminders.reminder_view.RemindersModule;
 
@@ -25,13 +36,11 @@ import reminders.reminder_view.RemindersModule;
  * @author villa
  */
 public class FrmMain extends javax.swing.JFrame {
-
         /**
          * Creates new form FrmMain
          */
         public FrmMain() {
                 initComponents();
-
                 // Configuration
                 ImageIcon iconConfiguration = (ImageIcon) configuration.getIcon();
                 Image imgConfiguration = iconConfiguration.getImage().getScaledInstance(
@@ -733,93 +742,78 @@ public class FrmMain extends javax.swing.JFrame {
                                                                 javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
 
                 pack();
-        }// </editor-fold>//GEN-END:initComponents
+        }
 
-        private void configurationMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_configurationMouseClicked
-                // TODO add your handling code here:
+        private void configurationMouseClicked(java.awt.event.MouseEvent evt) {
                 System.out.println("Configuration");
-        }// GEN-LAST:event_configurationMouseClicked
+        }
 
-        private void configurationMouseEntered(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_configurationMouseEntered
-                // TODO add your handling code here:
+        private void configurationMouseEntered(java.awt.event.MouseEvent evt) {
                 configuration.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        }// GEN-LAST:event_configurationMouseEntered
+        }
 
-        private void goalMouseEntered(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_goalMouseEntered
-                // TODO add your handling code here:
+        private void goalMouseEntered(java.awt.event.MouseEvent evt) {
                 goal.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        }// GEN-LAST:event_goalMouseEntered
+        }
 
-        private void goalMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_goalMouseClicked
-                // TODO add your handling code here:
-                System.out.println("Goal");
-        }// GEN-LAST:event_goalMouseClicked
+        private void goalMouseClicked(java.awt.event.MouseEvent evt) {
+                int selectedIndex = 0;
+                System.out.println("Mostrando vista de metas");
+                GoalsModule.initGoals(selectedIndex);
+        }
 
-        private void notificationMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_notificationMouseClicked
+        private void notificationMouseClicked(java.awt.event.MouseEvent evt) {
                 RemindersModule.controller.showRemindersView();
-        }// GEN-LAST:event_notificationMouseClicked
+        }
 
-        private void notificationMouseEntered(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_notificationMouseEntered
-                // TODO add your handling code here:
+        private void notificationMouseEntered(java.awt.event.MouseEvent evt) {
                 notification.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        }// GEN-LAST:event_notificationMouseEntered
+        }
 
-        private void accountMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_accountMouseClicked
-                // TODO add your handling code here:
+        private void accountMouseClicked(java.awt.event.MouseEvent evt) {
                 System.out.println("Account");
-        }// GEN-LAST:event_accountMouseClicked
+        }
 
-        private void accountMouseEntered(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_accountMouseEntered
-                // TODO add your handling code here:
+        private void accountMouseEntered(java.awt.event.MouseEvent evt) {
                 account.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        }// GEN-LAST:event_accountMouseEntered
+        }
 
-        private void subscriptionMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_subscriptionMouseClicked
+        private void subscriptionMouseClicked(java.awt.event.MouseEvent evt) {
                 RecurringsModule.controller.showRecMovesView();
-        }// GEN-LAST:event_subscriptionMouseClicked
+        }
 
-        private void subscriptionMouseEntered(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_subscriptionMouseEntered
-                // TODO add your handling code here:
+        private void subscriptionMouseEntered(java.awt.event.MouseEvent evt) {
                 subscription.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        }// GEN-LAST:event_subscriptionMouseEntered
+        }
 
-        private void addMovementMouseEntered(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_addMovementMouseEntered
-                // TODO add your handling code here:
-
+        private void addMovementMouseEntered(java.awt.event.MouseEvent evt) {
                 addMovement.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        }// GEN-LAST:event_addMovementMouseEntered
+        }
 
-        private void addMovementMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_addMovementMouseClicked
-                // TODO add your handling code here:
-                System.out.println("Add movement");
-        }// GEN-LAST:event_addMovementMouseClicked
+        private void addMovementMouseClicked(java.awt.event.MouseEvent evt) {
+                MovementsModule.initMovements(1);
+        }
 
-        private void btnWeekMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_btnWeekMouseClicked
-                // TODO add your handling code here:
+        private void btnWeekMouseClicked(java.awt.event.MouseEvent evt) {
 
-        }// GEN-LAST:event_btnWeekMouseClicked
+        }
 
-        private void btnWeekMouseEntered(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_btnWeekMouseEntered
-                // TODO add your handling code here:
+        private void btnWeekMouseEntered(java.awt.event.MouseEvent evt) {
                 btnWeek.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        }// GEN-LAST:event_btnWeekMouseEntered
+        }
 
-        private void btnTodayMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_btnTodayMouseClicked
-                // TODO add your handling code here:
-        }// GEN-LAST:event_btnTodayMouseClicked
+        private void btnTodayMouseClicked(java.awt.event.MouseEvent evt) {
+        }
 
-        private void btnTodayMouseEntered(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_btnTodayMouseEntered
-                // TODO add your handling code here:
+        private void btnTodayMouseEntered(java.awt.event.MouseEvent evt) {
                 btnToday.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        }// GEN-LAST:event_btnTodayMouseEntered
+        }
 
-        private void creditMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_creditMouseClicked
-                // TODO add your handling code here:
-        }// GEN-LAST:event_creditMouseClicked
+        private void creditMouseClicked(java.awt.event.MouseEvent evt) {
+        }
 
-        private void creditMouseEntered(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_creditMouseEntered
-                // TODO add your handling code here:
-        }// GEN-LAST:event_creditMouseEntered
+        private void creditMouseEntered(java.awt.event.MouseEvent evt) {
+        }
 
         /**
          * @param args the command line arguments

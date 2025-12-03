@@ -1,8 +1,5 @@
 package goals.goals_view;
 
-import movements.movement_model.MovementCategory;
-import movements.movement_model.MovementObserver;
-
 import goals.goals_controller.GoalsController;
 import goals.goals_model.Goal;
 
@@ -22,7 +19,7 @@ import javax.swing.border.LineBorder;
  * @author Jose Pablo Martinez
  */
 
-public class GoalsView extends JPanel implements MovementObserver {
+public class GoalsView extends JPanel {
 
     private GoalsController controller;
     private JTextField txtName;
@@ -219,13 +216,6 @@ public class GoalsView extends JPanel implements MovementObserver {
         }
         cardsContainer.revalidate();
         cardsContainer.repaint();
-    }
-
-    @Override
-    public void onNotify(List<MovementCategory> categories) {
-        if (controller != null) {
-            controller.handleExternalUpdates();
-        }
     }
 
     // Inner Class

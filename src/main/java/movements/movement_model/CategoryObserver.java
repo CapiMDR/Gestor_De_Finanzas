@@ -2,6 +2,6 @@ package movements.movement_model;
 
 import java.util.List;
 
-public interface MovementObserver {
+public interface CategoryObserver {
     void onNotify(List<MovementCategory> categories);
 }

@@ -19,11 +19,9 @@ public class GoalEditView extends JDialog {
     private final JButton btnSave;
     private final JButton btnCancel;
 
-    public GoalEditView(JFrame parent) {
-        super(parent, "Gestionar Meta", true);
+    public GoalEditView() {
         this.setSize(400, 300);
         this.setLayout(new GridLayout(5, 2, 10, 10));
-        this.setLocationRelativeTo(parent);
 
         txtName = new JTextField();
         txtTargetAmount = new JTextField();

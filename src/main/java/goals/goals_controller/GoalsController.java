@@ -1,10 +1,11 @@
 package goals.goals_controller;
 
 import movements.movement_model.Movement;
-import movements.movement_model.MovementCategory.MovementType;
 
 import accounts.account_model.Account;
 import accounts.account_model.AccountManager;
+import accounts.account_model.AccountManagerSubject;
+import accounts.account_model.AccountObserver;
 import goals.goals_model.Goal;
 import goals.goals_view.GoalActionListener;
 import goals.goals_view.GoalEditView;
@@ -22,27 +23,25 @@ import javax.swing.JOptionPane;
  * @author Jose Pablo Martinez
  */
 
-public class GoalsController implements GoalActionListener {
+public class GoalsController implements GoalActionListener, AccountObserver {
 
     private final GoalsView mainView;
     private final GoalEditView editView;
     private final GoalDetailController detailController;
 
     private Account currentAccount;
-    private final AccountManager accountManager;
 
     public GoalsController(GoalsView mainView,
             GoalEditView editView,
-            GoalDetailController detailController,
-            AccountManager accountManager) {
+            GoalDetailController detailController) {
         this.mainView = mainView;
         this.editView = editView;
         this.detailController = detailController;
-        this.accountManager = accountManager;
 
         this.mainView.getBtnAddGoal().addActionListener(e -> handleAddGoalFromMainView());
         this.mainView.setCardActionListener(this);
         this.mainView.setController(this);
+        AccountManagerSubject.addObserver(this);
     }
 
     /**
@@ -64,7 +63,7 @@ public class GoalsController implements GoalActionListener {
             String accName = (currentAccount.getName() != null) ? currentAccount.getName() : "Current Account";
             mainView.setAccountName(accName);
 
-            refreshView();
+            onNotify(AccountManager.getAccounts());
         }
     }
 
@@ -77,18 +76,18 @@ public class GoalsController implements GoalActionListener {
     /**
      * Handles updates triggered by external modules (like Movements).
      */
+    @Override
+    public void onNotify(List<Account> accountsList) {
+        if (currentAccount == null)
+            return;
 
-    public void handleExternalUpdates() {
-        if (currentAccount != null) {
-            List<Movement> movements = currentAccount.getMovements();
-            recalculateGoalsProgress(currentAccount.getGoals(), movements);
+        List<Movement> movements = currentAccount.getMovements();
+        recalculateGoalsProgress(currentAccount.getGoals(), movements);
 
-            // Corrected method name: saveAccountsData() instead of saveAll()
-            accountManager.saveAccountsData();
-
-            refreshView();
-            System.out.println("CONTROLLER: Goals refreshed based.");
-        }
+        // Guardando cuentas de nuevo con los cambios calculados en las metas
+        AccountManager.saveAccountsData();
+        refreshView();
+        System.out.println("CONTROLLER: Goals refreshed based.");
     }
 
     /**
@@ -102,11 +101,7 @@ public class GoalsController implements GoalActionListener {
 
             if (movements != null) {
                 for (Movement m : movements) {
-                    // If it's an EXPENSE and description matches Goal Name, add to saved amount
-                    if (m.getCategory().getType() == MovementType.EXPENSE &&
-                            m.getDescription().equalsIgnoreCase(goal.getName())) {
-                        totalSaved = totalSaved.add(m.getAmount());
-                    }
+                    totalSaved = totalSaved.add(m.getAmount());
                 }
             }
             goal.setCurrentAmount(totalSaved);
@@ -133,7 +128,7 @@ public class GoalsController implements GoalActionListener {
 
         if (currentAccount != null) {
             currentAccount.getGoals().add(newGoal);
-            accountManager.saveAccountsData();
+            AccountManager.saveAccountsData();
             refreshView();
         }
     }
@@ -162,7 +157,7 @@ public class GoalsController implements GoalActionListener {
             goal.setDescription(editView.getDescriptionInput());
 
             // Corrected method name: saveAccountsData()
-            accountManager.saveAccountsData();
+            AccountManager.saveAccountsData();
             refreshView();
             editView.closeDialog();
         });
@@ -178,7 +173,7 @@ public class GoalsController implements GoalActionListener {
 
         if (confirm == JOptionPane.YES_OPTION && currentAccount != null) {
             currentAccount.getGoals().remove(goal);
-            accountManager.saveAccountsData();
+            AccountManager.saveAccountsData();
             refreshView();
         }
     }

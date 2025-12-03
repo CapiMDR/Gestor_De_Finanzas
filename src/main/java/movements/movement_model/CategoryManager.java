@@ -35,18 +35,17 @@ public class CategoryManager {
         return categories.get(name);
     }
 
-    public void addOserver(MovementObserver observer) {
+    public void addOserver(CategoryObserver observer) {
         subject.addObserver(observer);
     }
 
-    public void removeObserver(MovementObserver observer) {
+    public void removeObserver(CategoryObserver observer) {
         subject.removeObserver(observer);
     }
 
     public void notifyObservers() {
         subject.notifyObservers(new ArrayList<>(categories.values()));
     }
-
 
     public HashMap<String, MovementCategory> getCategories() {
         return categories;

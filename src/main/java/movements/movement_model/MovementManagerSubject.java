@@ -4,18 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MovementManagerSubject {
-    private List<MovementObserver> observers = new ArrayList<>();
+    private List<CategoryObserver> observers = new ArrayList<>();
 
-    public void addObserver(MovementObserver observer) {
+    public void addObserver(CategoryObserver observer) {
         observers.add(observer);
     }
 
-    public void removeObserver(MovementObserver observer) {
+    public void removeObserver(CategoryObserver observer) {
         observers.remove(observer);
     }
 
     public void notifyObservers(List<MovementCategory> categories) {
-        for (MovementObserver observer : observers) {
+        for (CategoryObserver observer : observers) {
             observer.onNotify(categories);
         }
     }

@@ -55,8 +55,6 @@ public class MovementManagerView extends javax.swing.JFrame {
                 jPanel6 = new javax.swing.JPanel();
                 lblTittle = new javax.swing.JLabel();
 
-                setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
                 jPanel2.setBackground(new java.awt.Color(245, 144, 68));
                 jPanel2.setForeground(new java.awt.Color(246, 107, 14));
 

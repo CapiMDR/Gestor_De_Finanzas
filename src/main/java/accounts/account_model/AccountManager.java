@@ -8,31 +8,26 @@ import accounts.account_model.Account.AccountType;
 import accounts.account_model.Account.Coin;
 
 public class AccountManager {
-    private List<Account> accounts = new ArrayList<>();
-    private AccountManagerSubject subject;
-    private JsonDataHandler dataHandler;
+    private static List<Account> accounts = new ArrayList<>();
+    private static JsonDataHandler dataHandler = new JsonDataHandler();
 
-    // public AccountManager(AccountManagerSubject subject){
-    // this.dataHandler = new JsonDataHandler();
-    // this.accounts = dataHandler.loadAccounts();
-    // this.subject = subject;
-    // }
+    private AccountManager(JsonDataHandler dataHandler) {
 
-    public AccountManager(AccountManagerSubject subject, JsonDataHandler dataHandler) {
-        this.dataHandler = dataHandler;
-        this.accounts = dataHandler.loadAccounts();
-        this.subject = subject;
     }
 
-    public void loadInitialData() {
+    public static void initAccountManager() {
+        accounts = dataHandler.loadAccounts();
+    }
+
+    public static void loadInitialData() {
         notifyObservers();
     }
 
-    public void saveAccountsData() {
+    public static void saveAccountsData() {
         dataHandler.saveAccounts(accounts);
     }
 
-    public void addAccount(String name, AccountType type, Coin coin, BigDecimal initialBalace) {
+    public static void addAccount(String name, AccountType type, Coin coin, BigDecimal initialBalace) {
         Account newAccount = new Account(generateUniqueId(), name, type, coin, initialBalace);
 
         accounts.add(newAccount);
@@ -40,13 +35,13 @@ public class AccountManager {
         notifyObservers();
     }
 
-    public void removeAccount(int id) {
+    public static void removeAccount(int id) {
         accounts.removeIf(account -> account.getId() == id);
         saveAccountsData();
         notifyObservers();
     }
 
-    public void editAccount(Account account, String name, AccountType type, Coin coin) {
+    public static void editAccount(Account account, String name, AccountType type, Coin coin) {
         account.setName(name);
         account.setType(type);
         account.setCoin(coin);
@@ -54,7 +49,7 @@ public class AccountManager {
         notifyObservers();
     }
 
-    private int generateUniqueId() {
+    private static int generateUniqueId() {
         int maxId = 0;
         for (Account account : accounts) {
             if (account.getId() > maxId) {
@@ -64,38 +59,35 @@ public class AccountManager {
         return maxId + 1;
     }
 
-    public Account getAccountByIndex(int index) {
+    public static Account getAccountByIndex(int index) {
+        System.out.println(accounts.size());
         if (index >= 0 && index < accounts.size()) {
             return accounts.get(index);
         }
         return null;
     }
 
-    public Account getAccountById(int id) {
+    public static Account getAccountById(int id) {
         return accounts.stream()
                 .filter(a -> a.getId() == id)
                 .findFirst()
                 .orElse(null);
     }
 
-    public void addObserver(AccountObserver observer) {
-        subject.addObserver(observer);
+    public static void addObserver(AccountObserver observer) {
+        AccountManagerSubject.addObserver(observer);
     }
 
-    public void removeObserver(AccountObserver observer) {
-        subject.removeObserver(observer);
+    public static void removeObserver(AccountObserver observer) {
+        AccountManagerSubject.removeObserver(observer);
     }
 
-    private void notifyObservers() {
-        subject.notifyObservers(accounts);
+    private static void notifyObservers() {
+        AccountManagerSubject.notifyObservers(accounts);
     }
 
-    public List<Account> getAccounts() {
+    public static List<Account> getAccounts() {
         return accounts;
-    }
-
-    public AccountManagerSubject getSubject() {
-        return subject;
     }
 
 }

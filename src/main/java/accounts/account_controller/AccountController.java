@@ -14,13 +14,11 @@ import accounts.account_view.AccountEditView;
 import accounts.account_view.AccountView;
 
 public class AccountController implements AccountObserver {
-    private AccountManager model;
     private AccountView view;
 
-    public AccountController(AccountManager model, AccountView view) {
-        this.model = model;
+    public AccountController(AccountView view) {
         this.view = view;
-        this.model.addObserver(this);
+        AccountManager.addObserver(this);
         AssignEvents();
     }
 
@@ -48,7 +46,7 @@ public class AccountController implements AccountObserver {
                 Account.AccountType type = Account.AccountType.valueOf(typeString.toUpperCase());
                 Account.Coin coin = Account.Coin.valueOf(coinStr.toUpperCase());
 
-                model.addAccount(name, type, coin, balance);
+                AccountManager.addAccount(name, type, coin, balance);
 
                 JOptionPane.showMessageDialog(view,
                         "Cuenta agregada exitosamente.",
@@ -77,7 +75,7 @@ public class AccountController implements AccountObserver {
                 return;
             }
 
-            Account selectedAccount = model.getAccountByIndex(selectedIndex);
+            Account selectedAccount = AccountManager.getAccountByIndex(selectedIndex);
 
             if (selectedAccount == null) {
                 JOptionPane.showMessageDialog(view,
@@ -91,7 +89,7 @@ public class AccountController implements AccountObserver {
                     "Confirmar Eliminación", JOptionPane.YES_NO_OPTION);
 
             if (dialogResult == JOptionPane.YES_OPTION) {
-                model.removeAccount(selectedAccount.getId());
+                AccountManager.removeAccount(selectedAccount.getId());
 
                 JOptionPane.showMessageDialog(view,
                         "Cuenta '" + selectedAccount.getName() + "' eliminada exitosamente.",
@@ -109,7 +107,7 @@ public class AccountController implements AccountObserver {
                 return;
             }
 
-            Account accountToEdit = model.getAccountByIndex(selectedIndex);
+            Account accountToEdit = AccountManager.getAccountByIndex(selectedIndex);
             if (accountToEdit != null) {
                 showEditForm(accountToEdit);
             } else {
@@ -121,15 +119,15 @@ public class AccountController implements AccountObserver {
     }
 
     public void addAccount(String name, AccountType type, Coin coin, BigDecimal balance) {
-        model.addAccount(name, type, coin, balance);
+        AccountManager.addAccount(name, type, coin, balance);
     }
 
     public void removeAccount(int idAccount) {
-        model.removeAccount(idAccount);
+        AccountManager.removeAccount(idAccount);
     }
 
     public void editAccount(Account account, String name, AccountType type, Coin coin) {
-        model.editAccount(account, name, type, coin);
+        AccountManager.editAccount(account, name, type, coin);
     }
 
     private void clearInputFields() {
@@ -179,7 +177,7 @@ public class AccountController implements AccountObserver {
             Account.AccountType newType = Account.AccountType.valueOf(newTypeStr.toUpperCase());
             Account.Coin newCoin = Account.Coin.valueOf(newCoinStr.toUpperCase());
 
-            model.editAccount(accountToEdit, newName, newType, newCoin);
+            AccountManager.editAccount(accountToEdit, newName, newType, newCoin);
 
             editView.dispose();
             JOptionPane.showMessageDialog(view,

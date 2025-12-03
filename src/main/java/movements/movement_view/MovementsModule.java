@@ -1,27 +1,23 @@
-package movements;
+package movements.movement_view;
 
 import accounts.account_model.Account;
 import accounts.account_model.AccountManager;
-import accounts.account_model.AccountManagerSubject;
 import accounts.account_model.JsonDataHandler;
 import movements.movement_controller.MovementController;
 import movements.movement_model.CategoryManager;
 import movements.movement_model.MovementManagerSubject;
-import movements.movement_view.MovementManagerView;
 
-public class Main {
-    public static void main(String[] args) {
+public class MovementsModule {
+    public static void initMovements(int accountID) {
 
         // 1. SIMULACIÓN DE DEPENDENCIAS GLOBALES (AccountManager)
         JsonDataHandler testDataHandler = new JsonDataHandler();
-        AccountManagerSubject accountSubject = new AccountManagerSubject();
-        AccountManager accountModel = new AccountManager(accountSubject, testDataHandler);
 
         // 2. CREACIÓN DE LA CUENTA DE PRUEBA (Contexto)
         // **ELIMINAR:** Account testAccount = new Account(1, "Braulio regalo", ...);
 
         // **NUEVO:** OBTENER LA CUENTA REAL DEL MODELO (AccountManager)
-        Account testAccount = accountModel.getAccountById(1);
+        Account testAccount = AccountManager.getAccountById(accountID);
 
         // 3. CREACIÓN DEL MODELO DE MOVIMIENTOS
         MovementManagerSubject movementSubject = new MovementManagerSubject();
@@ -37,7 +33,6 @@ public class Main {
         // Ahora pasamos la REFERENCIA a la cuenta gestionada por accountModel
         MovementController movementController = new MovementController(
                 movementModel,
-                accountModel,
                 movementView,
                 testAccount);
 

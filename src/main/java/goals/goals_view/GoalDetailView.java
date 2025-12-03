@@ -1,7 +1,7 @@
 package goals.goals_view;
 
 import movements.movement_model.MovementCategory;
-import movements.movement_model.MovementObserver;
+import movements.movement_model.CategoryObserver;
 
 import goals.goals_model.Goal;
 
@@ -18,7 +18,7 @@ import javax.swing.border.EmptyBorder;
  *
  * @author Jose Pablo Martinez
  */
-public class GoalDetailView extends JDialog implements MovementObserver {
+public class GoalDetailView extends JDialog implements CategoryObserver {
 
     private final JLabel lblName;
     private final JLabel lblStatus;
@@ -27,8 +27,7 @@ public class GoalDetailView extends JDialog implements MovementObserver {
 
     private Goal currentGoal;
 
-    public GoalDetailView(JFrame parent) {
-        super(parent, "Detalle de Meta", false);
+    public GoalDetailView() {
         this.setSize(400, 300);
         this.setLayout(new BorderLayout(15, 15));
 
@@ -69,7 +68,6 @@ public class GoalDetailView extends JDialog implements MovementObserver {
         contentPanel.add(new JScrollPane(txtDescriptionDisplay));
 
         add(contentPanel, BorderLayout.CENTER);
-        setLocationRelativeTo(parent);
     }
 
     public void showProgress(Goal objGoal) {

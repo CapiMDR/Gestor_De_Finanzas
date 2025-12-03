@@ -13,27 +13,26 @@ import javax.swing.JOptionPane;
 
 import accounts.account_model.Account;
 import accounts.account_model.AccountManager;
+import accounts.account_model.AccountManagerSubject;
 import movements.movement_model.Movement;
 import movements.movement_model.MovementCategory;
 import movements.movement_model.CategoryManager;
-import movements.movement_model.MovementObserver;
+import movements.movement_model.CategoryObserver;
 import movements.movement_model.MovementCategory.MovementType;
 import movements.movement_view.MovementCategoriesView;
 import movements.movement_view.MovementManagerView;
 
-public class MovementController implements MovementObserver {
+public class MovementController implements CategoryObserver {
     private CategoryManager model;
     private MovementManagerView view;
     private MovementCategoriesView categoriesManagerView;
-    private AccountManager accountManager;
     private Account currentAccount;
 
-    public MovementController(CategoryManager model, AccountManager accountManager, MovementManagerView view,
+    public MovementController(CategoryManager model, MovementManagerView view,
             Account currentAccount) {
         this.model = model;
         this.view = view;
         this.categoriesManagerView = null;
-        this.accountManager = accountManager;
         this.currentAccount = currentAccount;
         model.addOserver(this);
         AssignEvents();
@@ -109,13 +108,14 @@ public class MovementController implements MovementObserver {
         }
     }
 
-    public void addMovement(String description, BigDecimal amount, MovementCategory category, Account account, LocalDateTime date) {
+    public void addMovement(String description, BigDecimal amount, MovementCategory category, Account account,
+            LocalDateTime date) {
         Movement movement = new Movement(UUID.randomUUID(), description, amount, category, account, date);
 
         account.addMovement(movement);
-        accountManager.saveAccountsData();
+        AccountManager.saveAccountsData();
 
-        accountManager.getSubject().notifyObservers(accountManager.getAccounts());
+        AccountManagerSubject.notifyObservers(AccountManager.getAccounts());
         model.notifyObservers();
     }
 

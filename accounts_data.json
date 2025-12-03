@@ -1,33 +1,9 @@
-[
-  {
-    "initialBalance": 1000,
-    "name": "canelo cuenta",
-    "movements": [{
-      "date": "2025-12-02T17:21:05.304",
-      "categoryType": "INCOME",
-      "amount": "500",
-      "description": "dfa",
-      "idMovement": "db863629-b141-4c3e-96a6-4ad664f4d5b8",
-      "categoryName": "Salario canelo"
-    }],
-    "id": 1,
-    "type": "CASH",
-    "coin": "USD",
-    "goals": [{
-      "amount": 0,
-      "targetAmount": 1500,
-      "name": "juguete",
-      "description": "juguete para canelo",
-      "currentAmount": 0
-    }]
-  },
-  {
-    "initialBalance": 500,
-    "name": "kpi",
-    "movements": [],
-    "id": 2,
-    "type": "CASH",
-    "coin": "MXN",
-    "goals": []
-  }
-]
+[{
+  "initialBalance": 1234,
+  "name": "Cuenta Capi",
+  "movements": [],
+  "id": 1,
+  "type": "CASH",
+  "coin": "MXN",
+  "goals": []
+}]

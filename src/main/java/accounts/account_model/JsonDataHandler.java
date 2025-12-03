@@ -67,7 +67,7 @@ public class JsonDataHandler {
     }
 
     // goals list to JSONArray
-    private JSONArray goalsToJson(List<Goal> goals){
+    private JSONArray goalsToJson(List<Goal> goals) {
         JSONArray jsonArray = new JSONArray();
 
         for (Goal goal : goals) {
@@ -143,7 +143,7 @@ public class JsonDataHandler {
     // JSONArray to movement list
     private List<Movement> jsonToMovements(JSONArray movementsJson, Account account) {
         List<Movement> movements = new ArrayList<>();
-        for (int i = 0; i < movementsJson.length(); i++){
+        for (int i = 0; i < movementsJson.length(); i++) {
             JSONObject movementJson = movementsJson.getJSONObject(i);
 
             UUID idMovement = UUID.fromString(movementJson.getString("idMovement"));
@@ -165,14 +165,14 @@ public class JsonDataHandler {
         return movements;
     }
 
-    //JSONArray to goals list
-    private List<Goal> jsonToGoals(JSONArray goalsJson){
+    // JSONArray to goals list
+    private List<Goal> jsonToGoals(JSONArray goalsJson) {
         List<Goal> goals = new ArrayList<>();
-        for (int i = 0; i < goalsJson.length(); i++){
+        for (int i = 0; i < goalsJson.length(); i++) {
             JSONObject goalJson = goalsJson.getJSONObject(i);
 
             String name = goalJson.getString("name");
-            
+
             String targetAmountStr = goalJson.get("targetAmount").toString();
             BigDecimal targetAmount = new BigDecimal(targetAmountStr);
 
@@ -184,6 +184,7 @@ public class JsonDataHandler {
         }
         return goals;
     }
+
     // HashMap to categories
     public HashMap<String, MovementCategory> jsonToCategories(JSONArray jsonArray) {
         HashMap<String, MovementCategory> categories = new HashMap<>();
