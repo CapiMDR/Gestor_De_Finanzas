@@ -1,4 +1,10 @@
-[{
-  "name": "Ad",
-  "type": "INCOME"
-}]
+[
+  {
+    "name": "Ad",
+    "type": "INCOME"
+  },
+  {
+    "name": "Asd",
+    "type": "EXPENSE"
+  }
+]
