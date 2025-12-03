@@ -1,1 +1,15 @@
-[]
+[{
+  "initialBalance": 60,
+  "name": "canelo ",
+  "movements": [],
+  "id": 1,
+  "type": "CASH",
+  "coin": "MXN",
+  "goals": [{
+    "amount": 60,
+    "targetAmount": 1000,
+    "name": "si",
+    "description": "dfsdf",
+    "currentAmount": 60
+  }]
+}]
