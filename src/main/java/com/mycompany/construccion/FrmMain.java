@@ -710,7 +710,7 @@ public class FrmMain extends javax.swing.JFrame  {
         private void btnWeekMouseEntered(java.awt.event.MouseEvent evt) {
                 btnWeek.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         }
-
+        
         private void btnTodayMouseClicked(java.awt.event.MouseEvent evt) {
         }
 
