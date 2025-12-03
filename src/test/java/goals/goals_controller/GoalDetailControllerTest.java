@@ -1,5 +1,7 @@
 package goals.goals_controller;
 
+import goals.goals_model.Goal;
+import goals.goals_view.GoalDetailView;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -7,39 +9,29 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import goals.goals_controller.GoalDetailController;
-import goals.goals_model.Goal;
-import goals.goals_view.GoalDetailView;
-
 import static org.mockito.Mockito.*;
-
-/**
- * Unit tests for the GoalDetailController.
- * Uses Mockito to verify that the controller correctly updates the view.
- * 
- * @author Jose Pablo Martinez
- */
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Goal Detail Controller Test")
 class GoalDetailControllerTest {
 
     @Mock
-    private GoalDetailView view; // Mock the view dependency
+    private GoalDetailView view; // Mock de la vista
 
     @InjectMocks
-    private GoalDetailController controller; // Inject mock into the controller
+    private GoalDetailController controller;
 
     @Test
     @DisplayName("Should call view.showProgress when goal is valid")
     void testShowDetails() {
-        // Arrange
+        // Arrange (Preparar)
         Goal testGoal = new Goal();
 
-        // Act: Execute the method to be tested
+        // Act (Ejecutar)
         controller.showDetails(testGoal);
 
-        // Assert: Verify that the controller called the view's method exactly once
+        // Assert (Verificar)
+        // Verificar que se llamo al método con esa meta
         verify(view, times(1)).showProgress(testGoal);
     }
 
@@ -49,7 +41,8 @@ class GoalDetailControllerTest {
         // Act
         controller.showDetails(null);
 
-        // Assert: Verify that no methods on the view were called
+        // Assert
+        // Verficar que no hubo interacción con la vista
         verifyNoInteractions(view);
     }
 }
