@@ -1,21 +1,20 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package reports.controllerReport;
 
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 import com.mycompany.construccion.FrmMain;
+
+import java.awt.Image;
 import java.math.BigDecimal;
 import java.util.List;
+
+import javax.swing.ImageIcon;
 
 import accounts.account_model.Account;
 import accounts.account_model.AccountManagerSubject;
 import accounts.account_model.AccountObserver;
 import movements.movement_model.Movement;
 import movements.movement_model.MovementCategory;
-import movements.movement_model.MovementCategory.MovementType;
 import reports.modelReport.ReportData;
 import reports.modelReport.ReportGenerator;
 import reports.modelReport.ReportObserver;
@@ -40,6 +39,7 @@ public class ReportController implements ReportObserver, AccountObserver {
 
         assignActions();
         syncAccount();
+        initComponents();
     }
 
     private void assignActions() {
@@ -56,21 +56,42 @@ public class ReportController implements ReportObserver, AccountObserver {
             public void mouseClicked(java.awt.event.MouseEvent e) {
                 reportGenerator.weekAgo();
             }
-    });
+        });
+    }
 
-    
+    private void initComponents() {
+        // --- PieChart ---
+        DefaultPieDataset dataset = new DefaultPieDataset();
+        dataset.setValue("INCOME", 0);
+        dataset.setValue("EXPENSE", 0);
 
-        /*
-         * view.btnCustom.addMouseListener(new java.awt.event.MouseAdapter() {
-         * 
-         * @Override
-         * public void mouseClicked(java.awt.event.MouseEvent e) {
-         * LocalDate s = LocalDate.parse(view.txtStartDate.getText());
-         * LocalDate e2 = LocalDate.parse(view.txtEndDate.getText());
-         * reportGenerator.selectPeriod(s, e2);
-         * }
-         * });
-         */
+        view.updateCharts(dataset);
+        
+        // --- BarChart ---
+        DefaultCategoryDataset barDataset = new DefaultCategoryDataset();
+
+        barDataset.addValue(0, "INCOME", "INCOME");
+        barDataset.addValue(0, "EXPENSE", "EXPENSE");
+
+        view.updateBarChart(barDataset);
+
+
+        String pathImg = "";
+
+        if (account.getType() == Account.AccountType.CASH) {
+            pathImg = "/images/piggy.png";
+        } else {
+            pathImg = "/images/credit.png";
+        }
+
+        ImageIcon icon = new ImageIcon(getClass().getResource(pathImg));
+
+        Image img = icon.getImage().getScaledInstance(
+                view.credit.getWidth(),
+                view.credit.getHeight(),
+                Image.SCALE_SMOOTH);
+
+        view.credit.setIcon(new ImageIcon(img));
     }
 
 
@@ -105,6 +126,7 @@ public class ReportController implements ReportObserver, AccountObserver {
 
         view.updateCharts(dataset);
 
+        // --- BarChart ---
         DefaultCategoryDataset barDataset = new DefaultCategoryDataset();
 
         barDataset.addValue(income, "INCOME", "INCOME");

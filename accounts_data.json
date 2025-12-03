@@ -1,39 +1,32 @@
-[
-  {
-    "initialBalance": 1234,
-    "name": "Cuenta 1",
-    "movements": [{
-      "date": "2025-12-02T19:43:26.799",
+[{
+  "initialBalance": 60,
+  "name": "canelo ",
+  "movements": [
+    {
+      "date": "2025-12-03T04:37:00.462",
       "categoryType": "INCOME",
-      "amount": "560",
-      "description": "qdqwd",
-      "idMovement": "03d5421f-b0c3-4beb-883b-443c0328a28e",
-      "categoryName": "Salario canelo"
-    }],
-    "id": 1,
-    "type": "DIGITAL",
-    "coin": "MXN",
-    "goals": [{
-      "amount": 0,
-      "targetAmount": 1235,
-      "name": "chocolatita",
-      "description": "asdad",
-      "currentAmount": 0
-    }]
-  },
-  {
-    "initialBalance": 124,
-    "name": "Cuenta 2",
-    "movements": [],
-    "id": 2,
-    "type": "CASH",
-    "coin": "MXN",
-    "goals": [{
-      "amount": 0,
-      "targetAmount": 1235,
-      "name": "chocolatita desde la cuenta 2",
-      "description": "asdad",
-      "currentAmount": 0
-    }]
-  }
-]
+      "amount": "199",
+      "description": "414",
+      "idMovement": "e4b60e3d-3dca-4ec5-b295-26098a3a9d6a",
+      "categoryName": "Pablo"
+    },
+    {
+      "date": "2025-12-03T04:37:54.027",
+      "categoryType": "EXPENSE",
+      "amount": "33535",
+      "description": "adad",
+      "idMovement": "5092d7da-a0c3-4a98-9c70-a2ecd657318f",
+      "categoryName": "Rra"
+    }
+  ],
+  "id": 1,
+  "type": "DIGITAL",
+  "coin": "MXN",
+  "goals": [{
+    "amount": -33276,
+    "targetAmount": 1000,
+    "name": "si",
+    "description": "dfsdf",
+    "currentAmount": -33276
+  }]
+}]

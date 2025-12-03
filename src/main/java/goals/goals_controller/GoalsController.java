@@ -16,11 +16,11 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 /**
- * Main Controller for the Goals Module.
- * Coordinates interaction between Views, Models, and Persistence.
- * Implements GoalActionListener to handle events from Goal Cards.
- *
- * @author Jose Pablo Martinez
+ * Controlador principal del Módulo de Metas.
+ * Coordina la interacción entre Vistas, Modelos y Persistencia.
+ * Implementa GoalActionListener para manejar los eventos de las tarjetas de metas.
+ * 
+ * @author Jose Pablo
  */
 
 public class GoalsController implements GoalActionListener, AccountObserver {
@@ -45,9 +45,9 @@ public class GoalsController implements GoalActionListener, AccountObserver {
     }
 
     /**
-     * Sets the active account context and refreshes the view.
+     * Establece la cuenta activa y refresca la vista.
      * 
-     * @param account The selected account.
+     * @param account La cuenta seleccionada.
      */
 
     public void setAccount(Account account) {
@@ -59,7 +59,7 @@ public class GoalsController implements GoalActionListener, AccountObserver {
             }
             mainView.setCurrencyLabel(currency);
 
-            // Auto-fill account name
+            // Auto-rellenar el nombre de la cuenta
             String accName = (currentAccount.getName() != null) ? currentAccount.getName() : "Current Account";
             mainView.setAccountName(accName);
 
@@ -74,8 +74,9 @@ public class GoalsController implements GoalActionListener, AccountObserver {
     }
 
     /**
-     * Handles updates triggered by external modules (like Movements).
+     * Maneja actualizaciones activadas por módulos externos (como Movimientos).
      */
+
     @Override
     public void onNotify(List<Account> accountsList) {
         if (currentAccount == null)
@@ -84,29 +85,83 @@ public class GoalsController implements GoalActionListener, AccountObserver {
         List<Movement> movements = currentAccount.getMovements();
         recalculateGoalsProgress(currentAccount.getGoals(), movements);
 
-        // Guardando cuentas de nuevo con los cambios calculados en las metas
+        // Guardando cuentas nuevamente después de recalcular las metas
         AccountManager.saveAccountsData();
         refreshView();
         System.out.println("CONTROLLER: Goals refreshed based.");
     }
 
     /**
-     * Business Logic: Updates goal progress based on Expenses matching the goal
-     * name.
+     * Calcula el saldo total (Inicial + Movimientos).
+     * Devuelve el valor BigDecimal directamente.
+     */
+
+    private BigDecimal calculateActualBalance() {
+        if (currentAccount == null) return BigDecimal.ZERO;
+
+        // Obtener el saldo inicial
+        BigDecimal balance = currentAccount.getInitialBalance();
+        if (balance == null) {
+            balance = BigDecimal.ZERO;
+        }
+
+        // Sumar y restar movimientos
+        List<Movement> movements = currentAccount.getMovements();
+        if (movements != null) {
+            for (Movement m : movements) {
+                if (m.getCategory() != null) {
+                    switch (m.getCategory().getType()) {
+                        case INCOME:
+                            balance = balance.add(m.getAmount());
+                            break;
+                        case EXPENSE:
+                            balance = balance.subtract(m.getAmount());
+                            break;
+                        default:
+                            System.out.println("Entrada no valida, tipo no encontrado");
+                         break;
+                    }
+                }
+            }
+        }
+        return balance;
+    }
+
+    /**
+     * Actualiza el progreso de las metas basándose en el saldo inicial
+     * de la cuenta y los movimientos.
      */
 
     private void recalculateGoalsProgress(List<Goal> goals, List<Movement> movements) {
-        for (Goal goal : goals) {
-            BigDecimal totalSaved = BigDecimal.ZERO;
+        //Calculamos el balance actual de la cuenta
+        BigDecimal totalBalance = calculateActualBalance();
 
-            if (movements != null) {
-                for (Movement m : movements) {
-                    totalSaved = totalSaved.add(m.getAmount());
-                }
-            }
-            goal.setCurrentAmount(totalSaved);
+        //Asignamos el balance a las metas
+        if (goals != null) {
+        for (Goal goal : goals) {
+            goal.setCurrentAmount(totalBalance);
         }
     }
+    }
+
+    public void createNewGoal(String name, BigDecimal target, String desc) {
+        Goal newGoal = new Goal(name, target, desc);
+
+
+        if (currentAccount != null) {
+            //Calculamos el balance actual y se lo ponemos a la meta recien creada
+            BigDecimal currentBalance =calculateActualBalance();
+            newGoal.setCurrentAmount(currentBalance);
+
+            currentAccount.getGoals().add(newGoal);
+            AccountManager.saveAccountsData();
+            refreshView();
+        }
+    }
+
+     /**
+     * Lógica para los botones en la vista.
+     */
 
     private void handleAddGoalFromMainView() {
         String name = mainView.getGoalName();
@@ -121,16 +176,6 @@ public class GoalsController implements GoalActionListener, AccountObserver {
 
         createNewGoal(name, target, desc); // Testing in JUnit
         mainView.clearForm();
-    }
-
-    public void createNewGoal(String name, BigDecimal target, String desc) {
-        Goal newGoal = new Goal(name, target, desc);
-
-        if (currentAccount != null) {
-            currentAccount.getGoals().add(newGoal);
-            AccountManager.saveAccountsData();
-            refreshView();
-        }
     }
 
     @Override
@@ -156,7 +201,6 @@ public class GoalsController implements GoalActionListener, AccountObserver {
             goal.setTargetAmount(newTarget);
             goal.setDescription(editView.getDescriptionInput());
 
-            // Corrected method name: saveAccountsData()
             AccountManager.saveAccountsData();
             refreshView();
             editView.closeDialog();

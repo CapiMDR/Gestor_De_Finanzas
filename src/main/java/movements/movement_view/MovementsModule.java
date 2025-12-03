@@ -6,38 +6,37 @@ import movements.movement_controller.MovementController;
 import movements.movement_model.CategoryManager;
 import movements.movement_model.MovementManagerSubject;
 
+/**
+ * Clase principal del módulo de movimientos.
+ * Se encarga de inicializar los componentes necesarios para gestionar
+ * los movimientos de una cuenta seleccionada, incluyendo modelo, vista y controlador.
+ * @author Capi Madera de Regil
+ */
 public class MovementsModule {
+
+    /**
+     * Inicializa todo el módulo de movimientos utilizando la cuenta seleccionada.
+     * Configura el Subject para notificaciones, el modelo que gestiona las categorías,
+     * la vista y el controlador encargado de coordinar la interacción.
+     *
+     * @param selectedAccount la cuenta sobre la cual se gestionarán los movimientos
+     */
     public static void initMovements(Account selectedAccount) {
 
-        // 1. SIMULACIÓN DE DEPENDENCIAS GLOBALES (AccountManager)
         JsonDataHandler testDataHandler = new JsonDataHandler();
 
-        // 2. CREACIÓN DE LA CUENTA DE PRUEBA (Contexto)
-        // **ELIMINAR:** Account testAccount = new Account(1, "Braulio regalo", ...);
-
-        // **NUEVO:** OBTENER LA CUENTA REAL DEL MODELO (AccountManager)
-
-        // 3. CREACIÓN DEL MODELO DE MOVIMIENTOS
         MovementManagerSubject movementSubject = new MovementManagerSubject();
+
         CategoryManager movementModel = new CategoryManager(
                 movementSubject,
                 testDataHandler);
 
-        // 4. CREACIÓN DE LA VISTA
         MovementManagerView movementView = new MovementManagerView();
 
-        // 5. CREACIÓN DEL CONTROLADOR (El cableado)
-        // Ahora pasamos la REFERENCIA a la cuenta gestionada por accountModel
         MovementController movementController = new MovementController(
                 movementModel,
                 movementView,
                 selectedAccount);
-
-        // 6. MOSTRAR LA VISTA
         movementView.setVisible(true);
     }
-
-    // Variables declaration - do not modify
-    // ... (Todas tus variables privadas) ...
-    // End of variables declaration
 }

@@ -3,6 +3,12 @@ package movements.movement_model;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Clase que implementa el patrón Observer para la gestión de categorías de movimientos.
+ * Permite registrar, eliminar y notificar observadores cuando ocurre un cambio
+ * relacionado con la lista de categorías de movimiento.
+ * @author Martín Jesús Pool Chuc
+ */
 public class MovementManagerSubject {
     private List<CategoryObserver> observers = new ArrayList<>();
 

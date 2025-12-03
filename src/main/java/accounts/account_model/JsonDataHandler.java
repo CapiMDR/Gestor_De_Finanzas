@@ -23,13 +23,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Clase encargada de serializar y deserializar datos relacionados con cuentas,
+ * movimientos, metas y categorías hacia y desde archivos JSON.
+ * @author Martín Jesús Pool Chuc
+ */
 public class JsonDataHandler {
+
+    /** Ruta del archivo donde se guardan los datos de cuentas. */
     private static final String FILE_PATH = "accounts_data.json";
+
+    /** Ruta del archivo donde se guardan los datos de categorías. */
     private static final String CATEGORIES_FILE_PATH = "categories_data.json";
 
     // SERIALIZATION
 
-    // Account list to JSONArray
+    /**
+     * Convierte una lista de cuentas en un JSONArray.
+     *
+     * @param accounts lista de cuentas a convertir
+     * @return JSONArray representando las cuentas
+     */
     public JSONArray accountsToJson(List<Account> accounts) {
         JSONArray jsonArray = new JSONArray();
 
@@ -49,7 +63,12 @@ public class JsonDataHandler {
         return jsonArray;
     }
 
-    // movement list to JSONArray
+    /**
+     * Convierte una lista de movimientos en un JSONArray.
+     *
+     * @param movements lista de movimientos
+     * @return JSONArray representando movimientos
+     */
     private JSONArray movementsToJson(List<Movement> movements) {
         JSONArray jsonArray = new JSONArray();
         for (Movement movement : movements) {
@@ -66,7 +85,12 @@ public class JsonDataHandler {
         return jsonArray;
     }
 
-    // goals list to JSONArray
+    /**
+     * Convierte una lista de metas en un JSONArray.
+     *
+     * @param goals lista de metas
+     * @return JSONArray representando metas
+     */
     private JSONArray goalsToJson(List<Goal> goals) {
         JSONArray jsonArray = new JSONArray();
 
@@ -84,7 +108,12 @@ public class JsonDataHandler {
         return jsonArray;
     }
 
-    // categories to hashMap
+    /**
+     * Convierte un mapa de categorías en un JSONArray.
+     *
+     * @param categories mapa de categorías
+     * @return JSONArray representando categorías
+     */
     public JSONArray categoriesToJson(HashMap<String, MovementCategory> categories) {
         JSONArray jsonArray = new JSONArray();
 
@@ -99,7 +128,12 @@ public class JsonDataHandler {
 
     // DESERIALIZATION
 
-    // JSONArray to acount list
+    /**
+     * Convierte un JSONArray en una lista de cuentas.
+     *
+     * @param jsonArray JSONArray con datos de cuentas
+     * @return lista de cuentas deserializadas
+     */
     public List<Account> jsonToAccounts(JSONArray jsonArray) {
         List<Account> accounts = new ArrayList<>();
         for (int i = 0; i < jsonArray.length(); i++) {
@@ -140,7 +174,13 @@ public class JsonDataHandler {
         return accounts;
     }
 
-    // JSONArray to movement list
+    /**
+     * Convierte un JSONArray en una lista de movimientos.
+     *
+     * @param movementsJson JSONArray de movimientos
+     * @param account cuenta asociada al movimiento
+     * @return lista de movimientos deserializados
+     */
     private List<Movement> jsonToMovements(JSONArray movementsJson, Account account) {
         List<Movement> movements = new ArrayList<>();
         for (int i = 0; i < movementsJson.length(); i++) {
@@ -165,7 +205,12 @@ public class JsonDataHandler {
         return movements;
     }
 
-    // JSONArray to goals list
+    /**
+     * Convierte un JSONArray en una lista de metas.
+     *
+     * @param goalsJson JSONArray con metas
+     * @return lista de metas deserializadas
+     */
     private List<Goal> jsonToGoals(JSONArray goalsJson) {
         List<Goal> goals = new ArrayList<>();
         for (int i = 0; i < goalsJson.length(); i++) {
@@ -185,7 +230,12 @@ public class JsonDataHandler {
         return goals;
     }
 
-    // HashMap to categories
+    /**
+     * Convierte un JSONArray en un mapa de categorías.
+     *
+     * @param jsonArray JSONArray con categorías
+     * @return mapa de categorías
+     */
     public HashMap<String, MovementCategory> jsonToCategories(JSONArray jsonArray) {
         HashMap<String, MovementCategory> categories = new HashMap<>();
         for (int i = 0; i < jsonArray.length(); i++) {
@@ -200,7 +250,11 @@ public class JsonDataHandler {
         return categories;
     }
 
-    // file operations
+    /**
+     * Guarda la lista de cuentas en un archivo JSON.
+     *
+     * @param accounts lista de cuentas a guardar
+     */
     public void saveAccounts(List<Account> accounts) {
         JSONArray jsonArray = accountsToJson(accounts);
         try (FileWriter file = new FileWriter(FILE_PATH)) {
@@ -211,6 +265,11 @@ public class JsonDataHandler {
         }
     }
 
+    /**
+     * Guarda las categorías en un archivo JSON.
+     *
+     * @param categories mapa de categorías
+     */
     public void saveCategories(HashMap<String, MovementCategory> categories) {
         JSONArray jsonArray = categoriesToJson(categories);
         try (FileWriter file = new FileWriter(CATEGORIES_FILE_PATH)) {
@@ -221,6 +280,11 @@ public class JsonDataHandler {
         }
     }
 
+    /**
+     * Carga las cuentas desde el archivo JSON.
+     *
+     * @return lista de cuentas cargadas o lista vacía en caso de error
+     */
     public List<Account> loadAccounts() {
         File file = new File(FILE_PATH);
         if (!file.exists() || file.length() == 0) {
@@ -240,6 +304,11 @@ public class JsonDataHandler {
         return new ArrayList<>();
     }
 
+    /**
+     * Carga las categorías desde el archivo JSON.
+     *
+     * @return mapa de categorías cargado o vacío en caso de error
+     */
     public HashMap<String, MovementCategory> loadCategories() {
         File file = new File(CATEGORIES_FILE_PATH);
         if (!file.exists() || file.length() == 0) {

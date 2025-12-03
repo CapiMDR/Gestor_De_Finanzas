@@ -3,11 +3,10 @@ package goals.goals_view;
 import goals.goals_model.Goal;
 
 /**
- * Interface to handle actions triggered from specific Goal Cards.
- * This allows the Controller to know WHICH goal needs to be edited, deleted, or
- * viewed.
+ * Interfaz para manejar acciones desencadenadas desde tarjetas individuales de metas.
+ * Esto permite que el Controlador sepa QUÉ meta necesita ser editada, eliminada o vista.
  *
- * @author Jose Pablo Martinez
+ * @autor Jose Pablo Martinez
  */
 
 public interface GoalActionListener {

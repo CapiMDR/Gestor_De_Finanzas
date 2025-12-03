@@ -77,30 +77,7 @@ public class ReportGenerator {
         reportSubject.notifyObservers(data);
     }
 
-    /**
-     * Generates a report for an arbitrary date range and notifies observers.
-     *
-     * @param start start date of the period (inclusive)
-     * @param end   end date of the period (inclusive)
-     */
-    public void selectPeriod(LocalDate start, LocalDate end) {
-        List<Movement> movements = account.getMovements().stream()
-                .filter(m -> {
-                    LocalDate date = m.getDate().toLocalDate();
-                    return (!date.isBefore(start) && !date.isAfter(end));
-                })
-                .collect(Collectors.toList());
-
-        BigDecimal total = amountTotal(movements);
-
-        ReportData data = new ReportData(
-                "Selected Period",
-                movements,
-                total,
-                start.toString() + "-" + end.toString());
-
-        reportSubject.notifyObservers(data);
-    }
+  
 
     /**
      * Calculates the sum of all movement amounts.
