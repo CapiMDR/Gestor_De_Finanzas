@@ -8,12 +8,10 @@ import goals.goals_model.Goal;
 import movements.movement_model.Movement;
 
 public class Account {
-
     public enum AccountType {
         CASH,
         DIGITAL
     }
-
     public enum Coin {
         USD,
         MXN
@@ -66,11 +64,10 @@ public class Account {
     public List<Movement> getMovements() {
         return movements;
     }
-
     public List<Goal> getGoals() {
         return goals;
     }
-
+    
     public void setGoals(List<Goal> goals) {
         this.goals = goals;
     }

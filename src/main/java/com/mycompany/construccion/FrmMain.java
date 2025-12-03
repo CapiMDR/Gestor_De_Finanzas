@@ -2,8 +2,6 @@ package com.mycompany.construccion;
 
 import java.awt.BorderLayout;
 import java.awt.Image;
-import java.util.List;
-
 import javax.swing.ImageIcon;
 
 import org.jfree.chart.ChartFactory;
@@ -16,13 +14,10 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 
 import accounts.account_model.Account;
-import accounts.account_model.AccountManagerSubject;
-import accounts.account_model.AccountObserver;
 import goals.GoalsModule;
 import movements.movement_view.MovementsModule;
 import recurringMoves.recurring_view.RecurringsModule;
 import reminders.reminder_view.RemindersModule;
-import reports.controllerReport.ReportController;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -87,17 +82,7 @@ public class FrmMain extends javax.swing.JFrame  {
                                 Image.SCALE_SMOOTH);
                 // Escalar la imagen
                 btnWeek.setIcon(new ImageIcon(imgWeek));
-                /*
-                 * //Select Period
-                 * ImageIcon iconCustom = (ImageIcon) btnCustom.getIcon();
-                 * Image imgCustom = iconCustom.getImage().getScaledInstance(
-                 * btnCustom.getWidth(),
-                 * btnCustom.getHeight(),
-                 * Image.SCALE_SMOOTH
-                 * );
-                 * // Escalar la imagen
-                 * btnCustom.setIcon(new ImageIcon(imgCustom));
-                 */
+
                 // Credit
                 ImageIcon iconCredit = (ImageIcon) credit.getIcon();
                 Image imgCredit = iconCredit.getImage().getScaledInstance(
@@ -750,7 +735,7 @@ public class FrmMain extends javax.swing.JFrame  {
         public javax.swing.JLabel btnToday;
         public javax.swing.JLabel btnWeek;
         
-        private javax.swing.JLabel credit;
+        public javax.swing.JLabel credit;
         private javax.swing.JLabel goal;
         private javax.swing.JLabel jLabel1;
         public javax.swing.JLabel labelName;

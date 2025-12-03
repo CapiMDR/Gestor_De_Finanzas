@@ -20,9 +20,4 @@ public class MovementCategory {
     public MovementType getType() {
         return type;
     }
-
-    @Override
-    public String toString() {
-        return "MovementCategory [name=" + name + ", type=" + type + "]";
-    }
 }

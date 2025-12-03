@@ -61,12 +61,4 @@ public class Movement {
     public void setIdMovement(UUID idMovement) {
         this.idMovement = idMovement;
     }
-
-    @Override
-    public String toString() {
-        return "Movement [getDescription()=" + getDescription() + ", getAmount()=" + getAmount() + ", getDate()="
-                + getDate() + ", getCategory()=" + getCategory() + ", getAccount()=" + getAccount()
-                + ", getIdMovement()=" + getIdMovement() + "]";
-    }
-
 }
