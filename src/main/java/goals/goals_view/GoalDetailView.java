@@ -10,7 +10,9 @@ import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.List;
 import javax.swing.*;
+import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 
 /**
  * View for displaying detailed progress of a single goal.
@@ -31,32 +33,57 @@ public class GoalDetailView extends JDialog implements CategoryObserver {
         this.setSize(400, 300);
         this.setLayout(new BorderLayout(15, 15));
 
+        Color bgColor = new Color(239, 239, 239);
+        Color textColor = new Color(17, 43, 60);
+        Color accentColor = new Color(246, 107, 14); // orange
+        Color inputBg = new Color(210, 210, 210);
+        
+        Font titleFont = new Font("Inter", Font.BOLD, 24);
+        Font labelFont = new Font("Inter", Font.BOLD, 14);
+        Font textFont = new Font("Inter", Font.PLAIN, 12);
+
+        this.getContentPane().setBackground(bgColor);
+
         JPanel contentPanel = new JPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
         contentPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
+        contentPanel.setBackground(bgColor);
 
         lblName = new JLabel("Meta", SwingConstants.CENTER);
-        lblName.setFont(new Font("SansSerif", Font.BOLD, 20));
+        lblName.setFont(titleFont);
+        lblName.setForeground(textColor);
         lblName.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         lblStatus = new JLabel("$0.00 / $0.00", SwingConstants.CENTER);
+        lblStatus.setFont(labelFont);
+        lblStatus.setForeground(textColor);
         lblStatus.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         progressBar = new JProgressBar(0, 100);
         progressBar.setStringPainted(true);
-        progressBar.setForeground(new Color(46, 204, 113));
+        progressBar.setForeground(accentColor);
+        progressBar.setFont(textFont);
         progressBar.setPreferredSize(new Dimension(300, 25));
 
         // Description Area (Read Only)
         JLabel lblDescTitle = new JLabel("Nota:");
+        lblDescTitle.setFont(labelFont);
+        lblDescTitle.setForeground(textColor);
         lblDescTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         txtDescriptionDisplay = new JTextArea(4, 20);
+        txtDescriptionDisplay.setFont(textFont);
         txtDescriptionDisplay.setWrapStyleWord(true);
         txtDescriptionDisplay.setLineWrap(true);
         txtDescriptionDisplay.setEditable(false);
-        txtDescriptionDisplay.setBackground(this.getBackground());
-        txtDescriptionDisplay.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+        txtDescriptionDisplay.setBackground(inputBg);
+        txtDescriptionDisplay.setForeground(textColor);
+        
+        //Border for txt Area
+        txtDescriptionDisplay.setBorder(new CompoundBorder(
+                new LineBorder(Color.LIGHT_GRAY),
+                new EmptyBorder(5, 5, 5, 5)
+        ));
 
         contentPanel.add(lblName);
         contentPanel.add(Box.createVerticalStrut(10));
@@ -65,7 +92,12 @@ public class GoalDetailView extends JDialog implements CategoryObserver {
         contentPanel.add(lblStatus);
         contentPanel.add(Box.createVerticalStrut(20));
         contentPanel.add(lblDescTitle);
-        contentPanel.add(new JScrollPane(txtDescriptionDisplay));
+        contentPanel.add(Box.createVerticalStrut(5));
+        
+        JScrollPane scrollDesc = new JScrollPane(txtDescriptionDisplay);
+        scrollDesc.setBorder(null); 
+        scrollDesc.setAlignmentX(Component.LEFT_ALIGNMENT);
+        contentPanel.add(scrollDesc);
 
         add(contentPanel, BorderLayout.CENTER);
     }

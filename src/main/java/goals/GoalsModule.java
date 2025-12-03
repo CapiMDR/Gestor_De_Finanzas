@@ -24,7 +24,7 @@ public class GoalsModule {
 
         JFrame frame = new JFrame("Metas");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setSize(900, 600);
+        frame.setSize(1040, 740);
         frame.add(goalsView);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);

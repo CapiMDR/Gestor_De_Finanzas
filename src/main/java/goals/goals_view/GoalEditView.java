@@ -22,18 +22,38 @@ public class GoalEditView extends JDialog {
     public GoalEditView() {
         this.setSize(400, 300);
         this.setLayout(new GridLayout(5, 2, 10, 10));
+        
+        Color bgColor = new Color(239, 239, 239);
+        Color textColor = new Color(17, 43, 60);
+        Color inputBg = new Color(210, 210, 210);
+        Color btnSaveColor = new Color(246, 107, 14); // orange
+        Color btnCancelColor = new Color(32, 83, 117); // blue
+        
+        Font labelFont = new Font("Inter", Font.BOLD, 14);
+        Font inputFont = new Font("Inter", Font.PLAIN, 12);
+
+        this.getContentPane().setBackground(bgColor);
 
         txtName = new JTextField();
-        txtTargetAmount = new JTextField();
-        txtDescription = new JTextField();
-        btnSave = new JButton("Guardar");
-        btnCancel = new JButton("Cancelar");
+        styleInput(txtName, inputFont, inputBg);
 
-        add(new JLabel("  Nombre:"));
+        txtTargetAmount = new JTextField();
+        styleInput(txtTargetAmount, inputFont, inputBg);
+
+        txtDescription = new JTextField();
+        styleInput(txtDescription, inputFont, inputBg);
+
+        btnSave = new JButton("Guardar");
+        styleButton(btnSave, labelFont, btnSaveColor);
+
+        btnCancel = new JButton("Cancelar");
+        styleButton(btnCancel, labelFont, btnCancelColor);
+
+        add(createStyledLabel("  Nombre:", labelFont, textColor));
         add(txtName);
-        add(new JLabel("  Monto Objetivo:"));
+        add(createStyledLabel("  Monto Objetivo:", labelFont, textColor));
         add(txtTargetAmount);
-        add(new JLabel("  Descripción:"));
+        add(createStyledLabel("  Descripción:", labelFont, textColor));
         add(txtDescription);
         add(new JLabel(""));
         add(new JLabel(""));
@@ -41,6 +61,29 @@ public class GoalEditView extends JDialog {
         add(btnSave);
 
         btnCancel.addActionListener(e -> dispose());
+    }
+    
+    // Method to apply a theme without repeating code
+    private void styleInput(JTextField field, Font font, Color bg) {
+        field.setFont(font);
+        field.setBackground(bg);
+        field.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
+    }
+
+    private void styleButton(JButton btn, Font font, Color bg) {
+        btn.setFont(font);
+        btn.setBackground(bg);
+        btn.setForeground(Color.WHITE);
+        btn.setFocusPainted(false);
+        btn.setBorderPainted(false);
+        btn.setOpaque(true);
+    }
+
+    private JLabel createStyledLabel(String text, Font font, Color fg) {
+        JLabel label = new JLabel(text);
+        label.setFont(font);
+        label.setForeground(fg);
+        return label;
     }
 
     // Clear fields for a new entry
