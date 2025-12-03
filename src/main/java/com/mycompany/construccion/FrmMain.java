@@ -3,7 +3,6 @@ package com.mycompany.construccion;
 import java.awt.BorderLayout;
 import java.awt.Image;
 import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -15,13 +14,7 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 
 import accounts.account_model.Account;
-import accounts.account_model.AccountManager;
 import goals.GoalsModule;
-import goals.goals_controller.GoalDetailController;
-import goals.goals_controller.GoalsController;
-import goals.goals_view.GoalDetailView;
-import goals.goals_view.GoalEditView;
-import goals.goals_view.GoalsView;
 import movements.movement_view.MovementsModule;
 import recurringMoves.recurring_view.RecurringsModule;
 import reminders.reminder_view.RemindersModule;
@@ -36,10 +29,13 @@ import reminders.reminder_view.RemindersModule;
  * @author villa
  */
 public class FrmMain extends javax.swing.JFrame {
+        private Account selectedAccount;
+
         /**
          * Creates new form FrmMain
          */
-        public FrmMain() {
+        public FrmMain(Account selectedAccount) {
+                this.selectedAccount = selectedAccount;
                 initComponents();
                 // Configuration
                 ImageIcon iconConfiguration = (ImageIcon) configuration.getIcon();
@@ -207,7 +203,6 @@ public class FrmMain extends javax.swing.JFrame {
                 btnWeek = new javax.swing.JLabel();
                 credit = new javax.swing.JLabel();
 
-                setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
                 setMinimumSize(new java.awt.Dimension(1012, 720));
                 setSize(new java.awt.Dimension(1012, 720));
 
@@ -759,7 +754,8 @@ public class FrmMain extends javax.swing.JFrame {
         private void goalMouseClicked(java.awt.event.MouseEvent evt) {
                 int selectedIndex = 0;
                 System.out.println("Mostrando vista de metas");
-                GoalsModule.initGoals(selectedIndex);
+                // AQUÍ METAS
+                GoalsModule.initGoals(selectedAccount);
         }
 
         private void notificationMouseClicked(java.awt.event.MouseEvent evt) {
@@ -771,6 +767,7 @@ public class FrmMain extends javax.swing.JFrame {
         }
 
         private void accountMouseClicked(java.awt.event.MouseEvent evt) {
+                // TODO: Eliminar este botón
                 System.out.println("Account");
         }
 
@@ -791,7 +788,7 @@ public class FrmMain extends javax.swing.JFrame {
         }
 
         private void addMovementMouseClicked(java.awt.event.MouseEvent evt) {
-                MovementsModule.initMovements(1);
+                MovementsModule.initMovements(selectedAccount);
         }
 
         private void btnWeekMouseClicked(java.awt.event.MouseEvent evt) {

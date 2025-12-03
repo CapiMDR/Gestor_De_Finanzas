@@ -12,6 +12,7 @@ import accounts.account_model.Account.AccountType;
 import accounts.account_model.Account.Coin;
 import accounts.account_view.AccountEditView;
 import accounts.account_view.AccountView;
+import reports.ReportsModule;
 
 public class AccountController implements AccountObserver {
     private AccountView view;
@@ -196,8 +197,14 @@ public class AccountController implements AccountObserver {
     }
 
     public void accessAccount() {
-        // mau aquí llamo a tu coso
-        System.out.println("accediendo al módulo de mau");
+        int selectedIndex = view.getListAccounts().getSelectedIndex();
+        Account selectedAccount = AccountManager.getAccountByIndex(selectedIndex);
+        if (selectedAccount == null) {
+            System.out.println("Seleccione una cuenta");
+            return;
+        }
+        System.out.println("Accediendo a la cuenta " + selectedAccount.getName());
+        ReportsModule.initReportsModule(selectedAccount);
     }
 
     @Override

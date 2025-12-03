@@ -8,6 +8,7 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 import com.mycompany.construccion.FrmMain;
 
+import accounts.account_model.Account;
 import reports.modelReport.Movement;
 import reports.modelReport.ReportData;
 import reports.modelReport.ReportGenerator;
@@ -22,7 +23,8 @@ public class ReportController implements ReportObserver {
     private FrmMain view;
     private ReportGenerator reportGenerator;
 
-    public void setViewModule(FrmMain view, ReportGenerator generator) {
+    public void setViewModule(FrmMain view, ReportGenerator generator, Account selectedAccount) {
+        System.out.println("Se seleccionó la cuenta " + selectedAccount.getName());
         this.view = view;
         this.reportGenerator = generator;
 

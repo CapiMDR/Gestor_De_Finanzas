@@ -19,7 +19,7 @@ import goals.goals_view.GoalsView;
 
 public class GoalsModule {
 
-    public static void initGoals(int selectedIndex) {
+    public static void initGoals(Account selectedAccount) {
         GoalsView goalsView = new GoalsView();
 
         JFrame frame = new JFrame("Metas");
@@ -36,20 +36,11 @@ public class GoalsModule {
                 goalsView,
                 goalEditView,
                 goalDetailController);
-        if (selectedIndex >= 0) {
-            // Obtener la cuenta seleccionada del modelo
-            Account selectedAccount = AccountManager.getAccountByIndex(selectedIndex);
-            ;
-            if (selectedAccount != null) {
-                // Pasar la cuenta al módulo de Metas
-                goalsController.setAccount(selectedAccount);
-            } else {
-                System.out.println("No se seleccionó cuenta");
-            }
+        if (selectedAccount != null) {
+            // Pasar la cuenta al módulo de metas
+            goalsController.setAccount(selectedAccount);
         } else {
-            // JOptionPane.showMessageDialog(mainFrame, "Seleccione una cuenta para
-            // continuar.");
-            System.out.println("Seleccione una cuenta");
+            System.out.println("No se seleccionó cuenta");
         }
         frame.setVisible(true);
     }

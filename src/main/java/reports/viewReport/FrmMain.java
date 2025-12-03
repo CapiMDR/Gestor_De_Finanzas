@@ -102,8 +102,6 @@ public class FrmMain extends javax.swing.JFrame {
                 btnFiltrar = new javax.swing.JButton();
                 categoryBox = new javax.swing.JComboBox<>();
 
-                setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
                 btnToday.setText("Hoy");
 
                 btnYesterday.setText("Semana pasada");
