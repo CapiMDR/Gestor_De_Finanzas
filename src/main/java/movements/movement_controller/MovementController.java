@@ -22,12 +22,24 @@ import movements.movement_model.MovementCategory.MovementType;
 import movements.movement_view.MovementCategoriesView;
 import movements.movement_view.MovementManagerView;
 
+/**
+ * Controlador encargado de gestionar los movimientos financieros de una cuenta,
+ * así como la administración de categorías. Implementa el patrón Observer para
+ * actualizar las vistas cuando se producen cambios en las categorías.
+ */
 public class MovementController implements CategoryObserver {
     private CategoryManager model;
     private MovementManagerView view;
     private MovementCategoriesView categoriesManagerView;
     private Account currentAccount;
 
+    /**
+     * Constructor del controlador de movimientos.
+     *
+     * @param model          el manejador de categorías
+     * @param view           la vista del administrador de movimientos
+     * @param currentAccount la cuenta actualmente seleccionada
+     */
     public MovementController(CategoryManager model, MovementManagerView view,
             Account currentAccount) {
         this.model = model;
@@ -39,6 +51,9 @@ public class MovementController implements CategoryObserver {
         loadInitialData();
     }
 
+    /**
+     * Asigna los eventos de la interfaz de usuario a sus respectivos manejadores.
+     */
     private void AssignEvents() {
         this.view.getBtnAddIncome().addActionListener(e -> 
             handleAddMovement(MovementType.INCOME)
@@ -57,6 +72,11 @@ public class MovementController implements CategoryObserver {
         );
     }
 
+    /**
+     * Maneja la creación de un nuevo movimiento de ingreso o gasto.
+     *
+     * @param type el tipo de movimiento (INCOME o EXPENSE)
+     */
     private void handleAddMovement(MovementType type) {
         String description;
         String amountStr;
@@ -128,6 +148,15 @@ public class MovementController implements CategoryObserver {
         }
     }
 
+    /**
+     * Agrega un nuevo movimiento a la cuenta dada.
+     *
+     * @param description la descripción del movimiento
+     * @param amount      el monto del movimiento
+     * @param category    la categoría del movimiento
+     * @param account     la cuenta a la que pertenece
+     * @param date        la fecha del movimiento
+     */
     public void addMovement(String description, BigDecimal amount, MovementCategory category, Account account, LocalDateTime date) {
         Movement movement = new Movement(UUID.randomUUID(), description, amount, category, account, date);
 
@@ -138,6 +167,10 @@ public class MovementController implements CategoryObserver {
         model.notifyObservers();
     }
 
+    /**
+     * Carga los datos iniciales en la vista, incluyendo el nombre de la cuenta
+     * y la lista de categorías disponibles.
+     */
     private void loadInitialData() {
         view.getTxtAccountIncome().setText(currentAccount.getName());
         view.getTxtAccountExpense().setText(currentAccount.getName());
@@ -145,6 +178,11 @@ public class MovementController implements CategoryObserver {
         updateCategoriesView(new ArrayList<>(model.getCategories().values()));
     }
 
+    /**
+     * Actualiza las listas de categorías visibles en la vista de movimientos.
+     *
+     * @param categories lista de categorías actualizada
+     */
     private void updateCategoriesView(List<MovementCategory> categories) {
         DefaultListModel<String> incomeModel = new DefaultListModel<>();
         DefaultListModel<String> expenseModel = new DefaultListModel<>();
@@ -161,6 +199,10 @@ public class MovementController implements CategoryObserver {
         view.getListCategoriesExpense().setModel(expenseModel);
     }
 
+    /**
+     * Muestra la ventana de administración de categorías. Si ya está abierta,
+     * simplemente la trae al frente.
+     */
     public void showCategoriesManagerView() {
 
         if (this.categoriesManagerView != null && this.categoriesManagerView.isVisible()) {
@@ -194,6 +236,11 @@ public class MovementController implements CategoryObserver {
         categoriesView.setVisible(true);
     }
 
+    /**
+     * Maneja la creación de una nueva categoría desde la vista de administración.
+     *
+     * @param categoriesView la vista de administración de categorías
+     */
     private void handleAddCategory(MovementCategoriesView categoriesView) {
         String name = categoriesView.getTxtNewNameCateogory().getText().trim();
         String typeStr = categoriesView.getListCategoryType().getSelectedValue();
@@ -228,6 +275,11 @@ public class MovementController implements CategoryObserver {
         }
     }
 
+    /**
+     * Maneja la eliminación de una categoría seleccionada.
+     *
+     * @param categoriesView la vista de administración de categorías
+     */
     private void handleRemoveCategory(MovementCategoriesView categoriesView) {
         String categoryName = categoriesView.getListCategories().getSelectedValue();
 
@@ -258,6 +310,11 @@ public class MovementController implements CategoryObserver {
         }
     }
 
+    /**
+     * Actualiza la lista de categorías mostrada en la vista de administración.
+     *
+     * @param categoriesView la vista que contiene la lista de categorías
+     */
     private void updateCategoriesList(MovementCategoriesView categoriesView) {
         DefaultListModel<String> listModel = new DefaultListModel<>();
 
@@ -272,6 +329,12 @@ public class MovementController implements CategoryObserver {
         categoriesView.getListCategories().setModel(listModel);
     }
 
+    /**
+     * Método del patrón Observer que se ejecuta cuando hay cambios en la lista
+     * de categorías.
+     *
+     * @param categories la lista actualizada de categorías
+     */
     @Override
     public void onNotify(List<MovementCategory> categories) {
         updateCategoriesView(categories);

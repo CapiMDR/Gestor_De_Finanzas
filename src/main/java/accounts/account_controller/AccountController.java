@@ -13,15 +13,30 @@ import accounts.account_view.AccountInterestView;
 import accounts.account_view.AccountView;
 import reports.ReportsModule;
 
+/**
+ * Controlador encargado de gestionar las acciones relacionadas con la vista de
+ * cuentas. Maneja la creación, edición, eliminación, acceso y cálculo de
+ * intereses de cuentas, así como la notificación de cambios provenientes del
+ * AccountManager.
+ */
 public class AccountController implements AccountObserver {
     private AccountView view;
 
+    /**
+     * Constructor del controlador que inicializa la vista y registra el
+     * observador.
+     *
+     * @param view Vista principal utilizada para interactuar con el usuario.
+     */
     public AccountController(AccountView view) {
         this.view = view;
         AccountManager.addObserver(this);
         AssignEvents();
     }
 
+    /**
+     * Asigna los listeners a los botones de la vista.
+     */
     private void AssignEvents() {
         this.view.getBtnAccessAccount().addActionListener(e -> {
             accessAccount();
@@ -42,10 +57,11 @@ public class AccountController implements AccountObserver {
         this.view.getBtnCalculateInterest().addActionListener(e -> {
             calculateInterest();
         });
-
-        
     }
 
+    /**
+     * Accede a la cuenta seleccionada y abre el módulo de reportes.
+     */
     public void accessAccount(){
         int selectedIndex = view.getListAccounts().getSelectedIndex();
         Account selectedAccount = AccountManager.getAccountByIndex(selectedIndex);
@@ -57,6 +73,10 @@ public class AccountController implements AccountObserver {
         ReportsModule.initReportsModule(selectedAccount);
     }
 
+    /**
+     * Agrega una nueva cuenta utilizando los datos de la vista. Valida la entrada,
+     * crea la instancia y actualiza la lista de cuentas.
+     */
     private void addAccount(){
         String name = view.getAccountName();
         String balanceStr = view.getInitialBalanceText();
@@ -103,6 +123,9 @@ public class AccountController implements AccountObserver {
         }  
     }
 
+    /**
+     * Elimina la cuenta seleccionada tras confirmar la acción con el usuario.
+     */
     private void deleteAccount(){
         int selectedIndex = view.getListAccounts().getSelectedIndex();
 
@@ -135,6 +158,10 @@ public class AccountController implements AccountObserver {
         }
     }
 
+    /**
+     * Inicia el proceso de edición de la cuenta seleccionada abriendo la vista
+     * correspondiente.
+     */
     private void editAccount(){
         int selectedIndex = view.getListAccounts().getSelectedIndex();
         if (selectedIndex < 0) {
@@ -154,6 +181,9 @@ public class AccountController implements AccountObserver {
         }
     }
 
+    /**
+     * Limpia los campos de entrada en la vista.
+     */
     private void clearInputFields() {
         view.txtNameAccount.setText("");
         view.txtInitialBalance.setText("");
@@ -161,6 +191,11 @@ public class AccountController implements AccountObserver {
         view.listCurrency.clearSelection();
     }
 
+    /**
+     * Muestra el formulario de edición para la cuenta seleccionada.
+     *
+     * @param accountToEdit Cuenta a editar.
+     */
     private void showEditForm(Account accountToEdit) {
         AccountEditView editView = new AccountEditView();
         editView.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -184,6 +219,12 @@ public class AccountController implements AccountObserver {
         editView.setVisible(true);
     }
 
+    /**
+     * Verifica y aplica los cambios de edición de una cuenta.
+     *
+     * @param editView Vista utilizada para editar la cuenta.
+     * @param accountToEdit Cuenta que está siendo editada.
+     */
     private void handleConfirmEdit(AccountEditView editView, Account accountToEdit) {
         String newName = editView.getTxtNameAccount().getText();
         String newTypeStr = editView.getListAccountType().getSelectedValue();
@@ -218,6 +259,10 @@ public class AccountController implements AccountObserver {
         }
     }
 
+    /**
+     * Calcula el interés compuesto de la cuenta seleccionada y muestra el resultado
+     * en la vista correspondiente.
+     */
     private void calculateInterest(){
         int selectedIndex = view.getListAccounts().getSelectedIndex();
         
@@ -291,9 +336,13 @@ public class AccountController implements AccountObserver {
         interestView.setVisible(true);
     }
 
+    /**
+     * Método llamado cuando el AccountManager notifica un cambio en la lista de cuentas.
+     *
+     * @param accountsList Lista actualizada de cuentas.
+     */
     @Override
     public void onNotify(List<Account> accountsList) {
         this.view.updateAccountList(accountsList);
-
     }
 }

@@ -1,15 +1,32 @@
 [{
   "initialBalance": 60,
   "name": "canelo ",
-  "movements": [],
+  "movements": [
+    {
+      "date": "2025-12-03T04:37:00.462",
+      "categoryType": "INCOME",
+      "amount": "199",
+      "description": "414",
+      "idMovement": "e4b60e3d-3dca-4ec5-b295-26098a3a9d6a",
+      "categoryName": "Pablo"
+    },
+    {
+      "date": "2025-12-03T04:37:54.027",
+      "categoryType": "EXPENSE",
+      "amount": "33535",
+      "description": "adad",
+      "idMovement": "5092d7da-a0c3-4a98-9c70-a2ecd657318f",
+      "categoryName": "Rra"
+    }
+  ],
   "id": 1,
   "type": "CASH",
   "coin": "MXN",
   "goals": [{
-    "amount": 60,
+    "amount": -33276,
     "targetAmount": 1000,
     "name": "si",
     "description": "dfsdf",
-    "currentAmount": 60
+    "currentAmount": -33276
   }]
 }]
