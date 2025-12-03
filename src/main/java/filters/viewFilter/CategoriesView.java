@@ -3,7 +3,6 @@ package filters.viewFilter;
 import java.awt.*;
 import java.util.List;
 
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
@@ -112,35 +111,31 @@ public class CategoriesView extends JPanel {
         add(footer, BorderLayout.SOUTH);
     }
 
-
-
-
     public void updateCategories(
-        List<Movement> incomes,
-        List<Movement> expenses,
-        double totalIncome,
-        double totalExpense) {
+            List<Movement> incomes,
+            List<Movement> expenses,
+            double totalIncome,
+            double totalExpense) {
 
-    totalIncomeLabel.setText(String.format("$%.2f", totalIncome));
-    totalExpenseLabel.setText(String.format("$%.2f", totalExpense));
+        totalIncomeLabel.setText(String.format("$%.2f", totalIncome));
+        totalExpenseLabel.setText(String.format("$%.2f", totalExpense));
 
-    incomeListModel.clear();
-    for (Movement m : incomes) {
-        incomeListModel.addElement(
-            m.getCategory().getName() +
-            "  -  $" + String.format("%.2f", m.getAmount()) +
-            "  -  " + m.getDate()  // <- fecha incluida
-        );
+        incomeListModel.clear();
+        for (Movement m : incomes) {
+            incomeListModel.addElement(
+                    m.getCategory().getName() +
+                            "  -  $" + String.format("%.2f", m.getAmount()) +
+                            "  -  " + m.getDate() // <- fecha incluida
+            );
+        }
+
+        expenseListModel.clear();
+        for (Movement m : expenses) {
+            expenseListModel.addElement(
+                    m.getCategory().getName() +
+                            "  -  $" + String.format("%.2f", m.getAmount().abs()) +
+                            "  -  " + m.getDate());
+        }
     }
-
-    expenseListModel.clear();
-    for (Movement m : expenses) {
-        expenseListModel.addElement(
-            m.getCategory().getName() +
-            "  -  $" + String.format("%.2f", m.getAmount().abs()) +
-            "  -  " + m.getDate()
-        );
-    }
-}
 
 }

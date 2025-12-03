@@ -1,15 +1,55 @@
-C:\Users\villa\OneDrive\Documentos\NetBeansProjects\construccion\src\main\java\modelFilter\FilterSubject.java
-C:\Users\villa\OneDrive\Documentos\NetBeansProjects\construccion\src\main\java\controllerReport\ReportController.java
-C:\Users\villa\OneDrive\Documentos\NetBeansProjects\construccion\src\main\java\modelFilter\FilterObserver.java
-C:\Users\villa\OneDrive\Documentos\NetBeansProjects\construccion\src\main\java\viewReport\FrmMain.java
-C:\Users\villa\OneDrive\Documentos\NetBeansProjects\construccion\src\main\java\com\mycompany\construccion\FrmMain.java
-C:\Users\villa\OneDrive\Documentos\NetBeansProjects\construccion\src\main\java\modelFilter\FilterModel.java
-C:\Users\villa\OneDrive\Documentos\NetBeansProjects\construccion\src\main\java\modelReport\ReportObserver.java
-C:\Users\villa\OneDrive\Documentos\NetBeansProjects\construccion\src\main\java\modelReport\ReportSubject.java
-C:\Users\villa\OneDrive\Documentos\NetBeansProjects\construccion\src\main\java\com\mycompany\construccion\Main.java
-C:\Users\villa\OneDrive\Documentos\NetBeansProjects\construccion\src\main\java\controllerFilter\FilterController.java
-C:\Users\villa\OneDrive\Documentos\NetBeansProjects\construccion\src\main\java\modelReport\ReportData.java
-C:\Users\villa\OneDrive\Documentos\NetBeansProjects\construccion\src\main\java\modelReport\JSONControllerPersistence.java
-C:\Users\villa\OneDrive\Documentos\NetBeansProjects\construccion\src\main\java\modelReport\ReportGenerator.java
-C:\Users\villa\OneDrive\Documentos\NetBeansProjects\construccion\src\main\java\com\mycompany\construccion\Construccion.java
-C:\Users\villa\OneDrive\Documentos\NetBeansProjects\construccion\src\main\java\modelReport\Movement.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\accounts\account_controller\AccountController.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\accounts\account_model\Account.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\accounts\account_model\AccountManager.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\accounts\account_model\AccountManagerSubject.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\accounts\account_model\AccountObserver.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\accounts\account_model\JsonDataHandler.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\accounts\account_view\AccountEditView.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\accounts\account_view\AccountInterestView.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\accounts\account_view\AccountView.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\com\mycompany\construccion\FrmMain.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\com\mycompany\construccion\Main.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\filters\controllerFilter\FilterController.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\filters\modelFilter\CategoriesModule.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\filters\viewFilter\CategoriesView.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\goals\goals_controller\GoalDetailController.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\goals\goals_controller\GoalsController.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\goals\goals_model\Goal.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\goals\goals_view\GoalActionListener.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\goals\goals_view\GoalDetailView.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\goals\goals_view\GoalEditView.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\goals\goals_view\GoalsView.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\goals\GoalsModule.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\movements\movement_controller\MovementController.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\movements\movement_model\CategoryManager.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\movements\movement_model\CategoryObserver.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\movements\movement_model\Movement.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\movements\movement_model\MovementCategory.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\movements\movement_model\MovementManagerSubject.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\movements\movement_view\MovementCategoriesView.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\movements\movement_view\MovementManagerView.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\movements\movement_view\MovementsModule.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\recurringMoves\recurring_controller\RecurringsController.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\recurringMoves\recurring_model\RecurrenceType.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\recurringMoves\recurring_model\RecurringJSONHandler.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\recurringMoves\recurring_model\RecurringMove.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\recurringMoves\recurring_model\RecurringObserver.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\recurringMoves\recurring_model\RecurringsModel.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\recurringMoves\recurring_view\RecurringsEditorView.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\recurringMoves\recurring_view\RecurringsModule.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\recurringMoves\recurring_view\RecurringsView.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\reminders\reminder_controller\RemindersController.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\reminders\reminder_model\Reminder.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\reminders\reminder_model\ReminderJSONHandler.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\reminders\reminder_model\ReminderObserver.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\reminders\reminder_model\RemindersModel.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\reminders\reminder_view\RemindersEditorView.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\reminders\reminder_view\RemindersModule.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\reminders\reminder_view\RemindersView.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\reports\controllerReport\ReportController.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\reports\modelReport\ReportData.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\reports\modelReport\ReportGenerator.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\reports\modelReport\ReportGeneratorTest.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\reports\modelReport\ReportObserver.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\reports\modelReport\ReportSubject.java
+C:\Users\Capi\Desktop\Construcción de Software\recurrings\src\main\java\reports\ReportsModule.java

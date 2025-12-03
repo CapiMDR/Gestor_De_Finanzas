@@ -1,0 +1,6 @@
+goals\goals_controller\GoalsControllerTest.class
+movements\movements_model\CategoryManagerTest.class
+accounts\account_model\AccountManagerTest.class
+accounts\account_model\AccountTest.class
+goals\goals_controller\GoalDetailControllerTest.class
+movements\movements_model\MovementTest.class

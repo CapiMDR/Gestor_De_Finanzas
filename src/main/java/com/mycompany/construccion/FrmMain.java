@@ -2,7 +2,6 @@ package com.mycompany.construccion;
 
 import java.awt.BorderLayout;
 import java.awt.Image;
-import java.util.List;
 
 import javax.swing.ImageIcon;
 
@@ -16,14 +15,11 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 
 import accounts.account_model.Account;
-import accounts.account_model.AccountManagerSubject;
-import accounts.account_model.AccountObserver;
 import filters.modelFilter.CategoriesModule;
 import goals.GoalsModule;
 import movements.movement_view.MovementsModule;
 import recurringMoves.recurring_view.RecurringsModule;
 import reminders.reminder_view.RemindersModule;
-import reports.controllerReport.ReportController;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license

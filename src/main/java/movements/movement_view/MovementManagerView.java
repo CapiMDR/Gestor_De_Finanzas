@@ -141,7 +141,7 @@ public class MovementManagerView extends javax.swing.JFrame {
                 btnAddCategoryIncome.setBackground(new java.awt.Color(245, 144, 68));
                 btnAddCategoryIncome
                                 .setIcon(new javax.swing.ImageIcon(
-                                                getClass().getResource("../../images/image 2.png"))); // NOI18N
+                                                getClass().getResource("/images/image 2.png"))); // NOI18N
 
                 javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
                 jPanel4.setLayout(jPanel4Layout);
@@ -418,7 +418,7 @@ public class MovementManagerView extends javax.swing.JFrame {
 
                 btnAddCategoryExpense.setBackground(new java.awt.Color(89, 137, 169));
                 btnAddCategoryExpense
-                                .setIcon(new javax.swing.ImageIcon(getClass().getResource("../../images/image 2.png"))); // NOI18N
+                                .setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/image 2.png"))); // NOI18N
 
                 javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
                 jPanel8.setLayout(jPanel8Layout);

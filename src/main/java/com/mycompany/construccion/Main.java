@@ -4,6 +4,7 @@ import accounts.account_controller.AccountController;
 import accounts.account_model.AccountManager;
 import accounts.account_view.AccountView;
 
+// Main del programa
 public class Main {
     public static void main(String[] args) {
         AccountManager.initAccountManager();

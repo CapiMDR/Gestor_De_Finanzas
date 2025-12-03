@@ -30,7 +30,6 @@ public class MovementCategoriesView extends javax.swing.JFrame {
                 lblTittle.setForeground(new java.awt.Color(255, 255, 255));
                 lblTittle.setText("EDITAR CATEGORIAS");
 
-
                 javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
                 jPanel5.setLayout(jPanel5Layout);
                 jPanel5Layout.setHorizontalGroup(
@@ -53,7 +52,7 @@ public class MovementCategoriesView extends javax.swing.JFrame {
                                                                                                 javax.swing.GroupLayout.DEFAULT_SIZE,
                                                                                                 44,
                                                                                                 Short.MAX_VALUE))
-                                                                                .addContainerGap(14, Short.MAX_VALUE)));
+                                                                .addContainerGap(14, Short.MAX_VALUE)));
 
                 jPanel4.setBackground(new java.awt.Color(239, 239, 239));
 
@@ -170,7 +169,7 @@ public class MovementCategoriesView extends javax.swing.JFrame {
                 btnDeleteCategory.setForeground(new java.awt.Color(255, 255, 255));
                 btnDeleteCategory
                                 .setIcon(new javax.swing.ImageIcon(
-                                                getClass().getResource("../../images/image 25.png"))); // NOI18N
+                                                getClass().getResource("/images/image 25.png"))); // NOI18N
                 btnDeleteCategory.setBorder(null);
 
                 listCategories.setBackground(new java.awt.Color(179, 65, 65));
@@ -288,9 +287,8 @@ public class MovementCategoriesView extends javax.swing.JFrame {
         }// </editor-fold>
 
         private void btnConfirmActionPerformed(java.awt.event.ActionEvent evt) {
-                
-        }
 
+        }
 
         private void txtNewNameCateogoryActionPerformed(java.awt.event.ActionEvent evt) {
         }

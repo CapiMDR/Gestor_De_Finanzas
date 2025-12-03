@@ -66,7 +66,7 @@ public class ReportController implements ReportObserver, AccountObserver {
         dataset.setValue("EXPENSE", 0);
 
         view.updateCharts(dataset);
-        
+
         // --- BarChart ---
         DefaultCategoryDataset barDataset = new DefaultCategoryDataset();
 
@@ -74,7 +74,6 @@ public class ReportController implements ReportObserver, AccountObserver {
         barDataset.addValue(0, "EXPENSE", "EXPENSE");
 
         view.updateBarChart(barDataset);
-
 
         String pathImg = "";
 
@@ -94,10 +93,9 @@ public class ReportController implements ReportObserver, AccountObserver {
         view.credit.setIcon(new ImageIcon(img));
     }
 
-
-    private void syncAccount(){
-        view.labelName.setText(""+account.getName());
-        view.labelMoney.setText("$"+account.getCurrentBalance());
+    private void syncAccount() {
+        view.labelName.setText("" + account.getName());
+        view.labelMoney.setText("$" + account.getCurrentBalance());
     }
 
     @Override
@@ -108,16 +106,14 @@ public class ReportController implements ReportObserver, AccountObserver {
     public void showCharts(String periodName, ReportData reportData) {
 
         BigDecimal income = reportData.getMovements().stream()
-        .filter(x -> x.getCategory().getType() == MovementCategory.MovementType.INCOME)
-        .map(Movement::getAmount)
-        .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-
+                .filter(x -> x.getCategory().getType() == MovementCategory.MovementType.INCOME)
+                .map(Movement::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         BigDecimal expense = reportData.getMovements().stream()
-        .filter(x -> x.getCategory().getType() == MovementCategory.MovementType.EXPENSE)
-        .map(Movement::getAmount)
-        .reduce(BigDecimal.ZERO, BigDecimal::add);     
+                .filter(x -> x.getCategory().getType() == MovementCategory.MovementType.EXPENSE)
+                .map(Movement::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         // --- PieChart ---
         DefaultPieDataset dataset = new DefaultPieDataset();

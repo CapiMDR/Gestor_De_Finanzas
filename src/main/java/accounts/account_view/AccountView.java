@@ -11,6 +11,7 @@ public class AccountView extends javax.swing.JFrame {
         public AccountView() {
                 initComponents();
         }
+
         @SuppressWarnings("unchecked")
         private void initComponents() {
 
@@ -36,14 +37,13 @@ public class AccountView extends javax.swing.JFrame {
                 btnAccessAccount = new javax.swing.JButton();
                 jPanel5 = new javax.swing.JPanel();
                 lblTittle = new javax.swing.JLabel();
-                
+
                 btnCalculateInterest = new javax.swing.JButton();
                 btnCalculateInterest.setBackground(new java.awt.Color(210, 210, 210));
                 btnCalculateInterest.setFont(new java.awt.Font("Inter", 1, 28));
                 btnCalculateInterest.setForeground(new java.awt.Color(255, 255, 255));
                 btnCalculateInterest.setBorder(null);
                 btnCalculateInterest.setText("Calc");
-
 
                 setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
                 setBackground(new java.awt.Color(89, 137, 169));
@@ -318,14 +318,14 @@ public class AccountView extends javax.swing.JFrame {
                 btnEditAccount.setBackground(new java.awt.Color(210, 210, 210));
                 btnEditAccount.setFont(new java.awt.Font("Inter", 1, 28)); // NOI18N
                 btnEditAccount.setForeground(new java.awt.Color(255, 255, 255));
-                btnEditAccount.setIcon(new javax.swing.ImageIcon(getClass().getResource("../../images/image 30.png"))); // NOI18N
+                btnEditAccount.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/image 30.png"))); // NOI18N
                 btnEditAccount.setBorder(null);
 
                 btnDeleteAccount.setBackground(new java.awt.Color(210, 210, 210));
                 btnDeleteAccount.setFont(new java.awt.Font("Inter", 1, 28)); // NOI18N
                 btnDeleteAccount.setForeground(new java.awt.Color(255, 255, 255));
                 btnDeleteAccount.setIcon(
-                                new javax.swing.ImageIcon(getClass().getResource("../../images/image 25.png"))); // NOI18N
+                                new javax.swing.ImageIcon(getClass().getResource("/images/image 25.png"))); // NOI18N
                 btnDeleteAccount.setBorder(null);
 
                 btnCalculateInterest.setBackground(new java.awt.Color(210, 210, 210));
@@ -333,7 +333,8 @@ public class AccountView extends javax.swing.JFrame {
                 btnCalculateInterest.setForeground(new java.awt.Color(255, 255, 255));
                 btnCalculateInterest.setText("Calc");
                 btnCalculateInterest.setBorder(null);
-                btnCalculateInterest.setIcon(new javax.swing.ImageIcon(getClass().getResource("../../images/interest.png")));
+                btnCalculateInterest.setIcon(
+                                new javax.swing.ImageIcon(getClass().getResource("/images/interest.png")));
 
                 btnAccessAccount.setBackground(new java.awt.Color(32, 83, 117));
                 btnAccessAccount.setFont(new java.awt.Font("Inter", 1, 28)); // NOI18N
@@ -341,43 +342,73 @@ public class AccountView extends javax.swing.JFrame {
                 btnAccessAccount.setText("Entrar");
                 btnAccessAccount.setBorder(null);
 
+                javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+                jPanel2.setLayout(jPanel2Layout);
+                jPanel2Layout.setHorizontalGroup(
+                                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(jPanel2Layout.createSequentialGroup()
+                                                                .addGap(24, 24, 24)
+                                                                .addGroup(jPanel2Layout.createParallelGroup(
+                                                                                javax.swing.GroupLayout.Alignment.TRAILING)
+                                                                                .addComponent(jScrollPane3,
+                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                449,
+                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                .addGroup(jPanel2Layout
+                                                                                                .createSequentialGroup()
+                                                                                                .addComponent(btnEditAccount,
+                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                                71,
+                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                                .addPreferredGap(
+                                                                                                                javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                                                .addComponent(btnDeleteAccount,
+                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                                71,
+                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                                .addPreferredGap(
+                                                                                                                javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                                                .addComponent(btnCalculateInterest,
+                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                                71,
+                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                                .addPreferredGap(
+                                                                                                                javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                                                .addComponent(btnAccessAccount,
+                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                                150,
+                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                                .addContainerGap(27, Short.MAX_VALUE)));
 
-
-                
-                 javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel2Layout.createSequentialGroup()
-                    .addGap(24, 24, 24)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 449, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(jPanel2Layout.createSequentialGroup()
-                            .addComponent(btnEditAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(btnDeleteAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(btnCalculateInterest, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(btnAccessAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        ))
-                    .addContainerGap(27, Short.MAX_VALUE))
-        );
-
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel2Layout.createSequentialGroup()
-                    .addGap(16, 16, 16)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 477, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(btnEditAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnDeleteAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnCalculateInterest, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnAccessAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGap(20, 20, 20))
-        );
-
+                jPanel2Layout.setVerticalGroup(
+                                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(jPanel2Layout.createSequentialGroup()
+                                                                .addGap(16, 16, 16)
+                                                                .addComponent(jScrollPane3,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                477,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(
+                                                                                javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                .addGroup(jPanel2Layout.createParallelGroup(
+                                                                                javax.swing.GroupLayout.Alignment.LEADING)
+                                                                                .addComponent(btnEditAccount,
+                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                70,
+                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                .addComponent(btnDeleteAccount,
+                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                70,
+                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                .addComponent(btnCalculateInterest,
+                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                70,
+                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                .addComponent(btnAccessAccount,
+                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                70,
+                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                .addGap(20, 20, 20)));
 
                 jPanel5.setBackground(new java.awt.Color(89, 137, 169));
 
@@ -471,7 +502,7 @@ public class AccountView extends javax.swing.JFrame {
         }
 
         private void btnAddAccountActionPerformed(java.awt.event.ActionEvent evt) {
-                
+
         }
 
         // Variables declaration - do not modify
@@ -501,7 +532,7 @@ public class AccountView extends javax.swing.JFrame {
         public javax.swing.JTextField txtNameAccount;
         // End of variables declaration
 
-        public javax.swing.JButton getBtnCalculateInterest(){
+        public javax.swing.JButton getBtnCalculateInterest() {
                 return btnCalculateInterest;
         }
 
