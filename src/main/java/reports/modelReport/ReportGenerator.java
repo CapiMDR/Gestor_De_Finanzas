@@ -9,6 +9,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import accounts.account_model.Account;
+import movements.movement_model.Movement;
+
 /**
  *
  * @author villa
@@ -16,7 +19,7 @@ import java.util.stream.Collectors;
 public class ReportGenerator {
 
     private ReportSubject reportSubject;
-    private JSONControllerPersistence persistence;
+    private Account account;
 
     /**
      * Creates a new ReportGenerator.
@@ -24,9 +27,9 @@ public class ReportGenerator {
      * @param subject     the subject used to notify observers
      * @param persistence the persistence controller used to load movement data
      */
-    public ReportGenerator(ReportSubject subject, JSONControllerPersistence persistence) {
+    public ReportGenerator(ReportSubject subject, Account selectedAccount) {
         this.reportSubject = subject;
-        this.persistence = persistence;
+        this.account = selectedAccount;
     }
 
     /**
@@ -34,11 +37,11 @@ public class ReportGenerator {
      */
     public void today() {
         LocalDate today = LocalDate.now();
-        List<Movement> movements = persistence.loadAllMovements().stream()
+        List<Movement> movements = account.getMovements().stream()
                 .filter(m -> m.getDate().toLocalDate().isEqual(today))
                 .collect(Collectors.toList());
 
-        double total = amountTotal(movements);
+        BigDecimal total = amountTotal(movements);
 
         ReportData data = new ReportData(
                 "Today",
@@ -56,14 +59,14 @@ public class ReportGenerator {
         LocalDate start = LocalDate.now().minusDays(7);
         LocalDate end = LocalDate.now();
 
-        List<Movement> movements = persistence.loadAllMovements().stream()
+        List<Movement> movements = account.getMovements().stream()
                 .filter(m -> {
                     LocalDate date = m.getDate().toLocalDate();
                     return (!date.isBefore(start) && !date.isAfter(end));
                 })
                 .collect(Collectors.toList());
 
-        double total = amountTotal(movements);
+        BigDecimal total = amountTotal(movements);
 
         ReportData data = new ReportData(
                 "Week Ago",
@@ -81,14 +84,14 @@ public class ReportGenerator {
      * @param end   end date of the period (inclusive)
      */
     public void selectPeriod(LocalDate start, LocalDate end) {
-        List<Movement> movements = persistence.loadAllMovements().stream()
+        List<Movement> movements = account.getMovements().stream()
                 .filter(m -> {
                     LocalDate date = m.getDate().toLocalDate();
                     return (!date.isBefore(start) && !date.isAfter(end));
                 })
                 .collect(Collectors.toList());
 
-        double total = amountTotal(movements);
+        BigDecimal total = amountTotal(movements);
 
         ReportData data = new ReportData(
                 "Selected Period",
@@ -105,10 +108,11 @@ public class ReportGenerator {
      * @param movements list of movements
      * @return total amount
      */
-    private double amountTotal(List<Movement> movements) {
-        double total = 0;
+    private BigDecimal amountTotal(List<Movement> movements) {
+        BigDecimal total = new BigDecimal(0);
         for (Movement m : movements) {
-            total += m.getAmount();
+
+            total.add(m.getAmount());
         }
         return total;
     }

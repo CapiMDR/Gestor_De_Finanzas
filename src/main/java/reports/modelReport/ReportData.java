@@ -5,6 +5,8 @@
 package reports.modelReport;
 
 import java.util.List;
+import java.math.BigDecimal;
+import movements.movement_model.Movement;
 
 /**
  *
@@ -13,10 +15,10 @@ import java.util.List;
 public class ReportData {
     private String periodName;
     private List<Movement> movements;
-    private double totalAmount;
+    private BigDecimal totalAmount;
     private String dateRange;
 
-    public ReportData(String periodName, List<Movement> movements, double totalAmount, String dateRange) {
+    public ReportData(String periodName, List<Movement> movements, BigDecimal totalAmount, String dateRange) {
         this.periodName = periodName;
         this.movements = movements;
         this.totalAmount = totalAmount;
@@ -31,7 +33,7 @@ public class ReportData {
         return movements;
     }
 
-    public double getTotalAmount() {
+    public BigDecimal getTotalAmount() {
         return totalAmount;
     }
 

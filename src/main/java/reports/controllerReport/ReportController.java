@@ -7,9 +7,15 @@ package reports.controllerReport;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 import com.mycompany.construccion.FrmMain;
+import java.math.BigDecimal;
+import java.util.List;
 
 import accounts.account_model.Account;
-import reports.modelReport.Movement;
+import accounts.account_model.AccountManagerSubject;
+import accounts.account_model.AccountObserver;
+import movements.movement_model.Movement;
+import movements.movement_model.MovementCategory;
+import movements.movement_model.MovementCategory.MovementType;
 import reports.modelReport.ReportData;
 import reports.modelReport.ReportGenerator;
 import reports.modelReport.ReportObserver;
@@ -18,19 +24,22 @@ import reports.modelReport.ReportObserver;
  *
  * @author villa
  */
-public class ReportController implements ReportObserver {
+public class ReportController implements ReportObserver, AccountObserver {
 
     private FrmMain view;
     private ReportGenerator reportGenerator;
+    private Account account;
 
     public void setViewModule(FrmMain view, ReportGenerator generator, Account selectedAccount) {
+        this.account = selectedAccount;
         System.out.println("Se seleccionó la cuenta " + selectedAccount.getName());
         this.view = view;
         this.reportGenerator = generator;
-
+        AccountManagerSubject.addObserver(this);
         reportGenerator.addObserver(this);
 
         assignActions();
+        syncAccount();
     }
 
     private void assignActions() {
@@ -47,7 +56,9 @@ public class ReportController implements ReportObserver {
             public void mouseClicked(java.awt.event.MouseEvent e) {
                 reportGenerator.weekAgo();
             }
-        });
+    });
+
+    
 
         /*
          * view.btnCustom.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -62,6 +73,12 @@ public class ReportController implements ReportObserver {
          */
     }
 
+
+    private void syncAccount(){
+        view.labelName.setText(""+account.getName());
+        view.labelMoney.setText("$"+account.getCurrentBalance());
+    }
+
     @Override
     public void onNotify(ReportData data) {
         showCharts(data.getPeriodName(), data);
@@ -69,15 +86,17 @@ public class ReportController implements ReportObserver {
 
     public void showCharts(String periodName, ReportData reportData) {
 
-        double income = reportData.getMovements().stream()
-                .filter(x -> x.getCategoryType().equals("INCOME"))
-                .mapToDouble(Movement::getAmount)
-                .sum();
+        BigDecimal income = reportData.getMovements().stream()
+        .filter(x -> x.getCategory().getType() == MovementCategory.MovementType.INCOME)
+        .map(Movement::getAmount)
+        .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        double expense = reportData.getMovements().stream()
-                .filter(x -> x.getCategoryType().equals("EXPENSE"))
-                .mapToDouble(Movement::getAmount)
-                .sum();
+
+
+        BigDecimal expense = reportData.getMovements().stream()
+        .filter(x -> x.getCategory().getType() == MovementCategory.MovementType.EXPENSE)
+        .map(Movement::getAmount)
+        .reduce(BigDecimal.ZERO, BigDecimal::add);     
 
         // --- PieChart ---
         DefaultPieDataset dataset = new DefaultPieDataset();
@@ -92,5 +111,11 @@ public class ReportController implements ReportObserver {
         barDataset.addValue(expense, "EXPENSE", "EXPENSE");
 
         view.updateBarChart(barDataset);
+    }
+
+    @Override
+    public void onNotify(List<Account> accountsList) {
+        System.out.println("Se actualizo el dinero");
+        syncAccount();
     }
 }

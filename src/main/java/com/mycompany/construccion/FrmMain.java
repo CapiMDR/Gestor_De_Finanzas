@@ -2,6 +2,8 @@ package com.mycompany.construccion;
 
 import java.awt.BorderLayout;
 import java.awt.Image;
+import java.util.List;
+
 import javax.swing.ImageIcon;
 
 import org.jfree.chart.ChartFactory;
@@ -14,10 +16,13 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 
 import accounts.account_model.Account;
+import accounts.account_model.AccountManagerSubject;
+import accounts.account_model.AccountObserver;
 import goals.GoalsModule;
 import movements.movement_view.MovementsModule;
 import recurringMoves.recurring_view.RecurringsModule;
 import reminders.reminder_view.RemindersModule;
+import reports.controllerReport.ReportController;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -28,23 +33,16 @@ import reminders.reminder_view.RemindersModule;
  *
  * @author villa
  */
-public class FrmMain extends javax.swing.JFrame {
+public class FrmMain extends javax.swing.JFrame  {
         private Account selectedAccount;
-
         /**
          * Creates new form FrmMain
          */
         public FrmMain(Account selectedAccount) {
                 this.selectedAccount = selectedAccount;
+                
                 initComponents();
-                // Configuration
-                ImageIcon iconConfiguration = (ImageIcon) configuration.getIcon();
-                Image imgConfiguration = iconConfiguration.getImage().getScaledInstance(
-                                configuration.getWidth(),
-                                configuration.getHeight(),
-                                Image.SCALE_SMOOTH);
-                // Escalar la imagen
-                configuration.setIcon(new ImageIcon(imgConfiguration));
+              
                 // Goal
                 ImageIcon iconGoal = (ImageIcon) goal.getIcon();
                 Image imgGoal = iconGoal.getImage().getScaledInstance(
@@ -54,14 +52,7 @@ public class FrmMain extends javax.swing.JFrame {
                 // Escalar la imagen
                 goal.setIcon(new ImageIcon(imgGoal));
 
-                // Account
-                ImageIcon iconAccount = (ImageIcon) account.getIcon();
-                Image imgAccount = iconAccount.getImage().getScaledInstance(
-                                account.getWidth(),
-                                account.getHeight(),
-                                Image.SCALE_SMOOTH);
-                // Escalar la imagen
-                account.setIcon(new ImageIcon(imgAccount));
+               
                 // Subscription
                 ImageIcon iconSubscription = (ImageIcon) subscription.getIcon();
                 Image imgSubscription = iconSubscription.getImage().getScaledInstance(
@@ -187,18 +178,18 @@ public class FrmMain extends javax.swing.JFrame {
                 goal = new javax.swing.JLabel();
                 jPanel5 = new javax.swing.JPanel();
                 notification = new javax.swing.JLabel();
-                jPanel6 = new javax.swing.JPanel();
-                account = new javax.swing.JLabel();
+                
+               
                 jPanel7 = new javax.swing.JPanel();
                 subscription = new javax.swing.JLabel();
                 jPanel3 = new javax.swing.JPanel();
                 pieChart = new javax.swing.JPanel();
                 barChart = new javax.swing.JPanel();
-                configuration = new javax.swing.JLabel();
+                
                 jPanel8 = new javax.swing.JPanel();
-                jLabel2 = new javax.swing.JLabel();
+                labelName = new javax.swing.JLabel();
                 jPanel9 = new javax.swing.JPanel();
-                jLabel3 = new javax.swing.JLabel();
+                labelMoney = new javax.swing.JLabel();
                 btnToday = new javax.swing.JLabel();
                 btnWeek = new javax.swing.JLabel();
                 credit = new javax.swing.JLabel();
@@ -320,41 +311,12 @@ public class FrmMain extends javax.swing.JFrame {
                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                 .addContainerGap()));
 
-                jPanel6.setBackground(new java.awt.Color(253, 157, 102));
+                
 
-                account.setForeground(new java.awt.Color(255, 153, 153));
-                account.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/account.png"))); // NOI18N
-                account.addMouseListener(new java.awt.event.MouseAdapter() {
-                        public void mouseClicked(java.awt.event.MouseEvent evt) {
-                                accountMouseClicked(evt);
-                        }
+               
+                
 
-                        public void mouseEntered(java.awt.event.MouseEvent evt) {
-                                accountMouseEntered(evt);
-                        }
-                });
-
-                javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
-                jPanel6.setLayout(jPanel6Layout);
-                jPanel6Layout.setHorizontalGroup(
-                                jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addGroup(jPanel6Layout.createSequentialGroup()
-                                                                .addGap(22, 22, 22)
-                                                                .addComponent(account,
-                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                                                46,
-                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addContainerGap(22, Short.MAX_VALUE)));
-                jPanel6Layout.setVerticalGroup(
-                                jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addGroup(jPanel6Layout.createSequentialGroup()
-                                                                .addContainerGap()
-                                                                .addComponent(account,
-                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                                                44,
-                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                                Short.MAX_VALUE)));
+                
 
                 jPanel7.setBackground(new java.awt.Color(253, 157, 102));
 
@@ -429,10 +391,7 @@ public class FrmMain extends javax.swing.JFrame {
                                                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout
                                                                 .createSequentialGroup()
                                                                 .addGap(69, 69, 69)
-                                                                .addComponent(jPanel6,
-                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                               
                                                                 .addPreferredGap(
                                                                                 javax.swing.LayoutStyle.ComponentPlacement.RELATED,
                                                                                 73,
@@ -529,34 +488,21 @@ public class FrmMain extends javax.swing.JFrame {
                                                                                 .addGroup(jPanel2Layout
                                                                                                 .createSequentialGroup()
                                                                                                 .addGap(25, 25, 25)
-                                                                                                .addComponent(jPanel6,
-                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)))));
+                                                                                                ))));
 
-                configuration.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/configuration.png"))); // NOI18N
-                configuration.setText("jLabel3");
-                configuration.addMouseListener(new java.awt.event.MouseAdapter() {
-                        public void mouseClicked(java.awt.event.MouseEvent evt) {
-                                configurationMouseClicked(evt);
-                        }
-
-                        public void mouseEntered(java.awt.event.MouseEvent evt) {
-                                configurationMouseEntered(evt);
-                        }
-                });
+              
 
                 jPanel8.setBackground(new java.awt.Color(241, 241, 241));
 
-                jLabel2.setFont(new java.awt.Font("Arial Black", 1, 36)); // NOI18N
-                jLabel2.setForeground(new java.awt.Color(77, 106, 196));
-                jLabel2.setText("Cuenta 4");
+                labelName.setFont(new java.awt.Font("Arial Black", 1, 36)); // NOI18N
+                labelName.setForeground(new java.awt.Color(77, 106, 196));
+                labelName.setText("Cuenta 4");
 
                 jPanel9.setBackground(new java.awt.Color(232, 231, 231));
 
-                jLabel3.setFont(new java.awt.Font("Segoe UI Black", 1, 24)); // NOI18N
-                jLabel3.setForeground(new java.awt.Color(102, 102, 102));
-                jLabel3.setText("$400.00");
+                labelMoney.setFont(new java.awt.Font("Segoe UI Black", 1, 24)); // NOI18N
+                labelMoney.setForeground(new java.awt.Color(102, 102, 102));
+                labelMoney.setText("$400.00");
 
                 btnToday.setForeground(new java.awt.Color(255, 153, 153));
                 btnToday.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/1.png"))); // NOI18N
@@ -588,7 +534,7 @@ public class FrmMain extends javax.swing.JFrame {
                                 jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addGroup(jPanel9Layout.createSequentialGroup()
                                                                 .addGap(15, 15, 15)
-                                                                .addComponent(jLabel3)
+                                                                .addComponent(labelMoney)
                                                                 .addGap(37, 37, 37)
                                                                 .addComponent(btnToday,
                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE,
@@ -618,7 +564,7 @@ public class FrmMain extends javax.swing.JFrame {
                                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE,
                                                                                                 44,
                                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                                .addComponent(jLabel3))
+                                                                                .addComponent(labelMoney))
                                                                 .addGap(11, 11, 11)));
 
                 credit.setForeground(new java.awt.Color(255, 153, 153));
@@ -641,7 +587,7 @@ public class FrmMain extends javax.swing.JFrame {
                                                                 javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                 .addGroup(jPanel8Layout.createSequentialGroup()
                                                                 .addGap(48, 48, 48)
-                                                                .addComponent(jLabel2)
+                                                                .addComponent(labelName)
                                                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE,
                                                                                 Short.MAX_VALUE))
                                                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout
@@ -657,7 +603,7 @@ public class FrmMain extends javax.swing.JFrame {
                                 jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addGroup(jPanel8Layout.createSequentialGroup()
                                                                 .addContainerGap()
-                                                                .addComponent(jLabel2)
+                                                                .addComponent(labelName)
                                                                 .addPreferredGap(
                                                                                 javax.swing.LayoutStyle.ComponentPlacement.RELATED,
                                                                                 javax.swing.GroupLayout.DEFAULT_SIZE,
@@ -689,10 +635,7 @@ public class FrmMain extends javax.swing.JFrame {
                                                                                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING,
                                                                                                 jPanel1Layout
                                                                                                                 .createSequentialGroup()
-                                                                                                                .addComponent(configuration,
-                                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                                                                                                45,
-                                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                                                
                                                                                                                 .addContainerGap())
                                                                                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING,
                                                                                                 jPanel1Layout.createSequentialGroup()
@@ -707,10 +650,7 @@ public class FrmMain extends javax.swing.JFrame {
                                                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout
                                                                 .createSequentialGroup()
                                                                 .addContainerGap()
-                                                                .addComponent(configuration,
-                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                                                45,
-                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                
                                                                 .addGap(17, 17, 17)
                                                                 .addComponent(jPanel8,
                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE,
@@ -739,13 +679,7 @@ public class FrmMain extends javax.swing.JFrame {
                 pack();
         }
 
-        private void configurationMouseClicked(java.awt.event.MouseEvent evt) {
-                System.out.println("Configuration");
-        }
-
-        private void configurationMouseEntered(java.awt.event.MouseEvent evt) {
-                configuration.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        }
+        
 
         private void goalMouseEntered(java.awt.event.MouseEvent evt) {
                 goal.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -766,14 +700,7 @@ public class FrmMain extends javax.swing.JFrame {
                 notification.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         }
 
-        private void accountMouseClicked(java.awt.event.MouseEvent evt) {
-                // TODO: Eliminar este botón
-                System.out.println("Account");
-        }
-
-        private void accountMouseEntered(java.awt.event.MouseEvent evt) {
-                account.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        }
+      
 
         private void subscriptionMouseClicked(java.awt.event.MouseEvent evt) {
                 RecurringsModule.controller.showRecMovesView();
@@ -817,23 +744,23 @@ public class FrmMain extends javax.swing.JFrame {
          */
 
         // Variables declaration - do not modify//GEN-BEGIN:variables
-        private javax.swing.JLabel account;
+        
         private javax.swing.JPanel addMovement;
         private javax.swing.JPanel barChart;
         public javax.swing.JLabel btnToday;
         public javax.swing.JLabel btnWeek;
-        private javax.swing.JLabel configuration;
+        
         private javax.swing.JLabel credit;
         private javax.swing.JLabel goal;
         private javax.swing.JLabel jLabel1;
-        private javax.swing.JLabel jLabel2;
-        private javax.swing.JLabel jLabel3;
+        public javax.swing.JLabel labelName;
+        public javax.swing.JLabel labelMoney;
         private javax.swing.JPanel jPanel1;
         private javax.swing.JPanel jPanel2;
         private javax.swing.JPanel jPanel3;
         private javax.swing.JPanel jPanel4;
         private javax.swing.JPanel jPanel5;
-        private javax.swing.JPanel jPanel6;
+        
         private javax.swing.JPanel jPanel7;
         private javax.swing.JPanel jPanel8;
         private javax.swing.JPanel jPanel9;
@@ -841,4 +768,7 @@ public class FrmMain extends javax.swing.JFrame {
         private javax.swing.JPanel pieChart;
         private javax.swing.JLabel subscription;
         // End of variables declaration//GEN-END:variables
+       
+
+        
 }

@@ -4,7 +4,7 @@ public class MovementCategory {
     public enum MovementType {
         INCOME, EXPENSE
     }
-
+    
     private String name;
     private MovementType type;
 
