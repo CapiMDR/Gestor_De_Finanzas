@@ -18,17 +18,33 @@
         "description": "14asdad",
         "idMovement": "57bf51a0-5a02-4382-9d20-eae2f525b149",
         "categoryName": "Salario canelo"
+      },
+      {
+        "date": "2025-12-03T02:57:49.883",
+        "categoryType": "EXPENSE",
+        "amount": "200",
+        "description": "adad",
+        "idMovement": "93644e62-ba93-46db-a2a4-782a3fccec45",
+        "categoryName": "Asd"
+      },
+      {
+        "date": "2025-12-03T02:58:12.315",
+        "categoryType": "INCOME",
+        "amount": "500",
+        "description": "dgbdgb",
+        "idMovement": "9939ae85-9bbb-4a7c-996e-28544dd4ad8e",
+        "categoryName": "Ad"
       }
     ],
     "id": 2,
-    "type": "DIGITAL",
-    "coin": "USD",
+    "type": "CASH",
+    "coin": "MXN",
     "goals": [{
-      "amount": 0,
-      "targetAmount": 10000,
-      "name": "chocolatita desde la cuenta 2",
-      "description": "asdad",
-      "currentAmount": 0
+      "amount": 1000,
+      "targetAmount": 1000,
+      "name": "pienso2",
+      "description": "hola",
+      "currentAmount": 1000
     }]
   },
   {
@@ -88,11 +104,11 @@
     "type": "CASH",
     "coin": "MXN",
     "goals": [{
-      "amount": 115,
+      "amount": 0,
       "targetAmount": 100,
       "name": "ad",
       "description": "cvcvb",
-      "currentAmount": 115
+      "currentAmount": 0
     }]
   }
 ]
