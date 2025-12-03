@@ -1,10 +1,13 @@
 package filters.viewFilter;
 
 import java.awt.*;
+import java.util.List;
 
-import java.util.Map;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+
+import movements.movement_model.Movement;
 
 public class CategoriesView extends JPanel {
 
@@ -15,7 +18,6 @@ public class CategoriesView extends JPanel {
     private JList<String> incomeList;
     private JList<String> expenseList;
 
-  
     private final Color BACKGROUND_COLOR = new Color(255, 195, 137);
     private final Color PANEL_COLOR = new Color(48, 45, 76);
     private final Color ACCENT_COLOR = new Color(249, 147, 34);
@@ -33,7 +35,6 @@ public class CategoriesView extends JPanel {
 
     private void initUI() {
 
-        
         JLabel title = new JLabel("CATEGORÍAS");
         title.setFont(new Font("Arial Black", Font.BOLD, 32));
         title.setForeground(PANEL_COLOR);
@@ -42,12 +43,10 @@ public class CategoriesView extends JPanel {
 
         add(title, BorderLayout.NORTH);
 
-        
         JPanel centerPanel = new JPanel(new GridLayout(1, 2, 20, 0));
         centerPanel.setBackground(BACKGROUND_COLOR);
         centerPanel.setBorder(new EmptyBorder(10, 20, 10, 20));
 
-       
         JPanel incomePanel = new JPanel(new BorderLayout());
         incomePanel.setBackground(INCOME_COLOR);
         incomePanel.setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -71,8 +70,6 @@ public class CategoriesView extends JPanel {
         incomePanel.add(totalIncomeLabel, BorderLayout.CENTER);
         incomePanel.add(new JScrollPane(incomeList), BorderLayout.SOUTH);
 
-
-        
         JPanel expensePanel = new JPanel(new BorderLayout());
         expensePanel.setBackground(EXPENSE_COLOR);
         expensePanel.setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -96,13 +93,11 @@ public class CategoriesView extends JPanel {
         expensePanel.add(totalExpenseLabel, BorderLayout.CENTER);
         expensePanel.add(new JScrollPane(expenseList), BorderLayout.SOUTH);
 
-
         centerPanel.add(incomePanel);
         centerPanel.add(expensePanel);
 
         add(centerPanel, BorderLayout.CENTER);
 
-        
         JButton closeBtn = new JButton("Cerrar");
         closeBtn.setBackground(ACCENT_COLOR);
         closeBtn.setForeground(TEXT_COLOR);
@@ -117,26 +112,35 @@ public class CategoriesView extends JPanel {
         add(footer, BorderLayout.SOUTH);
     }
 
-    
-    public void updateCategories(Map<String, Double> incomes,
-                                 Map<String, Double> expenses,
-                                 double totalIncome,
-                                 double totalExpense) {
 
-        totalIncomeLabel.setText(String.format("$%.2f", totalIncome));
-        totalExpenseLabel.setText(String.format("$%.2f", totalExpense));
 
-        incomeListModel.clear();
-        expenses.forEach((key, value) -> {});
 
-        incomeListModel.clear();
-        for (var entry : incomes.entrySet()) {
-            incomeListModel.addElement(entry.getKey() + "  -  $" + String.format("%.2f", entry.getValue()));
-        }
+    public void updateCategories(
+        List<Movement> incomes,
+        List<Movement> expenses,
+        double totalIncome,
+        double totalExpense) {
 
-        expenseListModel.clear();
-        for (var entry : expenses.entrySet()) {
-            expenseListModel.addElement(entry.getKey() + "  -  $" + String.format("%.2f", entry.getValue()));
-        }
+    totalIncomeLabel.setText(String.format("$%.2f", totalIncome));
+    totalExpenseLabel.setText(String.format("$%.2f", totalExpense));
+
+    incomeListModel.clear();
+    for (Movement m : incomes) {
+        incomeListModel.addElement(
+            m.getCategory().getName() +
+            "  -  $" + String.format("%.2f", m.getAmount()) +
+            "  -  " + m.getDate()  // <- fecha incluida
+        );
     }
+
+    expenseListModel.clear();
+    for (Movement m : expenses) {
+        expenseListModel.addElement(
+            m.getCategory().getName() +
+            "  -  $" + String.format("%.2f", m.getAmount().abs()) +
+            "  -  " + m.getDate()
+        );
+    }
+}
+
 }
