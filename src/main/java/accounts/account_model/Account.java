@@ -10,6 +10,7 @@ import movements.movement_model.Movement;
 /**
  * Representa una cuenta financiera que mantiene información sobre su saldo,
  * tipo, moneda, movimientos y metas asociadas.
+ * @author Martín Jesús Pool Chuc
  */
 public class Account {
 

@@ -10,6 +10,7 @@ import accounts.account_model.Account.Coin;
 /**
  * Gestiona las cuentas del sistema, permitiendo cargarlas, guardarlas,
  * agregarlas, editarlas, eliminarlas y notificar observadores cuando hay cambios.
+ * @author Martín Jesús Pool Chuc
  */
 public class AccountManager {
     /** Lista estática que contiene todas las cuentas. */

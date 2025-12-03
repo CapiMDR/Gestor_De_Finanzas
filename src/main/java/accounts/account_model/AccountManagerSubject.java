@@ -6,6 +6,7 @@ import java.util.List;
 /**
  * Clase que implementa el patrón Subject del patrón Observer para manejar
  * observadores relacionados con los cambios en la lista de cuentas.
+ * @author Martín Jesús Pool Chuc
  */
 public class AccountManagerSubject {
 

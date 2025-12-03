@@ -4,9 +4,9 @@ import goals.goals_model.Goal;
 import goals.goals_view.GoalDetailView;
 
 /**
- * Controller specifically for managing the Goal Detail View.
- * Handles the logic for displaying the progress of a specific goal.
- *
+ * Controlador específicamente encargado de gestionar la Vista de Detalle de una Meta.
+ * Maneja la lógica para mostrar el progreso de una meta específica.
+ * 
  * @author Jose Pablo Martinez
  */
 
@@ -19,9 +19,9 @@ public class GoalDetailController {
     }
 
     /**
-     * Receives a request to show details for a goal and updates the view.
+     * Recibe una solicitud para mostrar los detalles de una meta y actualiza la vista.
      * 
-     * @param objGoal The goal object to visualize.
+     * @param objGoal El objeto Meta a visualizar.
      */
 
     public void showDetails(Goal objGoal) {

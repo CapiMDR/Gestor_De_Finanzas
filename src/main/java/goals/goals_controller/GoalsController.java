@@ -16,11 +16,11 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 /**
- * Main Controller for the Goals Module.
- * Coordinates interaction between Views, Models, and Persistence.
- * Implements GoalActionListener to handle events from Goal Cards.
- *
- * @author Jose Pablo Martinez
+ * Controlador principal del Módulo de Metas.
+ * Coordina la interacción entre Vistas, Modelos y Persistencia.
+ * Implementa GoalActionListener para manejar los eventos de las tarjetas de metas.
+ * 
+ * @author Jose Pablo
  */
 
 public class GoalsController implements GoalActionListener, AccountObserver {
@@ -45,9 +45,9 @@ public class GoalsController implements GoalActionListener, AccountObserver {
     }
 
     /**
-     * Sets the active account context and refreshes the view.
+     * Establece la cuenta activa y refresca la vista.
      * 
-     * @param account The selected account.
+     * @param account La cuenta seleccionada.
      */
 
     public void setAccount(Account account) {
@@ -59,7 +59,7 @@ public class GoalsController implements GoalActionListener, AccountObserver {
             }
             mainView.setCurrencyLabel(currency);
 
-            // Auto-fill account name
+            // Auto-rellenar el nombre de la cuenta
             String accName = (currentAccount.getName() != null) ? currentAccount.getName() : "Current Account";
             mainView.setAccountName(accName);
 
@@ -74,7 +74,7 @@ public class GoalsController implements GoalActionListener, AccountObserver {
     }
 
     /**
-     * Handles updates triggered by external modules (like Movements).
+     * Maneja actualizaciones activadas por módulos externos (como Movimientos).
      */
 
     @Override
@@ -85,27 +85,27 @@ public class GoalsController implements GoalActionListener, AccountObserver {
         List<Movement> movements = currentAccount.getMovements();
         recalculateGoalsProgress(currentAccount.getGoals(), movements);
 
-        // Guardando cuentas de nuevo con los cambios calculados en las metas
+        // Guardando cuentas nuevamente después de recalcular las metas
         AccountManager.saveAccountsData();
         refreshView();
         System.out.println("CONTROLLER: Goals refreshed based.");
     }
 
     /**
-    * Calculates the total balance (Initial + Movements).
-    * Returns the BigDecimal value directly.
-    */
+     * Calcula el saldo total (Inicial + Movimientos).
+     * Devuelve el valor BigDecimal directamente.
+     */
 
     private BigDecimal calculateActualBalance() {
         if (currentAccount == null) return BigDecimal.ZERO;
 
-        //Obtener el saldo inicial
+        // Obtener el saldo inicial
         BigDecimal balance = currentAccount.getInitialBalance();
         if (balance == null) {
             balance = BigDecimal.ZERO;
         }
 
-        //Sumar y restar movimientos
+        // Sumar y restar movimientos
         List<Movement> movements = currentAccount.getMovements();
         if (movements != null) {
             for (Movement m : movements) {
@@ -128,8 +128,8 @@ public class GoalsController implements GoalActionListener, AccountObserver {
     }
 
     /**
-     * Updates goal progress based on the InitialBalance of 
-     * the account and the movements
+     * Actualiza el progreso de las metas basándose en el saldo inicial
+     * de la cuenta y los movimientos.
      */
 
     private void recalculateGoalsProgress(List<Goal> goals, List<Movement> movements) {
@@ -160,7 +160,7 @@ public class GoalsController implements GoalActionListener, AccountObserver {
     }
 
      /**
-     * Logic for buttons in the view
+     * Lógica para los botones en la vista.
      */
 
     private void handleAddGoalFromMainView() {

@@ -13,8 +13,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 /**
- * Main view for the Goals Module.
- * Uses initComponents() for integration.
+ * Vista principal del Módulo de Metas.
+ * Usa initComponents() para integrarse.
  *
  * @author Jose Pablo Martinez
  */
@@ -47,8 +47,8 @@ public class GoalsView extends JPanel {
     }
 
     /**
-     * Initializes the GUI components.
-     * This method is called from within the constructor to initialize the form.
+     * Inicializa los componentes de la interfaz gráfica.
+     * Este método se llama dentro del constructor para inicializar el formulario.
      */
 
     public void initComponents() {

@@ -26,6 +26,7 @@ import movements.movement_view.MovementManagerView;
  * Controlador encargado de gestionar los movimientos financieros de una cuenta,
  * así como la administración de categorías. Implementa el patrón Observer para
  * actualizar las vistas cuando se producen cambios en las categorías.
+ * @author Martín Jesús Pool Chuc
  */
 public class MovementController implements CategoryObserver {
     private CategoryManager model;

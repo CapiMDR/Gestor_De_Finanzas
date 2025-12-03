@@ -6,6 +6,11 @@ import java.util.UUID;
 
 import accounts.account_model.Account;
 
+/**
+ * Representa un movimiento financiero asociado a una cuenta, ya sea ingreso o gasto.
+ * Contiene información sobre descripción, monto, categoría, fecha y cuenta asociada.
+ * @author Martín Jesús Pool Chuc
+ */
 public class Movement {
 
     private UUID idMovement;
@@ -15,6 +20,16 @@ public class Movement {
     private MovementCategory category;
     Account account;
 
+    /**
+     * Constructor principal utilizado al crear un movimiento manualmente desde el sistema.
+     * Genera automáticamente un nuevo UUID y asigna la fecha actual.
+     *
+     * @param idMovement no se utiliza, pero se mantiene por compatibilidad
+     * @param description descripción del movimiento
+     * @param amount monto del movimiento
+     * @param category categoría del movimiento
+     * @param account cuenta asociada al movimiento
+     */
     public Movement(UUID idMovement, String description, BigDecimal amount, MovementCategory category, Account account) {
         this.idMovement = UUID.randomUUID();
         this.description = description;
@@ -24,7 +39,16 @@ public class Movement {
         this.account = account;
     }
 
-    // construct for load a JSON
+    /**
+     * Constructor utilizado al cargar un movimiento desde un archivo JSON.
+     *
+     * @param idMovement identificador único cargado desde persistencia
+     * @param description descripción del movimiento
+     * @param amount monto del movimiento
+     * @param category categoría del movimiento
+     * @param account cuenta asociada
+     * @param date fecha exacta del movimiento cargada desde persistencia
+     */
     public Movement(UUID idMovement, String description, BigDecimal amount, MovementCategory category, Account account, LocalDateTime date) {
         this.idMovement = idMovement;
         this.description = description;

@@ -26,6 +26,7 @@ import java.util.UUID;
 /**
  * Clase encargada de serializar y deserializar datos relacionados con cuentas,
  * movimientos, metas y categorías hacia y desde archivos JSON.
+ * @author Martín Jesús Pool Chuc
  */
 public class JsonDataHandler {
 

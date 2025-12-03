@@ -18,6 +18,7 @@ import reports.ReportsModule;
  * cuentas. Maneja la creación, edición, eliminación, acceso y cálculo de
  * intereses de cuentas, así como la notificación de cambios provenientes del
  * AccountManager.
+ * @author Martín Jesús Pool Chuc
  */
 public class AccountController implements AccountObserver {
     private AccountView view;
