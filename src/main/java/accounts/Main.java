@@ -10,6 +10,7 @@ public class Main {
         AccountView view = new AccountView();
 
         AccountController controller = new AccountController(view);
+        AccountManager.initAccountManager();
         AccountManager.loadInitialData();
 
         java.awt.EventQueue.invokeLater(() -> {

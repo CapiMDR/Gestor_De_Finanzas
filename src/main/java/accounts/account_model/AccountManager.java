@@ -11,8 +11,8 @@ public class AccountManager {
     private static List<Account> accounts = new ArrayList<>();
     private static JsonDataHandler dataHandler = new JsonDataHandler();
 
-    private AccountManager(JsonDataHandler dataHandler) {
-
+    private AccountManager() {
+        
     }
 
     public static void initAccountManager() {
@@ -89,5 +89,6 @@ public class AccountManager {
     public static List<Account> getAccounts() {
         return accounts;
     }
+
 
 }
