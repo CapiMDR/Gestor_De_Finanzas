@@ -76,6 +76,7 @@ public class GoalsController implements GoalActionListener, AccountObserver {
     /**
      * Handles updates triggered by external modules (like Movements).
      */
+
     @Override
     public void onNotify(List<Account> accountsList) {
         if (currentAccount == null)
@@ -91,22 +92,76 @@ public class GoalsController implements GoalActionListener, AccountObserver {
     }
 
     /**
-     * Business Logic: Updates goal progress based on Expenses matching the goal
-     * name.
+    * Calculates the total balance (Initial + Movements).
+    * Returns the BigDecimal value directly.
+    */
+
+    private BigDecimal calculateActualBalance() {
+        if (currentAccount == null) return BigDecimal.ZERO;
+
+        //Obtener el saldo inicial
+        BigDecimal balance = currentAccount.getInitialBalance();
+        if (balance == null) {
+            balance = BigDecimal.ZERO;
+        }
+
+        //Sumar y restar movimientos
+        List<Movement> movements = currentAccount.getMovements();
+        if (movements != null) {
+            for (Movement m : movements) {
+                if (m.getCategory() != null) {
+                    switch (m.getCategory().getType()) {
+                        case INCOME:
+                            balance = balance.add(m.getAmount());
+                            break;
+                        case EXPENSE:
+                            balance = balance.subtract(m.getAmount());
+                            break;
+                        default:
+                            System.out.println("Entrada no valida, tipo no encontrado");
+                         break;
+                    }
+                }
+            }
+        }
+        return balance;
+    }
+
+    /**
+     * Updates goal progress based on the InitialBalance of 
+     * the account and the movements
      */
 
     private void recalculateGoalsProgress(List<Goal> goals, List<Movement> movements) {
-        for (Goal goal : goals) {
-            BigDecimal totalSaved = BigDecimal.ZERO;
+        //Calculamos el balance actual de la cuenta
+        BigDecimal totalBalance = calculateActualBalance();
 
-            if (movements != null) {
-                for (Movement m : movements) {
-                    totalSaved = totalSaved.add(m.getAmount());
-                }
-            }
-            goal.setCurrentAmount(totalSaved);
+        //Asignamos el balance a las metas
+        if (goals != null) {
+        for (Goal goal : goals) {
+            goal.setCurrentAmount(totalBalance);
         }
     }
+    }
+
+    public void createNewGoal(String name, BigDecimal target, String desc) {
+        Goal newGoal = new Goal(name, target, desc);
+
+
+        if (currentAccount != null) {
+            //Calculamos el balance actual y se lo ponemos a la meta recien creada
+            BigDecimal currentBalance =calculateActualBalance();
+            newGoal.setCurrentAmount(currentBalance);
+
+            currentAccount.getGoals().add(newGoal);
+            AccountManager.saveAccountsData();
+            refreshView();
+        }
+    }
+
+     /**
+     * Logic for buttons in the view
+     */
 
     private void handleAddGoalFromMainView() {
         String name = mainView.getGoalName();
@@ -121,16 +176,6 @@ public class GoalsController implements GoalActionListener, AccountObserver {
 
         createNewGoal(name, target, desc); // Testing in JUnit
         mainView.clearForm();
-    }
-
-    public void createNewGoal(String name, BigDecimal target, String desc) {
-        Goal newGoal = new Goal(name, target, desc);
-
-        if (currentAccount != null) {
-            currentAccount.getGoals().add(newGoal);
-            AccountManager.saveAccountsData();
-            refreshView();
-        }
     }
 
     @Override
@@ -156,7 +201,6 @@ public class GoalsController implements GoalActionListener, AccountObserver {
             goal.setTargetAmount(newTarget);
             goal.setDescription(editView.getDescriptionInput());
 
-            // Corrected method name: saveAccountsData()
             AccountManager.saveAccountsData();
             refreshView();
             editView.closeDialog();

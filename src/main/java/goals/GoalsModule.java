@@ -23,8 +23,8 @@ public class GoalsModule {
         GoalsView goalsView = new GoalsView();
 
         JFrame frame = new JFrame("Metas");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(900, 600);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setSize(1040, 740);
         frame.add(goalsView);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);

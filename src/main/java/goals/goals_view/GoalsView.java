@@ -31,12 +31,12 @@ public class GoalsView extends JPanel {
 
     private JPanel cardsContainer;
 
-    private static final Color FORM_BG_COLOR = new Color(255, 178, 102); // Orange
-    private static final Color LIST_BG_COLOR = new Color(52, 101, 164); // Blue Turkey
+    private static final Color FORM_BG_COLOR = new Color(246, 107, 14); // Orange
+    private static final Color LIST_BG_COLOR = new Color(32, 83, 117); // Blue Turkey
     private static final Color HEADER_COLOR = Color.WHITE;
     private static final Color TEXT_PRIMARY = new Color(51, 51, 51);
     private static final Color CARD_BG = Color.WHITE;
-    private static final Color BTN_ADD_BG = new Color(0, 100, 0);
+    private static final Color BTN_ADD_BG = new Color(32, 83, 117);
     private static final Color BTN_ADD_TEXT = Color.WHITE;
     private static final Color EYE_BTN_COLOR = new Color(41, 128, 185); // Blue for Eye Circle
 
@@ -59,7 +59,7 @@ public class GoalsView extends JPanel {
         headerPanel.setBackground(new Color(255, 140, 0));
 
         JLabel lblTitle = new JLabel("METAS FINANCIERAS");
-        lblTitle.setFont(new Font("SansSerif", Font.BOLD, 24));
+        lblTitle.setFont(new Font("Inter", Font.BOLD, 38));
         lblTitle.setForeground(HEADER_COLOR);
         headerPanel.add(lblTitle);
 
@@ -98,26 +98,31 @@ public class GoalsView extends JPanel {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBackground(FORM_BG_COLOR);
         panel.setBorder(new EmptyBorder(20, 20, 20, 20));
+        Font inputFont = new Font("Inter", Font.BOLD, 12); 
 
         // Init Components
         txtName = new JTextField();
+        txtName.setFont(inputFont);
         txtTargetAmount = new JTextField();
+        txtTargetAmount.setFont(inputFont);
         txtDestinationAccount = new JTextField();
+        txtDestinationAccount.setFont(inputFont);
         txtDestinationAccount.setEditable(false);
         txtDestinationAccount.setBackground(new Color(240, 240, 240));
 
-        txtDescription = new JTextArea(3, 15);
+        txtDescription = new JTextArea(4, 15);
+        txtDescription.setFont(inputFont);
         txtDescription.setLineWrap(true);
         txtDescription.setWrapStyleWord(true);
 
         btnAddGoal = new JButton("Agregar Meta");
         btnAddGoal.setBackground(BTN_ADD_BG);
         btnAddGoal.setForeground(BTN_ADD_TEXT);
-        btnAddGoal.setFont(new Font("SansSerif", Font.BOLD, 14));
+        btnAddGoal.setFont(new Font("Inter", Font.BOLD, 28));
         btnAddGoal.setFocusPainted(false);
         btnAddGoal.setContentAreaFilled(false);
         btnAddGoal.setOpaque(true);
-        btnAddGoal.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
+        btnAddGoal.setMaximumSize(new Dimension(Integer.MAX_VALUE, 65));
         btnAddGoal.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         lblTargetAmount = new JLabel("Monto Objetivo ($):");
@@ -128,7 +133,7 @@ public class GoalsView extends JPanel {
 
         // Description
         JLabel lblDesc = new JLabel("Nota/Descripción:");
-        lblDesc.setFont(new Font("SansSerif", Font.BOLD, 12));
+        lblDesc.setFont(new Font("Inter", Font.BOLD, 18));
         lblDesc.setAlignmentX(Component.LEFT_ALIGNMENT);
         panel.add(lblDesc);
         panel.add(Box.createVerticalStrut(5));
@@ -145,7 +150,7 @@ public class GoalsView extends JPanel {
     }
 
     private void addFormField(JPanel panel, JLabel label, JTextField field) {
-        label.setFont(new Font("SansSerif", Font.BOLD, 12));
+        label.setFont(new Font("Inter", Font.BOLD, 18));
         label.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         // Force text fields to expand horizontally
@@ -238,7 +243,7 @@ public class GoalsView extends JPanel {
                     + "</b></body></html>";
             JLabel lblName = new JLabel(nameHtml);
             lblName.setForeground(TEXT_PRIMARY);
-            lblName.setFont(new Font("SansSerif", Font.PLAIN, 14));
+            lblName.setFont(new Font("Inter", Font.PLAIN, 18));
 
             NumberFormat currency = NumberFormat.getCurrencyInstance();
             JLabel lblAmount = new JLabel("Meta: " + currency.format(goal.getTargetAmount()));
@@ -251,7 +256,7 @@ public class GoalsView extends JPanel {
             JPanel rightPanel = new JPanel(new GridBagLayout());
             rightPanel.setBackground(CARD_BG);
             JButton btnView = new JButton("👁");
-            btnView.setFont(new Font("Segoe UI Symbol", Font.BOLD, 20));
+            btnView.setFont(new Font("Segoe UI Symbol", Font.BOLD, 25));
             btnView.setForeground(EYE_BTN_COLOR);
             btnView.setFocusPainted(false);
             btnView.setContentAreaFilled(false);
@@ -265,8 +270,8 @@ public class GoalsView extends JPanel {
             // Edit/Delete (Bottom)
             JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
             bottomPanel.setBackground(CARD_BG);
-            JButton btnEdit = createIconBtn("✎", "Editar", 18);
-            JButton btnDelete = createIconBtn("🗑", "Eliminar", 18);
+            JButton btnEdit = createIconBtn("✎", "Editar", 20);
+            JButton btnDelete = createIconBtn("🗑", "Eliminar", 20);
             bottomPanel.add(btnEdit);
             bottomPanel.add(Box.createHorizontalStrut(15));
             bottomPanel.add(btnDelete);
