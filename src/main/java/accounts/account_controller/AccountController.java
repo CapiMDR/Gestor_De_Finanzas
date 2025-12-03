@@ -8,9 +8,8 @@ import javax.swing.JOptionPane;
 import accounts.account_model.Account;
 import accounts.account_model.AccountManager;
 import accounts.account_model.AccountObserver;
-import accounts.account_model.Account.AccountType;
-import accounts.account_model.Account.Coin;
 import accounts.account_view.AccountEditView;
+import accounts.account_view.AccountInterestView;
 import accounts.account_view.AccountView;
 import reports.ReportsModule;
 
@@ -24,111 +23,135 @@ public class AccountController implements AccountObserver {
     }
 
     private void AssignEvents() {
-
         this.view.getBtnAccessAccount().addActionListener(e -> {
             accessAccount();
         });
 
         this.view.getBtnAddAccount().addActionListener(e -> {
-
-            String name = view.getAccountName();
-            String balanceStr = view.getInitialBalanceText();
-            String typeString = view.getSelectedAccountType();
-            String coinStr = view.getSelectedCurrency();
-
-            if (name.isEmpty() || balanceStr.isEmpty() || typeString == null || coinStr == null) {
-                JOptionPane.showMessageDialog(view,
-                        "Todos los campos deben estar llenos y las opciones deben estar seleccionadas.",
-                        "Error de Validación", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-            try {
-                BigDecimal balance = new BigDecimal(balanceStr);
-                Account.AccountType type = Account.AccountType.valueOf(typeString.toUpperCase());
-                Account.Coin coin = Account.Coin.valueOf(coinStr.toUpperCase());
-
-                AccountManager.addAccount(name, type, coin, balance);
-
-                JOptionPane.showMessageDialog(view,
-                        "Cuenta agregada exitosamente.",
-                        "Éxito", JOptionPane.INFORMATION_MESSAGE);
-                clearInputFields();
-
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(view,
-                        "El Saldo Inicial debe ser un número válido.",
-                        "Error de Formato", JOptionPane.ERROR_MESSAGE);
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(view,
-                        "Error al procesar la cuenta: " + ex.getMessage(),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            }
+            addAccount();
         });
 
         this.view.getBtnDeleteAccount().addActionListener(e -> {
-
-            int selectedIndex = view.getListAccounts().getSelectedIndex();
-
-            if (selectedIndex < 0) {
-                JOptionPane.showMessageDialog(view,
-                        "Debe seleccionar una cuenta para eliminarla",
-                        "Advertencia", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-
-            Account selectedAccount = AccountManager.getAccountByIndex(selectedIndex);
-
-            if (selectedAccount == null) {
-                JOptionPane.showMessageDialog(view,
-                        "Error al obtener la cuenta seleccionada. Intente de nuevo.",
-                        "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            int dialogResult = JOptionPane.showConfirmDialog(view,
-                    "¿Estás seguro de que desea eliminar la cuenta '" + selectedAccount.getName() + "'?",
-                    "Confirmar Eliminación", JOptionPane.YES_NO_OPTION);
-
-            if (dialogResult == JOptionPane.YES_OPTION) {
-                AccountManager.removeAccount(selectedAccount.getId());
-
-                JOptionPane.showMessageDialog(view,
-                        "Cuenta '" + selectedAccount.getName() + "' eliminada exitosamente.",
-                        "Éxito", JOptionPane.INFORMATION_MESSAGE);
-            }
+            deleteAccount();
         });
 
         this.view.getBtnEditAccount().addActionListener(e -> {
-            int selectedIndex = view.getListAccounts().getSelectedIndex();
-
-            if (selectedIndex < 0) {
-                JOptionPane.showMessageDialog(view,
-                        "Debe seleccionar una cuenta para editar.",
-                        "Advertencia", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-
-            Account accountToEdit = AccountManager.getAccountByIndex(selectedIndex);
-            if (accountToEdit != null) {
-                showEditForm(accountToEdit);
-            } else {
-                JOptionPane.showMessageDialog(view,
-                        "Error al obtener la cuenta seleccionada.",
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            }
+            editAccount();
         });
+
+        this.view.getBtnCalculateInterest().addActionListener(e -> {
+            calculateInterest();
+        });
+
+        
     }
 
-    public void addAccount(String name, AccountType type, Coin coin, BigDecimal balance) {
-        AccountManager.addAccount(name, type, coin, balance);
+    public void accessAccount(){
+        int selectedIndex = view.getListAccounts().getSelectedIndex();
+        Account selectedAccount = AccountManager.getAccountByIndex(selectedIndex);
+        if (selectedAccount == null) {
+            System.out.println("Seleccione una cuenta");
+            return;
+        }
+        System.out.println("Accediendo a la cuenta " + selectedAccount.getName());
+        ReportsModule.initReportsModule(selectedAccount);
     }
 
-    public void removeAccount(int idAccount) {
-        AccountManager.removeAccount(idAccount);
+    private void addAccount(){
+        String name = view.getAccountName();
+        String balanceStr = view.getInitialBalanceText();
+        String typeString = view.getSelectedAccountType();
+        String coinStr = view.getSelectedCurrency();
+
+        boolean isEmpty = name.isEmpty() || balanceStr.isEmpty() || typeString == null || coinStr == null;
+
+        if (isEmpty) {
+            JOptionPane.showMessageDialog(view,
+                    "Todos los campos deben estar llenos y las opciones deben estar seleccionadas.",
+                    "Error de Validación", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        try {
+            BigDecimal balance = new BigDecimal(balanceStr);
+
+            if (balance.compareTo(BigDecimal.ZERO) < 0){
+                throw new IllegalArgumentException("El saldo no puede ser negativo");
+            }
+
+            Account.AccountType type = Account.AccountType.valueOf(typeString.toUpperCase());
+            Account.Coin coin = Account.Coin.valueOf(coinStr.toUpperCase());
+
+            AccountManager.addAccount(name, type, coin, balance);
+
+            JOptionPane.showMessageDialog(view,
+                    "Cuenta agregada exitosamente.",
+                    "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            clearInputFields();
+
+        } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(view,
+                        "El Saldo Inicial debe ser un número válido.",
+                        "Error de Formato", JOptionPane.ERROR_MESSAGE);
+        } catch (IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog(view,
+                    ex.getMessage(),
+                    "Error de Validación", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(view,
+                        "Error al procesar la cuenta: " + ex.getMessage(),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+        }  
     }
 
-    public void editAccount(Account account, String name, AccountType type, Coin coin) {
-        AccountManager.editAccount(account, name, type, coin);
+    private void deleteAccount(){
+        int selectedIndex = view.getListAccounts().getSelectedIndex();
+
+        if (selectedIndex < 0) {
+            JOptionPane.showMessageDialog(view,
+                    "Debe seleccionar una cuenta para eliminarla",
+                    "Advertencia", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        Account selectedAccount = AccountManager.getAccountByIndex(selectedIndex);
+
+        if (selectedAccount == null) {
+            JOptionPane.showMessageDialog(view,
+                    "Error al obtener la cuenta seleccionada. Intente de nuevo.",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        int dialogResult = JOptionPane.showConfirmDialog(view,
+                "¿Estás seguro de que desea eliminar la cuenta '" + selectedAccount.getName() + "'?",
+                "Confirmar Eliminación", JOptionPane.YES_NO_OPTION);
+
+        if (dialogResult == JOptionPane.YES_OPTION) {
+            AccountManager.removeAccount(selectedAccount.getId());
+
+            JOptionPane.showMessageDialog(view,
+                    "Cuenta '" + selectedAccount.getName() + "' eliminada exitosamente.",
+                    "Éxito", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
+    private void editAccount(){
+        int selectedIndex = view.getListAccounts().getSelectedIndex();
+        if (selectedIndex < 0) {
+            JOptionPane.showMessageDialog(view,
+                    "Debe seleccionar una cuenta para editar.",
+                    "Advertencia", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        Account accountToEdit = AccountManager.getAccountByIndex(selectedIndex);
+        if (accountToEdit != null) {
+            showEditForm(accountToEdit);
+        } else {
+            JOptionPane.showMessageDialog(view,
+                    "Error al obtener la cuenta seleccionada.",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void clearInputFields() {
@@ -174,7 +197,6 @@ public class AccountController implements AccountObserver {
         }
 
         try {
-
             Account.AccountType newType = Account.AccountType.valueOf(newTypeStr.toUpperCase());
             Account.Coin newCoin = Account.Coin.valueOf(newCoinStr.toUpperCase());
 
@@ -196,15 +218,77 @@ public class AccountController implements AccountObserver {
         }
     }
 
-    public void accessAccount() {
+    private void calculateInterest(){
         int selectedIndex = view.getListAccounts().getSelectedIndex();
-        Account selectedAccount = AccountManager.getAccountByIndex(selectedIndex);
-        if (selectedAccount == null) {
-            System.out.println("Seleccione una cuenta");
+        
+        if (selectedIndex < 0) {
+            JOptionPane.showMessageDialog(view,
+                "Debe seleccionar una cuenta para calcular el interés",
+                "Advertencia", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        System.out.println("Accediendo a la cuenta " + selectedAccount.getName());
-        ReportsModule.initReportsModule(selectedAccount);
+
+        Account selectedAccount = AccountManager.getAccountByIndex(selectedIndex);
+
+        if (selectedAccount == null) {
+            JOptionPane.showMessageDialog(view,
+                "No se pudo obtener la cuenta seleccionada",
+                "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        AccountInterestView interestView = new AccountInterestView();
+        interestView.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        interestView.getTxtInitialBalance().setText(selectedAccount.getCurrentBalance().toString());
+
+        interestView.getBtnCalculate().addActionListener(e -> {
+            try {
+                BigDecimal initialBalance = selectedAccount.getCurrentBalance();
+
+                String interestStr = interestView.getTxtInterest().getText();
+                String timeStr = interestView.getTxtTime().getText();
+
+                if (interestStr.isEmpty() || timeStr.isEmpty()) {
+                    JOptionPane.showMessageDialog(interestView,
+                        "Debe ingresar una tasa y un tiempo",
+                        "Error de Validación", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
+                BigDecimal interestRate = new BigDecimal(interestStr);
+                BigDecimal timeYears = new BigDecimal(timeStr);
+
+                if (interestRate.compareTo(BigDecimal.ZERO) <= 0) {
+                    JOptionPane.showMessageDialog(interestView,
+                        "La tasa debe ser mayor que cero",
+                        "Error de Validación", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
+                if (timeYears.compareTo(BigDecimal.ZERO) <= 0) {
+                    JOptionPane.showMessageDialog(interestView,
+                        "El tiempo debe ser mayor que cero",
+                        "Error de Validación", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
+                BigDecimal r = interestRate.divide(BigDecimal.valueOf(100));
+                BigDecimal onePlusR = r.add(BigDecimal.ONE);
+
+                double exponent = timeYears.doubleValue();
+                BigDecimal futureBalance = initialBalance.multiply(onePlusR.pow((int) exponent));
+
+                interestView.getTxtFutureBalance().setText(futureBalance.toString());
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(interestView,
+                    "Error al calcular: " + ex.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+        interestView.setVisible(true);
     }
 
     @Override

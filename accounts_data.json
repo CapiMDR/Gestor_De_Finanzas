@@ -1,39 +1,50 @@
 [
   {
-    "initialBalance": 1234,
-    "name": "Cuenta 1",
-    "movements": [{
-      "date": "2025-12-02T19:43:26.799",
-      "categoryType": "INCOME",
-      "amount": "560",
-      "description": "qdqwd",
-      "idMovement": "03d5421f-b0c3-4beb-883b-443c0328a28e",
-      "categoryName": "Salario canelo"
-    }],
-    "id": 1,
+    "initialBalance": 124,
+    "name": "chocolatita",
+    "movements": [
+      {
+        "date": "2025-12-02T22:19:06.633",
+        "categoryType": "EXPENSE",
+        "amount": "24",
+        "description": "comifdda",
+        "idMovement": "a041effa-85fa-4778-9c1a-a0a4c50bd8bd",
+        "categoryName": "Canelo comida"
+      },
+      {
+        "date": "2025-12-01T22:20:57.904",
+        "categoryType": "INCOME",
+        "amount": "600",
+        "description": "14asdad",
+        "idMovement": "57bf51a0-5a02-4382-9d20-eae2f525b149",
+        "categoryName": "Salario canelo"
+      }
+    ],
+    "id": 2,
     "type": "DIGITAL",
-    "coin": "MXN",
+    "coin": "USD",
     "goals": [{
       "amount": 0,
-      "targetAmount": 1235,
-      "name": "chocolatita",
+      "targetAmount": 10000,
+      "name": "chocolatita desde la cuenta 2",
       "description": "asdad",
       "currentAmount": 0
     }]
   },
   {
-    "initialBalance": 124,
-    "name": "Cuenta 2",
-    "movements": [],
-    "id": 2,
+    "initialBalance": 14,
+    "name": "-41",
+    "movements": [{
+      "date": "2025-12-03T01:46:42.058",
+      "categoryType": "INCOME",
+      "amount": "3",
+      "description": "dad",
+      "idMovement": "ca1fd3f0-7903-4bee-a314-2c98764071b3",
+      "categoryName": "Ad"
+    }],
+    "id": 3,
     "type": "CASH",
     "coin": "MXN",
-    "goals": [{
-      "amount": 0,
-      "targetAmount": 1235,
-      "name": "chocolatita desde la cuenta 2",
-      "description": "asdad",
-      "currentAmount": 0
-    }]
+    "goals": []
   }
 ]

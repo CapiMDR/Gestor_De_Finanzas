@@ -40,12 +40,21 @@ public class MovementController implements CategoryObserver {
     }
 
     private void AssignEvents() {
-        this.view.getBtnAddIncome().addActionListener(e -> handleAddMovement(MovementType.INCOME));
+        this.view.getBtnAddIncome().addActionListener(e -> 
+            handleAddMovement(MovementType.INCOME)
+        );
 
-        this.view.getBtnAddExpense().addActionListener(e -> handleAddMovement(MovementType.EXPENSE));
+        this.view.getBtnAddExpense().addActionListener(e -> 
+            handleAddMovement(MovementType.EXPENSE)
+        );
 
-        this.view.getBtnAddCategoryIncome().addActionListener(e -> showCategoriesManagerView());
-        this.view.getBtnAddCategoryExpense().addActionListener(e -> showCategoriesManagerView());
+        this.view.getBtnAddCategoryIncome().addActionListener(e -> 
+            showCategoriesManagerView()
+        );
+
+        this.view.getBtnAddCategoryExpense().addActionListener(e -> 
+            showCategoriesManagerView()
+        );
     }
 
     private void handleAddMovement(MovementType type) {
@@ -59,14 +68,16 @@ public class MovementController implements CategoryObserver {
             amountStr = view.getTxtAmountIncome().getText();
             categoryName = view.getListCategoriesIncome().getSelectedValue();
             utilDate = view.getDateIncome().getDate();
-        } else { // EXPENSE
+        } else { //EXPENSE
             description = view.getTxtDescriptionExpense().getText();
             amountStr = view.getTxtAmountExpense().getText();
             categoryName = view.getListCategoriesExpense().getSelectedValue();
             utilDate = view.getDateExpense().getDate();
         }
 
-        if (description.isEmpty() || amountStr.isEmpty() || categoryName == null || utilDate == null) {
+        boolean isEmpty =description.isEmpty() || amountStr.isEmpty() || categoryName == null || utilDate == null;
+
+        if (isEmpty) {
             JOptionPane.showMessageDialog(view,
                     "Todos los campos son obligatorios.",
                     "Error de Validación", JOptionPane.WARNING_MESSAGE);
@@ -75,6 +86,11 @@ public class MovementController implements CategoryObserver {
 
         try {
             BigDecimal amount = new BigDecimal(amountStr);
+
+            if (amount.compareTo(BigDecimal.ZERO) < 0){
+                throw new IllegalArgumentException("El monto no puede ser negativo");
+            }
+
             LocalDateTime movementDate = utilDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
 
             MovementCategory category = model.getCategoryByName(categoryName);
@@ -101,6 +117,10 @@ public class MovementController implements CategoryObserver {
             JOptionPane.showMessageDialog(view,
                     "El Monto debe ser un número válido.",
                     "Error de Formato", JOptionPane.ERROR_MESSAGE);
+        } catch (IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog(view,
+                    ex.getMessage(),
+                    "Error de Validación", JOptionPane.ERROR_MESSAGE);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(view,
                     "Error al agregar movimiento: " + ex.getMessage(),
@@ -108,8 +128,7 @@ public class MovementController implements CategoryObserver {
         }
     }
 
-    public void addMovement(String description, BigDecimal amount, MovementCategory category, Account account,
-            LocalDateTime date) {
+    public void addMovement(String description, BigDecimal amount, MovementCategory category, Account account, LocalDateTime date) {
         Movement movement = new Movement(UUID.randomUUID(), description, amount, category, account, date);
 
         account.addMovement(movement);
@@ -208,8 +227,6 @@ public class MovementController implements CategoryObserver {
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
-    // Archivo: MovementController.java (Dentro de la clase MovementController)
 
     private void handleRemoveCategory(MovementCategoriesView categoriesView) {
         String categoryName = categoriesView.getListCategories().getSelectedValue();
