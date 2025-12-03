@@ -32,14 +32,14 @@ public class FilterController implements AccountObserver {
         if (account != null) {
             List<Movement> movements = account.getMovements();
             
-            // Mapa para almacenar categorías y sus totales
+        
             Map<String, BigDecimal> incomeCategories = new HashMap<>();
             Map<String, BigDecimal> expenseCategories = new HashMap<>();
             
             BigDecimal totalIncome = BigDecimal.ZERO;
             BigDecimal totalExpense = BigDecimal.ZERO;
             
-            // Procesar movimientos
+           
             for (Movement movement : movements) {
                 
                 String categoryName = "Sin categoría";
@@ -65,11 +65,10 @@ public class FilterController implements AccountObserver {
                 }
             }
 
-            // Hacer los valores effectively final
+           
             final double totalIncomeValue = totalIncome.doubleValue();
             final double totalExpenseValue = totalExpense.doubleValue();
 
-            // Actualizar la vista
             SwingUtilities.invokeLater(() -> {
                 
                 Map<String, Double> incomeCategoriesDouble = new HashMap<>();

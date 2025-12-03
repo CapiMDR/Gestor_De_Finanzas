@@ -109,14 +109,14 @@ public class FrmMain extends javax.swing.JFrame {
         }
 
         public void updateCharts(DefaultPieDataset dataset) {
-                crearGrafica(dataset);
+                createPieChart(dataset);
         }
 
         public void updateBarChart(DefaultCategoryDataset dataset) {
-                crearGraficaBarra(dataset);
+                createBarChart(dataset);
         }
 
-        private void crearGrafica(DefaultPieDataset dataset) {
+        private void createPieChart(DefaultPieDataset dataset) {
 
                 JFreeChart chart = ChartFactory.createPieChart(
                                 "Movements",
@@ -135,7 +135,7 @@ public class FrmMain extends javax.swing.JFrame {
                 pieChart.repaint();
         }
 
-        private void crearGraficaBarra(DefaultCategoryDataset dataset) {
+        private void createBarChart(DefaultCategoryDataset dataset) {
 
                 JFreeChart chart = ChartFactory.createBarChart(
                                 "Movements",

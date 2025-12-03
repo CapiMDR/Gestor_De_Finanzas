@@ -60,6 +60,21 @@ public class ReportController implements ReportObserver, AccountObserver {
     }
 
     private void initComponents() {
+        // --- PieChart ---
+        DefaultPieDataset dataset = new DefaultPieDataset();
+        dataset.setValue("INCOME", 0);
+        dataset.setValue("EXPENSE", 0);
+
+        view.updateCharts(dataset);
+        
+        // --- BarChart ---
+        DefaultCategoryDataset barDataset = new DefaultCategoryDataset();
+
+        barDataset.addValue(0, "INCOME", "INCOME");
+        barDataset.addValue(0, "EXPENSE", "EXPENSE");
+
+        view.updateBarChart(barDataset);
+
 
         String pathImg = "";
 
@@ -111,6 +126,7 @@ public class ReportController implements ReportObserver, AccountObserver {
 
         view.updateCharts(dataset);
 
+        // --- BarChart ---
         DefaultCategoryDataset barDataset = new DefaultCategoryDataset();
 
         barDataset.addValue(income, "INCOME", "INCOME");

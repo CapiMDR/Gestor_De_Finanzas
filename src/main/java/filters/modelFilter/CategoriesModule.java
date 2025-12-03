@@ -17,7 +17,7 @@ public class CategoriesModule {
         frame.add(categoriesView);
         frame.setLocationRelativeTo(null);
         
-        // Crear controlador y pasar la cuenta seleccionada
+        
         FilterController controller = new FilterController();
         if (selectedAccount != null) {
             controller.setViewModule(categoriesView, selectedAccount);
