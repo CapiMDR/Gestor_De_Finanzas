@@ -9,7 +9,9 @@ import java.util.TreeSet;
 import javax.swing.*;
 
 import movements.movement_model.CategoryManager;
+import movements.movement_model.CategoryObserver;
 import movements.movement_model.MovementCategory;
+import movements.movement_model.MovementManagerSubject;
 import recurringMoves.recurring_controller.RecurringsController;
 import recurringMoves.recurring_model.RecurrenceType;
 import recurringMoves.recurring_model.RecurringMove;
@@ -19,18 +21,19 @@ import recurringMoves.recurring_model.RecurringsModel;
 import java.math.BigDecimal;
 import java.time.format.DateTimeFormatter;
 
-public class RecurringsView extends javax.swing.JFrame implements RecurringObserver {
+public class RecurringsView extends javax.swing.JFrame implements RecurringObserver, CategoryObserver {
         private final RecurringsModel model;
         private final RecurringsController controller;
 
         public RecurringsView(RecurringsController controller, RecurringsModel model) {
                 setTitle("Movimientos recurrentes");
-                movementTypeCombo = new JComboBox<>(categoryManager.getCategories().keySet().toArray(new String[0]));
+                movementTypeCombo = new JComboBox<>();
+                onNotify(categoryManager.getCategories().values().stream().toList());
                 initComponents();
                 this.model = model;
                 this.controller = controller;
                 this.model.addObserver(this);
-
+                MovementManagerSubject.addObserver(this);
                 SpinnerDateModel dateModel = new SpinnerDateModel();
                 recMoveDateSpinner.setModel(dateModel);
                 recMoveDateSpinner.setEditor(new JSpinner.DateEditor(recMoveDateSpinner, "yyyy-MM-dd"));
@@ -38,6 +41,14 @@ public class RecurringsView extends javax.swing.JFrame implements RecurringObser
                 listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
 
                 updateRecurringList(model.getRecurrings());
+        }
+
+        @Override
+        public void onNotify(java.util.List<MovementCategory> categories) {
+                movementTypeCombo.removeAllItems();
+                for (MovementCategory category : categories) {
+                        movementTypeCombo.addItem(category.getName());
+                }
         }
 
         @Override

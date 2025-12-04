@@ -1,6 +1,7 @@
 recurringMoves\recurring_model\RecurringObserver.class
 accounts\account_view\AccountEditView$5.class
 accounts\account_view\AccountEditView$2.class
+recurringMoves\recurring_view\RecurringMoveAlertView$1.class
 accounts\account_view\AccountInterestView.class
 movements\movement_model\MovementCategory.class
 movements\movement_view\MovementManagerView$1.class
@@ -16,6 +17,7 @@ com\mycompany\construccion\FrmMain$4.class
 movements\movement_controller\MovementController.class
 com\mycompany\construccion\FrmMain$2.class
 movements\movement_view\MovementCategoriesView$2.class
+recurringMoves\recurring_view\RecurringMoveAlertView.class
 reminders\reminder_view\RemindersView.class
 accounts\account_view\AccountView$2.class
 reminders\reminder_view\RemindersView$1.class

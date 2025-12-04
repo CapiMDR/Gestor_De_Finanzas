@@ -3,6 +3,7 @@ package recurringMoves.recurring_view;
 import javax.swing.*;
 
 import movements.movement_model.CategoryManager;
+import movements.movement_model.CategoryObserver;
 import movements.movement_model.MovementCategory;
 import recurringMoves.recurring_model.RecurrenceType;
 import recurringMoves.recurring_model.RecurringMove;
@@ -11,7 +12,7 @@ import java.awt.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public class RecurringsEditorView extends JDialog {
+public class RecurringsEditorView extends JDialog implements CategoryObserver {
     private JTextField conceptField;
     private JTextArea descriptionArea;
     private JTextField amountField;
@@ -120,6 +121,14 @@ public class RecurringsEditorView extends JDialog {
 
         pack();
         setLocationRelativeTo(parent);
+    }
+
+    @Override
+    public void onNotify(java.util.List<MovementCategory> categories) {
+        movementTypeCombo.removeAllItems();
+        for (MovementCategory category : categories) {
+            movementTypeCombo.addItem(category.getName());
+        }
     }
 
     public RecurringMove getEditedRecMove() {

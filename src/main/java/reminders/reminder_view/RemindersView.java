@@ -89,7 +89,6 @@ public class RemindersView extends javax.swing.JFrame implements ReminderObserve
                 return row;
         }
 
-        @SuppressWarnings("unchecked")
         // <editor-fold defaultstate="collapsed" desc="Generated
         // Code">//GEN-BEGIN:initComponents
         private void initComponents() {
