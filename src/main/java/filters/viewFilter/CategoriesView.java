@@ -123,7 +123,7 @@ public class CategoriesView extends JPanel {
         incomeListModel.clear();
         for (Movement m : incomes) {
             incomeListModel.addElement(
-                    m.getCategory().getName() +
+                    m.getDescription() + " - " + m.getCategory().getName() +
                             "  -  $" + String.format("%.2f", m.getAmount()) +
                             "  -  " + m.getDate() // <- fecha incluida
             );
@@ -132,7 +132,7 @@ public class CategoriesView extends JPanel {
         expenseListModel.clear();
         for (Movement m : expenses) {
             expenseListModel.addElement(
-                    m.getCategory().getName() +
+                    m.getDescription() + " - " + m.getCategory().getName() +
                             "  -  $" + String.format("%.2f", m.getAmount().abs()) +
                             "  -  " + m.getDate());
         }

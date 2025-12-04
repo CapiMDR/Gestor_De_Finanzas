@@ -2,15 +2,23 @@ package recurringMoves.recurring_controller;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
+import accounts.account_model.Account;
+import accounts.account_model.AccountManager;
+import accounts.account_model.AccountManagerSubject;
+import movements.movement_model.Movement;
+import movements.movement_model.MovementCategory;
 import recurringMoves.recurring_model.RecurrenceType;
 import recurringMoves.recurring_model.RecurringMove;
 import recurringMoves.recurring_model.RecurringsModel;
+import recurringMoves.recurring_view.RecurringMoveAlertView;
 import recurringMoves.recurring_view.RecurringsEditorView;
 import recurringMoves.recurring_view.RecurringsView;
 
@@ -61,10 +69,11 @@ public class RecurringsController {
         for (RecurringMove recMove : recurringsModel.getRecurrings()) {
             if (recMove.shouldTrigger()) {
                 triggerRecurring(recMove);
+                recMove.setTriggered(true);
             } else {
                 // Como los recordatorios están ordenados por su fecha, si el actual no ha
                 // llegado a su tiempo, los demás tampoco
-                break;
+                // break;
             }
         }
     }
@@ -87,22 +96,45 @@ public class RecurringsController {
      * @param recMove el recordatorio que debe ser activado
      */
     private void triggerRecurring(RecurringMove recMove) {
-        recurringsModel.deleteRecurring(recMove);
-        RecurringMove next = recMove.createNextOccurrence();
-        recurringsModel.addRecurring(next);
-
-        recurringsModel.saveRecurrings();
-
-        javax.swing.SwingUtilities.invokeLater(() -> {
-            showRecMoveAlert(recMove);
-        });
+        SwingUtilities.invokeLater(() -> showRecurringMoveView(recMove));
     }
 
-    private void showRecMoveAlert(RecurringMove recMove) {
-        JOptionPane.showMessageDialog(recurringsView,
-                recMove.getDescription(),
-                recMove.getConcept() + " - Recordatorio",
-                JOptionPane.INFORMATION_MESSAGE);
+    private void showRecurringMoveView(RecurringMove recMove) {
+
+        List<Account> accounts = AccountManager.getAccounts();
+
+        RecurringMoveAlertView view = new RecurringMoveAlertView(recurringsView, recMove, accounts);
+
+        view.setOnApply(() -> {
+            Account selected = view.getSelectedAccount();
+            if (selected != null) {
+                System.out.println("Aplicando movimiento recurrente a la cuenta " + selected.getName());
+                performMovement(recMove, selected);
+
+                // Solamente si se aplica el movimiento a una cuenta se actualiza la
+                // "siguiente fecha", si no se realiza el pago se seguirá notificando al usuario
+                recurringsModel.deleteRecurring(recMove);
+                RecurringMove next = recMove.createNextOccurrence();
+                recurringsModel.addRecurring(next);
+                recurringsModel.saveRecurrings();
+            }
+            view.dispose();
+        });
+
+        view.setOnCancel(() -> view.dispose());
+
+        view.setVisible(true);
+    }
+
+    private void performMovement(RecurringMove recMove, Account account) {
+        Movement movement = new Movement(UUID.randomUUID(), recMove.getDescription(), recMove.getAmount(),
+                recMove.getCategory(),
+                account, LocalDateTime.now());
+
+        account.addMovement(movement);
+        AccountManager.saveAccountsData();
+
+        AccountManagerSubject.notifyObservers(AccountManager.getAccounts());
     }
 
     /**
@@ -115,11 +147,11 @@ public class RecurringsController {
      * @param recurrence  tipo de repetición
      */
     public void handleRecurringAddition(String concept, BigDecimal amount, String description,
-            LocalDateTime initialDate, RecurrenceType recurrence) {
+            LocalDateTime initialDate, RecurrenceType recurrence, MovementCategory category) {
         if (!isValidRecurring(concept, amount, description, initialDate, recurrence))
             return;
 
-        recurringsModel.addRecurring(concept, amount, description, initialDate, recurrence);
+        recurringsModel.addRecurring(concept, amount, description, initialDate, recurrence, category);
         recurringsModel.saveRecurrings();
     }
 

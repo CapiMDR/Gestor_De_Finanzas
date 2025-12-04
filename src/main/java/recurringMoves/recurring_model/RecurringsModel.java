@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.TreeSet;
 
+import movements.movement_model.MovementCategory;
+
 /**
  * Modelo encargado de gestionar los recordatorios recurrentes.
  * Mantiene un TreeSet para garantizar ordenamiento cronológico eficiente
@@ -18,7 +20,7 @@ public class RecurringsModel {
      * 
      * Cargados desde JSON al iniciar.
      */
-    private final TreeSet<RecurringMove> allRecurrings = RecurringJSONHandler.loadReminders();
+    private final TreeSet<RecurringMove> allRecurrings = RecurringJSONHandler.loadRecurrings();
 
     /** Lista de observadores suscritos a los cambios del modelo. */
     private final HashSet<RecurringObserver> observerList = new HashSet<>();
@@ -33,9 +35,9 @@ public class RecurringsModel {
      * @param recurrence  Tipo de recurrencia (diaria, semanal, mensual, etc.)
      */
     public void addRecurring(String concept, BigDecimal amount, String description,
-            LocalDateTime initialDate, RecurrenceType recurrence) {
+            LocalDateTime initialDate, RecurrenceType recurrence, MovementCategory category) {
 
-        RecurringMove reminder = new RecurringMove(concept, amount, description, initialDate, recurrence);
+        RecurringMove reminder = new RecurringMove(concept, amount, description, initialDate, recurrence, category);
         allRecurrings.add(reminder);
         notifyObservers();
     }

@@ -26,6 +26,7 @@ import movements.movement_view.MovementManagerView;
  * Controlador encargado de gestionar los movimientos financieros de una cuenta,
  * así como la administración de categorías. Implementa el patrón Observer para
  * actualizar las vistas cuando se producen cambios en las categorías.
+ * 
  * @author Martín Jesús Pool Chuc
  */
 public class MovementController implements CategoryObserver {
@@ -56,21 +57,13 @@ public class MovementController implements CategoryObserver {
      * Asigna los eventos de la interfaz de usuario a sus respectivos manejadores.
      */
     private void AssignEvents() {
-        this.view.getBtnAddIncome().addActionListener(e -> 
-            handleAddMovement(MovementType.INCOME)
-        );
+        this.view.getBtnAddIncome().addActionListener(e -> handleAddMovement(MovementType.INCOME));
 
-        this.view.getBtnAddExpense().addActionListener(e -> 
-            handleAddMovement(MovementType.EXPENSE)
-        );
+        this.view.getBtnAddExpense().addActionListener(e -> handleAddMovement(MovementType.EXPENSE));
 
-        this.view.getBtnAddCategoryIncome().addActionListener(e -> 
-            showCategoriesManagerView()
-        );
+        this.view.getBtnAddCategoryIncome().addActionListener(e -> showCategoriesManagerView());
 
-        this.view.getBtnAddCategoryExpense().addActionListener(e -> 
-            showCategoriesManagerView()
-        );
+        this.view.getBtnAddCategoryExpense().addActionListener(e -> showCategoriesManagerView());
     }
 
     /**
@@ -89,14 +82,14 @@ public class MovementController implements CategoryObserver {
             amountStr = view.getTxtAmountIncome().getText();
             categoryName = view.getListCategoriesIncome().getSelectedValue();
             utilDate = view.getDateIncome().getDate();
-        } else { //EXPENSE
+        } else { // EXPENSE
             description = view.getTxtDescriptionExpense().getText();
             amountStr = view.getTxtAmountExpense().getText();
             categoryName = view.getListCategoriesExpense().getSelectedValue();
             utilDate = view.getDateExpense().getDate();
         }
 
-        boolean isEmpty =description.isEmpty() || amountStr.isEmpty() || categoryName == null || utilDate == null;
+        boolean isEmpty = description.isEmpty() || amountStr.isEmpty() || categoryName == null || utilDate == null;
 
         if (isEmpty) {
             JOptionPane.showMessageDialog(view,
@@ -108,7 +101,7 @@ public class MovementController implements CategoryObserver {
         try {
             BigDecimal amount = new BigDecimal(amountStr);
 
-            if (amount.compareTo(BigDecimal.ZERO) < 0){
+            if (amount.compareTo(BigDecimal.ZERO) < 0) {
                 throw new IllegalArgumentException("El monto no puede ser negativo");
             }
 
@@ -158,7 +151,8 @@ public class MovementController implements CategoryObserver {
      * @param account     la cuenta a la que pertenece
      * @param date        la fecha del movimiento
      */
-    public void addMovement(String description, BigDecimal amount, MovementCategory category, Account account, LocalDateTime date) {
+    public void addMovement(String description, BigDecimal amount, MovementCategory category, Account account,
+            LocalDateTime date) {
         Movement movement = new Movement(UUID.randomUUID(), description, amount, category, account, date);
 
         account.addMovement(movement);

@@ -5,8 +5,11 @@ import java.awt.Dimension;
 import java.time.*;
 import java.util.Date;
 import java.util.TreeSet;
+
 import javax.swing.*;
 
+import movements.movement_model.CategoryManager;
+import movements.movement_model.MovementCategory;
 import recurringMoves.recurring_controller.RecurringsController;
 import recurringMoves.recurring_model.RecurrenceType;
 import recurringMoves.recurring_model.RecurringMove;
@@ -22,6 +25,7 @@ public class RecurringsView extends javax.swing.JFrame implements RecurringObser
 
         public RecurringsView(RecurringsController controller, RecurringsModel model) {
                 setTitle("Movimientos recurrentes");
+                movementTypeCombo = new JComboBox<>(categoryManager.getCategories().keySet().toArray(new String[0]));
                 initComponents();
                 this.model = model;
                 this.controller = controller;
@@ -32,6 +36,7 @@ public class RecurringsView extends javax.swing.JFrame implements RecurringObser
                 recMoveDateSpinner.setEditor(new JSpinner.DateEditor(recMoveDateSpinner, "yyyy-MM-dd"));
 
                 listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
+
                 updateRecurringList(model.getRecurrings());
         }
 
@@ -116,6 +121,7 @@ public class RecurringsView extends javax.swing.JFrame implements RecurringObser
                 recMoveCombo = new javax.swing.JComboBox<>();
                 jLabel3 = new javax.swing.JLabel();
                 jLabel7 = new javax.swing.JLabel();
+                jLabel8 = new javax.swing.JLabel();
                 jPanel7 = new javax.swing.JPanel();
                 addBTN = new javax.swing.JButton();
 
@@ -187,6 +193,11 @@ public class RecurringsView extends javax.swing.JFrame implements RecurringObser
 
                 jPanel4.setBackground(new java.awt.Color(255, 255, 255));
 
+                jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+                jLabel8.setForeground(new java.awt.Color(17, 43, 60));
+                jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+                jLabel8.setText("Categoría:");
+
                 jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
                 jLabel2.setForeground(new java.awt.Color(17, 43, 60));
                 jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -221,6 +232,10 @@ public class RecurringsView extends javax.swing.JFrame implements RecurringObser
                                                                 .addContainerGap(16, Short.MAX_VALUE)
                                                                 .addGroup(jPanel5Layout.createParallelGroup(
                                                                                 javax.swing.GroupLayout.Alignment.LEADING)
+                                                                                .addComponent(movementTypeCombo,
+                                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                                180,
+                                                                                                GroupLayout.PREFERRED_SIZE)
                                                                                 .addComponent(recMoveCombo,
                                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE,
                                                                                                 javax.swing.GroupLayout.DEFAULT_SIZE,
@@ -251,6 +266,13 @@ public class RecurringsView extends javax.swing.JFrame implements RecurringObser
                                 jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addGroup(jPanel5Layout.createSequentialGroup()
                                                                 .addGap(14, 14, 14)
+                                                                .addPreferredGap(
+                                                                                LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                .addComponent(movementTypeCombo,
+                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                GroupLayout.PREFERRED_SIZE)
+                                                                .addGap(18, 18, 18)
                                                                 .addComponent(recMoveConceptTXT,
                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE,
                                                                                 javax.swing.GroupLayout.DEFAULT_SIZE,
@@ -301,6 +323,11 @@ public class RecurringsView extends javax.swing.JFrame implements RecurringObser
                                                                                                 .createParallelGroup(
                                                                                                                 javax.swing.GroupLayout.Alignment.LEADING,
                                                                                                                 false)
+                                                                                                .addComponent(jLabel8,
+                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                                123,
+                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+
                                                                                                 .addComponent(jLabel2,
                                                                                                                 javax.swing.GroupLayout.DEFAULT_SIZE,
                                                                                                                 123,
@@ -340,6 +367,12 @@ public class RecurringsView extends javax.swing.JFrame implements RecurringObser
                                                                                                 Short.MAX_VALUE)
                                                                                 .addGroup(jPanel4Layout
                                                                                                 .createSequentialGroup()
+                                                                                                .addComponent(jLabel8,
+                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                                45,
+                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                                .addPreferredGap(
+                                                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                                                                 .addComponent(jLabel2,
                                                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE,
                                                                                                                 45,
@@ -369,7 +402,6 @@ public class RecurringsView extends javax.swing.JFrame implements RecurringObser
                                                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                                                 .addGap(0, 13, Short.MAX_VALUE)))
                                                                 .addGap(63, 63, 63)));
-
                 javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
                 jPanel3.setLayout(jPanel3Layout);
                 jPanel3Layout.setHorizontalGroup(
@@ -500,14 +532,20 @@ public class RecurringsView extends javax.swing.JFrame implements RecurringObser
                 } catch (NumberFormatException e) {
                         amount = BigDecimal.ZERO;
                 }
+
                 RecurrenceType recurrence = (RecurrenceType) recMoveCombo.getSelectedItem();
 
-                controller.handleRecurringAddition(concept, amount, description, initialDate, recurrence);
+                String type = (String) movementTypeCombo.getSelectedItem();
+                MovementCategory category = categoryManager.getCategoryByName(type);
+
+                controller.handleRecurringAddition(concept, amount, description, initialDate, recurrence, category);
         }
 
         // Variables declaration - do not modify//GEN-BEGIN:variables
+        private CategoryManager categoryManager = new CategoryManager();
         private javax.swing.JButton addBTN;
         private javax.swing.JLabel jLabel1;
+        private javax.swing.JLabel jLabel8;
         private javax.swing.JLabel jLabel2;
         private javax.swing.JLabel jLabel3;
         private javax.swing.JLabel jLabel4;
@@ -527,5 +565,6 @@ public class RecurringsView extends javax.swing.JFrame implements RecurringObser
         private javax.swing.JTextField recMoveConceptTXT;
         private javax.swing.JSpinner recMoveDateSpinner;
         private javax.swing.JTextField recMoveDescTXT;
+        private JComboBox<String> movementTypeCombo;
         // End of variables declaration//GEN-END:variables
 }

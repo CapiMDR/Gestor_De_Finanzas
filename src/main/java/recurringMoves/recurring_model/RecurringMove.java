@@ -3,6 +3,10 @@ package recurringMoves.recurring_model;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import movements.movement_model.Movement;
+import movements.movement_model.MovementCategory;
+import movements.movement_model.MovementCategory.MovementType;
+
 /**
  * Representa un movimiento recurrente (un pago o acción que debe repetirse
  * con una cierta frecuencia). Cada instancia contiene la información necesaria
@@ -31,6 +35,13 @@ public class RecurringMove {
     private RecurrenceType recurrence; // Diario/Mensual/Anual
 
     /**
+     * Si el pago recurrente ya se ha notificado al usuario en esta ejecución
+     */
+    private boolean hasTriggered = false;
+
+    private MovementCategory category;
+
+    /**
      * Crea un nuevo movimiento recurrente usando la fecha inicial como momento
      * de la primera activación y estableciendo la frecuencia correspondiente.
      *
@@ -42,13 +53,14 @@ public class RecurringMove {
      *                    etc.)
      */
     public RecurringMove(String concept, BigDecimal amount, String description,
-            LocalDateTime initialDate, RecurrenceType recurrence) {
+            LocalDateTime initialDate, RecurrenceType recurrence, MovementCategory type) {
 
         this.concept = concept;
         this.amount = amount;
         this.description = description;
         this.initialDate = initialDate;
         this.recurrence = recurrence;
+        this.category = type;
     }
 
     /** @return el concepto del movimiento */
@@ -105,7 +117,15 @@ public class RecurringMove {
      */
     public boolean shouldTrigger() {
         LocalDateTime now = LocalDateTime.now();
-        return !initialDate.isAfter(now);
+        return !initialDate.isAfter(now) && !hasTriggered;
+    }
+
+    public void setTriggered(boolean state) {
+        hasTriggered = state;
+    }
+
+    public MovementCategory getCategory() {
+        return category;
     }
 
     /**
@@ -125,7 +145,8 @@ public class RecurringMove {
                 amount,
                 description,
                 nextDate,
-                recurrence);
+                recurrence,
+                category);
     }
 
     /**

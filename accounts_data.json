@@ -1,32 +1,100 @@
-[{
-  "initialBalance": 60,
-  "name": "canelo ",
-  "movements": [
-    {
-      "date": "2025-12-03T04:37:00.462",
-      "categoryType": "INCOME",
-      "amount": "199",
-      "description": "414",
-      "idMovement": "e4b60e3d-3dca-4ec5-b295-26098a3a9d6a",
-      "categoryName": "Pablo"
-    },
-    {
-      "date": "2025-12-03T04:37:54.027",
-      "categoryType": "EXPENSE",
-      "amount": "33535",
-      "description": "adad",
-      "idMovement": "5092d7da-a0c3-4a98-9c70-a2ecd657318f",
-      "categoryName": "Rra"
-    }
-  ],
-  "id": 1,
-  "type": "DIGITAL",
-  "coin": "MXN",
-  "goals": [{
-    "amount": -33276,
-    "targetAmount": 1000,
-    "name": "si",
-    "description": "dfsdf",
-    "currentAmount": -33276
-  }]
-}]
+[
+  {
+    "initialBalance": 60,
+    "name": "canelo ",
+    "movements": [
+      {
+        "date": "2025-12-03T04:37:00.462",
+        "categoryType": "INCOME",
+        "amount": "199",
+        "description": "414",
+        "idMovement": "e4b60e3d-3dca-4ec5-b295-26098a3a9d6a",
+        "categoryName": "Pablo"
+      },
+      {
+        "date": "2025-12-03T04:37:54.027",
+        "categoryType": "EXPENSE",
+        "amount": "33535",
+        "description": "adad",
+        "idMovement": "5092d7da-a0c3-4a98-9c70-a2ecd657318f",
+        "categoryName": "Rra"
+      },
+      {
+        "date": "2025-12-03T19:23:04.004319900",
+        "categoryType": "INCOME",
+        "amount": "500",
+        "description": "sdf",
+        "idMovement": "ff4d7bae-0616-4fc2-8560-ff9c9b77a284",
+        "categoryName": "Pablo"
+      },
+      {
+        "date": "2025-12-03T19:23:20.751909600",
+        "categoryType": "INCOME",
+        "amount": "50000000",
+        "description": "sdf",
+        "idMovement": "e8075a95-1872-436a-a2ef-3980ecfe050b",
+        "categoryName": "Pablo"
+      },
+      {
+        "date": "2025-12-03T20:07:48.526808300",
+        "categoryType": "EXPENSE",
+        "amount": "150",
+        "description": "Pagar netflix",
+        "idMovement": "a6e0ad8e-eae0-485b-a083-d3fc364fdc9c",
+        "categoryName": "Rra"
+      },
+      {
+        "date": "2025-12-03T20:10:21.698682600",
+        "categoryType": "INCOME",
+        "amount": "100",
+        "description": "Pagar spotify",
+        "idMovement": "3a304fec-603a-4375-b6c5-9794c2bee8fe",
+        "categoryName": "Pablo"
+      }
+    ],
+    "id": 1,
+    "type": "DIGITAL",
+    "coin": "MXN",
+    "goals": [{
+      "amount": 0,
+      "targetAmount": 1000,
+      "name": "si",
+      "description": "dfsdf",
+      "currentAmount": 0
+    }]
+  },
+  {
+    "initialBalance": 100,
+    "name": "Cuenta Capi",
+    "movements": [
+      {
+        "date": "2025-12-03T20:10:17.730472",
+        "categoryType": "INCOME",
+        "amount": "800",
+        "description": "Pagar colegiatura",
+        "idMovement": "678142f6-86c0-4620-ae5f-34098fac477c",
+        "categoryName": "Pablo"
+      },
+      {
+        "date": "2025-12-03T20:10:39.199746500",
+        "categoryType": "INCOME",
+        "amount": "100",
+        "description": "Pagar spotify",
+        "idMovement": "2ba2a920-2e40-49fa-a089-85b5e72f7665",
+        "categoryName": "Pablo"
+      },
+      {
+        "date": "2025-12-03T20:15:40.011328400",
+        "categoryType": "EXPENSE",
+        "amount": "100",
+        "description": "Pagar spotify",
+        "idMovement": "7a5652cb-1bfd-4566-b127-7df9ef4bf5fd",
+        "categoryName": "Rra"
+      }
+    ],
+    "id": 2,
+    "type": "DIGITAL",
+    "coin": "USD",
+    "goals": []
+  }
+]
