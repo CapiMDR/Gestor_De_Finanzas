@@ -3,6 +3,7 @@ package reminders.reminder_view;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.TreeSet;
 import javax.swing.*;
@@ -54,7 +55,8 @@ public class RemindersView extends javax.swing.JFrame implements ReminderObserve
                 row.setLayout(new BoxLayout(row, BoxLayout.X_AXIS));
                 row.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-                JLabel label = new JLabel(reminder.getName());
+                DateTimeFormatter FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+                JLabel label = new JLabel(reminder.getName() + " " + reminder.getDate().format(FORMAT));
                 label.setAlignmentY(Component.CENTER_ALIGNMENT);
 
                 JButton editBtn = new JButton("🖊");

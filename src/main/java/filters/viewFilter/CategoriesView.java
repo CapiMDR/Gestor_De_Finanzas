@@ -1,6 +1,7 @@
 package filters.viewFilter;
 
 import java.awt.*;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import javax.swing.*;
@@ -117,6 +118,7 @@ public class CategoriesView extends JPanel {
             double totalIncome,
             double totalExpense) {
 
+        DateTimeFormatter FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         totalIncomeLabel.setText(String.format("$%.2f", totalIncome));
         totalExpenseLabel.setText(String.format("$%.2f", totalExpense));
 
@@ -125,7 +127,7 @@ public class CategoriesView extends JPanel {
             incomeListModel.addElement(
                     m.getDescription() + " - " + m.getCategory().getName() +
                             "  -  $" + String.format("%.2f", m.getAmount()) +
-                            "  -  " + m.getDate() // <- fecha incluida
+                            "  -  " + m.getDate().format(FORMAT) // <- fecha incluida
             );
         }
 
@@ -134,7 +136,7 @@ public class CategoriesView extends JPanel {
             expenseListModel.addElement(
                     m.getDescription() + " - " + m.getCategory().getName() +
                             "  -  $" + String.format("%.2f", m.getAmount().abs()) +
-                            "  -  " + m.getDate());
+                            "  -  " + m.getDate().format(FORMAT));
         }
     }
 
