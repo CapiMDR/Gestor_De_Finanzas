@@ -10,6 +10,7 @@ import accounts.account_model.JsonDataHandler;
  * agregar, eliminar, obtener y notificar cambios a los observadores.
  * Se encarga de cargar y guardar los datos en formato JSON mediante
  * {@link JsonDataHandler}.
+ * 
  * @author Martín Jesús Pool Chuc
  */
 public class CategoryManager {
@@ -31,12 +32,21 @@ public class CategoryManager {
      * un manejador de datos para persistencia. Carga las categorías desde
      * almacenamiento si existen.
      *
-     * @param subject      Sujeto que se usa para notificar observadores.
-     * @param dataHandler  Manejador para cargar/guardar datos JSON.
+     * @param subject     Sujeto que se usa para notificar observadores.
+     * @param dataHandler Manejador para cargar/guardar datos JSON.
      */
     public CategoryManager(MovementManagerSubject subject, JsonDataHandler dataHandler) {
         this.subject = subject;
         this.dataHandler = dataHandler;
+        this.categories = dataHandler.loadCategories();
+        if (this.categories == null) {
+            this.categories = new HashMap<>();
+        }
+    }
+
+    public CategoryManager() {
+        this.subject = new MovementManagerSubject();
+        this.dataHandler = new JsonDataHandler();
         this.categories = dataHandler.loadCategories();
         if (this.categories == null) {
             this.categories = new HashMap<>();

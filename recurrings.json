@@ -1,7 +1,29 @@
-[{
-    "recurrence": "Mensual",
-    "amount": 100,
-    "concept": "Pago de Netflix",
-    "description": "Pagar mi suscripción de Netflix",
-    "initialDate": "2025-12-30T03:02"
-}]
+[
+    {
+        "recurrence": "Mensual",
+        "categoryType": "EXPENSE",
+        "amount": 150,
+        "concept": "Netflix",
+        "description": "Pagar netflix",
+        "categoryName": "Rra",
+        "initialDate": "2026-01-03T20:05"
+    },
+    {
+        "recurrence": "Mensual",
+        "categoryType": "EXPENSE",
+        "amount": 100,
+        "concept": "Spotify",
+        "description": "Pagar spotify",
+        "categoryName": "Rra",
+        "initialDate": "2026-01-03T20:13"
+    },
+    {
+        "recurrence": "Anual",
+        "categoryType": "INCOME",
+        "amount": 800,
+        "concept": "Colegiatura",
+        "description": "Pagar colegiatura",
+        "categoryName": "Pablo",
+        "initialDate": "2026-12-03T20:06"
+    }
+]

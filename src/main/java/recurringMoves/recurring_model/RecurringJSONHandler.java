@@ -13,6 +13,9 @@ import java.util.TreeSet;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import movements.movement_model.MovementCategory;
+import movements.movement_model.MovementCategory.MovementType;
+
 /**
  * Utilidad encargada de guardar y cargar los objetos {@link RecurringMove}
  * desde y hacia un archivo JSON.
@@ -47,13 +50,15 @@ public class RecurringJSONHandler {
     public static void saveReminders(TreeSet<RecurringMove> recurrentsList) {
         JSONArray arr = new JSONArray();
 
-        for (RecurringMove reminder : recurrentsList) {
+        for (RecurringMove recMove : recurrentsList) {
             JSONObject obj = new JSONObject();
-            obj.put("concept", reminder.getConcept());
-            obj.put("amount", reminder.getAmount());
-            obj.put("description", reminder.getDescription());
-            obj.put("initialDate", reminder.getInitialDate().format(FORMATTER));
-            obj.put("recurrence", reminder.getRecurrence().name());
+            obj.put("concept", recMove.getConcept());
+            obj.put("amount", recMove.getAmount());
+            obj.put("description", recMove.getDescription());
+            obj.put("initialDate", recMove.getInitialDate().format(FORMATTER));
+            obj.put("recurrence", recMove.getRecurrence().name());
+            obj.put("categoryName", recMove.getCategory().getName());
+            obj.put("categoryType", recMove.getCategory().getType().name());
             arr.put(obj);
         }
 
@@ -70,7 +75,7 @@ public class RecurringJSONHandler {
      * @return Un {@link TreeSet} ordenado mediante {@link #REMINDER_COMPARATOR}
      *         conteniendo todos los objetos {@link RecurringMove} cargados.
      */
-    public static TreeSet<RecurringMove> loadReminders() {
+    public static TreeSet<RecurringMove> loadRecurrings() {
         TreeSet<RecurringMove> recMoves = new TreeSet<>(REMINDER_COMPARATOR);
         StringBuilder jsonText = new StringBuilder();
 
@@ -99,7 +104,10 @@ public class RecurringJSONHandler {
 
                 LocalDateTime date = LocalDateTime.parse(initialDateStr, FORMATTER);
 
-                recMoves.add(new RecurringMove(concept, amount, description, date, recurrence));
+                String categoryName = obj.getString("categoryName");
+                MovementType categoryType = MovementType.valueOf(obj.getString("categoryType"));
+                MovementCategory category = new MovementCategory(categoryName, categoryType);
+                recMoves.add(new RecurringMove(concept, amount, description, date, recurrence, category));
             }
 
         } catch (IOException e) {
