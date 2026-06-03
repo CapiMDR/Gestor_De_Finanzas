@@ -132,54 +132,23 @@ git clone https://github.com/CapiMDR/Gestor_De_Finanzas.git
 cd Gestor_De_Finanzas
 ```
 
-### 2. Install the local JCalendar dependency
-
-The `jcalendar-1.4.jar` is not available on Maven Central, so it must be installed manually into your local Maven repository once:
-
-```bash
-mvn install:install-file \
-  -Dfile=lib/jcalendar-1.4.jar \
-  -DgroupId=com.toedter \
-  -DartifactId=jcalendar \
-  -Dversion=1.4 \
-  -Dpackaging=jar
-```
-
-> On Windows (PowerShell), replace line breaks with a single line or use backticks `` ` `` for continuation.
-
-### 3. Compile the project
+### 2. Compile the project
 
 ```bash
 mvn compile
 ```
 
-### 4. Run the application
+> **Note:** `jcalendar-1.4.jar` is included in `lib/` and referenced directly via Maven's `systemPath` — no manual install needed.
+
+### 3. Run the application
 
 **From terminal:**
 ```bash
 mvn exec:java -Dexec.mainClass="com.mycompany.construccion.Main"
 ```
 
-**From VSCode** (with Extension Pack for Java installed):
-1. Open `Main.java`
-2. Click the ▶️ **Run** button that appears above the `main` method
-
-**From VSCode with F5** (after setting up `launch.json`):
-```json
-// .vscode/launch.json
-{
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "type": "java",
-      "name": "Launch Main",
-      "request": "launch",
-      "mainClass": "com.mycompany.construccion.Main",
-      "projectName": "reminders_notifications"
-    }
-  ]
-}
-```
+**From VSCode** — press **F5** or click the ▶️ **Run** button above `main` in `Main.java`.
+The `.vscode/launch.json` is already included in the repository.
 
 > **Note:** The JSON data files (`accounts_data.json`, `reminders.json`, etc.) are read from the **working directory** where the application is launched. Running from the project root ensures data is found correctly.
 
