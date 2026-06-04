@@ -4,13 +4,12 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.example</groupId>
-  <artifactId>reminders_notifications</artifactId>
+  <groupId>io.github.capimdr</groupId>
+  <artifactId>gestor-finanzas</artifactId>
   <version>1.0-SNAPSHOT</version>
 
-  <name>reminders_notifications</name>
-  <!-- FIXME change it to the project's website -->
-  <url>http://www.example.com</url>
+  <name>Gestor de Finanzas</name>
+  <url>https://github.com/CapiMDR/Gestor_De_Finanzas</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -57,7 +56,9 @@
         <dependency>
           <groupId>com.toedter</groupId>
           <artifactId>jcalendar</artifactId>
-          <version>1.4</version> 
+          <version>1.4</version>
+          <scope>system</scope>
+          <systemPath>${project.basedir}/lib/jcalendar-1.4.jar</systemPath>
         </dependency>
   </dependencies>
 

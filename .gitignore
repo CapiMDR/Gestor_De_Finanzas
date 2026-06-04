@@ -33,8 +33,11 @@ target/
 /nbdist/
 /.nb-gradle/
 
-# VSCode
-.vscode/
+# VSCode — ignore personal state, share project config
+.vscode/*
+!.vscode/settings.json
+!.vscode/launch.json
+!.vscode/extensions.json
 
 # IntelliJ IDEA
 .idea/
