@@ -7,23 +7,39 @@
 ## Table of Contents
 
 1. [About](#about)
-2. [Features](#features)
-3. [Tech Stack & Dependencies](#tech-stack--dependencies)
-4. [Project Structure](#project-structure)
-5. [Prerequisites](#prerequisites)
-6. [Setup & Running](#setup--running)
-7. [Running Tests](#running-tests)
-8. [Architecture](#architecture)
-9. [Data Persistence](#data-persistence)
-10. [Contributing](#contributing)
-11. [Authors](#authors)
-12. [Versión en Español](#versión-en-español)
+2. [First Delivery Documentation](#first-delivery-documentation)
+3. [Features](#features)
+4. [Tech Stack & Dependencies](#tech-stack--dependencies)
+5. [Project Structure](#project-structure)
+6. [Prerequisites](#prerequisites)
+7. [Setup & Running](#setup--running)
+8. [Running Tests](#running-tests)
+9. [Architecture](#architecture)
+10. [Data Persistence](#data-persistence)
+11. [Contributing](#contributing)
+12. [Authors](#authors)
+13. [Versión en Español](#versión-en-español)
 
 ---
 
 ## About
 
 **Personal Finance Manager** is a desktop application built with Java Swing and Maven. It allows users to manage multiple financial accounts, register income and expense movements, track savings goals, schedule recurring payments, set date-based reminders, and generate financial reports with charts powered by JFreeChart.
+
+---
+
+## First Delivery Documentation
+
+The following documents were produced during the first project delivery and serve as the design and planning baseline for the application:
+
+| Document | Description |
+|---|---|
+| [📋 Product Description](https://github.com/CapiMDR/Gestor_De_Finanzas/blob/First_Delivery/Delivery/Product_Description.md) | General description of the product, its purpose and scope |
+| [📅 Work Plan](https://github.com/CapiMDR/Gestor_De_Finanzas/blob/First_Delivery/Delivery/Work_Plan.md) | Task breakdown and timeline for the first delivery |
+| [🎨 MockUps](https://github.com/CapiMDR/Gestor_De_Finanzas/blob/First_Delivery/Delivery/Design/MockUps.md) | UI mockups and visual design of the application |
+| [📐 Class Diagrams](https://github.com/CapiMDR/Gestor_De_Finanzas/blob/First_Delivery/Delivery/Design/Class_Diagrams) | UML class diagrams of the initial architecture |
+
+> All documents are located in the [`First_Delivery`](https://github.com/CapiMDR/Gestor_De_Finanzas/blob/First_Delivery/Delivery) branch of this repository.
 
 ---
 
@@ -239,22 +255,38 @@ Data is loaded on startup and saved automatically after every modification.
 ## Índice
 
 1. [Acerca del proyecto](#acerca-del-proyecto)
-2. [Funcionalidades](#funcionalidades)
-3. [Tecnologías y dependencias](#tecnologías-y-dependencias)
-4. [Estructura del proyecto](#estructura-del-proyecto)
-5. [Prerrequisitos](#prerrequisitos)
-6. [Configuración y ejecución](#configuración-y-ejecución)
-7. [Ejecutar pruebas](#ejecutar-pruebas)
-8. [Arquitectura](#arquitectura)
-9. [Persistencia de datos](#persistencia-de-datos)
-10. [Contribuir](#contribuir)
-11. [Autores](#autores)
+2. [Documentación de la Primera Entrega](#documentación-de-la-primera-entrega)
+3. [Funcionalidades](#funcionalidades)
+4. [Tecnologías y dependencias](#tecnologías-y-dependencias)
+5. [Estructura del proyecto](#estructura-del-proyecto)
+6. [Prerrequisitos](#prerrequisitos)
+7. [Configuración y ejecución](#configuración-y-ejecución)
+8. [Ejecutar pruebas](#ejecutar-pruebas)
+9. [Arquitectura](#arquitectura)
+10. [Persistencia de datos](#persistencia-de-datos)
+11. [Contribuir](#contribuir)
+12. [Autores](#autores)
 
 ---
 
 ## Acerca del proyecto
 
 **Gestor de Finanzas** es una aplicación de escritorio desarrollada con Java Swing y Maven. Permite al usuario gestionar múltiples cuentas financieras, registrar movimientos de ingreso y gasto, hacer seguimiento de metas de ahorro, programar pagos recurrentes, establecer recordatorios por fecha y generar reportes financieros con gráficas mediante JFreeChart.
+
+---
+
+## Documentación de la Primera Entrega
+
+Los siguientes documentos fueron producidos durante la primera entrega del proyecto y sirven como base de diseño y planificación de la aplicación:
+
+| Documento | Descripción |
+|---|---|
+| [📋 Descripción del Producto](https://github.com/CapiMDR/Gestor_De_Finanzas/blob/First_Delivery/Delivery/Product_Description.md) | Descripción general del producto, su propósito y alcance |
+| [📅 Plan de Trabajo](https://github.com/CapiMDR/Gestor_De_Finanzas/blob/First_Delivery/Delivery/Work_Plan.md) | Desglose de tareas y cronograma de la primera entrega |
+| [🎨 MockUps](https://github.com/CapiMDR/Gestor_De_Finanzas/blob/First_Delivery/Delivery/Design/MockUps.md) | Mockups de la interfaz y diseño visual de la aplicación |
+| [📐 Diagramas de Clases](https://github.com/CapiMDR/Gestor_De_Finanzas/blob/First_Delivery/Delivery/Design/Class_Diagrams) | Diagramas UML de la arquitectura inicial |
+
+> Todos los documentos se encuentran en la rama [`First_Delivery`](https://github.com/CapiMDR/Gestor_De_Finanzas/blob/First_Delivery/Delivery) de este repositorio.
 
 ---
 
