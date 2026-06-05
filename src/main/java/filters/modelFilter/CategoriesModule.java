@@ -21,8 +21,6 @@ public class CategoriesModule {
         FilterController controller = new FilterController();
         if (selectedAccount != null) {
             controller.setViewModule(categoriesView, selectedAccount);
-        } else {
-            System.out.println("No se seleccionó cuenta");
         }
         
         frame.setVisible(true);

@@ -18,7 +18,8 @@ import javax.swing.JOptionPane;
 /**
  * Controlador principal del Módulo de Metas.
  * Coordina la interacción entre Vistas, Modelos y Persistencia.
- * Implementa GoalActionListener para manejar los eventos de las tarjetas de metas.
+ * Implementa GoalActionListener para manejar los eventos de las tarjetas de
+ * metas.
  * 
  * @author Jose Pablo
  */
@@ -88,7 +89,6 @@ public class GoalsController implements GoalActionListener, AccountObserver {
         // Guardando cuentas nuevamente después de recalcular las metas
         AccountManager.saveAccountsData();
         refreshView();
-        System.out.println("CONTROLLER: Goals refreshed based.");
     }
 
     /**
@@ -97,7 +97,8 @@ public class GoalsController implements GoalActionListener, AccountObserver {
      */
 
     private BigDecimal calculateActualBalance() {
-        if (currentAccount == null) return BigDecimal.ZERO;
+        if (currentAccount == null)
+            return BigDecimal.ZERO;
 
         // Obtener el saldo inicial
         BigDecimal balance = currentAccount.getInitialBalance();
@@ -118,8 +119,8 @@ public class GoalsController implements GoalActionListener, AccountObserver {
                             balance = balance.subtract(m.getAmount());
                             break;
                         default:
-                            System.out.println("Entrada no valida, tipo no encontrado");
-                         break;
+                            // Entrada no valida, tipo no encontrado
+                            break;
                     }
                 }
             }
@@ -133,24 +134,26 @@ public class GoalsController implements GoalActionListener, AccountObserver {
      */
 
     private void recalculateGoalsProgress(List<Goal> goals, List<Movement> movements) {
-        //Calculamos el balance actual de la cuenta
+        // Calculamos el balance actual de la cuenta
         BigDecimal totalBalance = calculateActualBalance();
 
-        //Asignamos el balance a las metas
+        // Asignamos el balance a las metas (sin superar el monto objetivo)
+        // Fix: Se arreglo que antes el progreso se le asignaba a todas las metas
+        // por igual, ahora se reparte el progreso segun el monto objetivo de cada meta
         if (goals != null) {
-        for (Goal goal : goals) {
-            goal.setCurrentAmount(totalBalance);
+            for (Goal goal : goals) {
+                BigDecimal progress = totalBalance.min(goal.getTargetAmount());
+                goal.setCurrentAmount(progress.max(BigDecimal.ZERO));
+            }
         }
-    }
     }
 
     public void createNewGoal(String name, BigDecimal target, String desc) {
         Goal newGoal = new Goal(name, target, desc);
 
-
         if (currentAccount != null) {
-            //Calculamos el balance actual y se lo ponemos a la meta recien creada
-            BigDecimal currentBalance =calculateActualBalance();
+            // Calculamos el balance actual y se lo ponemos a la meta recien creada
+            BigDecimal currentBalance = calculateActualBalance();
             newGoal.setCurrentAmount(currentBalance);
 
             currentAccount.getGoals().add(newGoal);
@@ -159,7 +162,7 @@ public class GoalsController implements GoalActionListener, AccountObserver {
         }
     }
 
-     /**
+    /**
      * Lógica para los botones en la vista.
      */
 
@@ -170,7 +173,7 @@ public class GoalsController implements GoalActionListener, AccountObserver {
 
         // Validate
         if (name.isEmpty() || target.compareTo(BigDecimal.ZERO) <= 0) {
-            JOptionPane.showMessageDialog(mainView, "Please enter a valid name and target amount.");
+            JOptionPane.showMessageDialog(mainView, "Por favor ingresa un nombre y monto objetivo válidos.");
             return;
         }
 
@@ -193,7 +196,7 @@ public class GoalsController implements GoalActionListener, AccountObserver {
             BigDecimal newTarget = editView.getTargetInput();
 
             if (newName.isEmpty() || newTarget.compareTo(BigDecimal.ZERO) <= 0) {
-                JOptionPane.showMessageDialog(editView, "Invalid Data.");
+                JOptionPane.showMessageDialog(editView, "Datos inválidos.");
                 return;
             }
 

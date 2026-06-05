@@ -3,7 +3,7 @@ package goals;
 import javax.swing.JFrame;
 
 import accounts.account_model.Account;
-import accounts.account_model.AccountManager;
+import accounts.account_model.AccountManagerSubject;
 import goals.goals_controller.GoalDetailController;
 import goals.goals_controller.GoalsController;
 import goals.goals_view.GoalDetailView;
@@ -39,9 +39,17 @@ public class GoalsModule {
         if (selectedAccount != null) {
             // Pasar la cuenta al módulo de metas
             goalsController.setAccount(selectedAccount);
-        } else {
-            System.out.println("No se seleccionó cuenta");
         }
+
+        // Desregistrar el observer al cerrar la ventana para evitar acumulación
+        // de observers muertos y notificaciones duplicadas
+        frame.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent e) {
+                AccountManagerSubject.removeObserver(goalsController);
+            }
+        });
+
         frame.setVisible(true);
     }
 }

@@ -77,8 +77,6 @@ public class ReportGenerator {
         reportSubject.notifyObservers(data);
     }
 
-  
-
     /**
      * Calculates the sum of all movement amounts.
      *
@@ -89,7 +87,7 @@ public class ReportGenerator {
         BigDecimal total = new BigDecimal(0);
         for (Movement m : movements) {
 
-            total.add(m.getAmount());
+            total = total.add(m.getAmount());
         }
         return total;
     }

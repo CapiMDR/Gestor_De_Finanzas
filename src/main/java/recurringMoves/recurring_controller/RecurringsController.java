@@ -71,9 +71,9 @@ public class RecurringsController {
                 triggerRecurring(recMove);
                 recMove.setTriggered(true);
             } else {
-                // Como los recordatorios están ordenados por su fecha, si el actual no ha
-                // llegado a su tiempo, los demás tampoco
-                // break;
+                // Como los recordatorios están ordenados cronológicamente en el TreeSet,
+                // si el actual aún no debe dispararse, los siguientes tampoco.
+                break;
             }
         }
     }
@@ -108,7 +108,6 @@ public class RecurringsController {
         view.setOnApply(() -> {
             Account selected = view.getSelectedAccount();
             if (selected != null) {
-                System.out.println("Aplicando movimiento recurrente a la cuenta " + selected.getName());
                 performMovement(recMove, selected);
 
                 // Solamente si se aplica el movimiento a una cuenta se actualiza la

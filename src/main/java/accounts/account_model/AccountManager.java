@@ -52,10 +52,10 @@ public class AccountManager {
      * @param name nombre de la cuenta
      * @param type tipo de cuenta {@link AccountType}
      * @param coin moneda usada {@link Coin}
-     * @param initialBalace balance inicial
+     * @param initialBalance balance inicial
      */
-    public static void addAccount(String name, AccountType type, Coin coin, BigDecimal initialBalace) {
-        Account newAccount = new Account(generateUniqueId(), name, type, coin, initialBalace);
+    public static void addAccount(String name, AccountType type, Coin coin, BigDecimal initialBalance) {
+        Account newAccount = new Account(generateUniqueId(), name, type, coin, initialBalance);
 
         accounts.add(newAccount);
         saveAccountsData();

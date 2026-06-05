@@ -31,7 +31,6 @@ public class ReportController implements ReportObserver, AccountObserver {
 
     public void setViewModule(FrmMain view, ReportGenerator generator, Account selectedAccount) {
         this.account = selectedAccount;
-        System.out.println("Se seleccionó la cuenta " + selectedAccount.getName());
         this.view = view;
         this.reportGenerator = generator;
         AccountManagerSubject.addObserver(this);
@@ -133,7 +132,6 @@ public class ReportController implements ReportObserver, AccountObserver {
 
     @Override
     public void onNotify(List<Account> accountsList) {
-        System.out.println("Se actualizo el dinero");
         syncAccount();
     }
 }

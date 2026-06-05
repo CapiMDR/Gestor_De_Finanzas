@@ -48,7 +48,7 @@ public class MovementController implements CategoryObserver {
         this.view = view;
         this.categoriesManagerView = null;
         this.currentAccount = currentAccount;
-        model.addOserver(this);
+        model.addObserver(this);
         AssignEvents();
         loadInitialData();
     }

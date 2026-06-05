@@ -708,10 +708,9 @@ public class FrmMain extends javax.swing.JFrame {
         }
 
         private void goalMouseClicked(java.awt.event.MouseEvent evt) {
-                int selectedIndex = 0;
-                System.out.println("Mostrando vista de metas");
-                // AQUÍ METAS
-                GoalsModule.initGoals(selectedAccount);
+                if (selectedAccount != null) {
+                    GoalsModule.initGoals(selectedAccount);
+                }
         }
 
         private void notificationMouseClicked(java.awt.event.MouseEvent evt) {
@@ -760,8 +759,9 @@ public class FrmMain extends javax.swing.JFrame {
         }
 
         private void categoriesMouseClicked(java.awt.event.MouseEvent evt) {
-                System.out.println("Mostrando vista de categorías");
-                CategoriesModule.initCategories(selectedAccount);
+                if (selectedAccount != null) {
+                    CategoriesModule.initCategories(selectedAccount);
+                }
         }
 
         private void categoriesMouseEntered(java.awt.event.MouseEvent evt) {

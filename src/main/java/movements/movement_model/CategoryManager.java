@@ -90,7 +90,7 @@ public class CategoryManager {
      *
      * @param observer Observador a registrar.
      */
-    public void addOserver(CategoryObserver observer) {
+    public void addObserver(CategoryObserver observer) {
         subject.addObserver(observer);
     }
 

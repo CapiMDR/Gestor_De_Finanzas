@@ -98,7 +98,7 @@ public class JsonDataHandler {
             JSONObject goalJson = new JSONObject();
             goalJson.put("name", goal.getName());
             goalJson.put("targetAmount", goal.getTargetAmount());
-            goalJson.put("amount", goal.getCurrentAmount());
+            //Se quitó el put del monto actual, ya que no es necesario
             goalJson.put("currentAmount", goal.getCurrentAmount());
             goalJson.put("description", goal.getDescription());
 
@@ -221,9 +221,11 @@ public class JsonDataHandler {
             String targetAmountStr = goalJson.get("targetAmount").toString();
             BigDecimal targetAmount = new BigDecimal(targetAmountStr);
 
+            String currentAmountStr = goalJson.optString("currentAmount", "0");
             String description = goalJson.getString("description");
 
             Goal goal = new Goal(name, targetAmount, description);
+            goal.setCurrentAmount(new BigDecimal(currentAmountStr));
 
             goals.add(goal);
         }
@@ -259,7 +261,6 @@ public class JsonDataHandler {
         JSONArray jsonArray = accountsToJson(accounts);
         try (FileWriter file = new FileWriter(FILE_PATH)) {
             file.write(jsonArray.toString(2));
-            System.out.println("Cuentas guardadas en " + FILE_PATH);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -274,7 +275,6 @@ public class JsonDataHandler {
         JSONArray jsonArray = categoriesToJson(categories);
         try (FileWriter file = new FileWriter(CATEGORIES_FILE_PATH)) {
             file.write(jsonArray.toString(2));
-            System.out.println("Categorías guardadas en " + CATEGORIES_FILE_PATH);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -288,7 +288,6 @@ public class JsonDataHandler {
     public List<Account> loadAccounts() {
         File file = new File(FILE_PATH);
         if (!file.exists() || file.length() == 0) {
-            System.out.println("Archivo de datos no encontrado o vacío. Iniciando con lista vacía.");
             return new ArrayList<>();
         }
 
@@ -312,7 +311,6 @@ public class JsonDataHandler {
     public HashMap<String, MovementCategory> loadCategories() {
         File file = new File(CATEGORIES_FILE_PATH);
         if (!file.exists() || file.length() == 0) {
-            System.out.println("Archivo de categorías no encontrado o vacío. Iniciando con lista vacía.");
             return new HashMap<>();
         }
 

@@ -67,10 +67,8 @@ public class AccountController implements AccountObserver {
         int selectedIndex = view.getListAccounts().getSelectedIndex();
         Account selectedAccount = AccountManager.getAccountByIndex(selectedIndex);
         if (selectedAccount == null) {
-            System.out.println("Seleccione una cuenta");
             return;
         }
-        System.out.println("Accediendo a la cuenta " + selectedAccount.getName());
         ReportsModule.initReportsModule(selectedAccount);
     }
 
