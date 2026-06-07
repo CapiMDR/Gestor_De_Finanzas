@@ -12,6 +12,9 @@ import java.awt.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+/**
+ * View dialog for editing an existing recurring movement.
+ */
 public class RecurringsEditorView extends JDialog implements CategoryObserver {
     private JTextField conceptField;
     private JTextArea descriptionArea;

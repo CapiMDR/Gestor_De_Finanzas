@@ -1,13 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package reports.modelReport;
 
 import java.util.List;
 import java.util.ArrayList;
 
 /**
+ * Subject that maintains a list of report observers and notifies them of new reports.
  *
  * @author villa
  */

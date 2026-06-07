@@ -7,19 +7,22 @@ import movements.movement_model.CategoryManager;
 import movements.movement_model.MovementManagerSubject;
 
 /**
- * Clase principal del módulo de movimientos.
- * Se encarga de inicializar los componentes necesarios para gestionar
- * los movimientos de una cuenta seleccionada, incluyendo modelo, vista y controlador.
+ * Main class of the movements module.
+ * Responsible for initializing the necessary components to manage
+ * the movements of a selected account, including model, view and controller.
  * @author Capi Madera de Regil
  */
 public class MovementsModule {
+    
+    @SuppressWarnings("unused")
+    private static MovementController movementController;
 
     /**
-     * Inicializa todo el módulo de movimientos utilizando la cuenta seleccionada.
-     * Configura el Subject para notificaciones, el modelo que gestiona las categorías,
-     * la vista y el controlador encargado de coordinar la interacción.
+     * Initializes the entire movements module using the selected account.
+     * Configures the Subject for notifications, the model that manages categories,
+     * the view and the controller responsible for coordinating the interaction.
      *
-     * @param selectedAccount la cuenta sobre la cual se gestionarán los movimientos
+     * @param selectedAccount the account on which the movements will be managed
      */
     public static void initMovements(Account selectedAccount) {
 
@@ -33,7 +36,7 @@ public class MovementsModule {
 
         MovementManagerView movementView = new MovementManagerView();
 
-        MovementController movementController = new MovementController(
+        movementController = new MovementController(
                 movementModel,
                 movementView,
                 selectedAccount);

@@ -1,14 +1,14 @@
 package movements.movement_model;
 
 /**
- * Representa una categoría de movimiento financiero, utilizada para clasificar
- * ingresos y gastos dentro del sistema.
+ * Represents a financial movement category, used to classify
+ * income and expenses within the system.
  * @author Martín Jesús Pool Chuc
  */
 public class MovementCategory {
 
     /**
-     * Tipos posibles de movimiento: INCOME (ingreso) o EXPENSE (gasto).
+     * Possible movement types: INCOME or EXPENSE.
      */
     public enum MovementType {
         INCOME, EXPENSE
@@ -18,10 +18,10 @@ public class MovementCategory {
     private MovementType type;
 
     /**
-     * Crea una nueva categoría de movimiento.
+     * Creates a new movement category.
      *
-     * @param name nombre de la categoría
-     * @param type tipo de movimiento (INCOME o EXPENSE)
+     * @param name category name
+     * @param type movement type (INCOME or EXPENSE)
      */
     public MovementCategory(String name, MovementType type) {
         this.name = name;

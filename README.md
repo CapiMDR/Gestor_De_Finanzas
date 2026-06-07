@@ -86,7 +86,7 @@ The following documents were produced during the first project delivery and serv
 | JUnit 4 / JUnit Jupiter | 4.11 / 5.13 | Unit testing |
 | Mockito | 5.11.0 | Mocking in unit tests |
 
-> **Note:** `jcalendar-1.4.jar` is included locally in the `lib/` directory and must be installed into your local Maven repository before building (see [Setup](#setup--running)).
+> **Note:** `jcalendar-1.4.jar` is included locally in the `lib/` directory and must be installed into your local Maven repository using the `mvn install:install-file` command before building (see [Setup & Running](#setup--running)).
 
 ---
 
@@ -164,15 +164,23 @@ git clone https://github.com/CapiMDR/Gestor_De_Finanzas.git
 cd Gestor_De_Finanzas
 ```
 
-### 2. Compile the project
+### 2. Install local dependencies (Run once per machine)
+
+Before compiling, you must install the local `jcalendar` dependency into your local Maven repository:
+
+```bash
+mvn install:install-file "-Dfile=lib/jcalendar-1.4.jar" "-DgroupId=com.toedter" "-DartifactId=jcalendar" "-Dversion=1.4" "-Dpackaging=jar"
+```
+
+> **Important Note:** This command only needs to be executed once per machine. If another collaborator clones the repository, they will need to run this command before compiling.
+
+### 3. Compile the project
 
 ```bash
 mvn compile
 ```
 
-> **Note:** `jcalendar-1.4.jar` is included in `lib/` and referenced directly via Maven's `systemPath` — no manual install needed.
-
-### 3. Run the application
+### 4. Run the application
 
 **From terminal:**
 ```bash
@@ -349,7 +357,7 @@ Los siguientes documentos fueron producidos durante la primera entrega del proye
 | JUnit 4 / JUnit Jupiter | 4.11 / 5.13 | Pruebas unitarias |
 | Mockito | 5.11.0 | Mocking en pruebas unitarias |
 
-> **Nota:** `jcalendar-1.4.jar` está incluido localmente en la carpeta `lib/` y debe instalarse en el repositorio local de Maven antes de compilar (ver [Configuración](#configuración-y-ejecución)).
+> **Nota:** `jcalendar-1.4.jar` está incluido localmente en la carpeta `lib/` y debe instalarse en el repositorio local de Maven usando el comando `mvn install:install-file` antes de compilar (ver [Configuración y ejecución](#configuración-y-ejecución)).
 
 ---
 
@@ -377,15 +385,23 @@ git clone https://github.com/CapiMDR/Gestor_De_Finanzas.git
 cd Gestor_De_Finanzas
 ```
 
-### 2. Compilar el proyecto
+### 2. Instalar dependencias locales (Ejecutar una vez por máquina)
+
+Antes de compilar, es necesario instalar la dependencia local `jcalendar` en el repositorio local de Maven:
+
+```bash
+mvn install:install-file "-Dfile=lib/jcalendar-1.4.jar" "-DgroupId=com.toedter" "-DartifactId=jcalendar" "-Dversion=1.4" "-Dpackaging=jar"
+```
+
+> **Nota importante:** El comando `mvn install:install-file` debe ejecutarse una sola vez por máquina. Si otro colaborador clona el repositorio, necesitará correr ese comando antes de compilar.
+
+### 3. Compilar el proyecto
 
 ```bash
 mvn compile
 ```
 
-> **Nota:** `jcalendar-1.4.jar` está incluido en `lib/` y se referencia directamente via `systemPath` de Maven — no se requiere instalación manual.
-
-### 3. Ejecutar la aplicación
+### 4. Ejecutar la aplicación
 
 **Desde la terminal:**
 ```bash

@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package reports.modelReport;
 
 import java.util.List;
@@ -9,6 +5,8 @@ import java.math.BigDecimal;
 import movements.movement_model.Movement;
 
 /**
+ * Holds the data required to display a report.
+ * Contains the period name, movements within the period, total amount, and date range.
  *
  * @author villa
  */

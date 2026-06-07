@@ -6,6 +6,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import reminders.reminder_model.Reminder;
 
+/**
+ * View dialog for editing an existing reminder.
+ */
 public class RemindersEditorView extends JDialog {
     private JTextField nameField;
     private JTextArea descriptionArea;

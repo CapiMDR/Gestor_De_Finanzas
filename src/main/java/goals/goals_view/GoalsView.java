@@ -13,14 +13,15 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 /**
- * Vista principal del Módulo de Metas.
- * Usa initComponents() para integrarse.
+ * Main view of the Goals Module.
+ * Uses initComponents() to integrate.
  *
  * @author Jose Pablo Martinez
  */
 
 public class GoalsView extends JPanel {
 
+    @SuppressWarnings("unused")
     private GoalsController controller;
     private JTextField txtName;
     private JTextField txtTargetAmount;
@@ -47,8 +48,8 @@ public class GoalsView extends JPanel {
     }
 
     /**
-     * Inicializa los componentes de la interfaz gráfica.
-     * Este método se llama dentro del constructor para inicializar el formulario.
+     * Initializes the graphical interface components.
+     * This method is called from within the constructor to initialize the form.
      */
 
     public void initComponents() {
@@ -98,7 +99,7 @@ public class GoalsView extends JPanel {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBackground(FORM_BG_COLOR);
         panel.setBorder(new EmptyBorder(20, 20, 20, 20));
-        Font inputFont = new Font("Inter", Font.BOLD, 12); 
+        Font inputFont = new Font("Inter", Font.BOLD, 12);
 
         // Init Components
         txtName = new JTextField();

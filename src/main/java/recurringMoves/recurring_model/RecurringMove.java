@@ -3,54 +3,51 @@ package recurringMoves.recurring_model;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import movements.movement_model.Movement;
 import movements.movement_model.MovementCategory;
-import movements.movement_model.MovementCategory.MovementType;
 
 /**
- * Representa un movimiento recurrente (un pago o acción que debe repetirse
- * con una cierta frecuencia). Cada instancia contiene la información necesaria
- * para determinar cuándo debe activarse y generar la siguiente ocurrencia.
+ * Represents a recurring movement (a payment or action that must be repeated
+ * with a certain frequency). Each instance contains the necessary information
+ * to determine when it should trigger and generate the next occurrence.
  */
 public class RecurringMove {
 
-    /** Concepto o nombre del movimiento recurrente. */
+    /** Concept or name of the recurring movement. */
     private String concept;
 
-    /** Monto asociado con el movimiento. */
+    /** Amount associated with the movement. */
     private BigDecimal amount;
 
-    /** Descripción adicional del movimiento. */
+    /** Additional description of the movement. */
     private String description;
 
     /**
-     * Fecha de la primera ocurrencia del movimiento recurrente.
-     * Esta fecha determina la base desde la cual se calculan las siguientes.
+     * Date of the first occurrence of the recurring movement.
+     * This date determines the base from which the next ones are calculated.
      */
-    private final LocalDateTime initialDate; // Fecha de la primera ocurrencia del movimiento recurrente
+    private final LocalDateTime initialDate; // Date of the first occurrence of the recurring movement
 
     /**
-     * Frecuencia con la que se repite el movimiento (diario, mensual, anual, etc.).
+     * Frequency with which the movement repeats (daily, monthly, yearly, etc.).
      */
     private RecurrenceType recurrence; // Diario/Mensual/Anual
 
     /**
-     * Si el pago recurrente ya se ha notificado al usuario en esta ejecución
+     * Whether the recurring payment has already been notified to the user in this execution.
      */
     private boolean hasTriggered = false;
 
     private MovementCategory category;
 
     /**
-     * Crea un nuevo movimiento recurrente usando la fecha inicial como momento
-     * de la primera activación y estableciendo la frecuencia correspondiente.
+     * Creates a new recurring movement using the initial date as the moment
+     * of the first activation and establishing the corresponding frequency.
      *
-     * @param concept     nombre del movimiento recurrente
-     * @param amount      monto asociado
-     * @param description descripción del movimiento
-     * @param initialDate fecha de la primera activación del movimiento
-     * @param recurrence  tipo de recurrencia (diario, semanal, mensual, anual,
-     *                    etc.)
+     * @param concept     name of the recurring movement
+     * @param amount      associated amount
+     * @param description description of the movement
+     * @param initialDate date of the first activation of the movement
+     * @param recurrence  type of recurrence (daily, weekly, monthly, yearly, etc.)
      */
     public RecurringMove(String concept, BigDecimal amount, String description,
             LocalDateTime initialDate, RecurrenceType recurrence, MovementCategory type) {
@@ -63,57 +60,57 @@ public class RecurringMove {
         this.category = type;
     }
 
-    /** @return el concepto del movimiento */
+    /** @return the movement concept */
     public String getConcept() {
         return concept;
     }
 
-    /** @return el monto del movimiento */
+    /** @return the movement amount */
     public BigDecimal getAmount() {
         return amount;
     }
 
-    /** @return la descripción del movimiento */
+    /** @return the description of the movement */
     public String getDescription() {
         return description;
     }
 
-    /** @return la fecha de la primera ocurrencia del movimiento */
+    /** @return the date of the first occurrence of the movement */
     public LocalDateTime getInitialDate() {
         return initialDate;
     }
 
-    /** @return la recurrencia del movimiento */
+    /** @return the movement recurrence */
     public RecurrenceType getRecurrence() {
         return recurrence;
     }
 
-    /** @param concept nuevo concepto */
+    /** @param concept new concept */
     public void setConcept(String concept) {
         this.concept = concept;
     }
 
-    /** @param amount nuevo monto */
+    /** @param amount new amount */
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
-    /** @param description nueva descripción */
+    /** @param description new description */
     public void setDescription(String description) {
         this.description = description;
     }
 
-    /** @param recurrence nuevo tipo de recurrencia */
+    /** @param recurrence new recurrence type */
     public void setRecurrence(RecurrenceType recurrence) {
         this.recurrence = recurrence;
     }
 
     /**
-     * Indica si el movimiento debe activarse en este momento.
-     * El movimiento debe dispararse cuando su fecha inicial ya pasó o es igual al
-     * momento actual.
+     * Indicates whether the movement should activate at this moment.
+     * The movement should trigger when its initial date has already passed or is equal to
+     * the current moment.
      *
-     * @return true si debe dispararse, false de lo contrario
+     * @return true if it should trigger, false otherwise
      */
     public boolean shouldTrigger() {
         LocalDateTime now = LocalDateTime.now();
@@ -129,11 +126,11 @@ public class RecurringMove {
     }
 
     /**
-     * Crea una nueva ocurrencia del movimiento recurrente sumando la frecuencia
-     * correspondiente a la fecha inicial y devolviendo una nueva instancia.
+     * Creates a new occurrence of the recurring movement adding the frequency
+     * corresponding to the initial date and returning a new instance.
      *
-     * @return un nuevo {@link RecurringMove} con la siguiente fecha programada,
-     *         o null si no se puede calcular
+     * @return a new {@link RecurringMove} with the next scheduled date,
+     *         or null if it cannot be calculated
      */
     public RecurringMove createNextOccurrence() {
         LocalDateTime nextDate = computeNextDate(initialDate, recurrence);
@@ -150,12 +147,12 @@ public class RecurringMove {
     }
 
     /**
-     * Devuelve la siguiente fecha en la que se enviará la notificación del pago
-     * según la frecuencia configurada.
+     * Returns the next date when the payment notification will be sent
+     * according to the configured frequency.
      *
-     * @param t    fecha base desde la cual calcular la siguiente
-     * @param type tipo de recurrencia
-     * @return la fecha siguiente según la recurrencia especificada
+     * @param t    base date from which to calculate the next one
+     * @param type recurrence type
+     * @return the next date according to the specified recurrence
      */
     private LocalDateTime computeNextDate(LocalDateTime t, RecurrenceType type) {
         return switch (type) {

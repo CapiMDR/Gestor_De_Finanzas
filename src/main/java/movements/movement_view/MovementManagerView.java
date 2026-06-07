@@ -1,5 +1,8 @@
 package movements.movement_view;
 
+/**
+ * Main view class for managing movements (incomes and expenses).
+ */
 public class MovementManagerView extends javax.swing.JFrame {
         public MovementManagerView() {
                 initComponents();

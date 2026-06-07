@@ -17,7 +17,7 @@ class AccountManagerTest {
 
     @BeforeEach
     void setUp() {
-        AccountManager.getAccounts().clear();
+        AccountManager.clearForTesting();
     }
 
     @Test

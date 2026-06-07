@@ -3,7 +3,7 @@ package goals.goals_model;
 import java.math.BigDecimal;
 
 /**
- * Representa una meta financiera dentro de una cuenta de usuario.
+ * Represents a financial goal within a user account.
  * 
  * @author Jose Pablo Martinez
  * @version 1.0

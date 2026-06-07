@@ -20,7 +20,8 @@ import reports.modelReport.ReportGenerator;
 import reports.modelReport.ReportObserver;
 
 /**
- *
+ * Controller class that manages reports and charts view interactions.
+ * Implements ReportObserver and AccountObserver to stay synced with model changes.
  * @author villa
  */
 public class ReportController implements ReportObserver, AccountObserver {
@@ -31,7 +32,6 @@ public class ReportController implements ReportObserver, AccountObserver {
 
     public void setViewModule(FrmMain view, ReportGenerator generator, Account selectedAccount) {
         this.account = selectedAccount;
-        System.out.println("Se seleccionó la cuenta " + selectedAccount.getName());
         this.view = view;
         this.reportGenerator = generator;
         AccountManagerSubject.addObserver(this);
@@ -61,7 +61,7 @@ public class ReportController implements ReportObserver, AccountObserver {
 
     private void initComponents() {
         // --- PieChart ---
-        DefaultPieDataset dataset = new DefaultPieDataset();
+        DefaultPieDataset<String> dataset = new DefaultPieDataset<>();
         dataset.setValue("INCOME", 0);
         dataset.setValue("EXPENSE", 0);
 
@@ -116,7 +116,7 @@ public class ReportController implements ReportObserver, AccountObserver {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         // --- PieChart ---
-        DefaultPieDataset dataset = new DefaultPieDataset();
+        DefaultPieDataset<String> dataset = new DefaultPieDataset<>();
         dataset.setValue("INCOME", income);
         dataset.setValue("EXPENSE", expense);
 
@@ -133,7 +133,6 @@ public class ReportController implements ReportObserver, AccountObserver {
 
     @Override
     public void onNotify(List<Account> accountsList) {
-        System.out.println("Se actualizo el dinero");
         syncAccount();
     }
 }

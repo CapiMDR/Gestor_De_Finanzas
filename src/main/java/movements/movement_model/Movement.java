@@ -7,8 +7,8 @@ import java.util.UUID;
 import accounts.account_model.Account;
 
 /**
- * Representa un movimiento financiero asociado a una cuenta, ya sea ingreso o gasto.
- * Contiene información sobre descripción, monto, categoría, fecha y cuenta asociada.
+ * Represents a financial movement associated with an account, either income or expense.
+ * Contains information about description, amount, category, date and associated account.
  * @author Martín Jesús Pool Chuc
  */
 public class Movement {
@@ -21,14 +21,14 @@ public class Movement {
     Account account;
 
     /**
-     * Constructor principal utilizado al crear un movimiento manualmente desde el sistema.
-     * Genera automáticamente un nuevo UUID y asigna la fecha actual.
+     * Main constructor used when manually creating a movement from the system.
+     * Automatically generates a new UUID and assigns the current date.
      *
-     * @param idMovement no se utiliza, pero se mantiene por compatibilidad
-     * @param description descripción del movimiento
-     * @param amount monto del movimiento
-     * @param category categoría del movimiento
-     * @param account cuenta asociada al movimiento
+     * @param idMovement not used, but kept for compatibility
+     * @param description movement description
+     * @param amount movement amount
+     * @param category movement category
+     * @param account account associated with the movement
      */
     public Movement(UUID idMovement, String description, BigDecimal amount, MovementCategory category, Account account) {
         this.idMovement = UUID.randomUUID();
@@ -40,14 +40,14 @@ public class Movement {
     }
 
     /**
-     * Constructor utilizado al cargar un movimiento desde un archivo JSON.
+     * Constructor used when loading a movement from a JSON file.
      *
-     * @param idMovement identificador único cargado desde persistencia
-     * @param description descripción del movimiento
-     * @param amount monto del movimiento
-     * @param category categoría del movimiento
-     * @param account cuenta asociada
-     * @param date fecha exacta del movimiento cargada desde persistencia
+     * @param idMovement unique identifier loaded from persistence
+     * @param description movement description
+     * @param amount movement amount
+     * @param category movement category
+     * @param account associated account
+     * @param date exact date of the movement loaded from persistence
      */
     public Movement(UUID idMovement, String description, BigDecimal amount, MovementCategory category, Account account, LocalDateTime date) {
         this.idMovement = idMovement;

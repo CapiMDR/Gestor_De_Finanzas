@@ -1,11 +1,13 @@
 package filters.modelFilter;
 
-import java.util.List;
 import javax.swing.JFrame;
 import accounts.account_model.Account;
 import filters.controllerFilter.FilterController;
 import filters.viewFilter.CategoriesView;
 
+/**
+ * Module in charge of initializing the categories view.
+ */
 public class CategoriesModule {
     
     public static void initCategories(Account selectedAccount) {
@@ -21,8 +23,6 @@ public class CategoriesModule {
         FilterController controller = new FilterController();
         if (selectedAccount != null) {
             controller.setViewModule(categoriesView, selectedAccount);
-        } else {
-            System.out.println("No se seleccionó cuenta");
         }
         
         frame.setVisible(true);

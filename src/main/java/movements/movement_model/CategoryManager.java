@@ -6,34 +6,34 @@ import java.util.HashMap;
 import accounts.account_model.JsonDataHandler;
 
 /**
- * Administra las categorías de movimientos del sistema, permitiendo
- * agregar, eliminar, obtener y notificar cambios a los observadores.
- * Se encarga de cargar y guardar los datos en formato JSON mediante
+ * Manages the system's movement categories, allowing to
+ * add, remove, retrieve and notify changes to observers.
+ * Responsible for loading and saving data in JSON format through
  * {@link JsonDataHandler}.
  * 
  * @author Martín Jesús Pool Chuc
  */
 public class CategoryManager {
     /**
-     * Mapa que contiene las categorías registradas, usando el nombre
-     * de la categoría como clave.
+     * Map containing the registered categories, using the category
+     * name as the key.
      */
     private HashMap<String, MovementCategory> categories;
 
     /**
-     * Sujeto responsable de notificar a los observadores cuando existe
-     * un cambio en las categorías.
+     * Subject responsible for notifying observers when there is
+     * a change in the categories.
      */
     private MovementManagerSubject subject;
     protected JsonDataHandler dataHandler;
 
     /**
-     * Construye un CategoryManager usando un sujeto para notificación y
-     * un manejador de datos para persistencia. Carga las categorías desde
-     * almacenamiento si existen.
+     * Constructs a CategoryManager using a subject for notification and
+     * a data handler for persistence. Loads the categories from
+     * storage if they exist.
      *
-     * @param subject     Sujeto que se usa para notificar observadores.
-     * @param dataHandler Manejador para cargar/guardar datos JSON.
+     * @param subject     Subject used to notify observers.
+     * @param dataHandler Handler to load/save JSON data.
      */
     public CategoryManager(MovementManagerSubject subject, JsonDataHandler dataHandler) {
         this.subject = subject;
@@ -54,9 +54,9 @@ public class CategoryManager {
     }
 
     /**
-     * Agrega una nueva categoría y actualiza el almacenamiento persistente.
+     * Adds a new category and updates the persistent storage.
      *
-     * @param category Categoría a agregar.
+     * @param category Category to add.
      */
     public void addCategory(MovementCategory category) {
         categories.put(category.getName(), category);
@@ -65,9 +65,9 @@ public class CategoryManager {
     }
 
     /**
-     * Elimina una categoría y actualiza el almacenamiento persistente.
+     * Removes a category and updates the persistent storage.
      *
-     * @param category Categoría a eliminar.
+     * @param category Category to remove.
      */
     public void removeCategory(MovementCategory category) {
         categories.remove(category.getName());
@@ -76,35 +76,35 @@ public class CategoryManager {
     }
 
     /**
-     * Obtiene una categoría por su nombre.
+     * Gets a category by its name.
      *
-     * @param name Nombre de la categoría.
-     * @return Categoría correspondiente o null si no existe.
+     * @param name Name of the category.
+     * @return Corresponding category or null if it doesn't exist.
      */
     public MovementCategory getCategoryByName(String name) {
         return categories.get(name);
     }
 
     /**
-     * Registra un observador para recibir actualizaciones.
+     * Registers an observer to receive updates.
      *
-     * @param observer Observador a registrar.
+     * @param observer Observer to register.
      */
-    public void addOserver(CategoryObserver observer) {
-        subject.addObserver(observer);
+    public void addObserver(CategoryObserver observer) {
+        MovementManagerSubject.addObserver(observer);
     }
 
     /**
-     * Elimina un observador registrado.
+     * Removes a registered observer.
      *
-     * @param observer Observador a remover.
+     * @param observer Observer to remove.
      */
     public void removeObserver(CategoryObserver observer) {
-        subject.removeObserver(observer);
+        MovementManagerSubject.removeObserver(observer);
     }
 
     public void notifyObservers() {
-        subject.notifyObservers(new ArrayList<>(categories.values()));
+        MovementManagerSubject.notifyObservers(new ArrayList<>(categories.values()));
     }
 
     public HashMap<String, MovementCategory> getCategories() {

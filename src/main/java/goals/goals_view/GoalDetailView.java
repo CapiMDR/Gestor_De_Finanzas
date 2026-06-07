@@ -13,8 +13,8 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 /**
- * Vista para mostrar el progreso detallado de una sola meta.
- * Incluye un campo de descripción.
+ * View to show the detailed progress of a single goal.
+ * Includes a description field.
  *
  * @author Jose Pablo 
  */
@@ -47,7 +47,7 @@ public class GoalDetailView extends JDialog implements CategoryObserver {
         progressBar.setForeground(new Color(246, 107, 14));
         progressBar.setPreferredSize(new Dimension(300, 25));
 
-        // Área de descripción (solo lectura)
+        // Description area (read-only)
         JLabel lblDescTitle = new JLabel("Nota:");
         lblDescTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
 
@@ -86,7 +86,7 @@ public class GoalDetailView extends JDialog implements CategoryObserver {
         lblStatus.setText(String.format("Ahorrado: %s de %s", currency.format(current), currency.format(target)));
         progressBar.setValue((int) percentage);
 
-        // Mostrar descripción
+        // Show description
         txtDescriptionDisplay.setText(objGoal.getDescription());
 
         if (!this.isVisible()) {

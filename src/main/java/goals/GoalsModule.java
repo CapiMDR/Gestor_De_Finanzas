@@ -3,7 +3,7 @@ package goals;
 import javax.swing.JFrame;
 
 import accounts.account_model.Account;
-import accounts.account_model.AccountManager;
+import accounts.account_model.AccountManagerSubject;
 import goals.goals_controller.GoalDetailController;
 import goals.goals_controller.GoalsController;
 import goals.goals_view.GoalDetailView;
@@ -11,10 +11,10 @@ import goals.goals_view.GoalEditView;
 import goals.goals_view.GoalsView;
 
 /**
- * Punto de entrada principal de la aplicación "Financial Manager".
- * Integra los módulos de Cuentas y Metas.
+ * Main entry point of the "Financial Manager" application.
+ * Integrates the Accounts and Goals modules.
  *
- * @author Integración del Equipo
+ * @author Team Integration
  */
 
 public class GoalsModule {
@@ -37,11 +37,19 @@ public class GoalsModule {
                 goalEditView,
                 goalDetailController);
         if (selectedAccount != null) {
-            // Pasar la cuenta al módulo de metas
+            // Pass the account to the goals module
             goalsController.setAccount(selectedAccount);
-        } else {
-            System.out.println("No se seleccionó cuenta");
         }
+
+        // Unregister observer when closing the window to prevent accumulation
+        // de observers muertos y notificaciones duplicadas
+        frame.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent e) {
+                AccountManagerSubject.removeObserver(goalsController);
+            }
+        });
+
         frame.setVisible(true);
     }
 }

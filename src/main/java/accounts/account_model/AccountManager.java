@@ -6,80 +6,87 @@ import java.util.List;
 
 import accounts.account_model.Account.AccountType;
 import accounts.account_model.Account.Coin;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * Gestiona las cuentas del sistema, permitiendo cargarlas, guardarlas,
- * agregarlas, editarlas, eliminarlas y notificar observadores cuando hay cambios.
+ * Manages the system's accounts, allowing them to be loaded, saved,
+ * added, edited, deleted and notifying observers when there are changes.
+ *
  * @author Martín Jesús Pool Chuc
  */
 public class AccountManager {
-    /** Lista estática que contiene todas las cuentas. */
+    private static final Logger logger = LoggerFactory.getLogger(AccountManager.class);
+    /** Static list that contains all accounts. */
     private static List<Account> accounts = new ArrayList<>();
-    /** Manejador para cargar y guardar datos en formato JSON. */
+    /** Handler to load and save data in JSON format. */
     private static JsonDataHandler dataHandler = new JsonDataHandler();
 
     /**
-     * Constructor privado para evitar instanciación.
+     * Private constructor to prevent instantiation.
      */
     private AccountManager() {
         
     }
 
     /**
-     * Inicializa el administrador cargando las cuentas desde el origen de datos.
+     * Initializes the manager by loading the accounts from the data source.
      */
     public static void initAccountManager() {
         accounts = dataHandler.loadAccounts();
+        logger.info("AccountManager initialized — {} account(s) loaded.", accounts.size());
     }
 
     /**
-     * Carga los datos iniciales y notifica a los observadores.
+     * Loads the initial data and notifies the observers.
      */
     public static void loadInitialData() {
         notifyObservers();
     }
 
     /**
-     * Guarda todas las cuentas actuales mediante el manejador JSON.
+     * Saves all current accounts using the JSON handler.
      */
     public static void saveAccountsData() {
         dataHandler.saveAccounts(accounts);
     }
 
     /**
-     * Agrega una nueva cuenta con los parámetros especificados.
+     * Adds a new account with the specified parameters.
      *
-     * @param name nombre de la cuenta
-     * @param type tipo de cuenta {@link AccountType}
-     * @param coin moneda usada {@link Coin}
-     * @param initialBalace balance inicial
+     * @param name account name
+     * @param type account type {@link AccountType}
+     * @param coin currency used {@link Coin}
+     * @param initialBalance initial balance
      */
-    public static void addAccount(String name, AccountType type, Coin coin, BigDecimal initialBalace) {
-        Account newAccount = new Account(generateUniqueId(), name, type, coin, initialBalace);
+    public static void addAccount(String name, AccountType type, Coin coin, BigDecimal initialBalance) {
+        Account newAccount = new Account(generateUniqueId(), name, type, coin, initialBalance);
 
         accounts.add(newAccount);
         saveAccountsData();
         notifyObservers();
+        logger.info("Account added: '{}' (id={}, type={}).", name, newAccount.getId(), type);
     }
 
     /**
-     * Elimina una cuenta según el id proporcionado.
+     * Deletes an account according to the provided id.
      *
-     * @param id identificador único de la cuenta
+     * @param id unique identifier of the account
      */
     public static void removeAccount(int id) {
         accounts.removeIf(account -> account.getId() == id);
         saveAccountsData();
         notifyObservers();
+        logger.info("Account removed: id={}.", id);
     }
 
     /**
-     * Edita una cuenta existente cambiando su nombre, tipo y moneda.
+     * Edits an existing account changing its name, type and currency.
      *
-     * @param account cuenta a editar
-     * @param name nuevo nombre
-     * @param type nuevo tipo de cuenta
-     * @param coin nueva moneda
+     * @param account account to edit
+     * @param name new name
+     * @param type new account type
+     * @param coin new currency
      */
     public static void editAccount(Account account, String name, AccountType type, Coin coin) {
         account.setName(name);
@@ -87,12 +94,13 @@ public class AccountManager {
         account.setCoin(coin);
         saveAccountsData();
         notifyObservers();
+        logger.info("Account edited: id={}, new name='{}'.", account.getId(), name);
     }
 
     /**
-     * Genera un ID único basado en el ID más alto actual.
+     * Generates a unique ID based on the highest current ID.
      *
-     * @return un nuevo ID único
+     * @return a new unique ID
      */
     private static int generateUniqueId() {
         int maxId = 0;
@@ -105,13 +113,13 @@ public class AccountManager {
     }
 
     /**
-     * Retorna una cuenta según su índice en la lista.
+     * Returns an account according to its index in the list.
      *
-     * @param index índice de la cuenta
-     * @return la cuenta encontrada o null si está fuera de rango
+     * @param index index of the account
+     * @return the found account or null if it is out of range
      */
     public static Account getAccountByIndex(int index) {
-        System.out.println(accounts.size());
+        logger.debug("getAccountByIndex called - accounts size: {}", accounts.size());
         if (index >= 0 && index < accounts.size()) {
             return accounts.get(index);
         }
@@ -119,10 +127,10 @@ public class AccountManager {
     }
 
     /**
-     * Busca una cuenta por su ID.
+     * Finds an account by its ID.
      *
-     * @param id identificador de la cuenta
-     * @return la cuenta encontrada o null si no existe
+     * @param id account identifier
+     * @return the found account or null if it doesn't exist
      */
     public static Account getAccountById(int id) {
         return accounts.stream()
@@ -132,37 +140,45 @@ public class AccountManager {
     }
 
     /**
-     * Agrega un observador del administrador de cuentas.
+     * Adds an observer of the account manager.
      *
-     * @param observer observador a agregar
+     * @param observer observer to add
      */
     public static void addObserver(AccountObserver observer) {
         AccountManagerSubject.addObserver(observer);
     }
 
     /**
-     * Elimina un observador previamente registrado.
+     * Removes a previously registered observer.
      *
-     * @param observer observador a eliminar
+     * @param observer observer to remove
      */
     public static void removeObserver(AccountObserver observer) {
         AccountManagerSubject.removeObserver(observer);
     }
 
     /**
-     * Notifica a todos los observadores enviando la lista actual de cuentas.
+     * Notifies all observers by sending the current list of accounts.
      */
     private static void notifyObservers() {
         AccountManagerSubject.notifyObservers(accounts);
     }
 
     /**
-     * Obtiene la lista de cuentas almacenadas.
+     * Gets the list of stored accounts.
      *
-     * @return lista de cuentas
+     * @return list of accounts
      */
     public static List<Account> getAccounts() {
-        return accounts;
+        return java.util.Collections.unmodifiableList(accounts);
+    }
+
+    /**
+     * Clears the accounts list. 
+     * Package-private access intentionally restricted for testing purposes.
+     */
+    static void clearForTesting() {
+        accounts.clear();
     }
 
 

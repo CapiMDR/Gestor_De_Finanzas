@@ -21,25 +21,27 @@ import recurringMoves.recurring_model.RecurringsModel;
 import recurringMoves.recurring_view.RecurringMoveAlertView;
 import recurringMoves.recurring_view.RecurringsEditorView;
 import recurringMoves.recurring_view.RecurringsView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * Controlador principal encargado de coordinar la interacción entre la vista,
- * el modelo y la lógica de notificaciones de los pagos recurrentes.
+ * Main controller in charge of coordinating the interaction between the view,
+ * the model and the notification logic of recurring payments.
  *
- * <p>
- * Administra la creación, edición, eliminación y monitoreo automático
- * de {@link RecurringMove} utilizando un {@link ScheduledExecutorService}.
- * </p>
+ * Administrates the creation, edition, deletion and automatic monitoring
+ * of {@link RecurringMove} using a {@link ScheduledExecutorService}.
  */
 public class RecurringsController {
 
-    /** Modelo que contiene todas las operaciones recurrentes. */
+    private static final Logger logger = LoggerFactory.getLogger(RecurringsController.class);
+
+    /** Model containing all recurring operations. */
     private final RecurringsModel recurringsModel = new RecurringsModel();
 
-    /** Vista principal encargada de mostrar los recordatorios recurrentes. */
+    /** Main view in charge of showing recurring reminders. */
     private final RecurringsView recurringsView = new RecurringsView(this, recurringsModel);
 
-    /** Servicio ejecutor para revisar periódicamente los recordatorios. */
+    /** Executor service to periodically check reminders. */
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
     public void showRecMovesView() {
@@ -47,23 +49,23 @@ public class RecurringsController {
     }
 
     /**
-     * Construye el controlador, inicializa la vista y comienza el monitoreo
-     * periódico
-     * de los recordatorios.
+     * Constructs the controller, initializes the view and starts the periodic
+     * monitoring of reminders.
      */
     public RecurringsController() {
+        logger.info("RecurringsController initialized.");
         recurringsView.setVisible(true);
         scheduler.scheduleAtFixedRate(this::watchRecurrings, 0, 1, TimeUnit.SECONDS);
     }
 
-    // Revisando los recordatorios cada segundo y activando aquellos que deban ser
+    // Checking reminders every second and activating those that should be
     // activados
 
     /**
-     * Revisa todos los recordatorios ordenados y activa aquellos cuya fecha ya
-     * pasó.
-     * Como los recordatorios están ordenados, la revisión termina cuando uno aún no
-     * debe ser disparado.
+     * Checks all sorted reminders and activates those whose date has already
+     * passed.
+     * Since the reminders are sorted, the check ends when one shouldn't
+     * be triggered yet.
      */
     private void watchRecurrings() {
         for (RecurringMove recMove : recurringsModel.getRecurrings()) {
@@ -71,31 +73,30 @@ public class RecurringsController {
                 triggerRecurring(recMove);
                 recMove.setTriggered(true);
             } else {
-                // Como los recordatorios están ordenados por su fecha, si el actual no ha
-                // llegado a su tiempo, los demás tampoco
-                // break;
+                // Since reminders are chronologically sorted in the TreeSet,
+                // if the current one shouldn't trigger yet, the following ones won't either.
+                break;
             }
         }
     }
 
-    // Cuando se activa la notificación de un pago recurrente se elimina y se crea
-    // la siguiente instancia según su frecuencia
+    // When a recurring payment notification is triggered, it is removed and the
+    // next instance is created according to its frequency
 
     /**
-     * Maneja la activación de un recordatorio recurrente.
-     * <p>
-     * El proceso consiste en:
-     * </p>
-     * <ul>
-     * <li>Eliminar el recordatorio actual.</li>
-     * <li>Crear su siguiente instancia dependiendo de la frecuencia.</li>
-     * <li>Guardar los cambios.</li>
-     * <li>Mostrar una alerta en la vista.</li>
-     * </ul>
+     * Handles the activation of a recurring reminder.
      *
-     * @param recMove el recordatorio que debe ser activado
+     * The process consists of:
+     * - Deleting the current reminder.
+     * - Creating its next instance depending on the frequency.
+     * - Saving the changes.
+     * - Showing an alert in the view.
+     *
+     * @param recMove the reminder that should be activated
      */
     private void triggerRecurring(RecurringMove recMove) {
+        logger.info("Recurring movement triggered: '{}' (recurrence={}).",
+                recMove.getConcept(), recMove.getRecurrence());
         SwingUtilities.invokeLater(() -> showRecurringMoveView(recMove));
     }
 
@@ -108,15 +109,19 @@ public class RecurringsController {
         view.setOnApply(() -> {
             Account selected = view.getSelectedAccount();
             if (selected != null) {
-                System.out.println("Aplicando movimiento recurrente a la cuenta " + selected.getName());
                 performMovement(recMove, selected);
 
-                // Solamente si se aplica el movimiento a una cuenta se actualiza la
-                // "siguiente fecha", si no se realiza el pago se seguirá notificando al usuario
+                // The "next date" is only updated if the movement is applied to an account,
+                // if the payment is not made the user will continue to be notified
                 recurringsModel.deleteRecurring(recMove);
                 RecurringMove next = recMove.createNextOccurrence();
                 recurringsModel.addRecurring(next);
                 recurringsModel.saveRecurrings();
+                logger.info("Recurring movement applied to account '{}'. Next occurrence: {}.",
+                        selected.getName(), next.getInitialDate());
+            } else {
+                logger.warn("Recurring movement '{}' dismissed — no account selected.",
+                        recMove.getConcept());
             }
             view.dispose();
         });
@@ -138,27 +143,30 @@ public class RecurringsController {
     }
 
     /**
-     * Procesa la solicitud de creación de un nuevo recordatorio.
+     * Processes the request to create a new reminder.
      *
-     * @param concept     nombre del recordatorio
-     * @param amount      monto asociado
-     * @param description descripción opcional
-     * @param initialDate fecha inicial
-     * @param recurrence  tipo de repetición
+     * @param concept     reminder name
+     * @param amount      associated amount
+     * @param description optional description
+     * @param initialDate initial date
+     * @param recurrence  repetition type
      */
     public void handleRecurringAddition(String concept, BigDecimal amount, String description,
             LocalDateTime initialDate, RecurrenceType recurrence, MovementCategory category) {
-        if (!isValidRecurring(concept, amount, description, initialDate, recurrence))
+        if (!isValidRecurring(concept, amount, description, initialDate, recurrence)) {
+            logger.warn("Invalid recurring movement data rejected: concept='{}'.", concept);
             return;
+        }
 
         recurringsModel.addRecurring(concept, amount, description, initialDate, recurrence, category);
         recurringsModel.saveRecurrings();
+        logger.info("Recurring movement added: '{}' ({}, every {}).", concept, amount, recurrence);
     }
 
     /**
-     * Valida los campos necesarios para crear o editar un recordatorio recurrente.
+     * Validates the necessary fields to create or edit a recurring reminder.
      *
-     * @return true si los datos son válidos, false en caso contrario
+     * @return true if the data is valid, false otherwise
      */
     private boolean isValidRecurring(String concept, BigDecimal amount, String description,
             LocalDateTime initialDate, RecurrenceType recurrence) {
@@ -178,32 +186,35 @@ public class RecurringsController {
     }
 
     /**
-     * Maneja la eliminación de un recordatorio recurrente.
+     * Handles the deletion of a recurring reminder.
      *
-     * @param recMove el recordatorio a eliminar
+     * @param recMove the reminder to delete
      */
     public void handleRecurringDeletion(RecurringMove recMove) {
         recurringsModel.deleteRecurring(recMove);
         recurringsModel.saveRecurrings();
+        logger.info("Recurring movement deleted: '{}'.", recMove.getConcept());
     }
 
     /**
-     * Procesa la edición de un recordatorio recurrente dado uno antiguo y uno
-     * nuevo.
+     * Processes the editing of a recurring reminder given an old one and a
+     * new one.
      *
-     * @param oldRecMove recordatorio original
-     * @param newRecMove recordatorio ya editado
+     * @param oldRecMove original reminder
+     * @param newRecMove edited reminder
      */
     public void handleRecurringEdit(RecurringMove oldRecMove, RecurringMove newRecMove) {
         recurringsModel.editRecurring(oldRecMove, newRecMove);
         recurringsModel.saveRecurrings();
+        logger.info("Recurring movement edited: '{}' -> '{}'.",
+                oldRecMove.getConcept(), newRecMove.getConcept());
     }
 
     /**
-     * Abre la ventana de edición para un recordatorio y procesa el resultado si el
-     * usuario confirma los cambios.
+     * Opens the edition window for a reminder and processes the result if the
+     * user confirms the changes.
      *
-     * @param recMove recordatorio a editar
+     * @param recMove reminder to edit
      */
     public void onEditRequest(RecurringMove recMove) {
         RecurringsEditorView editor = new RecurringsEditorView(null, recMove);

@@ -9,6 +9,9 @@ import javax.swing.border.EmptyBorder;
 
 import movements.movement_model.Movement;
 
+/**
+ * View class for displaying movement categories (income and expenses).
+ */
 public class CategoriesView extends JPanel {
 
     private JLabel totalIncomeLabel;
@@ -21,7 +24,7 @@ public class CategoriesView extends JPanel {
     private final Color BACKGROUND_COLOR = new Color(255, 195, 137);
     private final Color PANEL_COLOR = new Color(48, 45, 76);
     private final Color ACCENT_COLOR = new Color(249, 147, 34);
-    private final Color LIGHT_ACCENT = new Color(253, 157, 102);
+
     private final Color TEXT_COLOR = Color.WHITE;
     private final Color INCOME_COLOR = new Color(76, 175, 80);
     private final Color EXPENSE_COLOR = new Color(244, 67, 54);
