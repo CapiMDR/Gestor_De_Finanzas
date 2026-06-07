@@ -14,6 +14,8 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import config.AppConfig;
+
 /**
  * Utility class to handle the loading and saving of reminders in a
  * JSON file.
@@ -30,9 +32,6 @@ public class ReminderJSONHandler {
      */
     private ReminderJSONHandler() {
     }
-
-    /** JSON file name where reminders are stored. */
-    private static final String FILE_NAME = "reminders.json";
 
     /** Date format used to save and read dates in the JSON file. */
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
@@ -60,7 +59,7 @@ public class ReminderJSONHandler {
             arr.put(obj);
         }
 
-        try (FileWriter writer = new FileWriter(FILE_NAME)) {
+        try (FileWriter writer = new FileWriter(AppConfig.getRemindersFilePath())) {
             writer.write(arr.toString(4));
             logger.info("Reminders saved successfully — {} reminder(s).", remindersList.size());
         } catch (IOException e) {
@@ -78,7 +77,7 @@ public class ReminderJSONHandler {
         TreeSet<Reminder> reminders = new TreeSet<>(REMINDER_COMPARATOR);
         StringBuilder jsonText = new StringBuilder();
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(AppConfig.getRemindersFilePath()))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 jsonText.append(line);

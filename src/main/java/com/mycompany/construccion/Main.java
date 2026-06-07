@@ -3,6 +3,7 @@ package com.mycompany.construccion;
 import accounts.account_controller.AccountController;
 import accounts.account_model.AccountManager;
 import accounts.account_view.AccountView;
+import config.AppConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +16,7 @@ public class Main {
 
     public static void main(String[] args) {
         logger.info("Application starting...");
+        AppConfig.ensureDataDirExists();
         AccountManager.initAccountManager();
         AccountView accountsView = new AccountView();
         AccountController accountController = new AccountController(accountsView);

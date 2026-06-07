@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import config.AppConfig;
 import movements.movement_model.MovementCategory;
 import movements.movement_model.MovementCategory.MovementType;
 
@@ -31,9 +32,6 @@ public class RecurringJSONHandler {
     /** Private constructor to prevent instantiation. */
     private RecurringJSONHandler() {
     }
-
-    /** File name where reminders are saved. */
-    private static final String FILE_NAME = "recurrings.json";
 
     /** Standard format used to serialize and deserialize dates. */
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
@@ -66,7 +64,7 @@ public class RecurringJSONHandler {
             arr.put(obj);
         }
 
-        try (FileWriter writer = new FileWriter(FILE_NAME)) {
+        try (FileWriter writer = new FileWriter(AppConfig.getRecurringsFilePath())) {
             writer.write(arr.toString(4));
             logger.info("Recurring movements saved successfully — {} record(s).", recurrentsList.size());
         } catch (IOException e) {
@@ -84,7 +82,7 @@ public class RecurringJSONHandler {
         TreeSet<RecurringMove> recMoves = new TreeSet<>(REMINDER_COMPARATOR);
         StringBuilder jsonText = new StringBuilder();
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(AppConfig.getRecurringsFilePath()))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 jsonText.append(line);

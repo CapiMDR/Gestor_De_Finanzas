@@ -5,6 +5,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import config.AppConfig;
 import movements.movement_model.Movement;
 import movements.movement_model.MovementCategory;
 import movements.movement_model.MovementCategory.MovementType;
@@ -13,7 +14,6 @@ import accounts.account_model.Account.AccountType;
 import accounts.account_model.Account.Coin;
 import goals.goals_model.Goal;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -34,12 +34,6 @@ import java.util.UUID;
 public class JsonDataHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(JsonDataHandler.class);
-
-    /** Path of the file where account data is saved. */
-    private static final String FILE_PATH = "accounts_data.json";
-
-    /** Path of the file where category data is saved. */
-    private static final String CATEGORIES_FILE_PATH = "categories_data.json";
 
     // SERIALIZATION
 
@@ -264,7 +258,7 @@ public class JsonDataHandler {
      */
     public void saveAccounts(List<Account> accounts) {
         JSONArray jsonArray = accountsToJson(accounts);
-        try (FileWriter file = new FileWriter(FILE_PATH)) {
+        try (FileWriter file = new FileWriter(AppConfig.getAccountsFilePath())) {
             file.write(jsonArray.toString(2));
             logger.info("Accounts saved successfully — {} account(s).", accounts.size());
         } catch (IOException e) {
@@ -279,7 +273,7 @@ public class JsonDataHandler {
      */
     public void saveCategories(HashMap<String, MovementCategory> categories) {
         JSONArray jsonArray = categoriesToJson(categories);
-        try (FileWriter file = new FileWriter(CATEGORIES_FILE_PATH)) {
+        try (FileWriter file = new FileWriter(AppConfig.getCategoriesFilePath())) {
             file.write(jsonArray.toString(2));
             logger.info("Categories saved successfully — {} category/categories.", categories.size());
         } catch (IOException e) {
@@ -293,13 +287,13 @@ public class JsonDataHandler {
      * @return list of loaded accounts or an empty list in case of error
      */
     public List<Account> loadAccounts() {
-        File file = new File(FILE_PATH);
+        java.io.File file = new java.io.File(AppConfig.getAccountsFilePath());
         if (!file.exists() || file.length() == 0) {
             return new ArrayList<>();
         }
 
         try {
-            String content = new String(Files.readAllBytes(Paths.get(FILE_PATH)));
+            String content = new String(Files.readAllBytes(Paths.get(AppConfig.getAccountsFilePath())));
             JSONArray jsonArray = new JSONArray(content);
             List<Account> loaded = jsonToAccounts(jsonArray);
             logger.info("Accounts loaded successfully — {} account(s).", loaded.size());
@@ -318,13 +312,13 @@ public class JsonDataHandler {
      * @return map of loaded categories or empty map in case of error
      */
     public HashMap<String, MovementCategory> loadCategories() {
-        File file = new File(CATEGORIES_FILE_PATH);
+        java.io.File file = new java.io.File(AppConfig.getCategoriesFilePath());
         if (!file.exists() || file.length() == 0) {
             return new HashMap<>();
         }
 
         try {
-            String content = new String(Files.readAllBytes(Paths.get(CATEGORIES_FILE_PATH)));
+            String content = new String(Files.readAllBytes(Paths.get(AppConfig.getCategoriesFilePath())));
             JSONArray jsonArray = new JSONArray(content);
             HashMap<String, MovementCategory> cats = jsonToCategories(jsonArray);
             logger.info("Categories loaded successfully — {} category/categories.", cats.size());
