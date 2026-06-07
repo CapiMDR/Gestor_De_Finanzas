@@ -170,7 +170,15 @@ public class AccountManager {
      * @return list of accounts
      */
     public static List<Account> getAccounts() {
-        return accounts;
+        return java.util.Collections.unmodifiableList(accounts);
+    }
+
+    /**
+     * Clears the accounts list. 
+     * Package-private access intentionally restricted for testing purposes.
+     */
+    static void clearForTesting() {
+        accounts.clear();
     }
 
 
