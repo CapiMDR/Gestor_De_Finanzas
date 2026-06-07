@@ -8,31 +8,31 @@ import java.util.TreeSet;
 import movements.movement_model.MovementCategory;
 
 /**
- * Modelo encargado de gestionar los recordatorios recurrentes.
- * Mantiene un TreeSet para garantizar ordenamiento cronológico eficiente
- * en inserción, eliminación y búsqueda.
+ * Model in charge of managing recurring reminders.
+ * Keeps a TreeSet to guarantee efficient chronological sorting
+ * in insertion, deletion and search.
  */
 public class RecurringsModel {
 
     /**
-     * Manteniendo a los recordatorios en un TreeSet para rápido ordenamiento en
-     * inserción/eliminación y eficiencia al buscar existencia.
+     * Keeping reminders in a TreeSet for quick sorting in
+     * insertion/deletion and efficiency when searching for existence.
      * 
-     * Cargados desde JSON al iniciar.
+     * Loaded from JSON on startup.
      */
     private final TreeSet<RecurringMove> allRecurrings = RecurringJSONHandler.loadRecurrings();
 
-    /** Lista de observadores suscritos a los cambios del modelo. */
+    /** List of observers subscribed to the model changes. */
     private final HashSet<RecurringObserver> observerList = new HashSet<>();
 
     /**
-     * Agrega un nuevo recordatorio recurrente al modelo.
+     * Adds a new recurring reminder to the model.
      *
-     * @param concept     Concepto o título del movimiento recurrente.
-     * @param amount      Monto asociado.
-     * @param description Descripción del movimiento.
-     * @param initialDate Fecha y hora inicial del recordatorio.
-     * @param recurrence  Tipo de recurrencia (diaria, semanal, mensual, etc.)
+     * @param concept     Concept or title of the recurring movement.
+     * @param amount      Associated amount.
+     * @param description Movement description.
+     * @param initialDate Initial date and time of the reminder.
+     * @param recurrence  Recurrence type (daily, weekly, monthly, etc.)
      */
     public void addRecurring(String concept, BigDecimal amount, String description,
             LocalDateTime initialDate, RecurrenceType recurrence, MovementCategory category) {
@@ -43,9 +43,9 @@ public class RecurringsModel {
     }
 
     /**
-     * Agrega un objeto RecurringMove completo al modelo.
+     * Adds a complete RecurringMove object to the model.
      *
-     * @param recMove Recordatorio recurrente.
+     * @param recMove Recurring reminder.
      */
     public void addRecurring(RecurringMove recMove) {
         allRecurrings.add(recMove);
@@ -53,9 +53,9 @@ public class RecurringsModel {
     }
 
     /**
-     * Elimina un recordatorio recurrente si existe dentro del modelo.
+     * Removes a recurring reminder if it exists within the model.
      *
-     * @param recMove Recordatorio recurrente a eliminar.
+     * @param recMove Recurring reminder to remove.
      */
     public void deleteRecurring(RecurringMove recMove) {
         if (allRecurrings.contains(recMove))
@@ -64,17 +64,17 @@ public class RecurringsModel {
     }
 
     /**
-     * Edita un recordatorio existente reemplazándolo por uno nuevo.
+     * Edits an existing reminder replacing it with a new one.
      * 
-     * Se elimina el anterior y se agrega el nuevo para asegurar
-     * el orden cronológico dentro del TreeSet.
+     * The previous one is removed and the new one is added to ensure
+     * the chronological order within the TreeSet.
      *
-     * @param oldRecMove Recordatorio previo.
-     * @param newRecMove Nuevo recordatorio actualizado.
+     * @param oldRecMove Previous reminder.
+     * @param newRecMove New updated reminder.
      */
     public void editRecurring(RecurringMove oldRecMove, RecurringMove newRecMove) {
-        // Eliminando al recordatorio que se editó y creando uno nuevo para preservar el
-        // orden cronológico en el treeset
+        // Removing the edited reminder and creating a new one to preserve the
+        // chronological order in the treeset
         if (!allRecurrings.contains(oldRecMove))
             return;
         deleteRecurring(oldRecMove);
@@ -83,8 +83,8 @@ public class RecurringsModel {
     }
 
     /**
-     * Notifica a todos los observadores registrados, enviando la lista completa
-     * de recordatorios.
+     * Notifies all registered observers, sending the complete list
+     * of reminders.
      */
     private void notifyObservers() {
         for (RecurringObserver observer : observerList) {
@@ -93,18 +93,18 @@ public class RecurringsModel {
     }
 
     /**
-     * Registra un nuevo observador.
+     * Registers a new observer.
      *
-     * @param observer Observador a agregar.
+     * @param observer Observer to add.
      */
     public void addObserver(RecurringObserver observer) {
         observerList.add(observer);
     }
 
     /**
-     * Elimina un observador existente del modelo.
+     * Removes an existing observer from the model.
      *
-     * @param observer Observador a remover.
+     * @param observer Observer to remove.
      */
     public void removeObserver(RecurringObserver observer) {
         if (observerList.contains(observer))
@@ -112,16 +112,16 @@ public class RecurringsModel {
     }
 
     /**
-     * Devuelve el conjunto completo de recordatorios recurrentes.
+     * Returns the complete set of recurring reminders.
      *
-     * @return TreeSet con todos los RecurringMove.
+     * @return TreeSet with all RecurringMoves.
      */
     public TreeSet<RecurringMove> getRecurrings() {
         return allRecurrings;
     }
 
     /**
-     * Guarda todos los recordatorios recurrentes en el archivo JSON.
+     * Saves all recurring reminders in the JSON file.
      */
     public void saveRecurrings() {
         RecurringJSONHandler.saveReminders(allRecurrings);

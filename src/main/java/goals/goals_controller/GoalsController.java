@@ -16,10 +16,9 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 /**
- * Controlador principal del Módulo de Metas.
- * Coordina la interacción entre Vistas, Modelos y Persistencia.
- * Implementa GoalActionListener para manejar los eventos de las tarjetas de
- * metas.
+ * Main controller of the Goals Module.
+ * Coordinates the interaction between Views, Models and Persistence.
+ * Implements GoalActionListener to handle the events of the goal cards.
  * 
  * @author Jose Pablo
  */
@@ -46,9 +45,9 @@ public class GoalsController implements GoalActionListener, AccountObserver {
     }
 
     /**
-     * Establece la cuenta activa y refresca la vista.
+     * Sets the active account and refreshes the view.
      * 
-     * @param account La cuenta seleccionada.
+     * @param account The selected account.
      */
 
     public void setAccount(Account account) {
@@ -60,7 +59,7 @@ public class GoalsController implements GoalActionListener, AccountObserver {
             }
             mainView.setCurrencyLabel(currency);
 
-            // Auto-rellenar el nombre de la cuenta
+            // Auto-fill account name
             String accName = (currentAccount.getName() != null) ? currentAccount.getName() : "Current Account";
             mainView.setAccountName(accName);
 
@@ -75,7 +74,7 @@ public class GoalsController implements GoalActionListener, AccountObserver {
     }
 
     /**
-     * Maneja actualizaciones activadas por módulos externos (como Movimientos).
+     * Handles updates triggered by external modules (like Movements).
      */
 
     @Override
@@ -86,21 +85,21 @@ public class GoalsController implements GoalActionListener, AccountObserver {
         List<Movement> movements = currentAccount.getMovements();
         recalculateGoalsProgress(currentAccount.getGoals(), movements);
 
-        // Guardando cuentas nuevamente después de recalcular las metas
+        // Saving accounts again after recalculating goals
         AccountManager.saveAccountsData();
         refreshView();
     }
 
     /**
-     * Calcula el saldo total (Inicial + Movimientos).
-     * Devuelve el valor BigDecimal directamente.
+     * Calculates the total balance (Initial + Movements).
+     * Returns the BigDecimal value directly.
      */
 
     private BigDecimal calculateActualBalance() {
         if (currentAccount == null)
             return BigDecimal.ZERO;
 
-        // Obtener el saldo inicial
+        // Get initial balance
         BigDecimal balance = currentAccount.getInitialBalance();
         if (balance == null) {
             balance = BigDecimal.ZERO;
@@ -129,17 +128,17 @@ public class GoalsController implements GoalActionListener, AccountObserver {
     }
 
     /**
-     * Actualiza el progreso de las metas basándose en el saldo inicial
-     * de la cuenta y los movimientos.
+     * Updates the progress of the goals based on the account's initial
+     * balance and movements.
      */
 
     private void recalculateGoalsProgress(List<Goal> goals, List<Movement> movements) {
-        // Calculamos el balance actual de la cuenta
+        // We calculate the current account balance
         BigDecimal totalBalance = calculateActualBalance();
 
-        // Asignamos el balance a las metas (sin superar el monto objetivo)
-        // Fix: Se arreglo que antes el progreso se le asignaba a todas las metas
-        // por igual, ahora se reparte el progreso segun el monto objetivo de cada meta
+        // We assign the balance to the goals (without exceeding the target amount)
+        // Fix: Previously the progress was assigned to all goals equally,
+        // now the progress is distributed according to the target amount of each goal
         if (goals != null) {
             for (Goal goal : goals) {
                 BigDecimal progress = totalBalance.min(goal.getTargetAmount());
@@ -152,7 +151,7 @@ public class GoalsController implements GoalActionListener, AccountObserver {
         Goal newGoal = new Goal(name, target, desc);
 
         if (currentAccount != null) {
-            // Calculamos el balance actual y se lo ponemos a la meta recien creada
+            // We calculate the current balance and set it to the newly created goal
             BigDecimal currentBalance = calculateActualBalance();
             newGoal.setCurrentAmount(currentBalance);
 
@@ -163,7 +162,7 @@ public class GoalsController implements GoalActionListener, AccountObserver {
     }
 
     /**
-     * Lógica para los botones en la vista.
+     * Logic for the buttons in the view.
      */
 
     private void handleAddGoalFromMainView() {

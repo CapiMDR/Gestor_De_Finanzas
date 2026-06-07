@@ -9,6 +9,9 @@ import javax.swing.border.EmptyBorder;
 
 import movements.movement_model.Movement;
 
+/**
+ * View class for displaying movement categories (income and expenses).
+ */
 public class CategoriesView extends JPanel {
 
     private JLabel totalIncomeLabel;

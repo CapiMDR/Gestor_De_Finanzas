@@ -5,31 +5,30 @@ import java.util.HashSet;
 import java.util.TreeSet;
 
 /**
- * Modelo encargado de administrar los recordatorios simples (no recurrentes).
- * <p>
- * Gestiona la creación, edición, eliminación y almacenamiento de objetos
- * {@link Reminder}, además de notificar a los observadores registrados cada vez
- * que ocurre un cambio en la colección.
- * </p>
+ * Model in charge of managing simple (non-recurring) reminders.
+ * 
+ * Manages the creation, editing, deletion and storage of {@link Reminder}
+ * objects, as well as notifying registered observers every time
+ * a change occurs in the collection.
  */
 public class RemindersModel {
 
-    // Manteniendo a los recordatorios en un TreeSet para rápido ordenamiento en
-    // inserción/eliminación y eficiencia al buscar existencia
-    /** Colección principal de recordatorios, ordenada por fecha y nombre. */
+    // Keeping reminders in a TreeSet for fast sorting on
+    // insertion/deletion and efficiency when checking existence
+    /** Main collection of reminders, sorted by date and name. */
     private final TreeSet<Reminder> allReminders = ReminderJSONHandler.loadReminders();
 
     /**
-     * Lista de observadores que serán notificados cuando cambien los recordatorios.
+     * List of observers that will be notified when reminders change.
      */
     private final HashSet<ReminderObserver> observerList = new HashSet<>();
 
     /**
-     * Agrega un nuevo recordatorio utilizando sus datos individuales.
+     * Adds a new reminder using its individual data.
      *
-     * @param name    nombre identificador del recordatorio
-     * @param message mensaje o descripción del recordatorio
-     * @param date    fecha y hora del recordatorio
+     * @param name    reminder identifier name
+     * @param message reminder message or description
+     * @param date    reminder date and time
      */
     public void addReminder(String name, String message, LocalDateTime date) {
         Reminder reminder = new Reminder(name, message, date);
@@ -38,9 +37,9 @@ public class RemindersModel {
     }
 
     /**
-     * Agrega un recordatorio existente a la colección.
+     * Adds an existing reminder to the collection.
      *
-     * @param reminder recordatorio ya construido
+     * @param reminder already built reminder
      */
     public void addReminder(Reminder reminder) {
         allReminders.add(reminder);
@@ -48,9 +47,9 @@ public class RemindersModel {
     }
 
     /**
-     * Elimina un recordatorio específico si existe en el conjunto.
+     * Deletes a specific reminder if it exists in the set.
      *
-     * @param reminder recordatorio a eliminar
+     * @param reminder reminder to delete
      */
     public void deleteReminder(Reminder reminder) {
         if (allReminders.contains(reminder))
@@ -59,18 +58,17 @@ public class RemindersModel {
     }
 
     /**
-     * Edita un recordatorio sustituyéndolo por una nueva instancia.
-     * <p>
-     * Se elimina el recordatorio original y se agrega el nuevo para preservar
-     * el orden cronológico dentro del {@link TreeSet}.
-     * </p>
+     * Edits a reminder replacing it with a new instance.
+     * 
+     * The original reminder is removed and the new one is added to preserve
+     * the chronological order within the {@link TreeSet}.
      *
-     * @param oldReminder recordatorio que será sustituido
-     * @param newReminder recordatorio actualizado
+     * @param oldReminder reminder that will be replaced
+     * @param newReminder updated reminder
      */
     public void editReminder(Reminder oldReminder, Reminder newReminder) {
-        // Eliminando al recordatorio que se editó y creando uno nuevo para preservar el
-        // orden cronológico en el treeset
+        // Removing the edited reminder and creating a new one to preserve the
+        // chronological order in the treeset
         if (!allReminders.contains(oldReminder))
             return;
         deleteReminder(oldReminder);
@@ -79,8 +77,8 @@ public class RemindersModel {
     }
 
     /**
-     * Notifica a todos los observadores que la colección de recordatorios ha
-     * cambiado.
+     * Notifies all observers that the collection of reminders has
+     * changed.
      */
     private void notifyObservers() {
         for (ReminderObserver observer : observerList) {
@@ -89,18 +87,18 @@ public class RemindersModel {
     }
 
     /**
-     * Registra un observador para que sea notificado ante cambios.
+     * Registers an observer to be notified of changes.
      *
-     * @param observer objeto que implementa {@link ReminderObserver}
+     * @param observer object implementing {@link ReminderObserver}
      */
     public void addObserver(ReminderObserver observer) {
         observerList.add(observer);
     }
 
     /**
-     * Elimina un observador previamente registrado.
+     * Removes a previously registered observer.
      *
-     * @param observer el observador a remover
+     * @param observer the observer to remove
      */
     public void removeObserver(ReminderObserver observer) {
         if (observerList.contains(observer))
@@ -108,16 +106,16 @@ public class RemindersModel {
     }
 
     /**
-     * Devuelve el conjunto ordenado de todos los recordatorios.
+     * Returns the sorted set of all reminders.
      *
-     * @return {@link TreeSet} con los recordatorios
+     * @return {@link TreeSet} with the reminders
      */
     public TreeSet<Reminder> getReminders() {
         return allReminders;
     }
 
     /**
-     * Guarda todos los recordatorios en almacenamiento persistente (archivo JSON).
+     * Saves all reminders in persistent storage (JSON file).
      */
     public void saveReminders() {
         ReminderJSONHandler.saveReminders(allReminders);

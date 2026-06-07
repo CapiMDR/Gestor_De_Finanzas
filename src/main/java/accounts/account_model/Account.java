@@ -8,29 +8,30 @@ import goals.goals_model.Goal;
 import movements.movement_model.Movement;
 
 /**
- * Representa una cuenta financiera que mantiene información sobre su saldo,
- * tipo, moneda, movimientos y metas asociadas.
+ * Represents a financial account that maintains information about its balance,
+ * type, currency, movements and associated goals.
+ *
  * @author Martín Jesús Pool Chuc
  */
 public class Account {
 
     /**
-     * Tipos de cuenta disponibles.
+     * Available account types.
      */
     public enum AccountType {
-        /** Cuenta de efectivo. */
+        /** Cash account. */
         CASH,
-        /** Cuenta digital. */
+        /** Digital account. */
         DIGITAL
     }
 
     /**
-     * Tipos de moneda soportados.
+     * Supported currency types.
      */
     public enum Coin {
-        /** Dólar estadounidense. */
+        /** US Dollar. */
         USD,
-        /** Peso mexicano. */
+        /** Mexican peso. */
         MXN
     }
 
@@ -46,13 +47,13 @@ public class Account {
     private List<Goal> goals;
 
     /**
-     * Crea una nueva cuenta con los datos especificados.
+     * Creates a new account with the specified data.
      *
-     * @param id             identificador de la cuenta
-     * @param name           nombre de la cuenta
-     * @param type           tipo de cuenta (CASH o DIGITAL)
-     * @param coin           tipo de moneda (USD o MXN)
-     * @param initialBalance saldo inicial de la cuenta
+     * @param id             account identifier
+     * @param name           account name
+     * @param type           account type (CASH or DIGITAL)
+     * @param coin           currency type (USD or MXN)
+     * @param initialBalance initial account balance
      */
     public Account(int id, String name, AccountType type, Coin coin, BigDecimal initialBalance) {
         this.id = id;
@@ -66,18 +67,18 @@ public class Account {
     }
 
     /**
-     * Actualiza el saldo actual de la cuenta.
+     * Updates the current balance of the account.
      *
-     * @param currentBalance nuevo saldo actual
+     * @param currentBalance new current balance
      */
     public void updateBalance(BigDecimal currentBalance) {
         this.currentBalance = currentBalance;
     }
 
     /**
-     * Agrega un movimiento y actualiza el saldo según si es ingreso o gasto.
+     * Adds a movement and updates the balance depending on whether it is income or expense.
      *
-     * @param movement movimiento a registrar en la cuenta
+     * @param movement movement to register in the account
      */
     public void addMovement(Movement movement) {
         this.movements.add(movement);
@@ -96,9 +97,9 @@ public class Account {
     }
 
     /**
-     * Obtiene la lista de movimientos registrados.
+     * Gets the list of registered movements.
      *
-     * @return lista de movimientos
+     * @return list of movements
      */
     public List<Movement> getMovements() {
         return movements;
@@ -133,9 +134,9 @@ public class Account {
     }
 
     /**
-     * Obtiene el tipo de moneda.
+     * Gets the currency type.
      *
-     * @return moneda de la cuenta
+     * @return account currency
      */
     public Coin getCoin() {
         return coin;
@@ -154,9 +155,9 @@ public class Account {
     }
 
     /**
-     * Establece una nueva lista de movimientos.
+     * Sets a new list of movements.
      *
-     * @param movements lista de movimientos
+     * @param movements list of movements
      */
     public void setMovements(List<Movement> movements) {
         this.movements = movements;

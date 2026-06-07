@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package reports.modelReport;
 
 import java.math.BigDecimal;
@@ -13,7 +9,8 @@ import accounts.account_model.Account;
 import movements.movement_model.Movement;
 
 /**
- *
+ * Generates reports based on the account's movements.
+ * Notifies observers when a report is generated.
  * @author villa
  */
 public class ReportGenerator {

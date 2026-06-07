@@ -13,35 +13,28 @@ import reminders.reminder_view.RemindersEditorView;
 import reminders.reminder_view.RemindersView;
 
 /**
- * Controlador principal encargado de coordinar la interacción entre el modelo
- * de
- * recordatorios, las vistas y la lógica de verificación periódica.
+ * Main controller in charge of coordinating the interaction between the
+ * reminders model, the views and the periodic verification logic.
  * 
- * <p>
- * Se encarga de:
- * </p>
- * <ul>
- * <li>Escuchar solicitudes de la vista para agregar, editar o eliminar
- * recordatorios.</li>
- * <li>Disparar recordatorios cuando su fecha programada se cumple.</li>
- * <li>Sincronizar automáticamente los cambios con el almacenamiento en
- * JSON.</li>
- * </ul>
+ * Responsible for:
+ * - Listening to view requests to add, edit or delete reminders.
+ * - Triggering reminders when their scheduled date is met.
+ * - Automatically synchronizing changes with the JSON storage.
  */
 public class RemindersController {
 
-    /** Modelo que gestiona la colección de recordatorios. */
+    /** Model that manages the collection of reminders. */
     private final RemindersModel remindersModel = new RemindersModel();
 
-    /** Vista principal donde se muestran los recordatorios. */
+    /** Main view where reminders are shown. */
     private final RemindersView remindersView = new RemindersView(this, remindersModel);
 
-    /** Ejecutador programado para revisar periódicamente los recordatorios. */
+    /** Scheduled executor to periodically check reminders. */
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
     /**
-     * Crea el controlador, muestra la vista principal y programa la tarea
-     * periódica de vigilancia de recordatorios.
+     * Creates the controller, shows the main view and schedules the
+     * periodic reminder watch task.
      */
     public RemindersController() {
         scheduler.scheduleAtFixedRate(this::watchReminders, 0, 1, TimeUnit.SECONDS);
@@ -52,30 +45,28 @@ public class RemindersController {
     }
 
     /**
-     * Revisa los recordatorios cada segundo y activa aquellos cuya fecha haya sido
-     * alcanzada.
+     * Checks reminders every second and activates those whose date has been
+     * reached.
      * 
-     * <p>
-     * Como los recordatorios están ordenados cronológicamente, si uno aún no debe
-     * dispararse, los siguientes tampoco.
-     * </p>
+     * Since the reminders are sorted chronologically, if one should not
+     * be triggered yet, the following ones shouldn't either.
      */
     private void watchReminders() {
         for (Reminder reminder : remindersModel.getReminders()) {
             if (reminder.shouldTrigger()) {
                 triggerReminder(reminder);
             } else {
-                // Como los recordatorios están ordenados por su fecha, si el actual no ha
-                // llegado a su tiempo, los demás tampoco
+                // Since reminders are sorted by their date, if the current one has not
+                // reached its time, the others won't either
                 break;
             }
         }
     }
 
     /**
-     * Activa un recordatorio mostrando su alerta en la interfaz gráfica.
+     * Activates a reminder by showing its alert in the graphical interface.
      * 
-     * @param reminder Recordatorio que debe ser disparado.
+     * @param reminder Reminder to be triggered.
      */
     private void triggerReminder(Reminder reminder) {
         reminder.setTriggered(true);
@@ -92,11 +83,11 @@ public class RemindersController {
     }
 
     /**
-     * Maneja la petición de agregar un nuevo recordatorio desde la vista.
+     * Handles the request to add a new reminder from the view.
      * 
-     * @param name    Nombre del recordatorio.
-     * @param message Mensaje del recordatorio.
-     * @param date    Fecha y hora programada.
+     * @param name    Reminder name.
+     * @param message Reminder message.
+     * @param date    Scheduled date and time.
      */
     public void handleReminderAddition(String name, String message, LocalDateTime date) {
         if (!isValidReminder(name, message, date))
@@ -107,13 +98,12 @@ public class RemindersController {
     }
 
     /**
-     * Verifica si los datos proporcionados para un recordatorio son válidos.
+     * Verifies if the data provided for a reminder is valid.
      * 
-     * @param name    Nombre del recordatorio.
-     * @param message Mensaje asociado.
-     * @param date    Fecha de activación.
-     * @return {@code true} si los datos son válidos, {@code false} en caso
-     *         contrario.
+     * @param name    Reminder name.
+     * @param message Associated message.
+     * @param date    Activation date.
+     * @return {@code true} if the data is valid, {@code false} otherwise.
      */
     private boolean isValidReminder(String name, String message, LocalDateTime date) {
         if (name == null || name.isEmpty())
@@ -124,9 +114,9 @@ public class RemindersController {
     }
 
     /**
-     * Maneja la petición de eliminar un recordatorio.
+     * Handles the request to delete a reminder.
      * 
-     * @param reminder Recordatorio a eliminar.
+     * @param reminder Reminder to delete.
      */
     public void handleReminderDeletion(Reminder reminder) {
         remindersModel.deleteReminder(reminder);
@@ -134,11 +124,11 @@ public class RemindersController {
     }
 
     /**
-     * Maneja la edición de un recordatorio reemplazando el anterior con uno
-     * modificado.
+     * Handles the editing of a reminder replacing the old one with a
+     * modified one.
      * 
-     * @param oldReminder Recordatorio original.
-     * @param newReminder Versión editada del recordatorio.
+     * @param oldReminder Original reminder.
+     * @param newReminder Edited version of the reminder.
      */
     public void handleReminderEdit(Reminder oldReminder, Reminder newReminder) {
         remindersModel.editReminder(oldReminder, newReminder);
@@ -146,9 +136,9 @@ public class RemindersController {
     }
 
     /**
-     * Abre la ventana de edición para un recordatorio específico.
+     * Opens the edition window for a specific reminder.
      * 
-     * @param reminder Recordatorio a editar.
+     * @param reminder Reminder to edit.
      */
     public void onEditRequest(Reminder reminder) {
         RemindersEditorView editor = new RemindersEditorView(null, reminder);

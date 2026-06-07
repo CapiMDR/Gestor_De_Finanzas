@@ -13,39 +13,37 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
- * Clase utilitaria para manejar la carga y guardado de recordatorios en un
- * archivo JSON.
+ * Utility class to handle the loading and saving of reminders in a
+ * JSON file.
  * 
- * <p>
- * Esta clase no puede ser instanciada ya que únicamente ofrece métodos
- * estáticos para la persistencia de objetos {@link Reminder}.
- * </p>
+ * This class cannot be instantiated since it only offers static
+ * methods for the persistence of {@link Reminder} objects.
  */
 public class ReminderJSONHandler {
 
     /**
-     * Constructor privado para evitar la creación de instancias.
+     * Private constructor to prevent instantiation.
      */
     private ReminderJSONHandler() {
     }
 
-    /** Nombre del archivo JSON donde se almacenan los recordatorios. */
+    /** JSON file name where reminders are stored. */
     private static final String FILE_NAME = "reminders.json";
 
-    /** Formato de fecha utilizado para guardar y leer fechas en el archivo JSON. */
+    /** Date format used to save and read dates in the JSON file. */
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 
     /**
-     * Comparador para ordenar los recordatorios primero por su fecha,
-     * y luego por su nombre.
+     * Comparator to sort reminders first by their date,
+     * and then by their name.
      */
     public static Comparator<Reminder> REMINDER_COMPARATOR = Comparator.comparing(Reminder::getDate)
             .thenComparing(Reminder::getName);
 
     /**
-     * Guarda la lista de recordatorios en un archivo JSON.
+     * Saves the list of reminders in a JSON file.
      * 
-     * @param remindersList Conjunto ordenado de recordatorios que serán guardados.
+     * @param remindersList Sorted set of reminders to be saved.
      */
     public static void saveReminders(TreeSet<Reminder> remindersList) {
         JSONArray arr = new JSONArray();
@@ -66,10 +64,10 @@ public class ReminderJSONHandler {
     }
 
     /**
-     * Carga los recordatorios desde el archivo JSON.
+     * Loads reminders from the JSON file.
      * 
-     * @return Un {@link TreeSet} con los recordatorios cargados, ordenados
-     *         por fecha y nombre.
+     * @return A {@link TreeSet} with the loaded reminders, sorted
+     *         by date and name.
      */
     public static TreeSet<Reminder> loadReminders() {
         TreeSet<Reminder> reminders = new TreeSet<>(REMINDER_COMPARATOR);

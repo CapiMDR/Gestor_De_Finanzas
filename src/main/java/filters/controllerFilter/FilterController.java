@@ -10,15 +10,17 @@ import filters.viewFilter.CategoriesView;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import movements.movement_model.Movement;
 import movements.movement_model.MovementCategory;
 import movements.movement_model.MovementCategory.MovementType;
 
 import javax.swing.SwingUtilities;
 
+/**
+ * Controller in charge of managing the categories view filter.
+ * Handles the calculation of income and expenses based on the account's movements.
+ */
 public class FilterController implements AccountObserver {
 
     private CategoriesView view;

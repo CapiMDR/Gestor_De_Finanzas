@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Clase que implementa el patrón Observer para la gestión de categorías de
- * movimientos.
- * Permite registrar, eliminar y notificar observadores cuando ocurre un cambio
- * relacionado con la lista de categorías de movimiento.
+ * Class that implements the Observer pattern for the management of movement
+ * categories.
+ * Allows to register, remove and notify observers when a change occurs
+ * related to the movement category list.
  * 
  * @author Martín Jesús Pool Chuc
  */

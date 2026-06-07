@@ -8,6 +8,10 @@ import reports.controllerReport.ReportController;
 import reports.modelReport.ReportGenerator;
 import reports.modelReport.ReportSubject;
 
+/**
+ * Main class for initializing the reports module.
+ * Wires up the model, view, and controller for reporting functionalities.
+ */
 public class ReportsModule {
 
     public static void initReportsModule(Account selectedAccount) {
@@ -19,8 +23,8 @@ public class ReportsModule {
         ReportController controller = new ReportController();
         controller.setViewModule(reportsView, generator, selectedAccount);
 
-        // Desregistrar el observer al cerrar la ventana para evitar acumulación
-        // de observers muertos y notificaciones duplicadas
+        // Unregister observer when closing the window to prevent accumulation
+        // of dead observers and duplicated notifications
         reportsView.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosed(java.awt.event.WindowEvent e) {

@@ -14,20 +14,21 @@ import accounts.account_view.AccountView;
 import reports.ReportsModule;
 
 /**
- * Controlador encargado de gestionar las acciones relacionadas con la vista de
- * cuentas. Maneja la creación, edición, eliminación, acceso y cálculo de
- * intereses de cuentas, así como la notificación de cambios provenientes del
+ * Controller in charge of managing actions related to the account view.
+ * Handles the creation, editing, deletion, access and interest calculation
+ * of accounts, as well as the notification of changes coming from the
  * AccountManager.
+ * 
  * @author Martín Jesús Pool Chuc
  */
 public class AccountController implements AccountObserver {
     private AccountView view;
 
     /**
-     * Constructor del controlador que inicializa la vista y registra el
-     * observador.
+     * Constructor of the controller that initializes the view and registers the
+     * observer.
      *
-     * @param view Vista principal utilizada para interactuar con el usuario.
+     * @param view Main view used to interact with the user.
      */
     public AccountController(AccountView view) {
         this.view = view;
@@ -36,7 +37,7 @@ public class AccountController implements AccountObserver {
     }
 
     /**
-     * Asigna los listeners a los botones de la vista.
+     * Assigns listeners to the view's buttons.
      */
     private void AssignEvents() {
         this.view.getBtnAccessAccount().addActionListener(e -> {
@@ -61,7 +62,7 @@ public class AccountController implements AccountObserver {
     }
 
     /**
-     * Accede a la cuenta seleccionada y abre el módulo de reportes.
+     * Accesses the selected account and opens the reports module.
      */
     public void accessAccount(){
         int selectedIndex = view.getListAccounts().getSelectedIndex();
@@ -73,8 +74,8 @@ public class AccountController implements AccountObserver {
     }
 
     /**
-     * Agrega una nueva cuenta utilizando los datos de la vista. Valida la entrada,
-     * crea la instancia y actualiza la lista de cuentas.
+     * Adds a new account using the data from the view. Validates the input,
+     * creates the instance and updates the account list.
      */
     private void addAccount(){
         String name = view.getAccountName();
@@ -123,7 +124,7 @@ public class AccountController implements AccountObserver {
     }
 
     /**
-     * Elimina la cuenta seleccionada tras confirmar la acción con el usuario.
+     * Deletes the selected account after confirming the action with the user.
      */
     private void deleteAccount(){
         int selectedIndex = view.getListAccounts().getSelectedIndex();
@@ -158,8 +159,8 @@ public class AccountController implements AccountObserver {
     }
 
     /**
-     * Inicia el proceso de edición de la cuenta seleccionada abriendo la vista
-     * correspondiente.
+     * Starts the editing process of the selected account by opening the
+     * corresponding view.
      */
     private void editAccount(){
         int selectedIndex = view.getListAccounts().getSelectedIndex();
@@ -181,7 +182,7 @@ public class AccountController implements AccountObserver {
     }
 
     /**
-     * Limpia los campos de entrada en la vista.
+     * Clears the input fields in the view.
      */
     private void clearInputFields() {
         view.txtNameAccount.setText("");
@@ -191,9 +192,9 @@ public class AccountController implements AccountObserver {
     }
 
     /**
-     * Muestra el formulario de edición para la cuenta seleccionada.
+     * Shows the edit form for the selected account.
      *
-     * @param accountToEdit Cuenta a editar.
+     * @param accountToEdit Account to edit.
      */
     private void showEditForm(Account accountToEdit) {
         AccountEditView editView = new AccountEditView();
@@ -219,10 +220,10 @@ public class AccountController implements AccountObserver {
     }
 
     /**
-     * Verifica y aplica los cambios de edición de una cuenta.
+     * Verifies and applies the editing changes of an account.
      *
-     * @param editView Vista utilizada para editar la cuenta.
-     * @param accountToEdit Cuenta que está siendo editada.
+     * @param editView View used to edit the account.
+     * @param accountToEdit Account being edited.
      */
     private void handleConfirmEdit(AccountEditView editView, Account accountToEdit) {
         String newName = editView.getTxtNameAccount().getText();
@@ -259,8 +260,8 @@ public class AccountController implements AccountObserver {
     }
 
     /**
-     * Calcula el interés compuesto de la cuenta seleccionada y muestra el resultado
-     * en la vista correspondiente.
+     * Calculates the compound interest of the selected account and shows the result
+     * in the corresponding view.
      */
     private void calculateInterest(){
         int selectedIndex = view.getListAccounts().getSelectedIndex();
@@ -336,9 +337,9 @@ public class AccountController implements AccountObserver {
     }
 
     /**
-     * Método llamado cuando el AccountManager notifica un cambio en la lista de cuentas.
+     * Method called when the AccountManager notifies a change in the account list.
      *
-     * @param accountsList Lista actualizada de cuentas.
+     * @param accountsList Updated list of accounts.
      */
     @Override
     public void onNotify(List<Account> accountsList) {

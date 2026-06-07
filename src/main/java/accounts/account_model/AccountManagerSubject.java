@@ -4,37 +4,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Clase que implementa el patrón Subject del patrón Observer para manejar
- * observadores relacionados con los cambios en la lista de cuentas.
+ * Class that implements the Subject pattern from the Observer pattern to handle
+ * observers related to changes in the account list.
+ *
  * @author Martín Jesús Pool Chuc
  */
 public class AccountManagerSubject {
 
-    /** Lista estática de observadores registrados. */
+    /** Static list of registered observers. */
     private static List<AccountObserver> observers = new ArrayList<>();
 
     /**
-     * Agrega un observador a la lista de observadores registrados.
+     * Adds an observer to the list of registered observers.
      *
-     * @param observer el observador que será agregado
+     * @param observer the observer to be added
      */
     public static void addObserver(AccountObserver observer) {
         observers.add(observer);
     }
 
     /**
-     * Elimina un observador previamente registrado.
+     * Removes a previously registered observer.
      *
-     * @param observer el observador que será removido
+     * @param observer the observer to be removed
      */
     public static void removeObserver(AccountObserver observer) {
         observers.remove(observer);
     }
 
     /**
-     * Notifica a todos los observadores enviando la lista de cuentas actualizada.
+     * Notifies all observers by sending the updated list of accounts.
      *
-     * @param accountsList lista de cuentas que será enviada a los observadores
+     * @param accountsList list of accounts that will be sent to the observers
      */
     public static void notifyObservers(List<Account> accountsList) {
         for (AccountObserver observer : observers) {

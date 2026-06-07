@@ -12,6 +12,10 @@ import reminders.reminder_model.ReminderObserver;
 import reminders.reminder_model.Reminder;
 import reminders.reminder_model.RemindersModel;
 
+/**
+ * Main view for managing reminders.
+ * Displays the list of configured reminders and allows creating new ones.
+ */
 public class RemindersView extends javax.swing.JFrame implements ReminderObserver {
         private final RemindersModel model;
         private final RemindersController controller;
@@ -74,7 +78,7 @@ public class RemindersView extends javax.swing.JFrame implements ReminderObserve
                         controller.handleReminderDeletion(reminder);
                 });
 
-                // Panel para los botones de cada recordatorio
+                // Panel for the buttons of each reminder
                 JPanel buttonPanel = new JPanel();
                 buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
                 buttonPanel.setOpaque(false);
@@ -84,7 +88,7 @@ public class RemindersView extends javax.swing.JFrame implements ReminderObserve
                 buttonPanel.setAlignmentY(Component.CENTER_ALIGNMENT);
 
                 row.add(label);
-                // Empuja los botones a la derecha
+                // Pushes buttons to the right
                 row.add(Box.createHorizontalGlue());
                 row.add(buttonPanel);
 
@@ -468,7 +472,7 @@ public class RemindersView extends javax.swing.JFrame implements ReminderObserve
                 Date date = (Date) reminderDateSpinner.getValue();
                 Date time = (Date) reminderTimeSpinner.getValue();
 
-                // Convertir datos de los spinners a fecha
+                // Convert spinner data to date
                 LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                 LocalTime localTime = time.toInstant().atZone(ZoneId.systemDefault()).toLocalTime();
                 LocalDateTime finalDateTime = LocalDateTime.of(localDate, localTime);

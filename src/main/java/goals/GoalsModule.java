@@ -11,10 +11,10 @@ import goals.goals_view.GoalEditView;
 import goals.goals_view.GoalsView;
 
 /**
- * Punto de entrada principal de la aplicación "Financial Manager".
- * Integra los módulos de Cuentas y Metas.
+ * Main entry point of the "Financial Manager" application.
+ * Integrates the Accounts and Goals modules.
  *
- * @author Integración del Equipo
+ * @author Team Integration
  */
 
 public class GoalsModule {
@@ -37,11 +37,11 @@ public class GoalsModule {
                 goalEditView,
                 goalDetailController);
         if (selectedAccount != null) {
-            // Pasar la cuenta al módulo de metas
+            // Pass the account to the goals module
             goalsController.setAccount(selectedAccount);
         }
 
-        // Desregistrar el observer al cerrar la ventana para evitar acumulación
+        // Unregister observer when closing the window to prevent accumulation
         // de observers muertos y notificaciones duplicadas
         frame.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override

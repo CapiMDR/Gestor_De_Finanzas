@@ -21,12 +21,9 @@ import movements.movement_view.MovementsModule;
 import recurringMoves.recurring_view.RecurringsModule;
 import reminders.reminder_view.RemindersModule;
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
-
 /**
+ * Main dashboard view for a selected account.
+ * Displays charts, balances, and navigation options to different modules.
  *
  * @author villa
  */
@@ -47,7 +44,7 @@ public class FrmMain extends javax.swing.JFrame {
                                 goal.getWidth(),
                                 goal.getHeight(),
                                 Image.SCALE_SMOOTH);
-                // Escalar la imagen
+                // Scale the image
                 goal.setIcon(new ImageIcon(imgGoal));
 
                 // Subscription
@@ -56,7 +53,7 @@ public class FrmMain extends javax.swing.JFrame {
                                 subscription.getWidth(),
                                 subscription.getHeight(),
                                 Image.SCALE_SMOOTH);
-                // Escalar la imagen
+                // Scale the image
                 subscription.setIcon(new ImageIcon(imgSubscription));
                 // Notification
                 ImageIcon iconNotification = (ImageIcon) notification.getIcon();
@@ -64,7 +61,7 @@ public class FrmMain extends javax.swing.JFrame {
                                 notification.getWidth(),
                                 notification.getHeight(),
                                 Image.SCALE_SMOOTH);
-                // Escalar la imagen
+                // Scale the image
                 notification.setIcon(new ImageIcon(imgNotification));
 
                 // Today
@@ -73,7 +70,7 @@ public class FrmMain extends javax.swing.JFrame {
                                 btnToday.getWidth(),
                                 btnToday.getHeight(),
                                 Image.SCALE_SMOOTH);
-                // Escalar la imagen
+                // Scale the image
                 btnToday.setIcon(new ImageIcon(imgToday));
 
                 // Week
@@ -82,7 +79,7 @@ public class FrmMain extends javax.swing.JFrame {
                                 btnWeek.getWidth(),
                                 btnWeek.getHeight(),
                                 Image.SCALE_SMOOTH);
-                // Escalar la imagen
+                // Scale the image
                 btnWeek.setIcon(new ImageIcon(imgWeek));
 
                 // Credit
@@ -91,7 +88,7 @@ public class FrmMain extends javax.swing.JFrame {
                                 credit.getWidth(),
                                 credit.getHeight(),
                                 Image.SCALE_SMOOTH);
-                // Escalar la imagen
+                // Scale the image
                 credit.setIcon(new ImageIcon(imgCredit));
 
                 // Account
@@ -100,7 +97,7 @@ public class FrmMain extends javax.swing.JFrame {
                                 categories.getWidth(),
                                 categories.getHeight(),
                                 Image.SCALE_SMOOTH);
-                // Escalar la imagen
+                // Scale the image
                 categories.setIcon(new ImageIcon(imgAccount));
         }
 

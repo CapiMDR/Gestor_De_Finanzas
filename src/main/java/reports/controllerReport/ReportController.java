@@ -20,7 +20,8 @@ import reports.modelReport.ReportGenerator;
 import reports.modelReport.ReportObserver;
 
 /**
- *
+ * Controller class that manages reports and charts view interactions.
+ * Implements ReportObserver and AccountObserver to stay synced with model changes.
  * @author villa
  */
 public class ReportController implements ReportObserver, AccountObserver {

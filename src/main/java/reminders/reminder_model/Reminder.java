@@ -4,37 +4,34 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
- * Representa un recordatorio con un nombre, mensaje y fecha programada.
+ * Represents a reminder with a name, message and scheduled date.
  * 
- * <p>
- * La clase permite verificar si el recordatorio debe activarse según su
- * fecha programada y si ya fue disparado durante la ejecución actual.
- * </p>
+ * The class allows verifying if the reminder should trigger according to its
+ * scheduled date and if it was already triggered during the current execution.
  */
 public class Reminder {
 
-    /** Nombre del recordatorio. */
+    /** Reminder name. */
     private String name;
 
-    /** Mensaje asociado al recordatorio. */
+    /** Message associated with the reminder. */
     private String message;
 
-    /** Fecha y hora en la que debe dispararse el recordatorio. */
+    /** Date and time when the reminder should trigger. */
     private LocalDateTime date;
 
     /**
-     * Indica si el recordatorio ya fue disparado en esta ejecución.
-     * Se utiliza para evitar que un recordatorio atrasado se dispare múltiples
-     * veces.
+     * Indicates whether the reminder has already triggered in this execution.
+     * Used to prevent an overdue reminder from triggering multiple times.
      */
     private boolean triggered = false;
 
     /**
-     * Constructor principal del recordatorio.
+     * Main constructor of the reminder.
      * 
-     * @param name    Nombre del recordatorio.
-     * @param message Mensaje asociado al recordatorio.
-     * @param date    Fecha y hora en la que debe dispararse.
+     * @param name    Reminder name.
+     * @param message Message associated with the reminder.
+     * @param date    Date and time when it should trigger.
      */
     public Reminder(String name, String message, LocalDateTime date) {
         this.name = name;
@@ -43,11 +40,11 @@ public class Reminder {
     }
 
     /**
-     * Constructor alternativo que asigna la fecha actual como fecha del
-     * recordatorio.
+     * Alternative constructor that assigns the current date as the
+     * reminder date.
      * 
-     * @param name    Nombre del recordatorio.
-     * @param message Mensaje asociado al recordatorio.
+     * @param name    Reminder name.
+     * @param message Message associated with the reminder.
      */
     public Reminder(String name, String message) {
         this.name = name;
@@ -56,71 +53,67 @@ public class Reminder {
     }
 
     /**
-     * Obtiene el nombre del recordatorio.
+     * Gets the reminder name.
      * 
-     * @return Nombre del recordatorio.
+     * @return Reminder name.
      */
     public String getName() {
         return name;
     }
 
     /**
-     * Obtiene el mensaje del recordatorio.
+     * Gets the reminder message.
      * 
-     * @return Mensaje del recordatorio.
+     * @return Reminder message.
      */
     public String getMessage() {
         return message;
     }
 
     /**
-     * Obtiene la fecha programada del recordatorio.
+     * Gets the scheduled date of the reminder.
      * 
-     * @return Fecha en formato {@link LocalDateTime}.
+     * @return Date in {@link LocalDateTime} format.
      */
     public LocalDateTime getDate() {
         return date;
     }
 
     /**
-     * Cambia el nombre del recordatorio.
+     * Changes the reminder name.
      * 
-     * @param name Nuevo nombre del recordatorio.
+     * @param name New reminder name.
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     * Cambia el mensaje del recordatorio.
+     * Changes the reminder message.
      * 
-     * @param message Nuevo mensaje del recordatorio.
+     * @param message New reminder message.
      */
     public void setMessage(String message) {
         this.message = message;
     }
 
     /**
-     * Establece si el recordatorio ya ha sido disparado.
+     * Sets whether the reminder has already triggered.
      * 
-     * @param t {@code true} si ya fue disparado, de lo contrario {@code false}.
+     * @param t {@code true} if it was already triggered, otherwise {@code false}.
      */
     public void setTriggered(boolean t) {
         triggered = t;
     }
 
     /**
-     * Determina si el recordatorio debe dispararse.
+     * Determines whether the reminder should trigger.
      * 
-     * <p>
-     * Un recordatorio debe dispararse si:
-     * </p>
-     * <ul>
-     * <li>No ha sido disparado aún en esta ejecución.</li>
-     * <li>La fecha programada es anterior al momento actual.</li>
-     * </ul>
+     * A reminder should trigger if:
+     * - It has not triggered yet in this execution.
+     * - The scheduled date is before the current moment.
      * 
-     * @return {@code true} si debe dispararse, de lo contrario {@code false}.
+     * @return {@code true} if it should trigger, otherwise {@code false}.
      */
     public boolean shouldTrigger() {
         LocalDateTime now = LocalDateTime.now();
@@ -128,9 +121,9 @@ public class Reminder {
     }
 
     /**
-     * Devuelve una representación en texto del recordatorio.
+     * Returns a text representation of the reminder.
      * 
-     * @return Cadena descriptiva del recordatorio.
+     * @return Descriptive string of the reminder.
      */
     @Override
     public String toString() {

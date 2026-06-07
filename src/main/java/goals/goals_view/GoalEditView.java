@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import javax.swing.*;
 
 /**
- * Diálogo modal para crear o editar una Meta.
+ * Modal dialog to create or edit a Goal.
  *
  * @author Jose Pablo Martinez
  */
@@ -63,7 +63,7 @@ public class GoalEditView extends JDialog {
         btnCancel.addActionListener(e -> dispose());
     }
     
-    // Método para aplicar un estilo sin repetir código
+    // Method to apply a style without repeating code
     private void styleInput(JTextField field, Font font, Color bg) {
         field.setFont(font);
         field.setBackground(bg);
@@ -86,7 +86,7 @@ public class GoalEditView extends JDialog {
         return label;
     }
 
-    // Limpia los campos para un nuevo registro
+    // Clears the fields for a new record
     public void clearFields() {
         txtName.setText("");
         txtTargetAmount.setText("");
@@ -94,7 +94,7 @@ public class GoalEditView extends JDialog {
         setTitle("Agregar Nueva Meta");
     }
 
-    // Llena los campos para editar
+    // Fills the fields for editing
     public void populateFields(String name, BigDecimal targetAmount, String description) {
         txtName.setText(name);
         txtTargetAmount.setText(targetAmount.toString());

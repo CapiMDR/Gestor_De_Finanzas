@@ -8,6 +8,10 @@ import recurringMoves.recurring_model.RecurringMove;
 import java.awt.*;
 import java.util.List;
 
+/**
+ * View dialog that alerts the user about a triggered recurring movement.
+ * Allows the user to apply the movement to an account or delay it.
+ */
 public class RecurringMoveAlertView extends JDialog {
 
     private JComboBox<Account> accountCombo;

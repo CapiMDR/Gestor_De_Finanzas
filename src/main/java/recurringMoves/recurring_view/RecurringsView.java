@@ -21,6 +21,10 @@ import recurringMoves.recurring_model.RecurringsModel;
 import java.math.BigDecimal;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Main view for managing recurring movements.
+ * Displays the list of configured recurrences and allows creating new ones.
+ */
 public class RecurringsView extends javax.swing.JFrame implements RecurringObserver, CategoryObserver {
         private final RecurringsModel model;
         private final RecurringsController controller;
@@ -91,7 +95,7 @@ public class RecurringsView extends javax.swing.JFrame implements RecurringObser
                         controller.handleRecurringDeletion(recMove);
                 });
 
-                // Panel para los botones de cada recordatorio
+                // Panel for the buttons of each reminder
                 JPanel buttonPanel = new JPanel();
                 buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
                 buttonPanel.setOpaque(false);
@@ -101,7 +105,7 @@ public class RecurringsView extends javax.swing.JFrame implements RecurringObser
                 buttonPanel.setAlignmentY(Component.CENTER_ALIGNMENT);
 
                 row.add(label);
-                // Empuja los botones a la derecha
+                // Pushes buttons to the right
                 row.add(Box.createHorizontalGlue());
                 row.add(buttonPanel);
 

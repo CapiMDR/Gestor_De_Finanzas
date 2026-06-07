@@ -17,35 +17,35 @@ import movements.movement_model.MovementCategory;
 import movements.movement_model.MovementCategory.MovementType;
 
 /**
- * Utilidad encargada de guardar y cargar los objetos {@link RecurringMove}
- * desde y hacia un archivo JSON.
+ * Utility in charge of saving and loading {@link RecurringMove} objects
+ * to and from a JSON file.
  *
- * Esta clase es estática y no puede ser instanciada.
+ * This class is static and cannot be instantiated.
  */
 public class RecurringJSONHandler {
 
-    /** Constructor privado para evitar instanciación. */
+    /** Private constructor to prevent instantiation. */
     private RecurringJSONHandler() {
     }
 
-    /** Nombre del archivo donde se guardan los recordatorios. */
+    /** File name where reminders are saved. */
     private static final String FILE_NAME = "recurrings.json";
 
-    /** Formato estándar utilizado para serializar y deserializar fechas. */
+    /** Standard format used to serialize and deserialize dates. */
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 
-    // Ordenando a los recordatorios primero por su fecha, luego por su nombre
+    // Sorting reminders first by their date, then by their name
     /**
-     * Comparador utilizado para ordenar los recordatorios por fecha y luego por
-     * concepto.
+     * Comparator used to sort the reminders by date and then by
+     * concept.
      */
     public static Comparator<RecurringMove> REMINDER_COMPARATOR = Comparator.comparing(RecurringMove::getInitialDate)
             .thenComparing(RecurringMove::getConcept);
 
     /**
-     * Guarda una colección de recordatorios recurrentes dentro de un archivo JSON.
+     * Saves a collection of recurring reminders into a JSON file.
      *
-     * @param recurrentsList Lista ordenada de {@link RecurringMove} a guardar.
+     * @param recurrentsList Sorted list of {@link RecurringMove} to save.
      */
     public static void saveReminders(TreeSet<RecurringMove> recurrentsList) {
         JSONArray arr = new JSONArray();
@@ -70,10 +70,10 @@ public class RecurringJSONHandler {
     }
 
     /**
-     * Carga los recordatorios recurrentes almacenados en el archivo JSON.
+     * Loads the recurring reminders stored in the JSON file.
      *
-     * @return Un {@link TreeSet} ordenado mediante {@link #REMINDER_COMPARATOR}
-     *         conteniendo todos los objetos {@link RecurringMove} cargados.
+     * @return A {@link TreeSet} sorted by {@link #REMINDER_COMPARATOR}
+     *         containing all loaded {@link RecurringMove} objects.
      */
     public static TreeSet<RecurringMove> loadRecurrings() {
         TreeSet<RecurringMove> recMoves = new TreeSet<>(REMINDER_COMPARATOR);

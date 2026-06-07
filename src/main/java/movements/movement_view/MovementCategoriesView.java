@@ -1,5 +1,8 @@
 package movements.movement_view;
 
+/**
+ * View class for managing movement categories.
+ */
 public class MovementCategoriesView extends javax.swing.JFrame {
 
         public MovementCategoriesView() {
@@ -330,7 +333,7 @@ public class MovementCategoriesView extends javax.swing.JFrame {
                 return listCategoryType;
         }
 
-        // JList para mostrar las categorías existentes
+        // JList to show existing categories
         public javax.swing.JList<String> getListCategories() {
                 return listCategories;
         }
