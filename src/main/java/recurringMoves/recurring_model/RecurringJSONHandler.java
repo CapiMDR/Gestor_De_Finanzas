@@ -2,8 +2,12 @@ package recurringMoves.recurring_model;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.nio.charset.StandardCharsets;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -64,8 +68,12 @@ public class RecurringJSONHandler {
             arr.put(obj);
         }
 
-        try (FileWriter writer = new FileWriter(AppConfig.getRecurringsFilePath())) {
-            writer.write(arr.toString(4));
+        Path target = Paths.get(AppConfig.getRecurringsFilePath());
+        Path temp = Paths.get(AppConfig.getRecurringsFilePath() + ".tmp");
+
+        try {
+            Files.writeString(temp, arr.toString(4), StandardCharsets.UTF_8);
+            Files.move(temp, target, StandardCopyOption.REPLACE_EXISTING);
             logger.info("Recurring movements saved successfully — {} record(s).", recurrentsList.size());
         } catch (IOException e) {
             logger.error("Error saving recurring movements: {}", e.getMessage(), e);

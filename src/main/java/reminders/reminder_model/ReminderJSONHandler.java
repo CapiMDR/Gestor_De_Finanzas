@@ -2,8 +2,12 @@ package reminders.reminder_model;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
@@ -59,8 +63,12 @@ public class ReminderJSONHandler {
             arr.put(obj);
         }
 
-        try (FileWriter writer = new FileWriter(AppConfig.getRemindersFilePath())) {
-            writer.write(arr.toString(4));
+        Path target = Paths.get(AppConfig.getRemindersFilePath());
+        Path temp = Paths.get(AppConfig.getRemindersFilePath() + ".tmp");
+
+        try {
+            Files.writeString(temp, arr.toString(4), StandardCharsets.UTF_8);
+            Files.move(temp, target, StandardCopyOption.REPLACE_EXISTING);
             logger.info("Reminders saved successfully — {} reminder(s).", remindersList.size());
         } catch (IOException e) {
             logger.error("Error saving reminders: {}", e.getMessage(), e);

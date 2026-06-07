@@ -14,11 +14,14 @@ import accounts.account_model.Account.AccountType;
 import accounts.account_model.Account.Coin;
 import goals.goals_model.Goal;
 
-import java.io.FileWriter;
+
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.nio.charset.StandardCharsets;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -258,8 +261,12 @@ public class JsonDataHandler {
      */
     public void saveAccounts(List<Account> accounts) {
         JSONArray jsonArray = accountsToJson(accounts);
-        try (FileWriter file = new FileWriter(AppConfig.getAccountsFilePath())) {
-            file.write(jsonArray.toString(2));
+        Path target = Paths.get(AppConfig.getAccountsFilePath());
+        Path temp = Paths.get(AppConfig.getAccountsFilePath() + ".tmp");
+
+        try {
+            Files.writeString(temp, jsonArray.toString(2), StandardCharsets.UTF_8);
+            Files.move(temp, target, StandardCopyOption.REPLACE_EXISTING);
             logger.info("Accounts saved successfully — {} account(s).", accounts.size());
         } catch (IOException e) {
             logger.error("Error saving accounts to file: {}", e.getMessage(), e);
@@ -273,8 +280,12 @@ public class JsonDataHandler {
      */
     public void saveCategories(HashMap<String, MovementCategory> categories) {
         JSONArray jsonArray = categoriesToJson(categories);
-        try (FileWriter file = new FileWriter(AppConfig.getCategoriesFilePath())) {
-            file.write(jsonArray.toString(2));
+        Path target = Paths.get(AppConfig.getCategoriesFilePath());
+        Path temp = Paths.get(AppConfig.getCategoriesFilePath() + ".tmp");
+
+        try {
+            Files.writeString(temp, jsonArray.toString(2), StandardCharsets.UTF_8);
+            Files.move(temp, target, StandardCopyOption.REPLACE_EXISTING);
             logger.info("Categories saved successfully — {} category/categories.", categories.size());
         } catch (IOException e) {
             logger.error("Error saving categories to file: {}", e.getMessage(), e);
