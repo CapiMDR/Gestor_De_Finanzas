@@ -11,6 +11,8 @@ import reminders.reminder_model.RemindersModel;
 import reminders.reminder_model.Reminder;
 import reminders.reminder_view.RemindersEditorView;
 import reminders.reminder_view.RemindersView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Main controller in charge of coordinating the interaction between the
@@ -22,6 +24,8 @@ import reminders.reminder_view.RemindersView;
  * - Automatically synchronizing changes with the JSON storage.
  */
 public class RemindersController {
+
+    private static final Logger logger = LoggerFactory.getLogger(RemindersController.class);
 
     /** Model that manages the collection of reminders. */
     private final RemindersModel remindersModel = new RemindersModel();
@@ -37,6 +41,7 @@ public class RemindersController {
      * periodic reminder watch task.
      */
     public RemindersController() {
+        logger.info("RemindersController initialized.");
         scheduler.scheduleAtFixedRate(this::watchReminders, 0, 1, TimeUnit.SECONDS);
     }
 
@@ -69,6 +74,7 @@ public class RemindersController {
      * @param reminder Reminder to be triggered.
      */
     private void triggerReminder(Reminder reminder) {
+        logger.info("Reminder triggered: '{}' scheduled for {}.", reminder.getName(), reminder.getDate());
         reminder.setTriggered(true);
         javax.swing.SwingUtilities.invokeLater(() -> {
             showReminderAlert(reminder);
@@ -90,11 +96,14 @@ public class RemindersController {
      * @param date    Scheduled date and time.
      */
     public void handleReminderAddition(String name, String message, LocalDateTime date) {
-        if (!isValidReminder(name, message, date))
+        if (!isValidReminder(name, message, date)) {
+            logger.warn("Invalid reminder data rejected: name='{}', date={}.", name, date);
             return;
+        }
 
         remindersModel.addReminder(name, message, date);
         remindersModel.saveReminders();
+        logger.info("Reminder added: '{}' scheduled for {}.", name, date);
     }
 
     /**
@@ -121,6 +130,7 @@ public class RemindersController {
     public void handleReminderDeletion(Reminder reminder) {
         remindersModel.deleteReminder(reminder);
         remindersModel.saveReminders();
+        logger.info("Reminder deleted: '{}'.", reminder.getName());
     }
 
     /**
@@ -133,6 +143,7 @@ public class RemindersController {
     public void handleReminderEdit(Reminder oldReminder, Reminder newReminder) {
         remindersModel.editReminder(oldReminder, newReminder);
         remindersModel.saveReminders();
+        logger.info("Reminder edited: '{}' -> '{}'.", oldReminder.getName(), newReminder.getName());
     }
 
     /**

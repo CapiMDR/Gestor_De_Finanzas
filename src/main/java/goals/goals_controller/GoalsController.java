@@ -14,6 +14,8 @@ import goals.goals_view.GoalsView;
 import java.math.BigDecimal;
 import java.util.List;
 import javax.swing.JOptionPane;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Main controller of the Goals Module.
@@ -24,6 +26,8 @@ import javax.swing.JOptionPane;
  */
 
 public class GoalsController implements GoalActionListener, AccountObserver {
+
+    private static final Logger logger = LoggerFactory.getLogger(GoalsController.class);
 
     private final GoalsView mainView;
     private final GoalEditView editView;
@@ -158,6 +162,8 @@ public class GoalsController implements GoalActionListener, AccountObserver {
             currentAccount.getGoals().add(newGoal);
             AccountManager.saveAccountsData();
             refreshView();
+            logger.info("Goal created: '{}' with target={} for account '{}'.",
+                    name, target, currentAccount.getName());
         }
     }
 
@@ -206,6 +212,8 @@ public class GoalsController implements GoalActionListener, AccountObserver {
             AccountManager.saveAccountsData();
             refreshView();
             editView.closeDialog();
+            logger.info("Goal edited: '{}' -> '{}', new target={}.",
+                    goal.getName(), newName, newTarget);
         });
 
         editView.showDialog();
@@ -218,6 +226,8 @@ public class GoalsController implements GoalActionListener, AccountObserver {
                 "Confirm Deletion", JOptionPane.YES_NO_OPTION);
 
         if (confirm == JOptionPane.YES_OPTION && currentAccount != null) {
+            logger.info("Goal deleted: '{}' from account '{}'.",
+                    goal.getName(), currentAccount.getName());
             currentAccount.getGoals().remove(goal);
             AccountManager.saveAccountsData();
             refreshView();

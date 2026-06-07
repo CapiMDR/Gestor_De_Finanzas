@@ -6,6 +6,8 @@ import java.util.List;
 
 import accounts.account_model.Account.AccountType;
 import accounts.account_model.Account.Coin;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Manages the system's accounts, allowing them to be loaded, saved,
@@ -14,6 +16,7 @@ import accounts.account_model.Account.Coin;
  * @author Martín Jesús Pool Chuc
  */
 public class AccountManager {
+    private static final Logger logger = LoggerFactory.getLogger(AccountManager.class);
     /** Static list that contains all accounts. */
     private static List<Account> accounts = new ArrayList<>();
     /** Handler to load and save data in JSON format. */
@@ -31,6 +34,7 @@ public class AccountManager {
      */
     public static void initAccountManager() {
         accounts = dataHandler.loadAccounts();
+        logger.info("AccountManager initialized — {} account(s) loaded.", accounts.size());
     }
 
     /**
@@ -61,6 +65,7 @@ public class AccountManager {
         accounts.add(newAccount);
         saveAccountsData();
         notifyObservers();
+        logger.info("Account added: '{}' (id={}, type={}).", name, newAccount.getId(), type);
     }
 
     /**
@@ -72,6 +77,7 @@ public class AccountManager {
         accounts.removeIf(account -> account.getId() == id);
         saveAccountsData();
         notifyObservers();
+        logger.info("Account removed: id={}.", id);
     }
 
     /**
@@ -88,6 +94,7 @@ public class AccountManager {
         account.setCoin(coin);
         saveAccountsData();
         notifyObservers();
+        logger.info("Account edited: id={}, new name='{}'.", account.getId(), name);
     }
 
     /**
@@ -112,7 +119,7 @@ public class AccountManager {
      * @return the found account or null if it is out of range
      */
     public static Account getAccountByIndex(int index) {
-        System.out.println(accounts.size());
+        logger.debug("getAccountByIndex called - accounts size: {}", accounts.size());
         if (index >= 0 && index < accounts.size()) {
             return accounts.get(index);
         }

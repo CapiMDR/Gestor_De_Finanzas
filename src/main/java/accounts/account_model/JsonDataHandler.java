@@ -2,6 +2,8 @@ package accounts.account_model;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import movements.movement_model.Movement;
 import movements.movement_model.MovementCategory;
@@ -30,6 +32,8 @@ import java.util.UUID;
  * @author Martín Jesús Pool Chuc
  */
 public class JsonDataHandler {
+
+    private static final Logger logger = LoggerFactory.getLogger(JsonDataHandler.class);
 
     /** Path of the file where account data is saved. */
     private static final String FILE_PATH = "accounts_data.json";
@@ -262,8 +266,9 @@ public class JsonDataHandler {
         JSONArray jsonArray = accountsToJson(accounts);
         try (FileWriter file = new FileWriter(FILE_PATH)) {
             file.write(jsonArray.toString(2));
+            logger.info("Accounts saved successfully — {} account(s).", accounts.size());
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error saving accounts to file: {}", e.getMessage(), e);
         }
     }
 
@@ -276,8 +281,9 @@ public class JsonDataHandler {
         JSONArray jsonArray = categoriesToJson(categories);
         try (FileWriter file = new FileWriter(CATEGORIES_FILE_PATH)) {
             file.write(jsonArray.toString(2));
+            logger.info("Categories saved successfully — {} category/categories.", categories.size());
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error saving categories to file: {}", e.getMessage(), e);
         }
     }
 
@@ -295,11 +301,13 @@ public class JsonDataHandler {
         try {
             String content = new String(Files.readAllBytes(Paths.get(FILE_PATH)));
             JSONArray jsonArray = new JSONArray(content);
-            return jsonToAccounts(jsonArray);
+            List<Account> loaded = jsonToAccounts(jsonArray);
+            logger.info("Accounts loaded successfully — {} account(s).", loaded.size());
+            return loaded;
         } catch (IOException e) {
-            System.err.println("Error al leer el archivo: " + e.getMessage());
+            logger.error("Error reading accounts file: {}", e.getMessage(), e);
         } catch (Exception e) {
-            System.err.println("Error al parsear el JSON: " + e.getMessage());
+            logger.error("Error parsing accounts JSON: {}", e.getMessage(), e);
         }
         return new ArrayList<>();
     }
@@ -318,11 +326,13 @@ public class JsonDataHandler {
         try {
             String content = new String(Files.readAllBytes(Paths.get(CATEGORIES_FILE_PATH)));
             JSONArray jsonArray = new JSONArray(content);
-            return jsonToCategories(jsonArray);
+            HashMap<String, MovementCategory> cats = jsonToCategories(jsonArray);
+            logger.info("Categories loaded successfully — {} category/categories.", cats.size());
+            return cats;
         } catch (IOException e) {
-            System.err.println("Error al leer el archivo de categorías: " + e.getMessage());
+            logger.error("Error reading categories file: {}", e.getMessage(), e);
         } catch (Exception e) {
-            System.err.println("Error al parsear el JSON de categorías: " + e.getMessage());
+            logger.error("Error parsing categories JSON: {}", e.getMessage(), e);
         }
         return new HashMap<>();
     }

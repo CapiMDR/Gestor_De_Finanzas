@@ -12,6 +12,8 @@ import java.util.TreeSet;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import movements.movement_model.MovementCategory;
 import movements.movement_model.MovementCategory.MovementType;
@@ -23,6 +25,8 @@ import movements.movement_model.MovementCategory.MovementType;
  * This class is static and cannot be instantiated.
  */
 public class RecurringJSONHandler {
+
+    private static final Logger logger = LoggerFactory.getLogger(RecurringJSONHandler.class);
 
     /** Private constructor to prevent instantiation. */
     private RecurringJSONHandler() {
@@ -64,8 +68,9 @@ public class RecurringJSONHandler {
 
         try (FileWriter writer = new FileWriter(FILE_NAME)) {
             writer.write(arr.toString(4));
+            logger.info("Recurring movements saved successfully — {} record(s).", recurrentsList.size());
         } catch (IOException e) {
-            System.out.println("Error al guardar los pagos recurrentes: " + e.getMessage());
+            logger.error("Error saving recurring movements: {}", e.getMessage(), e);
         }
     }
 
@@ -111,9 +116,10 @@ public class RecurringJSONHandler {
             }
 
         } catch (IOException e) {
-            System.out.println("Error al cargar los recordatorios: " + e.getMessage());
+            logger.error("Error loading recurring movements: {}", e.getMessage(), e);
         }
 
+        logger.info("Recurring movements loaded — {} record(s).", recMoves.size());
         return recMoves;
     }
 }

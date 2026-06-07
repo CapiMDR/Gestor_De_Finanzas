@@ -21,6 +21,8 @@ import recurringMoves.recurring_model.RecurringsModel;
 import recurringMoves.recurring_view.RecurringMoveAlertView;
 import recurringMoves.recurring_view.RecurringsEditorView;
 import recurringMoves.recurring_view.RecurringsView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Main controller in charge of coordinating the interaction between the view,
@@ -30,6 +32,8 @@ import recurringMoves.recurring_view.RecurringsView;
  * of {@link RecurringMove} using a {@link ScheduledExecutorService}.
  */
 public class RecurringsController {
+
+    private static final Logger logger = LoggerFactory.getLogger(RecurringsController.class);
 
     /** Model containing all recurring operations. */
     private final RecurringsModel recurringsModel = new RecurringsModel();
@@ -49,6 +53,7 @@ public class RecurringsController {
      * monitoring of reminders.
      */
     public RecurringsController() {
+        logger.info("RecurringsController initialized.");
         recurringsView.setVisible(true);
         scheduler.scheduleAtFixedRate(this::watchRecurrings, 0, 1, TimeUnit.SECONDS);
     }
@@ -90,6 +95,8 @@ public class RecurringsController {
      * @param recMove the reminder that should be activated
      */
     private void triggerRecurring(RecurringMove recMove) {
+        logger.info("Recurring movement triggered: '{}' (recurrence={}).",
+                recMove.getConcept(), recMove.getRecurrence());
         SwingUtilities.invokeLater(() -> showRecurringMoveView(recMove));
     }
 
@@ -110,6 +117,11 @@ public class RecurringsController {
                 RecurringMove next = recMove.createNextOccurrence();
                 recurringsModel.addRecurring(next);
                 recurringsModel.saveRecurrings();
+                logger.info("Recurring movement applied to account '{}'. Next occurrence: {}.",
+                        selected.getName(), next.getInitialDate());
+            } else {
+                logger.warn("Recurring movement '{}' dismissed — no account selected.",
+                        recMove.getConcept());
             }
             view.dispose();
         });
@@ -141,11 +153,14 @@ public class RecurringsController {
      */
     public void handleRecurringAddition(String concept, BigDecimal amount, String description,
             LocalDateTime initialDate, RecurrenceType recurrence, MovementCategory category) {
-        if (!isValidRecurring(concept, amount, description, initialDate, recurrence))
+        if (!isValidRecurring(concept, amount, description, initialDate, recurrence)) {
+            logger.warn("Invalid recurring movement data rejected: concept='{}'.", concept);
             return;
+        }
 
         recurringsModel.addRecurring(concept, amount, description, initialDate, recurrence, category);
         recurringsModel.saveRecurrings();
+        logger.info("Recurring movement added: '{}' ({}, every {}).", concept, amount, recurrence);
     }
 
     /**
@@ -178,6 +193,7 @@ public class RecurringsController {
     public void handleRecurringDeletion(RecurringMove recMove) {
         recurringsModel.deleteRecurring(recMove);
         recurringsModel.saveRecurrings();
+        logger.info("Recurring movement deleted: '{}'.", recMove.getConcept());
     }
 
     /**
@@ -190,6 +206,8 @@ public class RecurringsController {
     public void handleRecurringEdit(RecurringMove oldRecMove, RecurringMove newRecMove) {
         recurringsModel.editRecurring(oldRecMove, newRecMove);
         recurringsModel.saveRecurrings();
+        logger.info("Recurring movement edited: '{}' -> '{}'.",
+                oldRecMove.getConcept(), newRecMove.getConcept());
     }
 
     /**

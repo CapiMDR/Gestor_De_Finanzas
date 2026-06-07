@@ -11,6 +11,8 @@ import java.util.TreeSet;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Utility class to handle the loading and saving of reminders in a
@@ -20,6 +22,8 @@ import org.json.JSONObject;
  * methods for the persistence of {@link Reminder} objects.
  */
 public class ReminderJSONHandler {
+
+    private static final Logger logger = LoggerFactory.getLogger(ReminderJSONHandler.class);
 
     /**
      * Private constructor to prevent instantiation.
@@ -58,8 +62,9 @@ public class ReminderJSONHandler {
 
         try (FileWriter writer = new FileWriter(FILE_NAME)) {
             writer.write(arr.toString(4));
+            logger.info("Reminders saved successfully — {} reminder(s).", remindersList.size());
         } catch (IOException e) {
-            System.out.println("Error al guardar los recordatorios: " + e.getMessage());
+            logger.error("Error saving reminders: {}", e.getMessage(), e);
         }
     }
 
@@ -94,9 +99,10 @@ public class ReminderJSONHandler {
             }
 
         } catch (IOException e) {
-            System.out.println("Error al cargar los recordatorios: " + e.getMessage());
+            logger.error("Error loading reminders: {}", e.getMessage(), e);
         }
 
+        logger.info("Reminders loaded — {} reminder(s).", reminders.size());
         return reminders;
     }
 }
