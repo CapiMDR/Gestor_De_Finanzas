@@ -3,9 +3,7 @@ package recurringMoves.recurring_model;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import movements.movement_model.Movement;
 import movements.movement_model.MovementCategory;
-import movements.movement_model.MovementCategory.MovementType;
 
 /**
  * Represents a recurring movement (a payment or action that must be repeated

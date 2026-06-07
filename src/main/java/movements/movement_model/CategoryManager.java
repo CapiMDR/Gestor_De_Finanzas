@@ -91,7 +91,7 @@ public class CategoryManager {
      * @param observer Observer to register.
      */
     public void addObserver(CategoryObserver observer) {
-        subject.addObserver(observer);
+        MovementManagerSubject.addObserver(observer);
     }
 
     /**
@@ -100,11 +100,11 @@ public class CategoryManager {
      * @param observer Observer to remove.
      */
     public void removeObserver(CategoryObserver observer) {
-        subject.removeObserver(observer);
+        MovementManagerSubject.removeObserver(observer);
     }
 
     public void notifyObservers() {
-        subject.notifyObservers(new ArrayList<>(categories.values()));
+        MovementManagerSubject.notifyObservers(new ArrayList<>(categories.values()));
     }
 
     public HashMap<String, MovementCategory> getCategories() {

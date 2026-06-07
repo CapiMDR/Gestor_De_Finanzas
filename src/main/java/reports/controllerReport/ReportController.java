@@ -61,7 +61,7 @@ public class ReportController implements ReportObserver, AccountObserver {
 
     private void initComponents() {
         // --- PieChart ---
-        DefaultPieDataset dataset = new DefaultPieDataset();
+        DefaultPieDataset<String> dataset = new DefaultPieDataset<>();
         dataset.setValue("INCOME", 0);
         dataset.setValue("EXPENSE", 0);
 
@@ -116,7 +116,7 @@ public class ReportController implements ReportObserver, AccountObserver {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         // --- PieChart ---
-        DefaultPieDataset dataset = new DefaultPieDataset();
+        DefaultPieDataset<String> dataset = new DefaultPieDataset<>();
         dataset.setValue("INCOME", income);
         dataset.setValue("EXPENSE", expense);
 

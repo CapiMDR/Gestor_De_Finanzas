@@ -13,6 +13,9 @@ import movements.movement_model.MovementManagerSubject;
  * @author Capi Madera de Regil
  */
 public class MovementsModule {
+    
+    @SuppressWarnings("unused")
+    private static MovementController movementController;
 
     /**
      * Initializes the entire movements module using the selected account.
@@ -33,7 +36,7 @@ public class MovementsModule {
 
         MovementManagerView movementView = new MovementManagerView();
 
-        MovementController movementController = new MovementController(
+        movementController = new MovementController(
                 movementModel,
                 movementView,
                 selectedAccount);

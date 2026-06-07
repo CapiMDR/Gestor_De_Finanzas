@@ -13,13 +13,16 @@ import org.slf4j.LoggerFactory;
  */
 public class Main {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
+    
+    @SuppressWarnings("unused")
+    private static AccountController accountController;
 
     public static void main(String[] args) {
         logger.info("Application starting...");
         AppConfig.ensureDataDirExists();
         AccountManager.initAccountManager();
         AccountView accountsView = new AccountView();
-        AccountController accountController = new AccountController(accountsView);
+        accountController = new AccountController(accountsView);
         AccountManager.loadInitialData();
 
         java.awt.EventQueue.invokeLater(() -> {
