@@ -157,6 +157,26 @@
           </execution>
         </executions>
       </plugin>
+      <!-- jPackage for Native Installers -->
+      <plugin>
+        <groupId>org.panteleyev</groupId>
+        <artifactId>jpackage-maven-plugin</artifactId>
+        <version>1.6.5</version>
+        <configuration>
+            <name>GestorFinanzas</name>
+            <appVersion>1.0.1</appVersion>
+            <vendor>RoastWare</vendor>
+            <input>target</input>
+            <mainJar>gestor-finanzas-${project.version}-jar-with-dependencies.jar</mainJar>
+            <mainClass>com.mycompany.construccion.Main</mainClass>
+            <type>EXE</type>
+            <destination>target/dist</destination>
+            <icon>src/main/resources/images/piggy.ico</icon>
+            <winDirChooser>true</winDirChooser>
+            <winMenu>true</winMenu>
+            <winShortcut>true</winShortcut>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 </project>
