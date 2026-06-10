@@ -16,6 +16,8 @@
     <maven.compiler.source>21</maven.compiler.source>
     <maven.compiler.target>21</maven.compiler.target>
     <sonar.organization>capimdr</sonar.organization>
+    <!-- Default version for local builds. GitHub Actions will override this -->
+    <app.version>1.0.0</app.version>
   </properties>
 
   <dependencies>
@@ -164,7 +166,7 @@
         <version>1.6.5</version>
         <configuration>
             <name>GestorFinanzas</name>
-            <appVersion>1.0.1</appVersion>
+            <appVersion>${app.version}</appVersion>
             <vendor>RoastWare</vendor>
             <input>target</input>
             <mainJar>gestor-finanzas-${project.version}-jar-with-dependencies.jar</mainJar>
