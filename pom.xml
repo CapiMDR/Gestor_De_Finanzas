@@ -6,7 +6,7 @@
 
   <groupId>io.github.capimdr</groupId>
   <artifactId>gestor-finanzas</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>2.0.0</version>
 
   <name>Gestor de Finanzas</name>
   <url>https://github.com/CapiMDR/Gestor_De_Finanzas</url>
@@ -17,7 +17,7 @@
     <maven.compiler.target>21</maven.compiler.target>
     <sonar.organization>capimdr</sonar.organization>
     <!-- Default version for local builds. GitHub Actions will override this -->
-    <app.version>1.0.0</app.version>
+    <app.version>2.0.0</app.version>
     <!-- JavaFX version centralizada -->
     <javafx.version>21.0.3</javafx.version>
   </properties>
@@ -156,27 +156,33 @@
           <mainClass>com.mycompany.construccion.MainApp</mainClass>
         </configuration>
       </plugin>
+      
+      <!-- 
+        maven-shade-plugin se usa en lugar de maven-assembly-plugin para generar el "Fat Jar"
+        porque Ikonli usa el ServiceLoader de Java (META-INF/services/org.kordamp.ikonli.IkonHandler).
+        El shade plugin fusiona los manejadores de los diferentes paquetes de íconos mediante el 
+        ServicesResourceTransformer, evitando el error de "Cannot resolve 'mdi2p...'" en el .exe final.
+      -->
       <!-- Create executable JAR with dependencies -->
       <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>3.6.0</version>
-        <configuration>
-          <archive>
-            <manifest>
-              <mainClass>com.mycompany.construccion.Main</mainClass>
-            </manifest>
-          </archive>
-          <descriptorRefs>
-            <descriptorRef>jar-with-dependencies</descriptorRef>
-          </descriptorRefs>
-        </configuration>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.5.2</version>
         <executions>
           <execution>
-            <id>make-assembly</id>
             <phase>package</phase>
             <goals>
-              <goal>single</goal>
+              <goal>shade</goal>
             </goals>
+            <configuration>
+              <createDependencyReducedPom>false</createDependencyReducedPom>
+              <transformers>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                  <mainClass>com.mycompany.construccion.AppLauncher</mainClass>
+                </transformer>
+              </transformers>
+            </configuration>
           </execution>
         </executions>
       </plugin>
@@ -210,8 +216,8 @@
             <appVersion>${app.version}</appVersion>
             <vendor>RoastWare</vendor>
             <input>target</input>
-            <mainJar>gestor-finanzas-${project.version}-jar-with-dependencies.jar</mainJar>
-            <mainClass>com.mycompany.construccion.Main</mainClass>
+            <mainJar>gestor-finanzas-${project.version}.jar</mainJar>
+            <mainClass>com.mycompany.construccion.AppLauncher</mainClass>
             <type>EXE</type>
             <destination>target/dist</destination>
             <icon>src/main/resources/images/piggy.ico</icon>
