@@ -47,6 +47,7 @@
         <VBox styleClass="list-panel" spacing="12">
             <ListView fx:id="listRecurrings" styleClass="recurrings-list" VBox.vgrow="ALWAYS"/>
             <HBox spacing="10">
+                <Button fx:id="btnEditRecurring" styleClass="btn-icon"/>
                 <Button fx:id="btnDeleteRecurring" styleClass="btn-icon"/>
             </HBox>
         </VBox>

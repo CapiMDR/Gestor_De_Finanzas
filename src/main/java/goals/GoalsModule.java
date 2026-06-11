@@ -19,7 +19,7 @@ import javafx.stage.Stage;
  */
 public class GoalsModule {
 
-    @SuppressWarnings("unused")
+
     private static GoalsController goalsController;
 
     public static void initGoals(Account selectedAccount) {

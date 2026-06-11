@@ -25,7 +25,17 @@ public class RecurringsViewFX {
     @FXML private ComboBox<String> cmbCategory;
     @FXML private DatePicker datePicker;
     @FXML private Button btnAddRecurring;
+    @FXML private Button btnEditRecurring;
     @FXML private Button btnDeleteRecurring;
 
-    // TODO: Implement — Phase 3.4 (Recurring movements module migration)
+    // ── Public Accessors for Controller ──────────────────────────────────────
+
+    public ListView<String> getListRecurrings() { return listRecurrings; }
+    public TextField getTxtDescription() { return txtDescription; }
+    public TextField getTxtAmount() { return txtAmount; }
+    public ComboBox<String> getCmbCategory() { return cmbCategory; }
+    public DatePicker getDatePicker() { return datePicker; }
+    public Button getBtnAddRecurring() { return btnAddRecurring; }
+    public Button getBtnEditRecurring() { return btnEditRecurring; }
+    public Button getBtnDeleteRecurring() { return btnDeleteRecurring; }
 }

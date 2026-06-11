@@ -719,7 +719,7 @@ public class FrmMain extends javax.swing.JFrame {
         }
 
         private void subscriptionMouseClicked(java.awt.event.MouseEvent evt) {
-                RecurringsModule.controller.showRecMovesView();
+                RecurringsModule.initRecurrings();
         }
 
         private void subscriptionMouseEntered(java.awt.event.MouseEvent evt) {

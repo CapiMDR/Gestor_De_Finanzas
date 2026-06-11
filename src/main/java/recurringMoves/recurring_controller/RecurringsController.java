@@ -2,133 +2,171 @@ package recurringMoves.recurring_controller;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
-import javax.swing.SwingUtilities;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import accounts.account_model.Account;
 import accounts.account_model.AccountManager;
 import accounts.account_model.AccountManagerSubject;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ListCell;
 import movements.movement_model.Movement;
 import movements.movement_model.MovementCategory;
 import recurringMoves.recurring_model.RecurrenceType;
 import recurringMoves.recurring_model.RecurringMove;
 import recurringMoves.recurring_model.RecurringsModel;
-import recurringMoves.recurring_view.RecurringMoveAlertView;
-import recurringMoves.recurring_view.RecurringsEditorView;
-import recurringMoves.recurring_view.RecurringsView;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import recurringMoves.recurring_view.RecurringsViewFX;
 
 /**
- * Main controller in charge of coordinating the interaction between the view,
- * the model and the notification logic of recurring payments.
- *
- * Administrates the creation, edition, deletion and automatic monitoring
- * of {@link RecurringMove} using a {@link ScheduledExecutorService}.
+ * Main controller for the Recurring Movements Module in JavaFX.
+ * Coordinates interaction between the view, the model, and the background notification logic.
  */
 public class RecurringsController {
 
     private static final Logger logger = LoggerFactory.getLogger(RecurringsController.class);
 
-    /** Model containing all recurring operations. */
     private final RecurringsModel recurringsModel = new RecurringsModel();
+    private RecurringsViewFX recurringsView;
+    
+    private final RecurringEditController editController = new RecurringEditController();
+    private final RecurringAlertController alertController = new RecurringAlertController();
 
-    /** Main view in charge of showing recurring reminders. */
-    private final RecurringsView recurringsView = new RecurringsView(this, recurringsModel);
-
-    /** Executor service to periodically check reminders. */
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
-    public void showRecMovesView() {
-        recurringsView.setVisible(true);
-    }
-
-    /**
-     * Constructs the controller, initializes the view and starts the periodic
-     * monitoring of reminders.
-     */
     public RecurringsController() {
-        logger.info("RecurringsController initialized.");
-        recurringsView.setVisible(true);
+        logger.info("RecurringsController background scheduler initialized.");
         scheduler.scheduleAtFixedRate(this::watchRecurrings, 0, 1, TimeUnit.SECONDS);
     }
 
-    // Checking reminders every second and activating those that should be
-    // activados
-
     /**
-     * Checks all sorted reminders and activates those whose date has already
-     * passed.
-     * Since the reminders are sorted, the check ends when one shouldn't
-     * be triggered yet.
+     * Injects the JavaFX view when the module is opened by the user.
      */
+    public void setView(RecurringsViewFX view) {
+        this.recurringsView = view;
+        assignEvents();
+        refreshView();
+    }
+
+    private void assignEvents() {
+        // Setup ListView to display only the concepts
+        recurringsView.getListRecurrings().setCellFactory(param -> new ListCell<String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty ? null : item);
+            }
+        });
+
+        // Setup Category ComboBox
+        recurringsView.getCmbCategory().getItems().clear();
+        for (MovementCategory.MovementType type : MovementCategory.MovementType.values()) {
+            recurringsView.getCmbCategory().getItems().add(type.name());
+        }
+
+        // Add Recurring
+        recurringsView.getBtnAddRecurring().setOnAction(e -> handleRecurringAddition());
+
+        // Delete Recurring
+        recurringsView.getBtnDeleteRecurring().setOnAction(e -> {
+            RecurringMove selected = getSelectedRecurring();
+            if (selected != null) {
+                handleRecurringDeletion(selected);
+            } else {
+                showAlert(AlertType.WARNING, "Selección requerida", "Por favor selecciona un movimiento recurrente para eliminar.");
+            }
+        });
+
+        // Edit Recurring (on Edit Button)
+        recurringsView.getBtnEditRecurring().setOnAction(e -> {
+            RecurringMove selected = getSelectedRecurring();
+            if (selected != null) {
+                onEditRequest(selected);
+            } else {
+                showAlert(AlertType.WARNING, "Selección requerida", "Por favor selecciona un movimiento recurrente para editar.");
+            }
+        });
+
+        // Edit Recurring (on Double Click)
+        recurringsView.getListRecurrings().setOnMouseClicked(e -> {
+            if (e.getClickCount() == 2) {
+                RecurringMove selected = getSelectedRecurring();
+                if (selected != null) {
+                    onEditRequest(selected);
+                }
+            }
+        });
+    }
+
+    private RecurringMove getSelectedRecurring() {
+        if (recurringsView == null) return null;
+        int index = recurringsView.getListRecurrings().getSelectionModel().getSelectedIndex();
+        if (index >= 0 && index < recurringsModel.getRecurrings().size()) {
+            return (RecurringMove) recurringsModel.getRecurrings().toArray()[index];
+        }
+        return null;
+    }
+
+    private void refreshView() {
+        if (recurringsView != null) {
+            Platform.runLater(() -> {
+                List<String> names = recurringsModel.getRecurrings().stream()
+                        .map(RecurringMove::getConcept)
+                        .collect(Collectors.toList());
+                recurringsView.getListRecurrings().setItems(FXCollections.observableArrayList(names));
+            });
+        }
+    }
+
     private void watchRecurrings() {
         for (RecurringMove recMove : recurringsModel.getRecurrings()) {
             if (recMove.shouldTrigger()) {
                 triggerRecurring(recMove);
                 recMove.setTriggered(true);
             } else {
-                // Since reminders are chronologically sorted in the TreeSet,
-                // if the current one shouldn't trigger yet, the following ones won't either.
                 break;
             }
         }
     }
 
-    // When a recurring payment notification is triggered, it is removed and the
-    // next instance is created according to its frequency
-
-    /**
-     * Handles the activation of a recurring reminder.
-     *
-     * The process consists of:
-     * - Deleting the current reminder.
-     * - Creating its next instance depending on the frequency.
-     * - Saving the changes.
-     * - Showing an alert in the view.
-     *
-     * @param recMove the reminder that should be activated
-     */
     private void triggerRecurring(RecurringMove recMove) {
         logger.info("Recurring movement triggered: '{}' (recurrence={}).",
                 recMove.getConcept(), recMove.getRecurrence());
-        SwingUtilities.invokeLater(() -> showRecurringMoveView(recMove));
+        
+        Platform.runLater(() -> showRecurringMoveView(recMove));
     }
 
     private void showRecurringMoveView(RecurringMove recMove) {
-
         List<Account> accounts = AccountManager.getAccounts();
+        
+        Account selectedAccount = alertController.showAlertDialog(recMove, accounts);
+        
+        if (selectedAccount != null) {
+            performMovement(recMove, selectedAccount);
 
-        RecurringMoveAlertView view = new RecurringMoveAlertView(recurringsView, recMove, accounts);
-
-        view.setOnApply(() -> {
-            Account selected = view.getSelectedAccount();
-            if (selected != null) {
-                performMovement(recMove, selected);
-
-                // The "next date" is only updated if the movement is applied to an account,
-                // if the payment is not made the user will continue to be notified
-                recurringsModel.deleteRecurring(recMove);
-                RecurringMove next = recMove.createNextOccurrence();
-                recurringsModel.addRecurring(next);
-                recurringsModel.saveRecurrings();
-                logger.info("Recurring movement applied to account '{}'. Next occurrence: {}.",
-                        selected.getName(), next.getInitialDate());
-            } else {
-                logger.warn("Recurring movement '{}' dismissed — no account selected.",
-                        recMove.getConcept());
-            }
-            view.dispose();
-        });
-
-        view.setOnCancel(() -> view.dispose());
-
-        view.setVisible(true);
+            recurringsModel.deleteRecurring(recMove);
+            RecurringMove next = recMove.createNextOccurrence();
+            recurringsModel.addRecurring(next);
+            recurringsModel.saveRecurrings();
+            
+            logger.info("Recurring movement applied to account '{}'. Next occurrence: {}.",
+                    selectedAccount.getName(), next.getInitialDate());
+            
+            refreshView();
+        } else {
+            logger.warn("Recurring movement '{}' dismissed — no account selected.", recMove.getConcept());
+        }
     }
 
     private void performMovement(RecurringMove recMove, Account account) {
@@ -138,90 +176,87 @@ public class RecurringsController {
 
         account.addMovement(movement);
         AccountManager.saveAccountsData();
-
         AccountManagerSubject.notifyObservers(AccountManager.getAccounts());
     }
 
-    /**
-     * Processes the request to create a new reminder.
-     *
-     * @param concept     reminder name
-     * @param amount      associated amount
-     * @param description optional description
-     * @param initialDate initial date
-     * @param recurrence  repetition type
-     */
-    public void handleRecurringAddition(String concept, BigDecimal amount, String description,
-            LocalDateTime initialDate, RecurrenceType recurrence, MovementCategory category) {
-        if (!isValidRecurring(concept, amount, description, initialDate, recurrence)) {
-            logger.warn("Invalid recurring movement data rejected: concept='{}'.", concept);
+    public void handleRecurringAddition() {
+        String concept = recurringsView.getTxtDescription().getText().trim();
+        String amountStr = recurringsView.getTxtAmount().getText().trim();
+        String categoryStr = recurringsView.getCmbCategory().getSelectionModel().getSelectedItem();
+        java.time.LocalDate date = recurringsView.getDatePicker().getValue();
+
+        if (concept.isEmpty() || amountStr.isEmpty() || categoryStr == null || date == null) {
+            showAlert(AlertType.ERROR, "Datos inválidos", "Todos los campos son requeridos.");
             return;
         }
 
-        recurringsModel.addRecurring(concept, amount, description, initialDate, recurrence, category);
-        recurringsModel.saveRecurrings();
-        logger.info("Recurring movement added: '{}' ({}, every {}).", concept, amount, recurrence);
+        try {
+            BigDecimal amount = new BigDecimal(amountStr);
+            if (!isValidRecurring(concept, amount, concept, date.atStartOfDay(), RecurrenceType.Mensual)) {
+                showAlert(AlertType.ERROR, "Datos inválidos", "Asegúrate de que el monto sea mayor a 0 y con máximo 2 decimales.");
+                return;
+            }
+
+            MovementCategory category = new MovementCategory(categoryStr, MovementCategory.MovementType.valueOf(categoryStr));
+            // Defaulting recurrence to Mensual for MVP, this can be added to UI later
+            recurringsModel.addRecurring(concept, amount, concept, LocalDateTime.of(date, LocalTime.MIDNIGHT), RecurrenceType.Mensual, category);
+            recurringsModel.saveRecurrings();
+            
+            logger.info("Recurring movement added: '{}' ({}, every {}).", concept, amount, RecurrenceType.Mensual);
+            refreshView();
+            
+            // Clear fields
+            recurringsView.getTxtDescription().clear();
+            recurringsView.getTxtAmount().clear();
+            recurringsView.getDatePicker().setValue(null);
+            
+        } catch (NumberFormatException ex) {
+            showAlert(AlertType.ERROR, "Monto inválido", "Por favor ingresa un monto numérico válido.");
+        }
     }
 
-    /**
-     * Validates the necessary fields to create or edit a recurring reminder.
-     *
-     * @return true if the data is valid, false otherwise
-     */
     private boolean isValidRecurring(String concept, BigDecimal amount, String description,
             LocalDateTime initialDate, RecurrenceType recurrence) {
-        if (concept == null || concept.isEmpty())
-            return false;
-
-        if (amount == null)
-            return false;
-
-        if (amount.compareTo(BigDecimal.ZERO) <= 0)
-            return false;
-
-        if (amount.scale() > 2)
-            return false;
-
+        if (concept == null || concept.isEmpty()) return false;
+        if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) return false;
+        if (amount.scale() > 2) return false;
         return true;
     }
 
-    /**
-     * Handles the deletion of a recurring reminder.
-     *
-     * @param recMove the reminder to delete
-     */
     public void handleRecurringDeletion(RecurringMove recMove) {
-        recurringsModel.deleteRecurring(recMove);
-        recurringsModel.saveRecurrings();
-        logger.info("Recurring movement deleted: '{}'.", recMove.getConcept());
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Confirmar Eliminación");
+        alert.setHeaderText(null);
+        alert.setContentText("¿Estás seguro de que deseas eliminar el movimiento recurrente: " + recMove.getConcept() + "?");
+
+        if (alert.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
+            recurringsModel.deleteRecurring(recMove);
+            recurringsModel.saveRecurrings();
+            logger.info("Recurring movement deleted: '{}'.", recMove.getConcept());
+            refreshView();
+        }
     }
 
-    /**
-     * Processes the editing of a recurring reminder given an old one and a
-     * new one.
-     *
-     * @param oldRecMove original reminder
-     * @param newRecMove edited reminder
-     */
     public void handleRecurringEdit(RecurringMove oldRecMove, RecurringMove newRecMove) {
         recurringsModel.editRecurring(oldRecMove, newRecMove);
         recurringsModel.saveRecurrings();
         logger.info("Recurring movement edited: '{}' -> '{}'.",
                 oldRecMove.getConcept(), newRecMove.getConcept());
+        refreshView();
     }
 
-    /**
-     * Opens the edition window for a reminder and processes the result if the
-     * user confirms the changes.
-     *
-     * @param recMove reminder to edit
-     */
     public void onEditRequest(RecurringMove recMove) {
-        RecurringsEditorView editor = new RecurringsEditorView(null, recMove);
-        editor.setVisible(true);
-
-        RecurringMove editedRecMove = editor.getEditedRecMove();
-        if (editedRecMove != null)
+        RecurringMove editedRecMove = editController.showEditDialog(recMove);
+        if (editedRecMove != null) {
             handleRecurringEdit(recMove, editedRecMove);
+        }
+    }
+    
+    private void showAlert(AlertType type, String title, String message) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

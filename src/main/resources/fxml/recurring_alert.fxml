@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ButtonType?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DialogPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+
+<DialogPane prefWidth="350.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="recurringMoves.recurring_view.RecurringAlertViewFX">
+   <header>
+      <VBox spacing="10" alignment="CENTER" style="-fx-background-color: #f39c12; -fx-padding: 15;">
+         <Label text="¡Movimiento Recurrente Detectado!" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: white;" />
+      </VBox>
+   </header>
+   <content>
+      <VBox spacing="15.0">
+         <children>
+            <Label fx:id="lblConcept" style="-fx-font-size: 14px; -fx-font-weight: bold;" />
+            <Label fx:id="lblAmount" style="-fx-font-size: 14px;" />
+            <Label text="Selecciona la cuenta a la que se aplicará el movimiento:" wrapText="true" />
+            <ComboBox fx:id="cmbAccounts" maxWidth="Infinity" />
+         </children>
+         <padding>
+            <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+         </padding>
+      </VBox>
+   </content>
+   <buttonTypes>
+      <ButtonType fx:constant="APPLY" />
+      <ButtonType fx:constant="CANCEL" />
+   </buttonTypes>
+</DialogPane>
