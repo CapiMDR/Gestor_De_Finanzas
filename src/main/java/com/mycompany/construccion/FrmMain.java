@@ -711,7 +711,7 @@ public class FrmMain extends javax.swing.JFrame {
         }
 
         private void notificationMouseClicked(java.awt.event.MouseEvent evt) {
-                RemindersModule.controller.showRemindersView();
+                RemindersModule.initReminders();
         }
 
         private void notificationMouseEntered(java.awt.event.MouseEvent evt) {

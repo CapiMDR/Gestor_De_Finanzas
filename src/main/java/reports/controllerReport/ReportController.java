@@ -59,11 +59,15 @@ public class ReportController implements ReportObserver, AccountObserver {
             GoalsModule.initGoals(account);
         });
 
-        view.getNavReminders().setOnMouseClicked(e -> showUnderConstructionAlert("Recordatorios"));
+        view.getNavReminders().setOnMouseClicked(e -> {
+            reminders.reminder_view.RemindersModule.initReminders();
+        });
         view.getNavRecurrings().setOnMouseClicked(e -> {
             recurringMoves.recurring_view.RecurringsModule.initRecurrings();
         });
-        view.getNavFilters().setOnMouseClicked(e -> showUnderConstructionAlert("Filtros"));
+        view.getNavFilters().setOnMouseClicked(e -> {
+            filters.modelFilter.CategoriesModule.initCategories(account);
+        });
         view.getNavCredit().setOnMouseClicked(e -> showUnderConstructionAlert("Calculadora de Crédito"));
     }
 

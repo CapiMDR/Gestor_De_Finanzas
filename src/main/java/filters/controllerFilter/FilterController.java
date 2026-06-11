@@ -6,7 +6,6 @@ package filters.controllerFilter;
 
 import accounts.account_model.Account;
 import accounts.account_model.AccountObserver;
-import filters.viewFilter.CategoriesView;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -15,7 +14,7 @@ import movements.movement_model.Movement;
 import movements.movement_model.MovementCategory;
 import movements.movement_model.MovementCategory.MovementType;
 
-import javax.swing.SwingUtilities;
+import javafx.application.Platform;
 
 /**
  * Controller in charge of managing the categories view filter.
@@ -23,10 +22,10 @@ import javax.swing.SwingUtilities;
  */
 public class FilterController implements AccountObserver {
 
-    private CategoriesView view;
+    private FilterViewFX view;
     private Account account;
 
-    public void setViewModule(CategoriesView view, Account selectedAccount) {
+    public void setViewModule(FilterViewFX view, Account selectedAccount) {
         this.view = view;
         this.account = selectedAccount;
         loadCategoriesToView();
@@ -63,12 +62,12 @@ public class FilterController implements AccountObserver {
             final double totalIncomeValue = totalIncome.doubleValue();
             final double totalExpenseValue = totalExpense.doubleValue();
 
-            SwingUtilities.invokeLater(() -> {
+            Platform.runLater(() -> {
                 view.updateCategories(
                     incomeMovements,
-                expenseMovements,
-                totalIncomeValue,
-                totalExpenseValue
+                    expenseMovements,
+                    totalIncomeValue,
+                    totalExpenseValue
                 );
             });
         }

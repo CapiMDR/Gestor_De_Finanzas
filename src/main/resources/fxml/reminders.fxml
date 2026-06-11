@@ -28,8 +28,12 @@
             <TextField fx:id="txtReminderName" styleClass="form-input"
                        promptText="Reminder name"/>
 
-            <Label text="Fecha:" styleClass="form-label"/>
+            <Label text="Fecha y Hora:" styleClass="form-label"/>
             <DatePicker fx:id="datePicker" styleClass="form-input" maxWidth="Infinity"/>
+            
+            <Label text="Mensaje:" styleClass="form-label"/>
+            <TextField fx:id="txtMessage" styleClass="form-input"
+                       promptText="Message content"/>
 
             <Button fx:id="btnAddReminder" text="Agregar Recordatorio"
                     styleClass="btn-primary" maxWidth="Infinity"/>
@@ -40,7 +44,8 @@
         <VBox styleClass="list-panel" spacing="12">
             <ListView fx:id="listReminders" styleClass="reminders-list" VBox.vgrow="ALWAYS"/>
             <HBox spacing="10">
-                <Button fx:id="btnDeleteReminder" styleClass="btn-icon"/>
+                <Button fx:id="btnEditReminder" text="Editar" styleClass="btn-icon"/>
+                <Button fx:id="btnDeleteReminder" text="Eliminar" styleClass="btn-icon"/>
             </HBox>
         </VBox>
     </center>

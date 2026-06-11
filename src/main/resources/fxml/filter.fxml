@@ -42,6 +42,12 @@
     <center>
         <VBox styleClass="list-panel" spacing="12">
             <ListView fx:id="listFilteredMovements" styleClass="movements-list" VBox.vgrow="ALWAYS"/>
+            <HBox spacing="20" alignment="CENTER_RIGHT" styleClass="totals-bar">
+                <Label text="Total Ingresos:" styleClass="form-label"/>
+                <Label fx:id="lblTotalIncome" text="$0.00" style="-fx-font-weight: bold; -fx-text-fill: green;"/>
+                <Label text="Total Egresos:" styleClass="form-label"/>
+                <Label fx:id="lblTotalExpense" text="$0.00" style="-fx-font-weight: bold; -fx-text-fill: red;"/>
+            </HBox>
         </VBox>
     </center>
 

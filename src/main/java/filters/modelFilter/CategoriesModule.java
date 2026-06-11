@@ -1,30 +1,39 @@
 package filters.modelFilter;
 
-import javax.swing.JFrame;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 import accounts.account_model.Account;
 import filters.controllerFilter.FilterController;
-import filters.viewFilter.CategoriesView;
+import filters.controllerFilter.FilterViewFX;
+
+import java.io.IOException;
 
 /**
- * Module in charge of initializing the categories view.
+ * Module in charge of initializing the categories/filters view via JavaFX.
  */
 public class CategoriesModule {
     
     public static void initCategories(Account selectedAccount) {
-        CategoriesView categoriesView = new CategoriesView();
-        
-        JFrame frame = new JFrame("Categorías");
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setSize(900, 600);
-        frame.add(categoriesView);
-        frame.setLocationRelativeTo(null);
-        
-        
-        FilterController controller = new FilterController();
-        if (selectedAccount != null) {
-            controller.setViewModule(categoriesView, selectedAccount);
+        try {
+            FXMLLoader loader = new FXMLLoader(CategoriesModule.class.getResource("/fxml/filter.fxml"));
+            Parent root = loader.load();
+
+            FilterViewFX view = loader.getController();
+            FilterController controller = new FilterController();
+            
+            if (selectedAccount != null) {
+                controller.setViewModule(view, selectedAccount);
+                view.setController(controller);
+            }
+
+            Stage stage = new Stage();
+            stage.setTitle("Filtros / Categorías");
+            stage.setScene(new Scene(root, 900, 600));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        
-        frame.setVisible(true);
     }
 }
