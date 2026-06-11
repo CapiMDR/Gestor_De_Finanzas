@@ -1,99 +1,97 @@
 # CONTRIBUTING — Gestor de Finanzas
-> Guía de desarrollo y estándares del proyecto.  
-> **Leer este archivo antes de escribir o modificar cualquier archivo del proyecto.**
+> Development guide and project standards.  
+> **Read this file before writing or modifying any file in the project.**
 
 ---
 
-## 1. Identidad del Proyecto
+## 1. Project Identity
 
-| Campo | Valor |
+| Field | Value |
 |---|---|
-| Nombre | Gestor de Finanzas |
-| Dominio | Aplicación de escritorio para finanzas personales |
-| Arquitectura | Java Desktop · MVC + Observer · Persistencia JSON local |
-| Etapa actual | Migración activa Swing → JavaFX |
-| Distribución | JAR ejecutable · Instalador nativo (.exe) vía jpackage |
-| Repositorio | [github.com/CapiMDR/Gestor_De_Finanzas](https://github.com/CapiMDR/Gestor_De_Finanzas) |
+| Name | Gestor de Finanzas |
+| Domain | Personal finance desktop application |
+| Architecture | Java Desktop · MVC + Observer · Local JSON persistence |
+| Current stage | Active migration Swing → JavaFX |
+| Distribution | Executable JAR · Native installer (.exe) via jpackage |
+| Repository | [github.com/CapiMDR/Gestor_De_Finanzas](https://github.com/CapiMDR/Gestor_De_Finanzas) |
 
-El Gestor de Finanzas es una aplicación de escritorio local que permite registrar cuentas,
-movimientos, metas financieras, movimientos recurrentes y recordatorios. Todos los datos
-se guardan localmente en el directorio `home` del usuario — sin servidores, sin nube,
-sin autenticación.
+Gestor de Finanzas is a local desktop application for tracking accounts, movements,
+financial goals, recurring movements, and reminders. All data is stored locally in the
+user's home directory — no servers, no cloud, no authentication.
 
 ---
 
-## 2. Estructura del Proyecto
+## 2. Project Structure
 
-No crear archivos fuera de esta estructura sin acordarlo primero.
+Do not create files outside this structure without prior agreement.
 
 ```
 gestorFinanzas/
 │
 ├── docs/
-│   ├── CONTRIBUTING.md          ← Este archivo
-│   └── APP_FLOW.md              ← Flujo técnico de la aplicación (arranque, datos, arquitectura)
+│   ├── CONTRIBUTING.md          ← This file
+│   └── APP_FLOW.md              ← Technical app flow (startup, data, architecture)
 │
 ├── src/
 │   ├── main/
 │   │   ├── java/
-│   │   │   ├── accounts/        ← Módulo de cuentas (model / view / controller)
-│   │   │   ├── movements/       ← Módulo de movimientos
-│   │   │   ├── goals/           ← Módulo de metas financieras
-│   │   │   ├── recurringMoves/  ← Módulo de movimientos recurrentes
-│   │   │   ├── reminders/       ← Módulo de recordatorios
-│   │   │   ├── reports/         ← Módulo de reportes y generación de datos
-│   │   │   ├── filters/         ← Módulo de filtros por categoría y fecha
-│   │   │   ├── config/          ← Configuración central (AppConfig.java)
-│   │   │   └── com/mycompany/construccion/  ← Punto de entrada (Main.java / MainApp.java)
+│   │   │   ├── accounts/        ← Accounts module (model / view / controller)
+│   │   │   ├── movements/       ← Movements module
+│   │   │   ├── goals/           ← Financial goals module
+│   │   │   ├── recurringMoves/  ← Recurring movements module
+│   │   │   ├── reminders/       ← Reminders module
+│   │   │   ├── reports/         ← Reports and data generation module
+│   │   │   ├── filters/         ← Category and date filters module
+│   │   │   ├── config/          ← Central configuration (AppConfig.java)
+│   │   │   └── com/mycompany/construccion/  ← Entry point (Main.java / MainApp.java)
 │   │   └── resources/
-│   │       ├── fxml/            ← Layouts declarativos de JavaFX (*.fxml)
-│   │       ├── styles/          ← Hojas de estilo JavaFX (app.css)
-│   │       └── images/          ← Recursos de imagen y íconos
+│   │       ├── fxml/            ← Declarative JavaFX layouts (*.fxml)
+│   │       ├── styles/          ← JavaFX stylesheets (app.css)
+│   │       └── images/          ← Image resources and icons
 │   └── test/
-│       └── java/                ← Tests unitarios (espejo de src/main/java)
+│       └── java/                ← Unit tests (mirrors src/main/java)
 │           ├── accounts/
 │           ├── goals/
 │           ├── movements/
 │           └── reports/
 │
-├── lib/                         ← JARs de dependencias locales (legacy)
-├── .github/workflows/           ← Pipelines de CI/CD (SonarCloud, Release)
-├── pom.xml                      ← Definición del proyecto Maven
-└── jreleaser.yml                ← Configuración de empaquetado y release
+├── lib/                         ← Local dependency JARs (legacy)
+├── .github/workflows/           ← CI/CD pipelines (SonarCloud, Release)
+├── pom.xml                      ← Maven project definition
+└── jreleaser.yml                ← Packaging and release configuration
 ```
 
-### 2.1 Estructura interna de cada módulo
+### 2.1 Internal module structure
 
-Cada módulo de dominio sigue la misma convención de tres subcarpetas:
+Every domain module follows the same three-subfolder convention:
 
 ```
-<módulo>/
-├── <módulo>_model/      ← Entidades, lógica de negocio, acceso a datos (JSON)
-├── <módulo>_view/       ← Presentación visual (JavaFX: *ViewFX.java + *.fxml)
-└── <módulo>_controller/ ← Orquesta modelo y vista; responde a eventos del usuario
+<module>/
+├── <module>_model/      ← Entities, business logic, data access (JSON)
+├── <module>_view/       ← Visual presentation (JavaFX: *ViewFX.java + *.fxml)
+└── <module>_controller/ ← Orchestrates model and view; handles user events
 ```
 
-> **Regla:** La lógica de negocio **nunca** va en la Vista. La Vista **nunca** accede
-> directamente al Modelo. Toda comunicación pasa por el Controlador.
+> **Rule:** Business logic **never** goes in the View. The View **never** accesses
+> the Model directly. All communication goes through the Controller.
 
 ---
 
-## 3. Arquitectura — MVC + Observer
+## 3. Architecture — MVC + Observer
 
-El proyecto implementa el patrón **Modelo-Vista-Controlador** combinado con el
-**patrón Observer** para desacoplar la capa de datos de la interfaz de usuario.
+The project implements the **Model-View-Controller** pattern combined with the
+**Observer pattern** to decouple the data layer from the user interface.
 
-### 3.1 Patrón Observer
+### 3.1 Observer pattern
 
-`AccountManager` es el `Subject` central. Los Controladores que necesitan reaccionar
-a cambios en el estado de las cuentas se registran como `Observer` y son notificados
-automáticamente cuando el modelo cambia.
+`AccountManager` is the central `Subject`. Controllers that need to react to account state
+changes register themselves as `Observer` and are notified automatically when the model changes.
 
-**Regla crítica al implementar una vista nueva:** Si un Controlador se registra como
-Observer, **debe** desregistrarse cuando su ventana se cierra para evitar memory leaks:
+**Critical rule when implementing a new view:** If a Controller registers as an Observer,
+it **must** unregister when its window closes to prevent memory leaks:
 
 ```java
-// ✅ Obligatorio en todo Controller que implemente Observer
+// ✅ Required in every Controller that implements Observer
 addWindowListener(new WindowAdapter() {
     @Override
     public void windowClosed(WindowEvent e) {
@@ -102,46 +100,46 @@ addWindowListener(new WindowAdapter() {
 });
 ```
 
-### 3.2 Principios SOLID aplicados
+### 3.2 SOLID principles applied
 
-| Principio | Cómo se aplica en este proyecto |
+| Principle | How it applies in this project |
 |---|---|
-| **S** — Single Responsibility | Cada clase tiene una responsabilidad. `JsonDataHandler` solo serializa/deserializa. `AppConfig` solo provee rutas. |
-| **O** — Open/Closed | Nuevas vistas se agregan sin modificar el `AccountManager`. |
-| **L** — Liskov Substitution | Los Observers son intercambiables: cualquier clase que implemente la interfaz `Observer` puede registrarse. |
-| **I** — Interface Segregation | Los módulos exponen solo las operaciones que necesitan. |
-| **D** — Dependency Inversion | Los Controladores dependen de interfaces, no de implementaciones concretas. Los constructores admiten inyección de dependencias para facilitar los tests. |
+| **S** — Single Responsibility | Each class has one responsibility. `JsonDataHandler` only serializes/deserializes. `AppConfig` only provides paths. |
+| **O** — Open/Closed | New views are added without modifying `AccountManager`. |
+| **L** — Liskov Substitution | Observers are interchangeable: any class implementing the `Observer` interface can register. |
+| **I** — Interface Segregation | Modules expose only the operations they need. |
+| **D** — Dependency Inversion | Controllers depend on interfaces, not concrete implementations. Constructors accept dependency injection to facilitate testing. |
 
 ---
 
-## 4. Convenciones de Código
+## 4. Code Conventions
 
-### 4.1 Idioma
+### 4.1 Language
 
 ```
-Código (clases, métodos, variables, constantes)  →  Inglés
-Comentarios Javadoc y comentarios inline         →  Inglés
-Mensajes al usuario final (UI)                   →  Español
-Commits de Git                                   →  Español
+Code (classes, methods, variables, constants)  →  English
+Javadoc comments and inline comments           →  English
+End-user messages displayed in the UI          →  Spanish
+Git commits                                    →  Spanish
 ```
 
-> Este proyecto usa **Javadoc** como estándar de documentación. Toda clase y
-> método público debe tener su bloque `/** ... */` en inglés.
+> This project uses **Javadoc** as its documentation standard. Every public class and
+> method must have a `/** ... */` block written in English.
 
-### 4.2 Nomenclatura Java
+### 4.2 Java naming
 
-| Elemento | Convención | Ejemplo |
+| Element | Convention | Example |
 |---|---|---|
-| Clase | `PascalCase` | `AccountManager`, `GoalsController` |
-| Interfaz | `PascalCase` | `Observer`, `AccountSubject` |
-| Método | `camelCase` | `loadAccounts()`, `ensureDataDirExists()` |
+| Class | `PascalCase` | `AccountManager`, `GoalsController` |
+| Interface | `PascalCase` | `Observer`, `AccountSubject` |
+| Method | `camelCase` | `loadAccounts()`, `ensureDataDirExists()` |
 | Variable | `camelCase` | `initialBalance`, `targetAmount` |
-| Constante | `UPPER_SNAKE_CASE` | `DATA_DIR`, `FILE_PATH` |
-| Paquete | `snake_case` (minúsculas) | `account_model`, `goals_controller` |
+| Constant | `UPPER_SNAKE_CASE` | `DATA_DIR`, `FILE_PATH` |
+| Package | lowercase with underscores | `account_model`, `goals_controller` |
 
-### 4.3 Comentarios y Javadoc
+### 4.3 Javadoc
 
-Todo clase y método público **debe** tener Javadoc. El estándar mínimo:
+Every public class and method **must** have Javadoc. Minimum standard:
 
 ```java
 /**
@@ -164,49 +162,48 @@ public class AccountManager {
 
 ### 4.4 Logging
 
-**Nunca usar `System.out.println()` en el código.** Usar SLF4J con Logback:
+**Never use `System.out.println()` in production code.** Use SLF4J with Logback:
 
 ```java
-// ✅ Correcto
+// ✅ Correct
 private static final Logger log = LoggerFactory.getLogger(MyClass.class);
 log.info("Accounts saved successfully — {} account(s).", count);
 log.error("Error reading accounts file: {}", e.getMessage(), e);
 
-// ❌ Prohibido
+// ❌ Forbidden
 System.out.println("Cuentas guardadas: " + count);
 ```
 
-Niveles de log a usar:
-- `log.info()` → Operaciones exitosas relevantes (guardado, carga, inicio)
-- `log.warn()` → Situaciones inesperadas pero recuperables
-- `log.error()` → Errores que impiden una operación; incluir siempre la excepción
+Log level guidelines:
+- `log.info()` → Relevant successful operations (save, load, startup)
+- `log.warn()` → Unexpected but recoverable situations
+- `log.error()` → Errors that prevent an operation; always include the exception
 
-### 4.5 Encapsulamiento
+### 4.5 Encapsulation
 
-- Los métodos que devuelven listas internas deben retornar
-  `Collections.unmodifiableList(...)` para proteger el estado interno.
-- Nunca exponer colecciones internas de forma mutable desde el modelo.
+- Methods that return internal lists must return `Collections.unmodifiableList(...)` to protect internal state.
+- Never expose mutable internal collections from the model.
 
 ---
 
-## 5. Stack Tecnológico
+## 5. Technology Stack
 
-| Tecnología | Versión | Rol |
+| Technology | Version | Role |
 |---|---|---|
-| Java | 21 (LTS) | Lenguaje principal |
-| JavaFX | 21.0.3 | Framework de UI (migración desde Swing) |
-| Ikonli + Material Design 2 | 12.3.1 | Íconos vectoriales escalables para JavaFX |
-| Maven | 3.9+ | Gestión de dependencias y build |
-| SLF4J + Logback | 2.0.13 / 1.5.6 | Sistema de logging |
-| org.json | 20250517 | Serialización/deserialización JSON |
-| JUnit Jupiter | 5.11.4 | Tests unitarios |
-| Mockito | 5.11.0 | Mocks en tests |
-| JaCoCo | 0.8.12 | Cobertura de código |
-| SonarCloud | — | Análisis estático de calidad |
+| Java | 21 (LTS) | Primary language |
+| JavaFX | 21.0.3 | UI framework (migration from Swing) |
+| Ikonli + Material Design 2 | 12.3.1 | Scalable vector icons for JavaFX |
+| Maven | 3.9+ | Dependency management and build |
+| SLF4J + Logback | 2.0.13 / 1.5.6 | Logging system |
+| org.json | 20250517 | JSON serialization/deserialization |
+| JUnit Jupiter | 5.11.4 | Unit testing |
+| Mockito | 5.11.0 | Mocking in tests |
+| JaCoCo | 0.8.12 | Code coverage |
+| SonarCloud | — | Static code quality analysis |
 
-### 5.1 Gestión de versiones de dependencias
+### 5.1 Dependency version management
 
-Las versiones clave de JavaFX están centralizadas en una propiedad de `pom.xml`:
+Key JavaFX versions are centralized in a `pom.xml` property:
 
 ```xml
 <properties>
@@ -214,57 +211,56 @@ Las versiones clave de JavaFX están centralizadas en una propiedad de `pom.xml`
 </properties>
 ```
 
-Si necesitas actualizar JavaFX, cambia **solo esta propiedad** — no las versiones individuales.
+To update JavaFX, change **only this property** — not the individual artifact versions.
 
 ---
 
-## 6. Persistencia de Datos
+## 6. Data Persistence
 
-Los datos de usuario **nunca** se guardan en la carpeta del proyecto ni de instalación.
-Se guardan en `~/.gestor-finanzas/` (ver `AppConfig.java` y `docs/APP_FLOW.md §2`).
+User data is **never** stored in the project folder or the installation folder.
+It is stored in `~/.gestor-finanzas/` (see `AppConfig.java` and `docs/APP_FLOW.md §2`).
 
-**Por lo tanto:**
-- Los archivos `*.json` están en `.gitignore` y **nunca** deben subirse al repositorio.
-- Al agregar un nuevo tipo de dato persistente, agregar su ruta en `AppConfig.java` siguiendo el patrón existente.
-- Los métodos de carga siempre deben manejar el caso de archivo inexistente devolviendo
-  una colección vacía — nunca lanzar una excepción no controlada al usuario.
+**Therefore:**
+- `*.json` files are in `.gitignore` and **must never** be committed to the repository.
+- When adding a new persistent data type, add its path to `AppConfig.java` following the existing pattern.
+- Load methods must always handle the case of a missing file by returning an empty collection — never throw an unhandled exception to the user.
 
 ---
 
-## 7. Flujo de Trabajo Git
+## 7. Git Workflow
 
-No hacer commits directamente a `main`. Todo cambio entra por una rama propia
-y se integra a `main` mediante Pull Request.
-
-```
-main                    ← Solo código estable aprobado
-  └── <tipo>/<descripcion>   ← Rama de desarrollo individual
-```
-
-### 7.1 Formato de nombre de rama
+Do not commit directly to `main`. Every change enters through its own branch
+and is integrated into `main` via Pull Request.
 
 ```
-feature/<descripcion-corta>      ← Nueva funcionalidad
-fix/<descripcion-corta>          ← Corrección de bug
-migration/<modulo>               ← Migración de Swing a JavaFX
-refactor/<descripcion-corta>     ← Refactorización sin cambio funcional
-docs/<descripcion-corta>         ← Solo documentación
+main                         ← Only approved stable code
+  └── <type>/<description>   ← Individual development branch
+```
 
-Ejemplos:
+### 7.1 Branch naming
+
+```
+feature/<short-description>      ← New feature
+fix/<short-description>          ← Bug fix
+migration/<module>               ← Swing to JavaFX migration
+refactor/<short-description>     ← Refactor without functional change
+docs/<short-description>         ← Documentation only
+
+Examples:
   feature/export-csv
   fix/report-amount-total
   migration/accounts-javafx
   refactor/json-handler-atomic-write
 ```
 
-### 7.2 Formato de commit
+### 7.2 Commit format
 
-Mensajes en **español**, modo imperativo, con prefijo del módulo afectado:
+Messages in **Spanish**, imperative mode, with the affected module as prefix:
 
 ```
-[módulo] descripción corta del cambio
+[module] short description of the change
 
-Ejemplos:
+Examples:
   [accounts] Corregir bug de balance cero en ReportGenerator
   [javafx] Agregar AccountViewFX con FXML y hoja de estilos
   [config] Centralizar rutas de datos en AppConfig
@@ -273,39 +269,39 @@ Ejemplos:
   [docs] Crear CONTRIBUTING y APP_FLOW
 ```
 
-### 7.3 Proceso de Pull Request
+### 7.3 Pull Request process
 
-1. Crear la rama desde `main` actualizado: `git checkout -b feature/mi-cambio`
-2. Hacer commits con el formato de la sección 7.2
-3. Verificar el checklist de la Sección 9 antes de abrir el PR
-4. Abrir el PR hacia `main` con una descripción clara de qué cambia y por qué
-5. Esperar que el pipeline de SonarCloud pase sin nuevos code smells críticos
-6. Merge a `main` solo tras revisión
+1. Create the branch from an updated `main`: `git checkout -b feature/my-change`
+2. Make commits following the format in section 7.2
+3. Verify the checklist in Section 9 before opening the PR
+4. Open the PR targeting `main` with a clear description of what changes and why
+5. Wait for the SonarCloud pipeline to pass without new critical code smells
+6. Merge to `main` only after review
 
 ---
 
 ## 8. Tests
 
-### 8.1 Ubicación
+### 8.1 Location
 
-Los tests deben estar en `src/test/java/` en el paquete exactamente equivalente
-al del código que prueban:
+Tests must be placed in `src/test/java/` in the exact package equivalent
+to the code they test:
 
 ```
 src/main/java/accounts/account_model/JsonDataHandler.java
-         ↕ mismo paquete
+         ↕ same package
 src/test/java/accounts/account_model/JsonDataHandlerTest.java
 ```
 
-### 8.2 Estándares de tests
+### 8.2 Test standards
 
-- Usar **JUnit Jupiter** (`@Test`, `@BeforeEach`, `@ExtendWith`)
-- Usar **Mockito** (`@Mock`, `@InjectMocks`, `when(...).thenReturn(...)`) para aislar dependencias
-- Usar `@TempDir` de JUnit para tests que involucren escritura de archivos
-- Usar `@ExtendWith(MockitoExtension.class)` en tests con mocks
+- Use **JUnit Jupiter** (`@Test`, `@BeforeEach`, `@ExtendWith`)
+- Use **Mockito** (`@Mock`, `@InjectMocks`, `when(...).thenReturn(...)`) to isolate dependencies
+- Use JUnit's `@TempDir` for tests that involve file I/O
+- Use `@ExtendWith(MockitoExtension.class)` in tests with mocks
 
 ```java
-// ✅ Ejemplo de test bien estructurado
+// ✅ Well-structured test example
 @ExtendWith(MockitoExtension.class)
 class GoalsControllerTest {
 
@@ -329,49 +325,124 @@ class GoalsControllerTest {
 }
 ```
 
-### 8.3 Ejecutar los tests
+### 8.3 Running tests
 
 ```bash
-mvn test                    # Ejecutar todos los tests
-mvn test -pl accounts       # Solo el módulo de cuentas
-mvn verify                  # Tests + reporte de cobertura JaCoCo
+mvn test          # Run all tests
+mvn verify        # Tests + JaCoCo coverage report
 ```
 
-El reporte de cobertura se genera en `target/site/jacoco/index.html`.
+The coverage report is generated at `target/site/jacoco/index.html`.
 
 ---
 
-## 9. Checklist antes de hacer un Pull Request
+## 9. Pull Request Checklist
 
-Verificar cada punto antes de abrir un PR:
+Verify every point before opening a PR:
 
-- [ ] ¿Los nombres de clases, métodos y variables siguen las convenciones de la Sección 4.2?
-- [ ] ¿El código está en inglés y los comentarios/Javadoc también en inglés?
-- [ ] ¿Toda clase y método público tiene Javadoc con `@param` y `@return` donde aplica?
-- [ ] ¿No hay ningún `System.out.println()` en el código producción?
-- [ ] ¿Los errores se manejan con `try/catch` y se loguean con SLF4J?
-- [ ] ¿Los nuevos datos persistentes usan `AppConfig` para sus rutas y se registran en él?
-- [ ] ¿El archivo está en la carpeta correcta según la Sección 2?
-- [ ] ¿Si el Controller implementa Observer, se desregistra correctamente al cerrar la ventana?
-- [ ] ¿Los nuevos tests están en `src/test/java/` en el paquete correcto?
-- [ ] ¿El pipeline de SonarCloud no reporta nuevos issues críticos o bloqueadores?
-- [ ] ¿El nombre del commit sigue el formato `[módulo] descripción` de la Sección 7.2?
-
----
-
-## 10. Prácticas Prohibidas
-
-- ❌ Hacer commit directamente a `main`.
-- ❌ Subir archivos `*.json` de datos al repositorio (están en `.gitignore`).
-- ❌ Usar `System.out.println()` en código que se integre a `main`.
-- ❌ Escribir lógica de negocio en la Vista.
-- ❌ Acceder al Modelo directamente desde la Vista (sin pasar por el Controlador).
-- ❌ Exponer listas internas del Modelo de forma mutable.
-- ❌ Agregar rutas de archivos hardcodeadas fuera de `AppConfig.java`.
-- ❌ Agregar dependencias al `pom.xml` sin acordarlo y documentarlo.
-- ❌ Mezclar Swing y JavaFX en la misma vista — cada módulo usa una u otra, nunca ambas.
+- [ ] Do class, method and variable names follow the conventions in Section 4.2?
+- [ ] Is the code in English and are Javadoc comments also in English?
+- [ ] Does every public class and method have Javadoc with `@param` and `@return` where applicable?
+- [ ] Is there no `System.out.println()` in production code?
+- [ ] Are errors handled with `try/catch` and logged via SLF4J?
+- [ ] Do new persistent data types use `AppConfig` for their paths?
+- [ ] Is the file in the correct folder according to Section 2?
+- [ ] If the Controller implements Observer, does it unregister correctly on window close?
+- [ ] Are new tests in `src/test/java/` in the correct package?
+- [ ] Does the SonarCloud pipeline report no new critical or blocker issues?
+- [ ] Does the commit message follow the `[module] description` format from Section 7.2?
 
 ---
 
-*Mantenido por RoastWare*  
-*Actualizar este archivo cuando cambie el stack, la arquitectura, las convenciones o el flujo de trabajo del proyecto.*
+## 10. Forbidden Practices
+
+- ❌ Committing directly to `main`.
+- ❌ Uploading `*.json` data files to the repository (they are in `.gitignore`).
+- ❌ Using `System.out.println()` in any code merged to `main`.
+- ❌ Writing business logic in the View.
+- ❌ Accessing the Model directly from the View (bypassing the Controller).
+- ❌ Exposing mutable internal collections from the Model.
+- ❌ Hardcoding file paths outside `AppConfig.java`.
+- ❌ Adding dependencies to `pom.xml` without prior agreement and documentation.
+- ❌ Mixing Swing and JavaFX in the same view — each module uses one or the other, never both.
+
+---
+
+---
+
+# CONTRIBUTING — Gestor de Finanzas *(Español)*
+> Guía de desarrollo y estándares del proyecto.  
+> **Leer este archivo antes de escribir o modificar cualquier archivo del proyecto.**
+
+---
+
+## 1. Identidad del Proyecto
+
+Gestor de Finanzas es una aplicación de escritorio local para registrar cuentas, movimientos,
+metas financieras, movimientos recurrentes y recordatorios. Todos los datos se guardan
+localmente en el directorio `home` del usuario — sin servidores, sin nube, sin autenticación.
+
+**Arquitectura:** Java Desktop · MVC + Observer · Persistencia JSON local  
+**Etapa actual:** Migración activa Swing → JavaFX
+
+---
+
+## 2. Estructura del Proyecto
+
+Cada módulo de dominio sigue la convención de tres subcarpetas: `_model/`, `_view/`, `_controller/`.  
+La lógica de negocio nunca va en la Vista. La Vista nunca accede directamente al Modelo.
+
+---
+
+## 3. Arquitectura — MVC + Observer
+
+`AccountManager` es el `Subject` central. Los Controladores se registran como `Observer`
+y son notificados automáticamente cuando el modelo cambia.  
+Al cerrar una ventana, el Controlador **debe** desregistrarse para evitar memory leaks.
+
+Principios SOLID aplicados: cada clase tiene una responsabilidad única, los Observers son
+intercambiables, y los Controladores dependen de interfaces (facilitando tests con inyección de dependencias).
+
+---
+
+## 4. Convenciones de Código
+
+- **Idioma del código y Javadoc:** inglés. **Mensajes al usuario:** español. **Commits:** español.
+- **Javadoc** obligatorio en toda clase y método público.
+- **Nunca** usar `System.out.println()` — usar SLF4J (`log.info`, `log.error`).
+- Los métodos que devuelven listas internas deben usar `Collections.unmodifiableList(...)`.
+
+---
+
+## 5. Persistencia de Datos
+
+Los JSON **nunca** se guardan en la carpeta del proyecto. Se guardan en `~/.gestor-finanzas/`
+(ver `AppConfig.java` y `docs/APP_FLOW.md §2`). Los archivos `*.json` están en `.gitignore`
+y nunca deben subirse al repositorio.
+
+---
+
+## 6. Flujo de Trabajo Git
+
+No hacer commits directamente a `main`. Todo cambio entra por rama propia → Pull Request.
+
+**Formato de rama:** `feature/`, `fix/`, `migration/`, `refactor/`, `docs/`  
+**Formato de commit:** `[módulo] descripción en español, modo imperativo`
+
+---
+
+## 7. Tests
+
+Tests en `src/test/java/` en el paquete exactamente equivalente al código que prueban.
+Usar JUnit Jupiter + Mockito. Usar `@TempDir` para tests con archivos.
+
+---
+
+## 8. Prácticas Prohibidas
+
+Ver Sección 10 de la versión en inglés — aplican exactamente igual.
+
+---
+
+*Maintained by RoastWare*  
+*Update this file when the stack, architecture, conventions or workflow change.*
