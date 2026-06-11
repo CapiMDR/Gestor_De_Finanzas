@@ -2,7 +2,6 @@ package movements.movement_controller;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -20,7 +19,7 @@ import movements.movement_model.CategoryManager;
 import movements.movement_model.CategoryObserver;
 import movements.movement_model.MovementCategory.MovementType;
 import movements.movement_view.MovementCategoriesView;
-import movements.movement_view.MovementManagerView;
+import movements.movement_view.MovementsViewFX;
 
 /**
  * Controller in charge of managing the financial movements of an account,
@@ -31,7 +30,7 @@ import movements.movement_view.MovementManagerView;
  */
 public class MovementController implements CategoryObserver {
     private CategoryManager model;
-    private MovementManagerView view;
+    private MovementsViewFX view;
     private MovementCategoriesView categoriesManagerView;
     private Account currentAccount;
 
@@ -39,10 +38,10 @@ public class MovementController implements CategoryObserver {
      * Constructor for the movement controller.
      *
      * @param model          the category manager
-     * @param view           the movement manager view
+     * @param view           the JavaFX movement manager view
      * @param currentAccount the currently selected account
      */
-    public MovementController(CategoryManager model, MovementManagerView view,
+    public MovementController(CategoryManager model, MovementsViewFX view,
             Account currentAccount) {
         this.model = model;
         this.view = view;
@@ -57,13 +56,10 @@ public class MovementController implements CategoryObserver {
      * Assigns user interface events to their respective handlers.
      */
     private void AssignEvents() {
-        this.view.getBtnAddIncome().addActionListener(e -> handleAddMovement(MovementType.INCOME));
-
-        this.view.getBtnAddExpense().addActionListener(e -> handleAddMovement(MovementType.EXPENSE));
-
-        this.view.getBtnAddCategoryIncome().addActionListener(e -> showCategoriesManagerView());
-
-        this.view.getBtnAddCategoryExpense().addActionListener(e -> showCategoriesManagerView());
+        this.view.getBtnAddIncome().setOnAction(e -> handleAddMovement(MovementType.INCOME));
+        this.view.getBtnAddExpense().setOnAction(e -> handleAddMovement(MovementType.EXPENSE));
+        this.view.getBtnAddCategoryIncome().setOnAction(e -> showCategoriesManagerView());
+        this.view.getBtnAddCategoryExpense().setOnAction(e -> showCategoriesManagerView());
     }
 
     /**
@@ -75,24 +71,25 @@ public class MovementController implements CategoryObserver {
         String description;
         String amountStr;
         String categoryName;
-        java.util.Date utilDate;
+        LocalDateTime movementDate;
 
         if (type == MovementType.INCOME) {
-            description = view.getTxtDescriptionIncome().getText();
-            amountStr = view.getTxtAmountIncome().getText();
-            categoryName = view.getListCategoriesIncome().getSelectedValue();
-            utilDate = view.getDateIncome().getDate();
-        } else { // EXPENSE
-            description = view.getTxtDescriptionExpense().getText();
-            amountStr = view.getTxtAmountExpense().getText();
-            categoryName = view.getListCategoriesExpense().getSelectedValue();
-            utilDate = view.getDateExpense().getDate();
+            description  = view.getDescriptionIncome();
+            amountStr    = view.getAmountIncomeText();
+            categoryName = view.getSelectedCategoryIncome();
+            movementDate = view.getIncomeDateAsLocalDateTime();
+        } else {
+            description  = view.getDescriptionExpense();
+            amountStr    = view.getAmountExpenseText();
+            categoryName = view.getSelectedCategoryExpense();
+            movementDate = view.getExpenseDateAsLocalDateTime();
         }
 
-        boolean isEmpty = description.isEmpty() || amountStr.isEmpty() || categoryName == null || utilDate == null;
+        boolean isEmpty = description.isEmpty() || amountStr.isEmpty()
+                || categoryName == null || movementDate == null;
 
         if (isEmpty) {
-            JOptionPane.showMessageDialog(view,
+            JOptionPane.showMessageDialog(null,
                     "Todos los campos son obligatorios.",
                     "Error de Validación", JOptionPane.WARNING_MESSAGE);
             return;
@@ -105,12 +102,10 @@ public class MovementController implements CategoryObserver {
                 throw new IllegalArgumentException("El monto no puede ser negativo");
             }
 
-            LocalDateTime movementDate = utilDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-
             MovementCategory category = model.getCategoryByName(categoryName);
 
             if (category == null) {
-                JOptionPane.showMessageDialog(view,
+                JOptionPane.showMessageDialog(null,
                         "La categoría '" + categoryName + "' no fue encontrada",
                         "Error", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -118,7 +113,7 @@ public class MovementController implements CategoryObserver {
 
             addMovement(description, amount, category, currentAccount, movementDate);
 
-            JOptionPane.showMessageDialog(view,
+            JOptionPane.showMessageDialog(null,
                     type.toString() + " agregado exitosamente y saldo actualizado",
                     "Éxito", JOptionPane.INFORMATION_MESSAGE);
             if (type == MovementType.INCOME) {
@@ -128,15 +123,15 @@ public class MovementController implements CategoryObserver {
             }
 
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(view,
+            JOptionPane.showMessageDialog(null,
                     "El Monto debe ser un número válido.",
                     "Error de Formato", JOptionPane.ERROR_MESSAGE);
         } catch (IllegalArgumentException ex) {
-            JOptionPane.showMessageDialog(view,
+            JOptionPane.showMessageDialog(null,
                     ex.getMessage(),
                     "Error de Validación", JOptionPane.ERROR_MESSAGE);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(view,
+            JOptionPane.showMessageDialog(null,
                     "Error al agregar movimiento: " + ex.getMessage(),
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -167,9 +162,7 @@ public class MovementController implements CategoryObserver {
      * and the list of available categories.
      */
     private void loadInitialData() {
-        view.getTxtAccountIncome().setText(currentAccount.getName());
-        view.getTxtAccountExpense().setText(currentAccount.getName());
-
+        view.setAccountName(currentAccount.getName());
         updateCategoriesView(new ArrayList<>(model.getCategories().values()));
     }
 
@@ -179,19 +172,19 @@ public class MovementController implements CategoryObserver {
      * @param categories updated list of categories
      */
     private void updateCategoriesView(List<MovementCategory> categories) {
-        DefaultListModel<String> incomeModel = new DefaultListModel<>();
-        DefaultListModel<String> expenseModel = new DefaultListModel<>();
+        List<String> incomeNames  = new ArrayList<>();
+        List<String> expenseNames = new ArrayList<>();
 
         for (MovementCategory category : categories) {
             if (category.getType() == MovementType.INCOME) {
-                incomeModel.addElement(category.getName());
+                incomeNames.add(category.getName());
             } else {
-                expenseModel.addElement(category.getName());
+                expenseNames.add(category.getName());
             }
         }
 
-        view.getListCategoriesIncome().setModel(incomeModel);
-        view.getListCategoriesExpense().setModel(expenseModel);
+        view.updateIncomeCategories(incomeNames);
+        view.updateExpenseCategories(expenseNames);
     }
 
     /**

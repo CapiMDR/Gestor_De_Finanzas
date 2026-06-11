@@ -1,28 +1,184 @@
 package movements.movement_view;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
 /**
- * JavaFX controller for the Movements view.
+ * JavaFX controller for the Movements Management view.
  * Replaces {@code MovementManagerView.java} (Swing).
  *
- * <p>Layout is defined declaratively in {@code /fxml/movements.fxml}.
- * Business logic is delegated to {@code MovementController}.
+ * <p>Manages both income (INCOME) and expense (EXPENSE) form sections.
+ * Business logic is fully delegated to {@link MovementController}.
+ *
+ * <p>Uses {@link DatePicker} (JavaFX native) instead of the {@code JDateChooser}
+ * Swing component that was used before.
  *
  * @see movements.movement_controller.MovementController
  */
 public class MovementsViewFX {
 
-    @FXML private ListView<String> listMovements;
-    @FXML private TextField txtDescription;
-    @FXML private TextField txtAmount;
-    @FXML private ComboBox<String> cmbCategory;
-    @FXML private Button btnAddMovement;
-    @FXML private Button btnDeleteMovement;
+    // ── Header ────────────────────────────────────────────────────────────────
+    @FXML private Label lblAccountName;
 
-    // TODO: Implement — Phase 3.4 (Movements module migration)
+    // ── Income form ───────────────────────────────────────────────────────────
+    @FXML private TextField txtAccountIncome;
+    @FXML private TextField txtAmountIncome;
+    @FXML private ListView<String> listCategoriesIncome;
+    @FXML private DatePicker datePickerIncome;
+    @FXML private TextArea txtDescriptionIncome;
+    @FXML private Button btnAddIncome;
+    @FXML private Button btnAddCategoryIncome;
+
+    // ── Expense form ──────────────────────────────────────────────────────────
+    @FXML private TextField txtAccountExpense;
+    @FXML private TextField txtAmountExpense;
+    @FXML private ListView<String> listCategoriesExpense;
+    @FXML private DatePicker datePickerExpense;
+    @FXML private TextArea txtDescriptionExpense;
+    @FXML private Button btnAddExpense;
+    @FXML private Button btnAddCategoryExpense;
+
+    /**
+     * Called automatically by JavaFX after all {@code @FXML} fields are injected.
+     * Defaults both date pickers to today.
+     */
+    @FXML
+    public void initialize() {
+        datePickerIncome.setValue(LocalDate.now());
+        datePickerExpense.setValue(LocalDate.now());
+    }
+
+    // ── Public methods used by MovementController ─────────────────────────────
+
+    /**
+     * Sets the account name displayed in the header chip and the read-only
+     * account fields in both income and expense forms.
+     * Mirrors {@code loadInitialData()} in the Swing controller.
+     *
+     * @param accountName the name of the currently selected account
+     */
+    public void setAccountName(String accountName) {
+        Platform.runLater(() -> {
+            lblAccountName.setText(accountName);
+            txtAccountIncome.setText(accountName);
+            txtAccountExpense.setText(accountName);
+        });
+    }
+
+    /**
+     * Updates the income category list shown in the view.
+     *
+     * @param categories list of categories with type INCOME
+     */
+    public void updateIncomeCategories(List<String> categories) {
+        Platform.runLater(() ->
+            listCategoriesIncome.setItems(FXCollections.observableArrayList(categories)));
+    }
+
+    /**
+     * Updates the expense category list shown in the view.
+     *
+     * @param categories list of categories with type EXPENSE
+     */
+    public void updateExpenseCategories(List<String> categories) {
+        Platform.runLater(() ->
+            listCategoriesExpense.setItems(FXCollections.observableArrayList(categories)));
+    }
+
+    /**
+     * Clears the income form fields after a successful addition.
+     * Mirrors {@code MovementManagerView#clearIncomeFields()}.
+     */
+    public void clearIncomeFields() {
+        Platform.runLater(() -> {
+            txtAmountIncome.clear();
+            txtDescriptionIncome.clear();
+            listCategoriesIncome.getSelectionModel().clearSelection();
+            datePickerIncome.setValue(LocalDate.now());
+        });
+    }
+
+    /**
+     * Clears the expense form fields after a successful addition.
+     * Mirrors {@code MovementManagerView#clearExpenseFields()}.
+     */
+    public void clearExpenseFields() {
+        Platform.runLater(() -> {
+            txtAmountExpense.clear();
+            txtDescriptionExpense.clear();
+            listCategoriesExpense.getSelectionModel().clearSelection();
+            datePickerExpense.setValue(LocalDate.now());
+        });
+    }
+
+    // ── Form data accessors (read by MovementController) ──────────────────────
+
+    /** @return description text from the income form */
+    public String getDescriptionIncome()  { return txtDescriptionIncome.getText().trim(); }
+
+    /** @return raw amount text from the income form */
+    public String getAmountIncomeText()   { return txtAmountIncome.getText().trim(); }
+
+    /** @return selected category name from the income list, or {@code null} */
+    public String getSelectedCategoryIncome() {
+        return listCategoriesIncome.getSelectionModel().getSelectedItem();
+    }
+
+    /**
+     * Returns the income date as a {@link LocalDateTime} (start of selected day).
+     *
+     * @return selected date at midnight, or {@code null} if no date is selected
+     */
+    public LocalDateTime getIncomeDateAsLocalDateTime() {
+        LocalDate date = datePickerIncome.getValue();
+        return date != null ? date.atStartOfDay() : null;
+    }
+
+    /** @return description text from the expense form */
+    public String getDescriptionExpense() { return txtDescriptionExpense.getText().trim(); }
+
+    /** @return raw amount text from the expense form */
+    public String getAmountExpenseText()  { return txtAmountExpense.getText().trim(); }
+
+    /** @return selected category name from the expense list, or {@code null} */
+    public String getSelectedCategoryExpense() {
+        return listCategoriesExpense.getSelectionModel().getSelectedItem();
+    }
+
+    /**
+     * Returns the expense date as a {@link LocalDateTime} (start of selected day).
+     *
+     * @return selected date at midnight, or {@code null} if no date is selected
+     */
+    public LocalDateTime getExpenseDateAsLocalDateTime() {
+        LocalDate date = datePickerExpense.getValue();
+        return date != null ? date.atStartOfDay() : null;
+    }
+
+    // ── Button getters (used by MovementController#AssignEvents) ──────────────
+    // MovementController wires event handlers via setOnAction() to preserve the
+    // original Observer architecture where the controller owns all business logic.
+
+    /** @return the "Agregar Ingreso" button */
+    public Button getBtnAddIncome()         { return btnAddIncome; }
+
+    /** @return the "Agregar Egreso" button */
+    public Button getBtnAddExpense()         { return btnAddExpense; }
+
+    /** @return the income category management button */
+    public Button getBtnAddCategoryIncome()  { return btnAddCategoryIncome; }
+
+    /** @return the expense category management button */
+    public Button getBtnAddCategoryExpense() { return btnAddCategoryExpense; }
 }

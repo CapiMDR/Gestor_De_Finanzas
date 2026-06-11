@@ -1,33 +1,32 @@
 package com.mycompany.construccion;
 
-import accounts.account_controller.AccountController;
 import accounts.account_model.AccountManager;
-import accounts.account_view.AccountView;
+import accounts.account_view.AccountsModule;
 import config.AppConfig;
+import javafx.application.Application;
+import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Main entry point of the application.
- * Initializes the account manager and displays the main account view.
+ * Main entry point of the application (JavaFX).
+ * Initializes the account manager and launches the JavaFX accounts view.
  */
-public class Main {
-    private static final Logger logger = LoggerFactory.getLogger(Main.class);
-    
-    @SuppressWarnings("unused")
-    private static AccountController accountController;
 
-    public static void main(String[] args) {
+public class Main extends Application {
+    private static final Logger logger = LoggerFactory.getLogger(Main.class);
+
+    @Override
+    public void start(Stage primaryStage) {
         logger.info("Application starting...");
         AppConfig.ensureDataDirExists();
         AccountManager.initAccountManager();
-        AccountView accountsView = new AccountView();
-        accountController = new AccountController(accountsView);
         AccountManager.loadInitialData();
+        AccountsModule.initAccountsModule();
+        logger.info("Main view displayed successfully.");
+    }
 
-        java.awt.EventQueue.invokeLater(() -> {
-            accountsView.setVisible(true);
-            logger.info("Main view displayed successfully.");
-        });
+    public static void main(String[] args) {
+        launch(args);
     }
 }

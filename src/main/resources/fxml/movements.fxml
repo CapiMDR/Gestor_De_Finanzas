@@ -2,50 +2,132 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 
 <!--
-    Movements View Layout
+    Movements Module — Income & Expense Management View
     Controller: movements.movement_view.MovementsViewFX
-    Stylesheet: /styles/app.css
 
-    TODO: Implement layout — Phase 3.4 (Movements module migration)
+    Structure:
+      Top:    Header bar with account name chip
+      Center: TabPane with two symmetric tabs:
+                - "Ingresos" tab  (green accent): amount, category, date, description
+                - "Egresos"  tab  (red accent):   amount, category, date, description
+      Each tab has its own "Agregar" button and "Gestionar categorías" link.
 -->
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="movements.movement_view.MovementsViewFX"
             styleClass="root-pane">
 
+    <!-- Header -->
     <top>
-        <HBox styleClass="header-bar">
+        <HBox styleClass="header-bar" spacing="15" alignment="CENTER_LEFT">
             <Label text="MOVIMIENTOS" styleClass="header-title"/>
+            <!-- Account name chip injected at runtime via fx:id -->
+            <Label fx:id="lblAccountName"
+                   style="-fx-background-color: rgba(255,255,255,0.15);
+                          -fx-background-radius: 20px;
+                          -fx-padding: 4px 14px;
+                          -fx-text-fill: -fx-on-primary;
+                          -fx-font-size: 14px;"/>
         </HBox>
     </top>
 
-    <left>
-        <VBox styleClass="form-panel" spacing="16">
-            <Label text="Descripción:" styleClass="form-label"/>
-            <TextField fx:id="txtDescription" styleClass="form-input"
-                       promptText="Movement description"/>
-
-            <Label text="Monto: $" styleClass="form-label"/>
-            <TextField fx:id="txtAmount" styleClass="form-input"
-                       promptText="0.00"/>
-
-            <Label text="Categoría:" styleClass="form-label"/>
-            <ComboBox fx:id="cmbCategory" styleClass="form-input" maxWidth="Infinity"/>
-
-            <Button fx:id="btnAddMovement" text="Agregar Movimiento"
-                    styleClass="btn-primary" maxWidth="Infinity"/>
-        </VBox>
-    </left>
-
+    <!-- Content: two symmetric forms side by side -->
     <center>
-        <VBox styleClass="list-panel" spacing="12">
-            <ListView fx:id="listMovements" styleClass="movements-list" VBox.vgrow="ALWAYS"/>
-            <HBox spacing="10">
-                <Button fx:id="btnDeleteMovement" styleClass="btn-icon"/>
-            </HBox>
-        </VBox>
+        <HBox spacing="0" HBox.hgrow="ALWAYS">
+
+            <!-- ── INCOME panel (left, green accent border) ─────────────────── -->
+            <VBox styleClass="form-panel" HBox.hgrow="ALWAYS" spacing="12"
+                  style="-fx-border-color: rgb(16, 185, 129) transparent transparent transparent;">
+                <padding><Insets top="25" right="20" bottom="20" left="20"/></padding>
+
+                <Label text="Agregar Ingreso" styleClass="form-section-title"
+                       style="-fx-text-fill: rgb(16, 185, 129);"/>
+                <Separator/>
+
+                <Label text="Cuenta destino:" styleClass="form-label"/>
+                <TextField fx:id="txtAccountIncome" styleClass="form-input"
+                           editable="false" focusTraversable="false"
+                           style="-fx-opacity: 0.7;"/>
+
+                <Label text="Monto: $" styleClass="form-label"/>
+                <TextField fx:id="txtAmountIncome" styleClass="form-input" promptText="0.00"/>
+
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <Label text="Categoría:" styleClass="form-label"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="btnAddCategoryIncome" text="+ Gestionar"
+                            styleClass="btn-secondary" style="-fx-font-size: 12px; -fx-padding: 4px 10px;"
+                            onAction="#onManageCategories"/>
+                </HBox>
+                <ListView fx:id="listCategoriesIncome" styleClass="list-view"
+                          prefHeight="140"/>
+
+                <Label text="Fecha:" styleClass="form-label"/>
+                <DatePicker fx:id="datePickerIncome" styleClass="form-input" maxWidth="Infinity"/>
+
+                <Label text="Descripción:" styleClass="form-label"/>
+                <TextArea fx:id="txtDescriptionIncome" styleClass="form-input"
+                          promptText="Descripción del ingreso..."
+                          prefRowCount="3" wrapText="true"/>
+
+                <Region VBox.vgrow="ALWAYS"/>
+                <Button fx:id="btnAddIncome" text="Agregar Ingreso"
+                        styleClass="btn-primary" maxWidth="Infinity"
+                        style="-fx-background-color: rgb(16, 185, 129);"
+                        onAction="#onAddIncome"/>
+            </VBox>
+
+            <!-- Vertical divider -->
+            <Separator orientation="VERTICAL"
+                       style="-fx-background-color: -fx-border; -fx-pref-width: 1px;"/>
+
+            <!-- ── EXPENSE panel (right, red accent border) ──────────────────── -->
+            <VBox styleClass="form-panel" HBox.hgrow="ALWAYS" spacing="12"
+                  style="-fx-border-color: rgb(239, 68, 68) transparent transparent transparent;
+                         -fx-background-radius: 8px 0 0 8px;">
+                <padding><Insets top="25" right="20" bottom="20" left="20"/></padding>
+
+                <Label text="Agregar Egreso" styleClass="form-section-title"
+                       style="-fx-text-fill: rgb(239, 68, 68);"/>
+                <Separator/>
+
+                <Label text="Cuenta origen:" styleClass="form-label"/>
+                <TextField fx:id="txtAccountExpense" styleClass="form-input"
+                           editable="false" focusTraversable="false"
+                           style="-fx-opacity: 0.7;"/>
+
+                <Label text="Monto: $" styleClass="form-label"/>
+                <TextField fx:id="txtAmountExpense" styleClass="form-input" promptText="0.00"/>
+
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <Label text="Categoría:" styleClass="form-label"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="btnAddCategoryExpense" text="+ Gestionar"
+                            styleClass="btn-secondary" style="-fx-font-size: 12px; -fx-padding: 4px 10px;"
+                            onAction="#onManageCategories"/>
+                </HBox>
+                <ListView fx:id="listCategoriesExpense" styleClass="list-view"
+                          prefHeight="140"/>
+
+                <Label text="Fecha:" styleClass="form-label"/>
+                <DatePicker fx:id="datePickerExpense" styleClass="form-input" maxWidth="Infinity"/>
+
+                <Label text="Descripción:" styleClass="form-label"/>
+                <TextArea fx:id="txtDescriptionExpense" styleClass="form-input"
+                          promptText="Descripción del egreso..."
+                          prefRowCount="3" wrapText="true"/>
+
+                <Region VBox.vgrow="ALWAYS"/>
+                <Button fx:id="btnAddExpense" text="Agregar Egreso"
+                        styleClass="btn-primary" maxWidth="Infinity"
+                        style="-fx-background-color: rgb(239, 68, 68);"
+                        onAction="#onAddExpense"/>
+            </VBox>
+
+        </HBox>
     </center>
 
 </BorderPane>

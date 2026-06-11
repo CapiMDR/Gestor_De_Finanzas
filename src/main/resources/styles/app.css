@@ -1,28 +1,312 @@
-/* =============================================================================
-   app.css — Global JavaFX Stylesheet
-   Gestor de Finanzas
-   =============================================================================
-   Status: PLACEHOLDER — Full implementation in Phase 3.3
-   This file defines the token declarations only.
-   Complete styles (components, animations, layout rules) will be added in 3.3.
-   ============================================================================= */
+/* app.css — Global JavaFX Stylesheet 
+ Implementation of Phase 3.3 — Rich UI Styles 
+ Defines global color tokens and styles for components used across all modules.
+  
+ NOTE FOR IDEs/LINTERS: 
+ Warnings about missing standard properties (like 'border-radius') should be   
+ ignored. JavaFX requires the '-fx-' prefix for all its properties. Adding     
+ standard web CSS properties will cause JavaFX runtime console warnings.
 
-/* --- Color Tokens (preserved from the original Swing palette) --- */
+ NOTE ON COLOR FORMAT (rgb vs hex):
+ Tokens are defined using rgb() for readability and easy channel adjustment.
+ Unlike web CSS, JavaFX does NOT support var() composition, so rgba() opacity
+ variants are kept as hardcoded rgba(R, G, B, alpha) values throughout.
+*/
+
+
 .root {
-    /* Primary palette */
-    -fx-primary:        #F66B0E;   /* Orange — main action color */
-    -fx-secondary:      #205375;   /* Dark blue — headers, accents */
-    -fx-surface:        #5989A9;   /* Medium blue — panels */
-    -fx-background:     #EFEFEF;   /* Light grey — main background */
-    -fx-surface-light:  #D2D2D2;   /* Light grey — inputs, icon buttons */
+    /* Brand Colors */
+    -fx-primary:        rgb(32, 83, 117);    /* Dark Blue — Main brand color (nav, headers, focus) */
+    -fx-primary-dark:   rgb(17, 43, 60);     /* Deep Blue */
+    -fx-accent:         rgb(246, 107, 14);   /* Vibrant Orange — Call to Action buttons */
+    -fx-accent-dark:    rgb(214, 87, 9);     /* Darker Orange */
 
-    /* Text colors */
-    -fx-on-primary:     #FFFFFF;   /* White text on primary/secondary */
-    -fx-on-surface:     #112B3C;   /* Dark text on light surfaces */
+    /* Semantic Colors */
+    -fx-success:        rgb(16, 185, 129);   /* Green for income/success */
+    -fx-danger:         rgb(239, 68, 68);    /* Red for expenses/delete */
+    -fx-warning:        rgb(245, 158, 11);   /* Amber for alerts */
+
+    /* Surface & Background Colors */
+    -fx-surface:        rgb(255, 255, 255);  /* Clean white panels */
+    -fx-background:     rgb(243, 244, 246);  /* Light gray background */
+    -fx-border:         rgb(229, 231, 235);  /* Light gray borders */
+
+    /* Text Colors */
+    -fx-text-main:      rgb(17, 24, 39);     /* Almost black for maximum readability */
+    -fx-text-muted:     rgb(107, 114, 128);  /* Muted gray text */
+    -fx-on-primary:     rgb(255, 255, 255);  /* White text on primary/accent colors */
 
     /* Typography */
-    -fx-font-family: "Inter";
+    -fx-font-family: "Inter", "Segoe UI", "Arial", sans-serif;
     -fx-font-size: 14px;
 }
 
-/* TODO: Add full component styles in Phase 3.3 (app.css implementation) */
+/* Base Application Pane */
+.root-pane {
+    -fx-background-color: -fx-background;
+}
+
+/* --- Headers --- */
+.header-bar {
+    -fx-background-color: -fx-primary;
+    -fx-padding: 15px 25px;
+    -fx-alignment: center-left;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 2);
+}
+
+.header-title {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-on-primary;
+}
+
+/* --- Panels & Containers --- */
+.form-panel {
+    -fx-background-color: -fx-surface;
+    -fx-padding: 25px;
+    -fx-background-radius: 0 8px 8px 0;
+    -fx-border-color: -fx-primary transparent transparent transparent;
+    -fx-border-width: 0 0 0 5px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 10, 0, 0, 2);
+    -fx-pref-width: 350px;
+    -fx-spacing: 12px;
+}
+
+.list-panel {
+    -fx-background-color: transparent;
+    -fx-padding: 20px;
+    -fx-spacing: 15px;
+}
+
+/* --- Typography & Forms --- */
+.form-label {
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-primary;
+    -fx-font-size: 13px;
+    -fx-padding: 4px 0 0 0;
+}
+
+/* Title for a form section — uses Orange for visual hierarchy */
+.form-section-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-accent;
+}
+
+.form-input, .combo-box, .date-picker {
+    -fx-background-color: #FAFAFA;
+    -fx-border-color: -fx-border;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 8px 12px;
+    -fx-font-size: 14px;
+    -fx-text-fill: -fx-text-main;
+}
+
+.form-input:focused, .combo-box:focused, .date-picker:focused {
+    -fx-border-color: -fx-primary;
+    -fx-background-color: -fx-surface;
+}
+
+/* --- Buttons --- */
+.button {
+    -fx-cursor: hand;
+    -fx-padding: 10px 20px;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6px;
+    -fx-border-radius: 6px;
+}
+
+/* Primary buttons now use Orange (Accent) */
+.btn-primary {
+    -fx-background-color: -fx-accent;
+    -fx-text-fill: -fx-on-primary;
+    -fx-effect: dropshadow(three-pass-box, rgba(246, 107, 14, 0.3), 8, 0, 0, 3);
+}
+
+.btn-primary:hover {
+    -fx-background-color: -fx-accent-dark;
+}
+
+.btn-primary:pressed {
+    -fx-background-color: -fx-primary;
+}
+
+.btn-secondary {
+    -fx-background-color: -fx-surface;
+    -fx-text-fill: -fx-accent;
+    -fx-border-color: -fx-accent;
+    -fx-border-width: 2px;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+}
+
+.btn-secondary:hover {
+    -fx-background-color: -fx-accent;
+    -fx-text-fill: -fx-on-primary;
+}
+
+/* Semantic buttons */
+.btn-danger {
+    -fx-background-color: -fx-danger;
+    -fx-text-fill: -fx-on-primary;
+}
+.btn-danger:hover {
+    -fx-background-color: #DC2626; /* Darker red */
+}
+
+.btn-icon {
+    -fx-background-color: transparent;
+    -fx-text-fill: -fx-text-muted;
+    -fx-padding: 8px;
+    -fx-border-color: transparent;
+}
+
+.btn-icon:hover {
+    -fx-background-color: -fx-border;
+    -fx-text-fill: -fx-primary;
+    -fx-background-radius: 50%;
+}
+
+.btn-filter {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-text-fill: -fx-on-primary;
+    -fx-border-color: rgba(255, 255, 255, 0.3);
+    -fx-border-radius: 20px;
+    -fx-background-radius: 20px;
+    -fx-padding: 5px 15px;
+    -fx-font-size: 13px;
+    -fx-font-weight: normal;
+}
+
+.btn-filter:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* --- List Views --- */
+.list-view {
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 8px;
+    -fx-border-color: -fx-border;
+    -fx-border-radius: 8px;
+    -fx-padding: 5px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 2);
+}
+
+.list-view .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: -fx-text-main;
+    -fx-padding: 12px 15px;
+    -fx-font-size: 15px;
+    -fx-border-color: transparent transparent -fx-background transparent;
+}
+
+.list-view .list-cell:empty {
+    -fx-border-color: transparent;
+}
+
+.list-view .list-cell:filled:hover {
+    -fx-background-color: #F9FAFB;
+}
+
+.list-view .list-cell:filled:selected {
+    -fx-background-color: rgba(32, 83, 117, 0.12); /* Primary/Blue tint */
+    -fx-text-fill: -fx-primary;
+    -fx-font-weight: bold;
+    -fx-border-color: transparent transparent transparent -fx-accent;
+    -fx-border-width: 0 0 0 4px;
+}
+
+/* --- Dashboard / Reports View --- */
+.dashboard-header {
+    -fx-background-color: -fx-primary;
+    -fx-padding: 25px 35px;
+    -fx-spacing: 10px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 10, 0, 0, 2);
+}
+
+.dashboard-account-name {
+    -fx-font-size: 18px;
+    -fx-text-fill: rgba(255, 255, 255, 0.8);
+    -fx-font-weight: normal;
+}
+
+.dashboard-balance {
+    -fx-font-size: 42px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-on-primary;
+}
+
+.nav-panel {
+    -fx-background-color: -fx-surface;
+    -fx-padding: 20px 10px;
+    -fx-pref-width: 240px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 2);
+}
+
+.nav-item {
+    -fx-padding: 12px 20px;
+    -fx-background-radius: 8px;
+    -fx-cursor: hand;
+    -fx-spacing: 15px;
+    -fx-border-color: transparent transparent transparent transparent;
+    -fx-border-width: 0 0 0 3px;
+    -fx-border-radius: 0;
+}
+
+.nav-item:hover {
+    -fx-background-color: rgba(32, 83, 117, 0.08);
+    -fx-border-color: -fx-accent;
+}
+
+.nav-label {
+    -fx-font-size: 15px;
+    -fx-font-weight: 600;
+    -fx-text-fill: -fx-text-muted;
+}
+
+.nav-item:hover .nav-label {
+    -fx-text-fill: -fx-primary;
+}
+
+/* Active nav item — Blue background, orange accent bar */
+.nav-item-active {
+    -fx-background-color: rgba(32, 83, 117, 0.12);
+    -fx-border-color: -fx-accent;
+    -fx-border-width: 0 0 0 3px;
+    -fx-border-radius: 0;
+}
+
+.nav-item-active .nav-label {
+    -fx-text-fill: -fx-primary;
+    -fx-font-weight: 700;
+}
+
+.charts-panel {
+    -fx-padding: 20px;
+}
+
+.dashboard-chart {
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 8px;
+    -fx-padding: 15px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 2);
+}
+
+/* --- Progress Bars (For Goals) --- */
+.progress-bar {
+    -fx-pref-height: 12px;
+}
+
+.progress-bar .track {
+    -fx-background-color: -fx-border;
+    -fx-background-radius: 6px;
+    -fx-border-radius: 6px;
+}
+
+.progress-bar .bar {
+    -fx-background-color: -fx-success; /* Use success color for progress */
+    -fx-background-radius: 6px;
+    -fx-border-radius: 6px;
+}

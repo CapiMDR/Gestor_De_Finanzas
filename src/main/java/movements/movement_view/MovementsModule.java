@@ -5,15 +5,24 @@ import accounts.account_model.JsonDataHandler;
 import movements.movement_controller.MovementController;
 import movements.movement_model.CategoryManager;
 import movements.movement_model.MovementManagerSubject;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 /**
- * Main class of the movements module.
- * Responsible for initializing the necessary components to manage
- * the movements of a selected account, including model, view and controller.
+ * Entry point for the Movements JavaFX module.
+ * Loads {@code movements.fxml}, instantiates {@link MovementsViewFX} via FXMLLoader,
+ * then creates and wires {@link MovementController} to the view.
+ *
+ * Mirrors the original {@code MovementsModule} structure: same model/subject
+ * setup, same controller constructor. Only the view type changes from
+ * {@code MovementManagerView} (Swing) to {@code MovementsViewFX} (JavaFX).
+ *
  * @author Capi Madera de Regil
  */
 public class MovementsModule {
-    
+
     @SuppressWarnings("unused")
     private static MovementController movementController;
 
@@ -25,21 +34,29 @@ public class MovementsModule {
      * @param selectedAccount the account on which the movements will be managed
      */
     public static void initMovements(Account selectedAccount) {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                MovementsModule.class.getResource("/fxml/movements.fxml"));
 
-        JsonDataHandler testDataHandler = new JsonDataHandler();
+            Parent root = loader.load();
 
-        MovementManagerSubject movementSubject = new MovementManagerSubject();
+            // FXMLLoader created MovementsViewFX and injected @FXML fields
+            MovementsViewFX movementView = loader.getController();
 
-        CategoryManager movementModel = new CategoryManager(
-                movementSubject,
-                testDataHandler);
+            JsonDataHandler testDataHandler = new JsonDataHandler();
+            MovementManagerSubject movementSubject = new MovementManagerSubject();
+            CategoryManager movementModel = new CategoryManager(movementSubject, testDataHandler);
 
-        MovementManagerView movementView = new MovementManagerView();
+            // Controller registers itself as Observer and wires button events
+            movementController = new MovementController(movementModel, movementView, selectedAccount);
 
-        movementController = new MovementController(
-                movementModel,
-                movementView,
-                selectedAccount);
-        movementView.setVisible(true);
+            Stage stage = new Stage();
+            stage.setTitle("Movimientos — " + selectedAccount.getName());
+            stage.setScene(new Scene(root, 960, 680));
+            stage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
