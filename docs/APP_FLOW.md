@@ -2,25 +2,30 @@
 
 > Technical document describing the internal workings of the application:
 > startup sequence, data persistence, architecture, and UI lifecycle.
+> Updated for v2.0.0 (JavaFX migration).
 
 ---
 
 ## 1. Entry Point
 
-The application starts from `Main.java` (or `MainApp.java` after the JavaFX migration).
-The `main()` method executes four steps in strict order:
+The application starts from `AppLauncher.java`, which delegates immediately to `Main.java`.
+The `AppLauncher` wrapper exists to avoid the JavaFX module detection error that occurs when
+a class extending `Application` is used directly as the fat-jar or installer main class.
+
+The `Main.start()` method executes four steps in strict order:
 
 ```
-main()
-  │
-  ├── 1. AppConfig.ensureDataDirExists()      → Guarantees the data folder exists
-  ├── 2. AccountManager.initAccountManager()  → Initializes the central model in memory
-  ├── 3. AccountView / MainApp (JavaFX)       → Builds the main UI
-  └── 4. AccountManager.loadInitialData()     → Loads data from disk into memory
+AppLauncher.main()
+  └── Main.main() / Main.start()
+        │
+        ├── 1. AppConfig.ensureDataDirExists()      → Guarantees the data folder exists
+        ├── 2. AccountManager.initAccountManager()  → Initializes the central model in memory
+        ├── 3. RemindersModule.initGlobalReminders() → Starts the background reminder scheduler
+        └── 4. AccountsModule.initAccountsModule()  → Loads FXML, builds and shows the main Stage
 ```
 
 No JSON file is read before the folder is guaranteed (step 1).
-No data is displayed in the UI before it is loaded into `AccountManager` (step 4).
+No data is displayed in the UI before it is loaded into `AccountManager` (step 2).
 
 ---
 
@@ -122,7 +127,7 @@ to decouple the data layer from the UI.
 | Layer | Package | Responsibility |
 |---|---|---|
 | **Model** | `*_model/` | Data, business logic, JSON persistence |
-| **View** | `*_view/` | Visual presentation (Swing → migrating to JavaFX) |
+| **View** | `*_view/` | Visual presentation (JavaFX — FXML + CSS) |
 | **Controller** | `*_controller/` | Orchestrates model and view; handles user events |
 
 **Critical rule:** Business logic **never** goes in the View. The View **never** accesses
@@ -157,28 +162,28 @@ gestorFinanzas/src/main/java/
 │
 ├── accounts/
 │   ├── account_model/       ← Account, AccountManager, JsonDataHandler
-│   ├── account_view/        ← AccountView (Swing) → AccountViewFX (JavaFX)
+│   ├── account_view/        ← AccountViewFX.java + AccountsModule.java (JavaFX)
 │   └── account_controller/  ← AccountController
 │
 ├── movements/
 │   ├── movement_model/      ← Movement, MovementCategory
-│   ├── movement_view/       ← MovementsView → MovementsViewFX
+│   ├── movement_view/       ← MovementsViewFX.java (JavaFX)
 │   └── movement_controller/ ← MovementController
 │
 ├── goals/
 │   ├── goals_model/         ← Goal
-│   ├── goals_view/          ← GoalsView → GoalsViewFX
+│   ├── goals_view/          ← GoalsViewFX.java (JavaFX)
 │   └── goals_controller/    ← GoalsController
 │
 ├── recurringMoves/
 │   ├── recurring_model/     ← RecurringMove, RecurringJSONHandler
-│   ├── recurring_view/      ← RecurringsView → RecurringsViewFX
+│   ├── recurring_view/      ← RecurringsViewFX.java (JavaFX)
 │   └── recurring_controller/← RecurringsController
 │
 ├── reminders/
 │   ├── reminder_model/      ← Reminder, ReminderJSONHandler
-│   ├── reminder_view/       ← RemindersView → RemindersViewFX
-│   └── reminder_controller/ ← RemindersController
+│   ├── reminder_view/       ← RemindersViewFX.java (JavaFX)
+│   └── reminder_controller/ ← RemindersController (daemon thread scheduler)
 │
 ├── reports/
 │   └── modelReport/         ← ReportGenerator, ReportSubject
@@ -197,30 +202,27 @@ gestorFinanzas/src/main/java/
 ### 4.1 Opening a window
 
 ```
-User clicks a button in AccountView (e.g. "View Movements")
+User clicks a button in AccountViewFX (e.g. "View Movements")
     │
     ▼
 AccountController handles the event
     │
     ▼
-Creates an instance of MovementsView and MovementsController
+Calls MovementsModule.initMovements(account)
     │
-    ├── MovementsController registers itself as Observer in AccountManager
-    └── MovementsView is shown to the user
+    ├── Loads movements.fxml via FXMLLoader
+    ├── Creates and wires MovementsViewFX and MovementController
+    └── Shows the new Stage
 ```
 
 ### 4.2 Closing a window
 
-When a window closes, the Controller **unregisters** from the Subject to
-prevent memory leaks (the `static` observer list in `AccountManagerSubject`):
+In JavaFX, each `Stage` can register an `onCloseRequest` handler to unregister from
+the Observer list when the window is closed, preventing memory leaks:
 
 ```java
-// Required in every Controller that implements Observer:
-addWindowListener(new WindowAdapter() {
-    @Override
-    public void windowClosed(WindowEvent e) {
-        AccountManager.removeObserver(MyController.this);
-    }
+stage.setOnCloseRequest(event -> {
+    AccountManager.removeObserver(myController);
 });
 ```
 
@@ -237,9 +239,11 @@ data is persisted immediately after each change.
 | Workflow | Trigger | Action |
 |---|---|---|
 | `sonarcloud.yml` | Push to any branch | Static code analysis with SonarCloud + JaCoCo coverage |
-| `release.yml` | Push of tag `v*` | Builds the executable JAR and creates a GitHub Release |
+| `release.yml` | Push of tag `v*` | Builds the fat-jar, generates the Windows `.exe` installer, and publishes it as a GitHub Release |
 
 The release workflow uses `jreleaser.yml` to package and publish the artifact.
+The fat-jar is produced by `maven-shade-plugin` with `ServicesResourceTransformer`.
+The installer is generated by `jpackage-maven-plugin` and bundles a private JRE.
 
 ---
 
@@ -254,20 +258,22 @@ The release workflow uses `jreleaser.yml` to package and publish the artifact.
 
 ## 1. Punto de Entrada
 
-La aplicación arranca desde `Main.java` (o `MainApp.java` tras la migración a JavaFX).
-El método `main()` ejecuta cuatro pasos en orden estricto:
+La aplicación arranca desde `AppLauncher.java`, que delega inmediatamente a `Main.java`.
+El wrapper `AppLauncher` existe para evitar el error de detección del módulo JavaFX que ocurre
+cuando una clase que extiende `Application` se usa directamente como clase principal del
+fat-jar o del instalador.
 
 ```
-main()
-  │
-  ├── 1. AppConfig.ensureDataDirExists()      → Garantiza que la carpeta de datos existe
-  ├── 2. AccountManager.initAccountManager()  → Inicializa el modelo central en memoria
-  ├── 3. AccountView / MainApp (JavaFX)       → Construye la UI principal
-  └── 4. AccountManager.loadInitialData()     → Carga los datos desde disco a memoria
+AppLauncher.main()
+  └── Main.main() / Main.start()
+        │
+        ├── 1. AppConfig.ensureDataDirExists()       → Garantiza que la carpeta de datos existe
+        ├── 2. AccountManager.initAccountManager()   → Inicializa el modelo central en memoria
+        ├── 3. RemindersModule.initGlobalReminders()  → Arranca el scheduler de recordatorios
+        └── 4. AccountsModule.initAccountsModule()   → Carga el FXML y muestra el Stage principal
 ```
 
 Ningún archivo JSON se lee antes de que la carpeta esté garantizada (paso 1).
-Ningún dato se muestra en la UI antes de que esté cargado en el `AccountManager` (paso 4).
 
 ---
 
@@ -350,8 +356,8 @@ y son notificados automáticamente cuando el modelo cambia.
 
 ## 4. Ciclo de Vida de la UI
 
-- **Apertura:** El Controlador se registra como Observer al crear la ventana.
-- **Cierre:** El Controlador se desregistra del Subject para evitar memory leaks.
+- **Apertura:** El Controlador carga el FXML, crea el Stage y se registra como Observer.
+- **Cierre:** El Stage llama al handler `onCloseRequest` que desregistra el Controlador del Subject.
 - **Guardado:** Automático tras cada operación de escritura — sin botón "Guardar" explícito.
 
 ---
