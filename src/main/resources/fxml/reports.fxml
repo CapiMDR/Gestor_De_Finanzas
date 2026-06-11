@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<!--
+    Reports View Layout — Account Dashboard
+    Controller: reports.report_view.ReportsViewFX
+    Stylesheet: /styles/app.css
+
+    This is the main dashboard screen shown after selecting an account.
+    It has two roles:
+      1. Navigation hub — buttons to access all other modules
+      2. Account summary — name, balance, and time-filtered charts
+
+    Mirrors the structure of FrmMain.java (Swing):
+      - Top bar:    account name + balance + time filter buttons
+      - Left panel: module navigation icons
+      - Center:     pie chart (income/expense) + bar chart (movements by date)
+
+    TODO: Implement full layout — Phase 3.4 (Reports/Dashboard module migration)
+-->
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="reports.report_view.ReportsViewFX"
+            styleClass="root-pane">
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         TOP — Account name, balance, and chart filter buttons
+         ═══════════════════════════════════════════════════════════════ -->
+    <top>
+        <VBox styleClass="dashboard-header">
+
+            <!-- Account name -->
+            <Label fx:id="lblAccountName" text="Cuenta"
+                   styleClass="dashboard-account-name"/>
+
+            <!-- Balance + time filter row -->
+            <HBox alignment="CENTER_LEFT" spacing="20">
+                <Label fx:id="lblAccountBalance" text="$0.00"
+                       styleClass="dashboard-balance" HBox.hgrow="ALWAYS"/>
+                <Button fx:id="btnToday" text="Hoy"    styleClass="btn-filter"/>
+                <Button fx:id="btnWeek"  text="Semana" styleClass="btn-filter"/>
+            </HBox>
+
+        </VBox>
+    </top>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         LEFT — Module navigation panel
+         ═══════════════════════════════════════════════════════════════ -->
+    <left>
+        <VBox styleClass="nav-panel" spacing="8">
+
+            <HBox fx:id="navAddMovement" styleClass="nav-item" alignment="CENTER">
+                <!-- Icon: MaterialDesignP.PLUS_CIRCLE — set in controller -->
+                <Label text="Agregar Movimiento" styleClass="nav-label"/>
+            </HBox>
+
+            <HBox fx:id="navGoals" styleClass="nav-item" alignment="CENTER">
+                <!-- Icon: MaterialDesignT.TARGET — set in controller -->
+                <Label text="Metas" styleClass="nav-label"/>
+            </HBox>
+
+            <HBox fx:id="navReminders" styleClass="nav-item" alignment="CENTER">
+                <!-- Icon: MaterialDesignB.BELL — set in controller -->
+                <Label text="Recordatorios" styleClass="nav-label"/>
+            </HBox>
+
+            <HBox fx:id="navRecurrings" styleClass="nav-item" alignment="CENTER">
+                <!-- Icon: MaterialDesignR.REPEAT — set in controller -->
+                <Label text="Recurrentes" styleClass="nav-label"/>
+            </HBox>
+
+            <HBox fx:id="navFilters" styleClass="nav-item" alignment="CENTER">
+                <!-- Icon: MaterialDesignM.MAGNIFY — set in controller -->
+                <Label text="Filtros" styleClass="nav-label"/>
+            </HBox>
+
+            <HBox fx:id="navCredit" styleClass="nav-item" alignment="CENTER">
+                <!-- Icon: MaterialDesignC.CALCULATOR — set in controller -->
+                <Label text="Calculadora" styleClass="nav-label"/>
+            </HBox>
+
+        </VBox>
+    </left>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         CENTER — Charts area (pie + bar)
+         ═══════════════════════════════════════════════════════════════ -->
+    <center>
+        <HBox styleClass="charts-panel" spacing="12">
+
+            <!-- Pie chart: income vs expense distribution -->
+            <PieChart fx:id="pieChartMovements"
+                      title="Movimientos"
+                      styleClass="dashboard-chart"
+                      HBox.hgrow="ALWAYS"/>
+
+            <!-- Bar chart: movement amounts by date -->
+            <BarChart fx:id="barChartMovements"
+                      styleClass="dashboard-chart"
+                      HBox.hgrow="ALWAYS">
+                <xAxis>
+                    <CategoryAxis label="Fecha"/>
+                </xAxis>
+                <yAxis>
+                    <NumberAxis label="Monto ($)"/>
+                </yAxis>
+            </BarChart>
+
+        </HBox>
+    </center>
+
+</BorderPane>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!--
+    Movements View Layout
+    Controller: movements.movement_view.MovementsViewFX
+    Stylesheet: /styles/app.css
+
+    TODO: Implement layout — Phase 3.4 (Movements module migration)
+-->
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="movements.movement_view.MovementsViewFX"
+            styleClass="root-pane">
+
+    <top>
+        <HBox styleClass="header-bar">
+            <Label text="MOVIMIENTOS" styleClass="header-title"/>
+        </HBox>
+    </top>
+
+    <left>
+        <VBox styleClass="form-panel" spacing="16">
+            <Label text="Descripción:" styleClass="form-label"/>
+            <TextField fx:id="txtDescription" styleClass="form-input"
+                       promptText="Movement description"/>
+
+            <Label text="Monto: $" styleClass="form-label"/>
+            <TextField fx:id="txtAmount" styleClass="form-input"
+                       promptText="0.00"/>
+
+            <Label text="Categoría:" styleClass="form-label"/>
+            <ComboBox fx:id="cmbCategory" styleClass="form-input" maxWidth="Infinity"/>
+
+            <Button fx:id="btnAddMovement" text="Agregar Movimiento"
+                    styleClass="btn-primary" maxWidth="Infinity"/>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox styleClass="list-panel" spacing="12">
+            <ListView fx:id="listMovements" styleClass="movements-list" VBox.vgrow="ALWAYS"/>
+            <HBox spacing="10">
+                <Button fx:id="btnDeleteMovement" styleClass="btn-icon"/>
+            </HBox>
+        </VBox>
+    </center>
+
+</BorderPane>

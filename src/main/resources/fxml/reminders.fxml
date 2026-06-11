@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!--
+    Reminders View Layout
+    Controller: reminders.reminder_view.RemindersViewFX
+    Stylesheet: /styles/app.css
+
+    Note: Uses native JavaFX DatePicker — JCalendar dependency eliminated.
+    TODO: Implement layout — Phase 3.4 (Reminders module migration)
+-->
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="reminders.reminder_view.RemindersViewFX"
+            styleClass="root-pane">
+
+    <top>
+        <HBox styleClass="header-bar">
+            <Label text="RECORDATORIOS" styleClass="header-title"/>
+        </HBox>
+    </top>
+
+    <left>
+        <VBox styleClass="form-panel" spacing="16">
+            <Label text="Nombre:" styleClass="form-label"/>
+            <TextField fx:id="txtReminderName" styleClass="form-input"
+                       promptText="Reminder name"/>
+
+            <Label text="Fecha:" styleClass="form-label"/>
+            <DatePicker fx:id="datePicker" styleClass="form-input" maxWidth="Infinity"/>
+
+            <Button fx:id="btnAddReminder" text="Agregar Recordatorio"
+                    styleClass="btn-primary" maxWidth="Infinity"/>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox styleClass="list-panel" spacing="12">
+            <ListView fx:id="listReminders" styleClass="reminders-list" VBox.vgrow="ALWAYS"/>
+            <HBox spacing="10">
+                <Button fx:id="btnDeleteReminder" styleClass="btn-icon"/>
+            </HBox>
+        </VBox>
+    </center>
+
+</BorderPane>

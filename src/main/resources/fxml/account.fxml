@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!--
+    Accounts View Layout
+    Controller: accounts.account_view.AccountViewFX
+    Stylesheet: /styles/app.css
+
+    TODO: Implement layout — Phase 3.4 (Accounts module migration)
+-->
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="accounts.account_view.AccountViewFX"
+            styleClass="root-pane">
+
+    <!-- Top: Header bar -->
+    <top>
+        <HBox styleClass="header-bar">
+            <Label text="GESTIÓN DE CUENTAS" styleClass="header-title"/>
+        </HBox>
+    </top>
+
+    <!-- Left: Add account form -->
+    <left>
+        <VBox styleClass="form-panel" spacing="16">
+            <Label text="Nombre:" styleClass="form-label"/>
+            <TextField fx:id="txtNameAccount" styleClass="form-input"
+                       promptText="Account name"/>
+
+            <Label text="Saldo inicial: $" styleClass="form-label"/>
+            <TextField fx:id="txtInitialBalance" styleClass="form-input"
+                       promptText="0.00"/>
+
+            <Button fx:id="btnAddAccount" text="Agregar Nueva Cuenta"
+                    styleClass="btn-primary" maxWidth="Infinity"/>
+        </VBox>
+    </left>
+
+    <!-- Center: Accounts list + action buttons -->
+    <center>
+        <VBox styleClass="list-panel" spacing="12">
+            <ListView fx:id="listAccounts" styleClass="accounts-list" VBox.vgrow="ALWAYS"/>
+
+            <HBox spacing="10">
+                <Button fx:id="btnEditAccount"    styleClass="btn-icon"/>
+                <Button fx:id="btnDeleteAccount"  styleClass="btn-icon"/>
+                <Button fx:id="btnCalculateInterest" styleClass="btn-icon"/>
+                <Button fx:id="btnAccessAccount"  text="Entrar"
+                        styleClass="btn-primary" HBox.hgrow="ALWAYS"/>
+            </HBox>
+        </VBox>
+    </center>
+
+</BorderPane>

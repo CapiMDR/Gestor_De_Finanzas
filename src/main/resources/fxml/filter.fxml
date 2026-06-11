@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!--
+    Filter View Layout
+    Controller: filters.controllerFilter.FilterViewFX
+    Stylesheet: /styles/app.css
+
+    TODO: Implement layout — Phase 3.4 (Filter module migration)
+-->
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="filters.controllerFilter.FilterViewFX"
+            styleClass="root-pane">
+
+    <top>
+        <HBox styleClass="header-bar">
+            <Label text="FILTRAR MOVIMIENTOS" styleClass="header-title"/>
+        </HBox>
+    </top>
+
+    <left>
+        <VBox styleClass="form-panel" spacing="16">
+            <Label text="Categoría:" styleClass="form-label"/>
+            <ComboBox fx:id="cmbCategory" styleClass="form-input" maxWidth="Infinity"/>
+
+            <Label text="Desde:" styleClass="form-label"/>
+            <DatePicker fx:id="datePickerFrom" styleClass="form-input" maxWidth="Infinity"/>
+
+            <Label text="Hasta:" styleClass="form-label"/>
+            <DatePicker fx:id="datePickerTo" styleClass="form-input" maxWidth="Infinity"/>
+
+            <Button fx:id="btnApplyFilter" text="Aplicar Filtro"
+                    styleClass="btn-primary" maxWidth="Infinity"/>
+            <Button fx:id="btnClearFilter" text="Limpiar"
+                    styleClass="btn-secondary" maxWidth="Infinity"/>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox styleClass="list-panel" spacing="12">
+            <ListView fx:id="listFilteredMovements" styleClass="movements-list" VBox.vgrow="ALWAYS"/>
+        </VBox>
+    </center>
+
+</BorderPane>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!--
+    Goals View Layout
+    Controller: goals.goals_view.GoalsViewFX
+    Stylesheet: /styles/app.css
+
+    TODO: Implement layout — Phase 3.4 (Goals module migration)
+-->
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="goals.goals_view.GoalsViewFX"
+            styleClass="root-pane">
+
+    <top>
+        <HBox styleClass="header-bar">
+            <Label text="METAS FINANCIERAS" styleClass="header-title"/>
+        </HBox>
+    </top>
+
+    <left>
+        <VBox styleClass="form-panel" spacing="16">
+            <Label text="Nombre:" styleClass="form-label"/>
+            <TextField fx:id="txtGoalName" styleClass="form-input"
+                       promptText="Goal name"/>
+
+            <Label text="Monto objetivo: $" styleClass="form-label"/>
+            <TextField fx:id="txtTargetAmount" styleClass="form-input"
+                       promptText="0.00"/>
+
+            <Label text="Descripción:" styleClass="form-label"/>
+            <TextField fx:id="txtDescription" styleClass="form-input"
+                       promptText="Description"/>
+
+            <Button fx:id="btnAddGoal" text="Agregar Meta"
+                    styleClass="btn-primary" maxWidth="Infinity"/>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox styleClass="list-panel" spacing="12">
+            <ListView fx:id="listGoals" styleClass="goals-list" VBox.vgrow="ALWAYS"/>
+            <ProgressBar fx:id="progressBarGoal" maxWidth="Infinity"/>
+            <HBox spacing="10">
+                <Button fx:id="btnEditGoal"   styleClass="btn-icon"/>
+                <Button fx:id="btnDeleteGoal" styleClass="btn-icon"/>
+            </HBox>
+        </VBox>
+    </center>
+
+</BorderPane>

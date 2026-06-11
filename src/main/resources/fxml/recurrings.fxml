@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!--
+    Recurring Movements View Layout
+    Controller: recurringMoves.recurring_view.RecurringsViewFX
+    Stylesheet: /styles/app.css
+
+    Note: Uses native JavaFX DatePicker — JCalendar dependency eliminated.
+    TODO: Implement layout — Phase 3.4 (Recurring movements module migration)
+-->
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="recurringMoves.recurring_view.RecurringsViewFX"
+            styleClass="root-pane">
+
+    <top>
+        <HBox styleClass="header-bar">
+            <Label text="MOVIMIENTOS RECURRENTES" styleClass="header-title"/>
+        </HBox>
+    </top>
+
+    <left>
+        <VBox styleClass="form-panel" spacing="16">
+            <Label text="Descripción:" styleClass="form-label"/>
+            <TextField fx:id="txtDescription" styleClass="form-input"
+                       promptText="Description"/>
+
+            <Label text="Monto: $" styleClass="form-label"/>
+            <TextField fx:id="txtAmount" styleClass="form-input"
+                       promptText="0.00"/>
+
+            <Label text="Categoría:" styleClass="form-label"/>
+            <ComboBox fx:id="cmbCategory" styleClass="form-input" maxWidth="Infinity"/>
+
+            <Label text="Fecha:" styleClass="form-label"/>
+            <DatePicker fx:id="datePicker" styleClass="form-input" maxWidth="Infinity"/>
+
+            <Button fx:id="btnAddRecurring" text="Agregar Recurrente"
+                    styleClass="btn-primary" maxWidth="Infinity"/>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox styleClass="list-panel" spacing="12">
+            <ListView fx:id="listRecurrings" styleClass="recurrings-list" VBox.vgrow="ALWAYS"/>
+            <HBox spacing="10">
+                <Button fx:id="btnDeleteRecurring" styleClass="btn-icon"/>
+            </HBox>
+        </VBox>
+    </center>
+
+</BorderPane>

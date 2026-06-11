@@ -1,0 +1,28 @@
+/* =============================================================================
+   app.css — Global JavaFX Stylesheet
+   Gestor de Finanzas
+   =============================================================================
+   Status: PLACEHOLDER — Full implementation in Phase 3.3
+   This file defines the token declarations only.
+   Complete styles (components, animations, layout rules) will be added in 3.3.
+   ============================================================================= */
+
+/* --- Color Tokens (preserved from the original Swing palette) --- */
+.root {
+    /* Primary palette */
+    -fx-primary:        #F66B0E;   /* Orange — main action color */
+    -fx-secondary:      #205375;   /* Dark blue — headers, accents */
+    -fx-surface:        #5989A9;   /* Medium blue — panels */
+    -fx-background:     #EFEFEF;   /* Light grey — main background */
+    -fx-surface-light:  #D2D2D2;   /* Light grey — inputs, icon buttons */
+
+    /* Text colors */
+    -fx-on-primary:     #FFFFFF;   /* White text on primary/secondary */
+    -fx-on-surface:     #112B3C;   /* Dark text on light surfaces */
+
+    /* Typography */
+    -fx-font-family: "Inter";
+    -fx-font-size: 14px;
+}
+
+/* TODO: Add full component styles in Phase 3.3 (app.css implementation) */
