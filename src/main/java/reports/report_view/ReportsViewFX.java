@@ -35,9 +35,18 @@ public class ReportsViewFX {
     /** Displays the current balance of the selected account. */
     @FXML private Label lblAccountBalance;
 
+    /** Icon next to the balance, changes based on account type. */
+    @FXML private org.kordamp.ikonli.javafx.FontIcon accountIcon;
+
     // ── Chart filter buttons ─────────────────────────────────────────────────
     /** Filter charts to show only today's movements. */
     @FXML private Button btnToday;
+
+    /** Filter charts to show movements from yesterday. */
+    @FXML private Button btnYesterday;
+
+    /** Filter charts to show movements from the current week. */
+    @FXML private Button btnCurrentWeek;
 
     /** Filter charts to show movements from the last 7 days. */
     @FXML private Button btnWeek;
@@ -72,8 +81,11 @@ public class ReportsViewFX {
 
     public Label getLblAccountName() { return lblAccountName; }
     public Label getLblAccountBalance() { return lblAccountBalance; }
+    public org.kordamp.ikonli.javafx.FontIcon getAccountIcon() { return accountIcon; }
 
     public Button getBtnToday() { return btnToday; }
+    public Button getBtnYesterday() { return btnYesterday; }
+    public Button getBtnCurrentWeek() { return btnCurrentWeek; }
     public Button getBtnWeek() { return btnWeek; }
 
     public PieChart getPieChartMovements() { return pieChartMovements; }

@@ -73,6 +73,53 @@ public class ReportGenerator {
 
         reportSubject.notifyObservers(data);
     }
+    /**
+     * Generates a report for yesterday's movements.
+     */
+    public void yesterday() {
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        List<Movement> movements = account.getMovements().stream()
+                .filter(m -> m.getDate().toLocalDate().isEqual(yesterday))
+                .collect(Collectors.toList());
+
+        BigDecimal total = amountTotal(movements);
+
+        ReportData data = new ReportData(
+                "Ayer",
+                movements,
+                total,
+                yesterday.toString());
+
+        reportSubject.notifyObservers(data);
+    }
+
+    /**
+     * Generates a report covering the current week (from Monday to Sunday).
+     */
+    public void currentWeek() {
+        LocalDate today = LocalDate.now();
+        // Go back to the most recent Monday
+        LocalDate start = today.with(java.time.DayOfWeek.MONDAY);
+        // End is today
+        LocalDate end = today;
+
+        List<Movement> movements = account.getMovements().stream()
+                .filter(m -> {
+                    LocalDate date = m.getDate().toLocalDate();
+                    return (!date.isBefore(start) && !date.isAfter(end));
+                })
+                .collect(Collectors.toList());
+
+        BigDecimal total = amountTotal(movements);
+
+        ReportData data = new ReportData(
+                "Semana Actual",
+                movements,
+                total,
+                start.toString() + "-" + end.toString());
+
+        reportSubject.notifyObservers(data);
+    }
 
     /**
      * Calculates the sum of all movement amounts.

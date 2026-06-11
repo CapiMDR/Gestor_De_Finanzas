@@ -34,8 +34,11 @@
             <Separator/>
 
             <Label text="Nombre:" styleClass="form-label"/>
-            <TextField fx:id="txtNameAccount" styleClass="form-input"
-                       promptText="Ej. Cuenta de ahorros"/>
+            <VBox spacing="4">
+                <TextField fx:id="txtNameAccount" styleClass="form-input"
+                           promptText="Ej. Cuenta de ahorros"/>
+                <Label text="Máximo 18 caracteres" style="-fx-text-fill: #9CA3AF; -fx-font-size: 11px;"/>
+            </VBox>
 
             <Label text="Tipo:" styleClass="form-label"/>
             <ComboBox fx:id="cmbAccountType" styleClass="form-input"

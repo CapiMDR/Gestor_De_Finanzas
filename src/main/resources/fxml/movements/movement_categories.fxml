@@ -30,6 +30,18 @@
 
     <center>
         <VBox styleClass="list-panel" spacing="12">
+            <!-- Legend -->
+            <HBox spacing="20" alignment="CENTER">
+                <HBox spacing="6" alignment="CENTER">
+                    <Region style="-fx-background-color: #3182CE; -fx-min-width: 12px; -fx-min-height: 12px; -fx-max-width: 12px; -fx-max-height: 12px; -fx-background-radius: 6px;"/>
+                    <Label text="Ingreso" style="-fx-text-fill: #4B5563; -fx-font-weight: bold; -fx-font-size: 13px;"/>
+                </HBox>
+                <HBox spacing="6" alignment="CENTER">
+                    <Region style="-fx-background-color: #DD6B20; -fx-min-width: 12px; -fx-min-height: 12px; -fx-max-width: 12px; -fx-max-height: 12px; -fx-background-radius: 6px;"/>
+                    <Label text="Egreso" style="-fx-text-fill: #4B5563; -fx-font-weight: bold; -fx-font-size: 13px;"/>
+                </HBox>
+            </HBox>
+
             <ListView fx:id="listCategories" styleClass="list-view" VBox.vgrow="ALWAYS"/>
             <HBox spacing="10" alignment="CENTER">
                 <Button fx:id="btnDeleteCategory" styleClass="btn-icon">

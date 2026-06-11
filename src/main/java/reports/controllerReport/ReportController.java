@@ -11,6 +11,7 @@ import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import goals.goals_view.GoalsModule;
 import movements.movement_model.Movement;
 import movements.movement_model.MovementCategory;
@@ -47,8 +48,22 @@ public class ReportController implements ReportObserver, AccountObserver {
 
     private void assignActions() {
         // Time filter actions
-        view.getBtnToday().setOnAction(e -> reportGenerator.today());
-        view.getBtnWeek().setOnAction(e -> reportGenerator.weekAgo());
+        view.getBtnToday().setOnAction(e -> {
+            setActiveFilterButton(view.getBtnToday());
+            reportGenerator.today();
+        });
+        view.getBtnYesterday().setOnAction(e -> {
+            setActiveFilterButton(view.getBtnYesterday());
+            reportGenerator.yesterday();
+        });
+        view.getBtnCurrentWeek().setOnAction(e -> {
+            setActiveFilterButton(view.getBtnCurrentWeek());
+            reportGenerator.currentWeek();
+        });
+        view.getBtnWeek().setOnAction(e -> {
+            setActiveFilterButton(view.getBtnWeek());
+            reportGenerator.weekAgo();
+        });
 
         // Navigation actions
         view.getNavAddMovement().setOnMouseClicked(e -> {
@@ -79,8 +94,21 @@ public class ReportController implements ReportObserver, AccountObserver {
         alert.showAndWait();
     }
 
+    private void setActiveFilterButton(Button activeButton) {
+        view.getBtnToday().getStyleClass().remove("btn-filter-selected");
+        view.getBtnYesterday().getStyleClass().remove("btn-filter-selected");
+        view.getBtnCurrentWeek().getStyleClass().remove("btn-filter-selected");
+        view.getBtnWeek().getStyleClass().remove("btn-filter-selected");
+        
+        activeButton.getStyleClass().add("btn-filter-selected");
+    }
+
     private void initComponents() {
         Platform.runLater(() -> {
+            // Disable animation to prevent label overlap bug when updating frequently
+            view.getPieChartMovements().setAnimated(false);
+            view.getBarChartMovements().setAnimated(false);
+
             // --- PieChart ---
             view.getPieChartMovements().getData().clear();
 
@@ -92,14 +120,24 @@ public class ReportController implements ReportObserver, AccountObserver {
             
             // Force layout to avoid label overlapping bug
             view.getPieChartMovements().layout();
+            
+            // Initialize default filter and data
+            setActiveFilterButton(view.getBtnWeek());
+            reportGenerator.weekAgo();
         });
     }
 
     private void syncAccount() {
-        Platform.runLater(() -> {
+        if (account != null) {
             view.getLblAccountName().setText(account.getName());
-            view.getLblAccountBalance().setText("$" + account.getCurrentBalance().toPlainString());
-        });
+            view.getLblAccountBalance().setText(String.format("$%.2f", account.getCurrentBalance()));
+            
+            if (account.getType() == Account.AccountType.DIGITAL) {
+                view.getAccountIcon().setIconLiteral("mdi2c-credit-card");
+            } else {
+                view.getAccountIcon().setIconLiteral("mdi2p-piggy-bank");
+            }
+        }
     }
 
     @Override
@@ -155,6 +193,20 @@ public class ReportController implements ReportObserver, AccountObserver {
                 if (d.getNode() != null) {
                     if ("INGRESO".equals(d.getXValue())) d.getNode().setStyle("-fx-bar-fill: #3182CE;");
                     else d.getNode().setStyle("-fx-bar-fill: #DD6B20;");
+                }
+            }
+
+            // Fix pie chart legend
+            for (javafx.scene.Node n : view.getPieChartMovements().lookupAll(".chart-legend-item")) {
+                if (n instanceof javafx.scene.control.Label) {
+                    javafx.scene.control.Label label = (javafx.scene.control.Label) n;
+                    if (label.getGraphic() != null) {
+                        if ("INGRESO".equals(label.getText())) {
+                            label.getGraphic().setStyle("-fx-background-color: #3182CE;");
+                        } else if ("EGRESO".equals(label.getText())) {
+                            label.getGraphic().setStyle("-fx-background-color: #DD6B20;");
+                        }
+                    }
                 }
             }
         });

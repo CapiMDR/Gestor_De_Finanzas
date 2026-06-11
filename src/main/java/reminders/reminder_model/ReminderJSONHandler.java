@@ -60,6 +60,7 @@ public class ReminderJSONHandler {
             obj.put("name", reminder.getName());
             obj.put("message", reminder.getMessage());
             obj.put("date", reminder.getDate().format(FORMATTER));
+            obj.put("triggered", reminder.isTriggered());
             arr.put(obj);
         }
 
@@ -99,10 +100,13 @@ public class ReminderJSONHandler {
                 String name = obj.getString("name");
                 String message = obj.getString("message");
                 String dateStr = obj.getString("date");
+                boolean triggered = obj.optBoolean("triggered", false);
 
                 LocalDateTime date = LocalDateTime.parse(dateStr, FORMATTER);
 
-                reminders.add(new Reminder(name, message, date));
+                Reminder r = new Reminder(name, message, date);
+                r.setTriggered(triggered);
+                reminders.add(r);
             }
 
         } catch (IOException e) {

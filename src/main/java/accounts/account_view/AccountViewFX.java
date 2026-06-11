@@ -46,7 +46,7 @@ public class AccountViewFX {
 
     // ── Account list ─────────────────────────────────────────────────────────
     @FXML
-    private ListView<String> listAccounts;
+    private ListView<Account> listAccounts;
 
     // ── Action buttons ───────────────────────────────────────────────────────
     @FXML
@@ -79,6 +79,44 @@ public class AccountViewFX {
         btnEditAccount.setGraphic(iconEdit);
         btnDeleteAccount.setGraphic(iconDelete);
         btnCalculateInterest.setGraphic(iconCalc);
+
+        // Limit account name to 18 characters
+        txtNameAccount.setTextFormatter(new javafx.scene.control.TextFormatter<>(change -> {
+            if (change.getControlNewText().length() > 18) {
+                return null;
+            }
+            return change;
+        }));
+
+        listAccounts.setCellFactory(lv -> new javafx.scene.control.ListCell<>() {
+            @Override
+            protected void updateItem(Account item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    FontIcon icon = new FontIcon();
+                    if (item.getType() == Account.AccountType.DIGITAL) {
+                        icon.setIconLiteral("mdi2c-credit-card");
+                    } else {
+                        icon.setIconLiteral("mdi2p-piggy-bank");
+                    }
+                    icon.setIconSize(24);
+                    icon.setIconColor(javafx.scene.paint.Color.web("#112B3C"));
+
+                    javafx.scene.control.Label nameLabel = new javafx.scene.control.Label(
+                            String.format("%s  —  $%.2f %s", item.getName(), item.getCurrentBalance(), item.getCoin())
+                    );
+                    nameLabel.setWrapText(true);
+                    nameLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #112B3C;");
+
+                    javafx.scene.layout.HBox box = new javafx.scene.layout.HBox(12, icon, nameLabel);
+                    box.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+                    setGraphic(box);
+                }
+            }
+        });
     }
 
     // ── Public methods called by AccountController / Observer ────────────────
@@ -90,11 +128,7 @@ public class AccountViewFX {
      * @param accounts the current list of accounts
      */
     public void updateAccountList(List<Account> accounts) {
-        List<String> items = accounts.stream()
-                .map(a -> String.format("%s  —  %.2f %s",
-                        a.getName(), a.getCurrentBalance(), a.getCoin()))
-                .toList();
-        Platform.runLater(() -> listAccounts.setItems(FXCollections.observableArrayList(items)));
+        Platform.runLater(() -> listAccounts.setItems(FXCollections.observableArrayList(accounts)));
     }
 
     // ── Form data accessors (used by AccountController) ───────────────────────

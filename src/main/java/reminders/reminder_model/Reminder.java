@@ -107,6 +107,15 @@ public class Reminder {
     }
 
     /**
+     * Gets whether the reminder has already triggered.
+     * 
+     * @return {@code true} if it has triggered, otherwise {@code false}.
+     */
+    public boolean isTriggered() {
+        return triggered;
+    }
+
+    /**
      * Determines whether the reminder should trigger.
      * 
      * A reminder should trigger if:

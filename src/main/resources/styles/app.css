@@ -103,6 +103,10 @@
     -fx-text-fill: -fx-text-main;
 }
 
+.combo-box, .date-picker {
+    -fx-padding: 2px 4px;
+}
+
 .form-input:focused, .combo-box:focused, .date-picker:focused {
     -fx-border-color: -fx-primary;
     -fx-background-color: -fx-surface;
@@ -182,6 +186,12 @@
 
 .btn-filter:hover {
     -fx-background-color: rgba(255, 255, 255, 0.2);
+}
+
+.btn-filter-selected {
+    -fx-background-color: -fx-accent;
+    -fx-text-fill: -fx-on-primary;
+    -fx-font-weight: bold;
 }
 
 /* PieChart Colors */

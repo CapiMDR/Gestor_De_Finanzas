@@ -70,13 +70,15 @@ public class RemindersController {
      * be triggered yet, the following ones shouldn't either.
      */
     private void watchReminders() {
+        LocalDateTime now = LocalDateTime.now();
         for (Reminder reminder : remindersModel.getReminders()) {
-            if (reminder.shouldTrigger()) {
-                triggerReminder(reminder);
-            } else {
-                // Since reminders are sorted by their date, if the current one has not
-                // reached its time, the others won't either
+            if (reminder.getDate().isAfter(now)) {
+                // Since reminders are sorted by date, if this one is in the future,
+                // all subsequent ones are also in the future.
                 break;
+            }
+            if (!reminder.isTriggered()) {
+                triggerReminder(reminder);
             }
         }
     }
@@ -89,6 +91,7 @@ public class RemindersController {
     private void triggerReminder(Reminder reminder) {
         logger.info("Reminder triggered: '{}' scheduled for {}.", reminder.getName(), reminder.getDate());
         reminder.setTriggered(true);
+        remindersModel.saveReminders();
         Platform.runLater(() -> {
             showReminderAlert(reminder);
         });
