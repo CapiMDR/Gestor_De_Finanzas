@@ -19,8 +19,8 @@ public class Account {
      * Available account types.
      */
     public enum AccountType {
-        /** Cash account. */
-        CASH,
+        /** Fisical account. */
+        EFECTIVO,
         /** Digital account. */
         DIGITAL
     }
@@ -51,7 +51,7 @@ public class Account {
      *
      * @param id             account identifier
      * @param name           account name
-     * @param type           account type (CASH or DIGITAL)
+     * @param type           account type (EFECTIVO or DIGITAL)
      * @param coin           currency type (USD or MXN)
      * @param initialBalance initial account balance
      */

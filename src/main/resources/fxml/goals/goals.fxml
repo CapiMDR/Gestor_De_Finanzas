@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 
 <!--
     Goals View Layout
@@ -44,9 +45,15 @@
         <VBox styleClass="list-panel" spacing="12">
             <ListView fx:id="listGoals" styleClass="goals-list" VBox.vgrow="ALWAYS"/>
             <ProgressBar fx:id="progressBarGoal" maxWidth="Infinity"/>
-            <HBox spacing="10">
-                <Button fx:id="btnEditGoal"   styleClass="btn-icon"/>
-                <Button fx:id="btnDeleteGoal" styleClass="btn-icon"/>
+            <HBox spacing="10" alignment="CENTER_RIGHT">
+                <Button fx:id="btnEditGoal" styleClass="btn-icon">
+                    <graphic><FontIcon iconLiteral="mdi2p-pencil" iconSize="28"/></graphic>
+                    <tooltip><Tooltip text="Editar meta seleccionada"/></tooltip>
+                </Button>
+                <Button fx:id="btnDeleteGoal" styleClass="btn-icon">
+                    <graphic><FontIcon iconLiteral="mdi2d-delete" iconSize="28"/></graphic>
+                    <tooltip><Tooltip text="Eliminar meta seleccionada"/></tooltip>
+                </Button>
             </HBox>
         </VBox>
     </center>

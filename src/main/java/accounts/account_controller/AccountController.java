@@ -3,8 +3,6 @@ package accounts.account_controller;
 import java.math.BigDecimal;
 import java.util.List;
 
-import javax.swing.JOptionPane;
-
 import accounts.account_model.Account;
 import accounts.account_model.AccountManager;
 import accounts.account_model.AccountObserver;
@@ -68,9 +66,7 @@ public class AccountController implements AccountObserver {
         boolean isEmpty = name.isEmpty() || balanceStr.isEmpty() || typeString == null || coinStr == null;
 
         if (isEmpty) {
-            JOptionPane.showMessageDialog(null,
-                    "Todos los campos deben estar llenos y las opciones deben estar seleccionadas.",
-                    "Error de Validación", JOptionPane.WARNING_MESSAGE);
+            view.showWarning("Error de Validación", "Todos los campos deben estar llenos y las opciones deben estar seleccionadas.");
             return;
         }
         try {
@@ -85,23 +81,15 @@ public class AccountController implements AccountObserver {
 
             AccountManager.addAccount(name, type, coin, balance);
 
-            JOptionPane.showMessageDialog(null,
-                    "Cuenta agregada exitosamente.",
-                    "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            view.showInfo("Éxito", "Cuenta agregada exitosamente.");
             clearInputFields();
 
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(null,
-                    "El Saldo Inicial debe ser un número válido.",
-                    "Error de Formato", JOptionPane.ERROR_MESSAGE);
+            view.showError("Error de Formato", "El Saldo Inicial debe ser un número válido.");
         } catch (IllegalArgumentException ex) {
-            JOptionPane.showMessageDialog(null,
-                    ex.getMessage(),
-                    "Error de Validación", JOptionPane.ERROR_MESSAGE);
+            view.showError("Error de Validación", ex.getMessage());
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null,
-                    "Error al procesar la cuenta: " + ex.getMessage(),
-                    "Error", JOptionPane.ERROR_MESSAGE);
+            view.showError("Error", "Error al procesar la cuenta: " + ex.getMessage());
         }
     }
 
@@ -112,31 +100,23 @@ public class AccountController implements AccountObserver {
         int selectedIndex = view.getSelectedAccountIndex();
 
         if (selectedIndex < 0) {
-            JOptionPane.showMessageDialog(null,
-                    "Debe seleccionar una cuenta para eliminarla",
-                    "Advertencia", JOptionPane.WARNING_MESSAGE);
+            view.showWarning("Advertencia", "Debe seleccionar una cuenta para eliminarla");
             return;
         }
 
         Account selectedAccount = AccountManager.getAccountByIndex(selectedIndex);
 
         if (selectedAccount == null) {
-            JOptionPane.showMessageDialog(null,
-                    "Error al obtener la cuenta seleccionada. Intente de nuevo.",
-                    "Error", JOptionPane.ERROR_MESSAGE);
+            view.showError("Error", "Error al obtener la cuenta seleccionada. Intente de nuevo.");
             return;
         }
 
-        int dialogResult = JOptionPane.showConfirmDialog(null,
-                "¿Estás seguro de que desea eliminar la cuenta '" + selectedAccount.getName() + "'?",
-                "Confirmar Eliminación", JOptionPane.YES_NO_OPTION);
+        boolean confirmed = view.showConfirm("Confirmar Eliminación", 
+                "¿Estás seguro de que desea eliminar la cuenta '" + selectedAccount.getName() + "'?");
 
-        if (dialogResult == JOptionPane.YES_OPTION) {
+        if (confirmed) {
             AccountManager.removeAccount(selectedAccount.getId());
-
-            JOptionPane.showMessageDialog(null,
-                    "Cuenta '" + selectedAccount.getName() + "' eliminada exitosamente.",
-                    "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            view.showInfo("Éxito", "Cuenta '" + selectedAccount.getName() + "' eliminada exitosamente.");
         }
     }
 
@@ -147,9 +127,7 @@ public class AccountController implements AccountObserver {
     private void editAccount() {
         int selectedIndex = view.getSelectedAccountIndex();
         if (selectedIndex < 0) {
-            JOptionPane.showMessageDialog(null,
-                    "Debe seleccionar una cuenta para editar.",
-                    "Advertencia", JOptionPane.WARNING_MESSAGE);
+            view.showWarning("Advertencia", "Debe seleccionar una cuenta para editar.");
             return;
         }
 
@@ -158,9 +136,7 @@ public class AccountController implements AccountObserver {
             AccountEditController editController = new AccountEditController(accountToEdit);
             editController.show();
         } else {
-            JOptionPane.showMessageDialog(null,
-                    "Error al obtener la cuenta seleccionada.",
-                    "Error", JOptionPane.ERROR_MESSAGE);
+            view.showError("Error", "Error al obtener la cuenta seleccionada.");
         }
     }
 
@@ -180,18 +156,14 @@ public class AccountController implements AccountObserver {
         int selectedIndex = view.getSelectedAccountIndex();
 
         if (selectedIndex < 0) {
-            JOptionPane.showMessageDialog(null,
-                    "Debe seleccionar una cuenta para calcular el interés",
-                    "Advertencia", JOptionPane.WARNING_MESSAGE);
+            view.showWarning("Advertencia", "Debe seleccionar una cuenta para calcular el interés");
             return;
         }
 
         Account selectedAccount = AccountManager.getAccountByIndex(selectedIndex);
 
         if (selectedAccount == null) {
-            JOptionPane.showMessageDialog(null,
-                    "No se pudo obtener la cuenta seleccionada",
-                    "Error", JOptionPane.ERROR_MESSAGE);
+            view.showError("Error", "No se pudo obtener la cuenta seleccionada");
             return;
         }
 

@@ -3,6 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 
 <!--
     Account Module — Full Interactive Layout
@@ -29,9 +30,8 @@
     <left>
         <VBox styleClass="form-panel" spacing="12">
             <padding><Insets top="25" right="20" bottom="25" left="20"/></padding>
-
             <Label text="Nueva cuenta" styleClass="form-section-title"/>
-            <Separator style="-fx-background-color: -fx-border;"/>
+            <Separator/>
 
             <Label text="Nombre:" styleClass="form-label"/>
             <TextField fx:id="txtNameAccount" styleClass="form-input"
@@ -52,8 +52,7 @@
             <Region VBox.vgrow="ALWAYS"/>
 
             <Button fx:id="btnAddAccount" text="Agregar cuenta"
-                    styleClass="btn-primary" maxWidth="Infinity"
-                    onAction="#onAddAccount"/>
+                    styleClass="btn-primary" maxWidth="Infinity"/>
         </VBox>
     </left>
 
@@ -67,14 +66,23 @@
 
             <ListView fx:id="listAccounts" styleClass="list-view" VBox.vgrow="ALWAYS"/>
 
-            <!-- Action row: icon buttons (left) + primary action (right) -->
-            <HBox spacing="10" alignment="CENTER_RIGHT">
-                <Button fx:id="btnEditAccount"       styleClass="btn-icon" onAction="#onEditAccount"/>
-                <Button fx:id="btnDeleteAccount"     styleClass="btn-icon" onAction="#onDeleteAccount"/>
-                <Button fx:id="btnCalculateInterest" styleClass="btn-icon" onAction="#onCalculateInterest"/>
-                <Region HBox.hgrow="ALWAYS"/>
-                <Button fx:id="btnAccessAccount" text="Entrar"
-                        styleClass="btn-primary" onAction="#onAccessAccount"/>
+            <!-- Action row: icon buttons and primary action -->
+            <HBox spacing="15" alignment="CENTER">
+                <Button fx:id="btnEditAccount" styleClass="btn-icon">
+                    <graphic><FontIcon iconLiteral="mdi2p-pencil" iconSize="28"/></graphic>
+                    <tooltip><Tooltip text="Editar cuenta"/></tooltip>
+                </Button>
+                <Button fx:id="btnDeleteAccount" styleClass="btn-icon">
+                    <graphic><FontIcon iconLiteral="mdi2d-delete" iconSize="28"/></graphic>
+                    <tooltip><Tooltip text="Eliminar cuenta"/></tooltip>
+                </Button>
+                <Button fx:id="btnCalculateInterest" styleClass="btn-icon">
+                    <graphic><FontIcon iconLiteral="mdi2c-calculator" iconSize="28"/></graphic>
+                    <tooltip><Tooltip text="Calcular intereses"/></tooltip>
+                </Button>
+                
+                <Button fx:id="btnAccessAccount" text="Entrar a la Cuenta"
+                        styleClass="btn-primary"/>
             </HBox>
 
         </VBox>

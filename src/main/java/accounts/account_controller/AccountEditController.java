@@ -1,12 +1,14 @@
 package accounts.account_controller;
 
-import javax.swing.JOptionPane;
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 
 import accounts.account_model.Account;
 import accounts.account_model.AccountManager;
 import accounts.account_view.AccountEditViewFX;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 
@@ -28,7 +30,7 @@ public class AccountEditController {
 
     private void initDialog() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/account_edit.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/accounts/account_edit.fxml"));
             DialogPane pane = loader.load();
             this.view = loader.getController();
 
@@ -38,7 +40,10 @@ public class AccountEditController {
 
             // Pre-fill form
             view.getTxtNameAccount().setText(accountToEdit.getName());
-            view.getCmbAccountType().setValue(accountToEdit.getType().toString());
+            String typeStr = accountToEdit.getType().toString();
+            if ("DIGITAL".equalsIgnoreCase(typeStr)) typeStr = "Digital";
+            else if ("EFECTIVO".equalsIgnoreCase(typeStr)) typeStr = "Efectivo";
+            view.getCmbAccountType().setValue(typeStr);
             view.getCmbCurrency().setValue(accountToEdit.getCoin().toString());
 
         } catch (Exception e) {
@@ -60,9 +65,7 @@ public class AccountEditController {
         String newCoinStr = view.getCmbCurrency().getValue();
 
         if (newName.isEmpty() || newTypeStr == null || newCoinStr == null) {
-            JOptionPane.showMessageDialog(null,
-                    "Debe completar todos los campos.",
-                    "Error de Validación", JOptionPane.WARNING_MESSAGE);
+            showAlert(AlertType.WARNING, "Error de Validación", "Debe completar todos los campos.");
             return;
         }
 
@@ -72,18 +75,21 @@ public class AccountEditController {
 
             AccountManager.editAccount(accountToEdit, newName, newType, newCoin);
             
-            JOptionPane.showMessageDialog(null,
-                    "Cuenta '" + newName + "' actualizada.",
-                    "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            showAlert(AlertType.INFORMATION, "Éxito", "Cuenta '" + newName + "' actualizada.");
 
         } catch (IllegalArgumentException ex) {
-            JOptionPane.showMessageDialog(null,
-                    "Error de mapeo. Verifique que Tipo o Moneda seleccionados sean válidos.",
-                    "Error de Configuración", JOptionPane.ERROR_MESSAGE);
+            showAlert(AlertType.ERROR, "Error de Configuración", "Error de mapeo. Verifique que Tipo o Moneda seleccionados sean válidos.");
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null,
-                    "Error inesperado al editar la cuenta: " + ex.getMessage(),
-                    "Error", JOptionPane.ERROR_MESSAGE);
+            showAlert(AlertType.ERROR, "Error", "Error inesperado al editar la cuenta: " + ex.getMessage());
         }
+    }
+
+    private void showAlert(AlertType type, String title, String message) {
+        Platform.runLater(() -> {
+            Alert alert = new Alert(type, message, ButtonType.OK);
+            alert.setTitle(title);
+            alert.setHeaderText(null);
+            alert.showAndWait();
+        });
     }
 }

@@ -184,7 +184,7 @@ public class RemindersController {
      */
     public void onEditRequest(Reminder reminder) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/reminder_edit.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/reminders/reminder_edit.fxml"));
             DialogPane dialogPane = loader.load();
             ReminderEditController editController = loader.getController();
 

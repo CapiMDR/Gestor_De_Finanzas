@@ -9,6 +9,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Entry point for the Movements JavaFX module.
@@ -25,6 +27,7 @@ public class MovementsModule {
 
     @SuppressWarnings("unused")
     private static MovementController movementController;
+    private static Map<String, Stage> activeStages = new HashMap<>();
 
     /**
      * Initializes the entire movements module using the selected account.
@@ -34,9 +37,15 @@ public class MovementsModule {
      * @param selectedAccount the account on which the movements will be managed
      */
     public static void initMovements(Account selectedAccount) {
+        if (selectedAccount == null) return;
+        String accountId = selectedAccount.getName();
+        if (activeStages.containsKey(accountId) && activeStages.get(accountId).isShowing()) {
+            activeStages.get(accountId).toFront();
+            return;
+        }
         try {
             FXMLLoader loader = new FXMLLoader(
-                MovementsModule.class.getResource("/fxml/movements.fxml"));
+                MovementsModule.class.getResource("/fxml/movements/movements.fxml"));
 
             Parent root = loader.load();
 
@@ -51,12 +60,25 @@ public class MovementsModule {
             movementController = new MovementController(movementModel, movementView, selectedAccount);
 
             Stage stage = new Stage();
+            activeStages.put(accountId, stage);
             stage.setTitle("Movimientos — " + selectedAccount.getName());
-            stage.setScene(new Scene(root, 960, 680));
+            Scene scene = new Scene(root, 900, 600);
+            scene.getStylesheets().add(MovementsModule.class.getResource("/styles/app.css").toExternalForm());
+            stage.setScene(scene);
+            
+            stage.setOnCloseRequest(e -> {
+                activeStages.remove(accountId);
+            });
+            
             stage.show();
 
         } catch (Exception e) {
             e.printStackTrace();
+            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+            alert.setTitle("Error de Carga");
+            alert.setHeaderText("Error al abrir el módulo de Movimientos");
+            alert.setContentText(e.getMessage() != null ? e.getMessage() : e.toString());
+            alert.showAndWait();
         }
     }
 }

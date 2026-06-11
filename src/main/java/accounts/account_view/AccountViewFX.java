@@ -65,7 +65,7 @@ public class AccountViewFX {
      */
     @FXML
     public void initialize() {
-        cmbAccountType.setItems(FXCollections.observableArrayList("Cash", "Digital"));
+        cmbAccountType.setItems(FXCollections.observableArrayList("Efectivo", "Digital"));
         cmbCurrency.setItems(FXCollections.observableArrayList("MXN", "USD"));
 
         FontIcon iconEdit = new FontIcon(MaterialDesignP.PENCIL);
@@ -181,6 +181,21 @@ public class AccountViewFX {
     public void showError(String title, String message) {
         Platform.runLater(() -> {
             Alert alert = new Alert(AlertType.ERROR, message, ButtonType.OK);
+            alert.setTitle(title);
+            alert.setHeaderText(null);
+            alert.showAndWait();
+        });
+    }
+
+    /**
+     * Shows a warning alert dialog.
+     *
+     * @param title   dialog title
+     * @param message warning message body
+     */
+    public void showWarning(String title, String message) {
+        Platform.runLater(() -> {
+            Alert alert = new Alert(AlertType.WARNING, message, ButtonType.OK);
             alert.setTitle(title);
             alert.setHeaderText(null);
             alert.showAndWait();

@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 
 <!--
     Reminders View Layout
@@ -29,8 +30,12 @@
                        promptText="Reminder name"/>
 
             <Label text="Fecha y Hora:" styleClass="form-label"/>
-            <DatePicker fx:id="datePicker" styleClass="form-input" maxWidth="Infinity"/>
-            
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <DatePicker fx:id="datePicker" styleClass="form-input" maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
+                <ComboBox fx:id="cmbHour" styleClass="form-input" prefWidth="75"/>
+                <Label text=":" styleClass="form-label" style="-fx-font-weight: bold;"/>
+                <ComboBox fx:id="cmbMinute" styleClass="form-input" prefWidth="75"/>
+            </HBox>
             <Label text="Mensaje:" styleClass="form-label"/>
             <TextField fx:id="txtMessage" styleClass="form-input"
                        promptText="Message content"/>
@@ -43,9 +48,15 @@
     <center>
         <VBox styleClass="list-panel" spacing="12">
             <ListView fx:id="listReminders" styleClass="reminders-list" VBox.vgrow="ALWAYS"/>
-            <HBox spacing="10">
-                <Button fx:id="btnEditReminder" text="Editar" styleClass="btn-icon"/>
-                <Button fx:id="btnDeleteReminder" text="Eliminar" styleClass="btn-icon"/>
+            <HBox spacing="10" alignment="CENTER_RIGHT">
+                <Button fx:id="btnEditReminder" text="Editar" styleClass="btn-icon">
+                    <graphic><FontIcon iconLiteral="mdi2p-pencil" iconSize="28"/></graphic>
+                    <tooltip><Tooltip text="Editar recordatorio seleccionado"/></tooltip>
+                </Button>
+                <Button fx:id="btnDeleteReminder" text="Eliminar" styleClass="btn-icon">
+                    <graphic><FontIcon iconLiteral="mdi2d-delete" iconSize="28"/></graphic>
+                    <tooltip><Tooltip text="Eliminar recordatorio seleccionado"/></tooltip>
+                </Button>
             </HBox>
         </VBox>
     </center>

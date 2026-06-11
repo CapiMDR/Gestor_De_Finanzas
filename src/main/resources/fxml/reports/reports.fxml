@@ -4,6 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 
 <!--
     Reports View Layout — Account Dashboard
@@ -39,7 +40,7 @@
 
             <!-- Balance + time filter row -->
             <HBox alignment="CENTER_LEFT" spacing="20">
-                <Label fx:id="lblAccountBalance" text="$0.00"
+                <Label fx:id="lblAccountBalance" text="\$0.00"
                        styleClass="dashboard-balance" HBox.hgrow="ALWAYS"/>
                 <Button fx:id="btnToday" text="Hoy"    styleClass="btn-filter"/>
                 <Button fx:id="btnWeek"  text="Semana" styleClass="btn-filter"/>
@@ -54,33 +55,33 @@
     <left>
         <VBox styleClass="nav-panel" spacing="8">
 
-            <HBox fx:id="navAddMovement" styleClass="nav-item" alignment="CENTER">
-                <!-- Icon: MaterialDesignP.PLUS_CIRCLE — set in controller -->
+            <HBox fx:id="navAddMovement" styleClass="nav-item" alignment="CENTER_LEFT" spacing="10">
+                <FontIcon iconLiteral="mdi2p-plus-circle" iconSize="24"/>
                 <Label text="Agregar Movimiento" styleClass="nav-label"/>
             </HBox>
 
-            <HBox fx:id="navGoals" styleClass="nav-item" alignment="CENTER">
-                <!-- Icon: MaterialDesignT.TARGET — set in controller -->
+            <HBox fx:id="navGoals" styleClass="nav-item" alignment="CENTER_LEFT" spacing="10">
+                <FontIcon iconLiteral="mdi2t-target" iconSize="24"/>
                 <Label text="Metas" styleClass="nav-label"/>
             </HBox>
 
-            <HBox fx:id="navReminders" styleClass="nav-item" alignment="CENTER">
-                <!-- Icon: MaterialDesignB.BELL — set in controller -->
+            <HBox fx:id="navReminders" styleClass="nav-item" alignment="CENTER_LEFT" spacing="10">
+                <FontIcon iconLiteral="mdi2b-bell" iconSize="24"/>
                 <Label text="Recordatorios" styleClass="nav-label"/>
             </HBox>
 
-            <HBox fx:id="navRecurrings" styleClass="nav-item" alignment="CENTER">
-                <!-- Icon: MaterialDesignR.REPEAT — set in controller -->
+            <HBox fx:id="navRecurrings" styleClass="nav-item" alignment="CENTER_LEFT" spacing="10">
+                <FontIcon iconLiteral="mdi2r-repeat" iconSize="24"/>
                 <Label text="Recurrentes" styleClass="nav-label"/>
             </HBox>
 
-            <HBox fx:id="navFilters" styleClass="nav-item" alignment="CENTER">
-                <!-- Icon: MaterialDesignM.MAGNIFY — set in controller -->
+            <HBox fx:id="navFilters" styleClass="nav-item" alignment="CENTER_LEFT" spacing="10">
+                <FontIcon iconLiteral="mdi2m-magnify" iconSize="24"/>
                 <Label text="Filtros" styleClass="nav-label"/>
             </HBox>
 
-            <HBox fx:id="navCredit" styleClass="nav-item" alignment="CENTER">
-                <!-- Icon: MaterialDesignC.CALCULATOR — set in controller -->
+            <HBox fx:id="navCredit" styleClass="nav-item" alignment="CENTER_LEFT" spacing="10">
+                <FontIcon iconLiteral="mdi2c-calculator" iconSize="24"/>
                 <Label text="Calculadora" styleClass="nav-label"/>
             </HBox>
 
@@ -91,18 +92,18 @@
          CENTER — Charts area (pie + bar)
          ═══════════════════════════════════════════════════════════════ -->
     <center>
-        <HBox styleClass="charts-panel" spacing="12">
+        <VBox styleClass="charts-panel" spacing="12">
 
             <!-- Pie chart: income vs expense distribution -->
             <PieChart fx:id="pieChartMovements"
                       title="Movimientos"
                       styleClass="dashboard-chart"
-                      HBox.hgrow="ALWAYS"/>
+                      VBox.vgrow="ALWAYS"/>
 
             <!-- Bar chart: movement amounts by date -->
             <BarChart fx:id="barChartMovements"
                       styleClass="dashboard-chart"
-                      HBox.hgrow="ALWAYS">
+                      VBox.vgrow="ALWAYS">
                 <xAxis>
                     <CategoryAxis label="Fecha"/>
                 </xAxis>
@@ -111,7 +112,7 @@
                 </yAxis>
             </BarChart>
 
-        </HBox>
+        </VBox>
     </center>
 
 </BorderPane>

@@ -55,8 +55,10 @@ public class RecurringsController {
      */
     public void setView(RecurringsViewFX view) {
         this.recurringsView = view;
-        assignEvents();
-        refreshView();
+        if (view != null) {
+            assignEvents();
+            refreshView();
+        }
     }
 
     private void assignEvents() {

@@ -11,6 +11,9 @@ import reports.modelReport.ReportGenerator;
 import reports.modelReport.ReportSubject;
 import reports.report_view.ReportsViewFX;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Main class for initializing the reports module (Dashboard).
  * Wires up the model, view, and controller for reporting functionalities
@@ -20,11 +23,18 @@ public class ReportsModule {
 
    
     private static ReportController reportController;
+    private static Map<String, Stage> activeStages = new HashMap<>();
 
     public static void initReportsModule(Account selectedAccount) {
+        if (selectedAccount == null) return;
+        String accountId = selectedAccount.getName();
+        if (activeStages.containsKey(accountId) && activeStages.get(accountId).isShowing()) {
+            activeStages.get(accountId).toFront();
+            return;
+        }
         try {
             FXMLLoader loader = new FXMLLoader(
-                ReportsModule.class.getResource("/fxml/reports.fxml"));
+                ReportsModule.class.getResource("/fxml/reports/reports.fxml"));
             
             Parent root = loader.load();
             ReportsViewFX view = loader.getController();
@@ -36,13 +46,17 @@ public class ReportsModule {
             reportController.setViewModule(view, generator, selectedAccount);
 
             Stage stage = new Stage();
+            activeStages.put(accountId, stage);
             stage.setTitle("Dashboard — " + selectedAccount.getName());
-            stage.setScene(new Scene(root, 1100, 750));
+            Scene scene = new Scene(root, 900, 600);
+            scene.getStylesheets().add(ReportsModule.class.getResource("/styles/app.css").toExternalForm());
+            stage.setScene(scene);
 
             // Unregister observer when closing the window to prevent accumulation
             // of dead observers and duplicated notifications
             stage.setOnCloseRequest(e -> {
                 AccountManagerSubject.removeObserver(reportController);
+                activeStages.remove(accountId);
             });
 
             stage.show();

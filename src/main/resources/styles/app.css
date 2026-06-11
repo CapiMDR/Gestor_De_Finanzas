@@ -184,6 +184,45 @@
     -fx-background-color: rgba(255, 255, 255, 0.2);
 }
 
+/* PieChart Colors */
+.chart-pie.income-slice {
+    -fx-pie-color: -fx-success;
+}
+
+.chart-pie.expense-slice {
+    -fx-pie-color: -fx-danger;
+}
+
+/* ── SCROLL PANE ────────────────────────────────────────────────────────── */
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+/* Custom ScrollBar for ListViews and ScrollPanes */
+.scroll-bar:vertical,
+.scroll-bar:horizontal {
+    -fx-background-color: transparent;
+}
+.scroll-bar:vertical .track,
+.scroll-bar:horizontal .track {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 0em;
+}
+.scroll-bar:vertical .thumb,
+.scroll-bar:horizontal .thumb {
+    -fx-background-color: #CBD5E1;
+    -fx-background-radius: 5px;
+}
+.scroll-bar:vertical .thumb:hover,
+.scroll-bar:horizontal .thumb:hover {
+    -fx-background-color: #94A3B8;
+}
+
 /* --- List Views --- */
 .list-view {
     -fx-background-color: -fx-surface;

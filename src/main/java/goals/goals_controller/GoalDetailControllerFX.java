@@ -13,7 +13,7 @@ public class GoalDetailControllerFX {
 
     public void showDetails(Goal goal) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/goal_detail.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/goals/goal_detail.fxml"));
             DialogPane dialogPane = loader.load();
             GoalDetailViewFX view = loader.getController();
 

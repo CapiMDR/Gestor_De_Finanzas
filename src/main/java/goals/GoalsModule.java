@@ -10,6 +10,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Main entry point of the Goals module (JavaFX).
@@ -21,10 +23,17 @@ public class GoalsModule {
 
 
     private static GoalsController goalsController;
+    private static Map<String, Stage> activeStages = new HashMap<>();
 
     public static void initGoals(Account selectedAccount) {
+        if (selectedAccount == null) return;
+        String accountId = selectedAccount.getName();
+        if (activeStages.containsKey(accountId) && activeStages.get(accountId).isShowing()) {
+            activeStages.get(accountId).toFront();
+            return;
+        }
         try {
-            FXMLLoader loader = new FXMLLoader(GoalsModule.class.getResource("/fxml/goals.fxml"));
+            FXMLLoader loader = new FXMLLoader(GoalsModule.class.getResource("/fxml/goals/goals.fxml"));
             Parent root = loader.load();
             GoalsViewFX view = loader.getController();
 
@@ -38,13 +47,17 @@ public class GoalsModule {
             }
 
             Stage stage = new Stage();
+            activeStages.put(accountId, stage);
             stage.setTitle("Metas Financieras");
-            stage.setScene(new Scene(root, 900, 600));
+            Scene scene = new Scene(root, 900, 600);
+            scene.getStylesheets().add(GoalsModule.class.getResource("/styles/app.css").toExternalForm());
+            stage.setScene(scene);
 
             // Unregister observer when closing the window to prevent accumulation
             // of dead observers and duplicated notifications
             stage.setOnCloseRequest(e -> {
                 AccountManagerSubject.removeObserver(goalsController);
+                activeStages.remove(accountId);
             });
 
             stage.show();

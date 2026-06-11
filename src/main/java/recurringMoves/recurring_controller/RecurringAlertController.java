@@ -14,7 +14,7 @@ public class RecurringAlertController {
 
     public Account showAlertDialog(RecurringMove recMove, List<Account> accounts) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/recurring_alert.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/recurrings/recurring_alert.fxml"));
             DialogPane dialogPane = loader.load();
             RecurringAlertViewFX view = loader.getController();
 

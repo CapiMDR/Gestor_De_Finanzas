@@ -18,7 +18,7 @@ public class GoalEditController {
 
     public boolean showEditDialog(Goal goal) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/goal_edit.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/goals/goal_edit.fxml"));
             DialogPane dialogPane = loader.load();
             GoalEditViewFX view = loader.getController();
 

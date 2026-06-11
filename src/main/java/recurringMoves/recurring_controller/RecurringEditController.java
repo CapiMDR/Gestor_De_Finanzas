@@ -16,7 +16,7 @@ public class RecurringEditController {
 
     public RecurringMove showEditDialog(RecurringMove oldRecMove) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/recurring_edit.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/recurrings/recurring_edit.fxml"));
             DialogPane dialogPane = loader.load();
             RecurringEditViewFX view = loader.getController();
 
@@ -56,8 +56,6 @@ public class RecurringEditController {
                             showAlert("Error", "El monto debe ser mayor a 0.");
                             return null;
                         }
-
-                        MovementCategory category = new MovementCategory(categoryStr, MovementCategory.MovementType.valueOf(categoryStr));
 
                         // Input is validated; object will be created after dialog closes.
 

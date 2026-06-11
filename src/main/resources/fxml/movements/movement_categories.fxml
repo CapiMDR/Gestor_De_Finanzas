@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="movements.movement_view.MovementCategoriesViewFX"
+            styleClass="root-pane">
+
+    <top>
+        <HBox styleClass="header-bar">
+            <Label text="EDITAR CATEGORÍAS" styleClass="header-title"/>
+        </HBox>
+    </top>
+
+    <left>
+        <VBox styleClass="form-panel" spacing="16">
+            <Label text="Nombre:" styleClass="form-label"/>
+            <TextField fx:id="txtNewNameCategory" styleClass="form-input" promptText="Nombre de la categoría"/>
+
+            <Label text="Tipo:" styleClass="form-label"/>
+            <ComboBox fx:id="cmbCategoryType" styleClass="form-input" maxWidth="Infinity"/>
+
+            <Region VBox.vgrow="ALWAYS"/>
+            <Button fx:id="btnConfirm" text="Agregar Categoría" styleClass="btn-primary" maxWidth="Infinity"/>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox styleClass="list-panel" spacing="12">
+            <ListView fx:id="listCategories" styleClass="list-view" VBox.vgrow="ALWAYS"/>
+            <HBox spacing="10" alignment="CENTER_RIGHT">
+                <Button fx:id="btnDeleteCategory" styleClass="btn-icon">
+                    <graphic><FontIcon iconLiteral="mdi2d-delete" iconSize="28"/></graphic>
+                    <tooltip><Tooltip text="Eliminar categoría seleccionada"/></tooltip>
+                </Button>
+            </HBox>
+        </VBox>
+    </center>
+
+</BorderPane>

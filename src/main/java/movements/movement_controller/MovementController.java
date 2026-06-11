@@ -7,8 +7,15 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import javax.swing.DefaultListModel;
-import javax.swing.JOptionPane;
+import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import accounts.account_model.Account;
 import accounts.account_model.AccountManager;
@@ -18,7 +25,7 @@ import movements.movement_model.MovementCategory;
 import movements.movement_model.CategoryManager;
 import movements.movement_model.CategoryObserver;
 import movements.movement_model.MovementCategory.MovementType;
-import movements.movement_view.MovementCategoriesView;
+import movements.movement_view.MovementCategoriesViewFX;
 import movements.movement_view.MovementsViewFX;
 
 /**
@@ -31,7 +38,8 @@ import movements.movement_view.MovementsViewFX;
 public class MovementController implements CategoryObserver {
     private CategoryManager model;
     private MovementsViewFX view;
-    private MovementCategoriesView categoriesManagerView;
+    private MovementCategoriesViewFX categoriesManagerView;
+    private Stage categoriesStage;
     private Account currentAccount;
 
     /**
@@ -85,37 +93,24 @@ public class MovementController implements CategoryObserver {
             movementDate = view.getExpenseDateAsLocalDateTime();
         }
 
-        boolean isEmpty = description.isEmpty() || amountStr.isEmpty()
-                || categoryName == null || movementDate == null;
-
-        if (isEmpty) {
-            JOptionPane.showMessageDialog(null,
-                    "Todos los campos son obligatorios.",
-                    "Error de Validación", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
         try {
-            BigDecimal amount = new BigDecimal(amountStr);
-
-            if (amount.compareTo(BigDecimal.ZERO) < 0) {
-                throw new IllegalArgumentException("El monto no puede ser negativo");
-            }
-
-            MovementCategory category = model.getCategoryByName(categoryName);
-
-            if (category == null) {
-                JOptionPane.showMessageDialog(null,
-                        "La categoría '" + categoryName + "' no fue encontrada",
-                        "Error", JOptionPane.ERROR_MESSAGE);
+            if (description.isEmpty() || amountStr.isEmpty() || categoryName == null) {
+                showAlert(AlertType.WARNING, "Error de Validación",
+                        "Debe llenar todos los campos y seleccionar una categoría.");
                 return;
             }
 
-            addMovement(description, amount, category, currentAccount, movementDate);
+            BigDecimal amount = new BigDecimal(amountStr);
 
-            JOptionPane.showMessageDialog(null,
-                    type.toString() + " agregado exitosamente y saldo actualizado",
-                    "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+                showAlert(AlertType.ERROR, "Error", "El monto debe ser mayor a cero.");
+                return;
+            }
+
+            MovementCategory category = model.getCategoryByName(categoryName);
+            addMovement(description, amount, category, currentAccount, movementDate);
+            showAlert(AlertType.INFORMATION, "Éxito", "Movimiento agregado exitosamente a la cuenta.");
+
             if (type == MovementType.INCOME) {
                 view.clearIncomeFields();
             } else {
@@ -123,17 +118,11 @@ public class MovementController implements CategoryObserver {
             }
 
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(null,
-                    "El Monto debe ser un número válido.",
-                    "Error de Formato", JOptionPane.ERROR_MESSAGE);
+            showAlert(AlertType.ERROR, "Error de Formato", "El monto debe ser un número válido.");
         } catch (IllegalArgumentException ex) {
-            JOptionPane.showMessageDialog(null,
-                    ex.getMessage(),
-                    "Error de Validación", JOptionPane.ERROR_MESSAGE);
+            showAlert(AlertType.ERROR, "Error de Validación", ex.getMessage());
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null,
-                    "Error al agregar movimiento: " + ex.getMessage(),
-                    "Error", JOptionPane.ERROR_MESSAGE);
+            showAlert(AlertType.ERROR, "Error", "Error al procesar el movimiento: " + ex.getMessage());
         }
     }
 
@@ -191,37 +180,40 @@ public class MovementController implements CategoryObserver {
      * Shows the category administration window. If it's already open,
      * simply brings it to the front.
      */
-    public void showCategoriesManagerView() {
-
-        if (this.categoriesManagerView != null && this.categoriesManagerView.isVisible()) {
-            this.categoriesManagerView.toFront();
+    private void showCategoriesManagerView() {
+        if (categoriesStage != null && categoriesStage.isShowing()) {
+            categoriesStage.toFront();
             return;
         }
 
-        MovementCategoriesView categoriesView = new MovementCategoriesView();
-        categoriesView.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/movements/movement_categories.fxml"));
+            Parent root = loader.load();
 
-        this.categoriesManagerView = categoriesView;
+            categoriesManagerView = loader.getController();
 
-        categoriesView.addWindowListener(new java.awt.event.WindowAdapter() {
-            @Override
-            public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+            categoriesStage = new Stage();
+            categoriesStage.initModality(Modality.APPLICATION_MODAL);
+            categoriesStage.setTitle("Gestionar Categorías");
+            Scene scene = new Scene(root, 600, 450);
+            scene.getStylesheets().add(getClass().getResource("/styles/app.css").toExternalForm());
+            categoriesStage.setScene(scene);
+
+            categoriesStage.setOnHidden(e -> {
                 categoriesManagerView = null;
-            }
-        });
+                categoriesStage = null;
+            });
 
-        DefaultListModel<String> typeModel = new DefaultListModel<>();
-        for (MovementType type : MovementType.values()) {
-            typeModel.addElement(type.name());
+            updateCategoriesList(categoriesManagerView);
+
+            categoriesManagerView.getBtnConfirm().setOnAction(e -> handleAddCategory(categoriesManagerView));
+            categoriesManagerView.getBtnDeleteCategory().setOnAction(e -> handleRemoveCategory(categoriesManagerView));
+
+            categoriesStage.showAndWait();
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert(AlertType.ERROR, "Error", "No se pudo cargar la vista de categorías.");
         }
-        categoriesView.getListCategoryType().setModel(typeModel);
-
-        updateCategoriesList(categoriesView);
-
-        categoriesView.getBtnConfirm().addActionListener(e -> handleAddCategory(categoriesView));
-        categoriesView.getBtnDeleteCategory().addActionListener(e -> handleRemoveCategory(categoriesView));
-
-        categoriesView.setVisible(true);
     }
 
     /**
@@ -229,14 +221,12 @@ public class MovementController implements CategoryObserver {
      *
      * @param categoriesView the category administration view
      */
-    private void handleAddCategory(MovementCategoriesView categoriesView) {
-        String name = categoriesView.getTxtNewNameCateogory().getText().trim();
-        String typeStr = categoriesView.getListCategoryType().getSelectedValue();
+    private void handleAddCategory(MovementCategoriesViewFX categoriesView) {
+        String name = categoriesView.getTxtNewNameCategory().getText().trim();
+        String typeStr = categoriesView.getCmbCategoryType().getValue();
 
         if (name.isEmpty() || typeStr == null) {
-            JOptionPane.showMessageDialog(categoriesView,
-                    "Debe ingresar el nombre y seleccionar el tipo (Ingreso/Gasto)",
-                    "Advertencia", JOptionPane.WARNING_MESSAGE);
+            categoriesView.showWarning("Advertencia", "Debe ingresar el nombre y seleccionar el tipo (Ingreso/Gasto)");
             return;
         }
 
@@ -246,8 +236,7 @@ public class MovementController implements CategoryObserver {
             MovementType type = MovementType.valueOf(typeStr);
 
             if (model.getCategories().containsKey(name)) {
-                JOptionPane.showMessageDialog(categoriesView, "La categoría '" + name + "' ya existe.", "Error",
-                        JOptionPane.ERROR_MESSAGE);
+                categoriesView.showError("Error", "La categoría '" + name + "' ya existe.");
                 return;
             }
 
@@ -257,9 +246,7 @@ public class MovementController implements CategoryObserver {
             categoriesView.clearFields();
 
         } catch (IllegalArgumentException ex) {
-            JOptionPane.showMessageDialog(categoriesView,
-                    "Error al procesar el tipo de categoría.",
-                    "Error", JOptionPane.ERROR_MESSAGE);
+            categoriesView.showError("Error", "Error al procesar el tipo de categoría.");
         }
     }
 
@@ -268,32 +255,28 @@ public class MovementController implements CategoryObserver {
      *
      * @param categoriesView the category administration view
      */
-    private void handleRemoveCategory(MovementCategoriesView categoriesView) {
-        String categoryName = categoriesView.getListCategories().getSelectedValue();
+    private void handleRemoveCategory(MovementCategoriesViewFX categoriesView) {
+        String categorySelection = categoriesView.getListCategories().getSelectionModel().getSelectedItem();
 
-        if (categoryName == null) {
-            JOptionPane.showMessageDialog(categoriesView,
-                    "Debe seleccionar una categoría para eliminar",
-                    "Advertencia", JOptionPane.WARNING_MESSAGE);
+        if (categorySelection == null) {
+            categoriesView.showWarning("Advertencia", "Debe seleccionar una categoría para eliminar");
             return;
         }
 
-        int confirmation = JOptionPane.showConfirmDialog(categoriesView,
-                "¿Está seguro de eliminar la categoría '" + categoryName + "'?",
-                "Confirmar Eliminación", JOptionPane.YES_NO_OPTION);
+        // Extract the actual name from the formatted string "Name - [TYPE]"
+        String categoryName = categorySelection.split(" - ")[0];
 
-        if (confirmation == JOptionPane.YES_OPTION) {
+        boolean confirmed = categoriesView.showConfirmation("Confirmar Eliminación",
+                "¿Está seguro de eliminar la categoría '" + categoryName + "'?");
+
+        if (confirmed) {
             MovementCategory categoryToRemove = model.getCategoryByName(categoryName);
 
             if (categoryToRemove != null) {
                 model.removeCategory(categoryToRemove);
-                JOptionPane.showMessageDialog(categoriesView,
-                        "Categoría eliminada: " + categoryName,
-                        "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                categoriesView.showInfo("Éxito", "Categoría eliminada: " + categoryName);
             } else {
-                JOptionPane.showMessageDialog(categoriesView,
-                        "Error al encontrar la categoría en el modelo",
-                        "Error", JOptionPane.ERROR_MESSAGE);
+                categoriesView.showError("Error", "Error al encontrar la categoría en el modelo");
             }
         }
     }
@@ -303,18 +286,13 @@ public class MovementController implements CategoryObserver {
      *
      * @param categoriesView the view containing the category list
      */
-    private void updateCategoriesList(MovementCategoriesView categoriesView) {
-        DefaultListModel<String> listModel = new DefaultListModel<>();
-
-        List<String> categoryNames = model.getCategories().values().stream()
-                .map(MovementCategory::getName)
-                .sorted()
+    private void updateCategoriesList(MovementCategoriesViewFX categoriesView) {
+        List<String> formattedNames = model.getCategories().values().stream()
+                .sorted((c1, c2) -> c1.getName().compareToIgnoreCase(c2.getName()))
+                .map(c -> c.getName() + " - [" + c.getType().name() + "]")
                 .collect(Collectors.toList());
 
-        for (String name : categoryNames) {
-            listModel.addElement(name);
-        }
-        categoriesView.getListCategories().setModel(listModel);
+        categoriesView.getListCategories().getItems().setAll(formattedNames);
     }
 
     /**
@@ -327,8 +305,17 @@ public class MovementController implements CategoryObserver {
     public void onNotify(List<MovementCategory> categories) {
         updateCategoriesView(categories);
 
-        if (this.categoriesManagerView != null && this.categoriesManagerView.isVisible()) {
+        if (this.categoriesManagerView != null && categoriesStage != null && categoriesStage.isShowing()) {
             updateCategoriesList(this.categoriesManagerView);
         }
+    }
+
+    private void showAlert(AlertType type, String title, String message) {
+        Platform.runLater(() -> {
+            Alert alert = new Alert(type, message, ButtonType.OK);
+            alert.setTitle(title);
+            alert.setHeaderText(null);
+            alert.showAndWait();
+        });
     }
 }

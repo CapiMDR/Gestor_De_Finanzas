@@ -2,6 +2,7 @@ package reminders.reminder_view;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -24,6 +25,8 @@ public class RemindersViewFX {
     @FXML private TextField txtReminderName;
     @FXML private TextField txtMessage;
     @FXML private DatePicker datePicker;
+    @FXML private ComboBox<String> cmbHour;
+    @FXML private ComboBox<String> cmbMinute;
     @FXML private Button btnAddReminder;
     @FXML private Button btnEditReminder;
     @FXML private Button btnDeleteReminder;
@@ -32,6 +35,13 @@ public class RemindersViewFX {
 
     @FXML
     public void initialize() {
+        if (cmbHour != null && cmbMinute != null) {
+            for (int i = 0; i < 24; i++) cmbHour.getItems().add(String.format("%02d", i));
+            for (int i = 0; i < 60; i++) cmbMinute.getItems().add(String.format("%02d", i));
+            cmbHour.getSelectionModel().select("12");
+            cmbMinute.getSelectionModel().select("00");
+        }
+
         btnAddReminder.setOnAction(e -> addReminder());
         btnDeleteReminder.setOnAction(e -> deleteReminder());
         btnEditReminder.setOnAction(e -> editReminder());
@@ -54,9 +64,11 @@ public class RemindersViewFX {
             String message = txtMessage.getText().trim();
             java.time.LocalDate date = datePicker.getValue();
             
-            if (date != null) {
-                // Defaulting to midnight for MVP
-                controller.handleReminderAddition(name, message, date.atStartOfDay());
+            if (date != null && cmbHour.getValue() != null && cmbMinute.getValue() != null) {
+                int h = Integer.parseInt(cmbHour.getValue());
+                int m = Integer.parseInt(cmbMinute.getValue());
+                java.time.LocalTime time = java.time.LocalTime.of(h, m);
+                controller.handleReminderAddition(name, message, java.time.LocalDateTime.of(date, time));
             }
         }
     }

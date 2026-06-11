@@ -95,6 +95,19 @@ public class ReportController implements ReportObserver, AccountObserver {
             series.getData().add(new XYChart.Data<>("INCOME", 0));
             series.getData().add(new XYChart.Data<>("EXPENSE", 0));
             view.getBarChartMovements().getData().add(series);
+
+            for (PieChart.Data d : view.getPieChartMovements().getData()) {
+                if (d.getNode() != null) {
+                    if ("INCOME".equals(d.getName())) d.getNode().setStyle("-fx-pie-color: -fx-success;");
+                    else d.getNode().setStyle("-fx-pie-color: -fx-danger;");
+                }
+            }
+            for (XYChart.Data<String, Number> d : series.getData()) {
+                if (d.getNode() != null) {
+                    if ("INCOME".equals(d.getXValue())) d.getNode().setStyle("-fx-bar-fill: -fx-success;");
+                    else d.getNode().setStyle("-fx-bar-fill: -fx-danger;");
+                }
+            }
         });
     }
 
@@ -137,6 +150,19 @@ public class ReportController implements ReportObserver, AccountObserver {
             series.getData().add(new XYChart.Data<>("INCOME", income.doubleValue()));
             series.getData().add(new XYChart.Data<>("EXPENSE", expense.doubleValue()));
             view.getBarChartMovements().getData().add(series);
+
+            for (PieChart.Data d : view.getPieChartMovements().getData()) {
+                if (d.getNode() != null) {
+                    if ("INCOME".equals(d.getName())) d.getNode().setStyle("-fx-pie-color: -fx-success;");
+                    else d.getNode().setStyle("-fx-pie-color: -fx-danger;");
+                }
+            }
+            for (XYChart.Data<String, Number> d : series.getData()) {
+                if (d.getNode() != null) {
+                    if ("INCOME".equals(d.getXValue())) d.getNode().setStyle("-fx-bar-fill: -fx-success;");
+                    else d.getNode().setStyle("-fx-bar-fill: -fx-danger;");
+                }
+            }
         });
     }
 

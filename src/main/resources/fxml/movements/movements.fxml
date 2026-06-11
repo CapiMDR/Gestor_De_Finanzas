@@ -36,15 +36,16 @@
 
     <!-- Content: two symmetric forms side by side -->
     <center>
-        <HBox spacing="0" HBox.hgrow="ALWAYS">
+        <ScrollPane fitToWidth="true" fitToHeight="true" style="-fx-background-color: transparent; -fx-background: transparent;">
+            <HBox spacing="0" HBox.hgrow="ALWAYS">
 
-            <!-- ── INCOME panel (left, green accent border) ─────────────────── -->
+            <!-- ── INCOME panel (left, pastel blue) ─────────────────── -->
             <VBox styleClass="form-panel" HBox.hgrow="ALWAYS" spacing="12"
-                  style="-fx-border-color: rgb(16, 185, 129) transparent transparent transparent;">
+                  style="-fx-background-color: #EBF8FF; -fx-background-radius: 8px 0 0 8px;">
                 <padding><Insets top="25" right="20" bottom="20" left="20"/></padding>
 
                 <Label text="Agregar Ingreso" styleClass="form-section-title"
-                       style="-fx-text-fill: rgb(16, 185, 129);"/>
+                       style="-fx-text-fill: #2B6CB0;"/>
                 <Separator/>
 
                 <Label text="Cuenta destino:" styleClass="form-label"/>
@@ -59,8 +60,7 @@
                     <Label text="Categoría:" styleClass="form-label"/>
                     <Region HBox.hgrow="ALWAYS"/>
                     <Button fx:id="btnAddCategoryIncome" text="+ Gestionar"
-                            styleClass="btn-secondary" style="-fx-font-size: 12px; -fx-padding: 4px 10px;"
-                            onAction="#onManageCategories"/>
+                            styleClass="btn-secondary" style="-fx-font-size: 12px; -fx-padding: 4px 10px;"/>
                 </HBox>
                 <ListView fx:id="listCategoriesIncome" styleClass="list-view"
                           prefHeight="140"/>
@@ -76,22 +76,16 @@
                 <Region VBox.vgrow="ALWAYS"/>
                 <Button fx:id="btnAddIncome" text="Agregar Ingreso"
                         styleClass="btn-primary" maxWidth="Infinity"
-                        style="-fx-background-color: rgb(16, 185, 129);"
-                        onAction="#onAddIncome"/>
+                        style="-fx-background-color: #3182CE; -fx-text-fill: white;"/>
             </VBox>
 
-            <!-- Vertical divider -->
-            <Separator orientation="VERTICAL"
-                       style="-fx-background-color: -fx-border; -fx-pref-width: 1px;"/>
-
-            <!-- ── EXPENSE panel (right, red accent border) ──────────────────── -->
+            <!-- ── EXPENSE panel (right, pastel orange) ──────────────────── -->
             <VBox styleClass="form-panel" HBox.hgrow="ALWAYS" spacing="12"
-                  style="-fx-border-color: rgb(239, 68, 68) transparent transparent transparent;
-                         -fx-background-radius: 8px 0 0 8px;">
+                  style="-fx-background-color: #FFFAF0; -fx-background-radius: 0 8px 8px 0;">
                 <padding><Insets top="25" right="20" bottom="20" left="20"/></padding>
 
                 <Label text="Agregar Egreso" styleClass="form-section-title"
-                       style="-fx-text-fill: rgb(239, 68, 68);"/>
+                       style="-fx-text-fill: #DD6B20;"/>
                 <Separator/>
 
                 <Label text="Cuenta origen:" styleClass="form-label"/>
@@ -106,8 +100,7 @@
                     <Label text="Categoría:" styleClass="form-label"/>
                     <Region HBox.hgrow="ALWAYS"/>
                     <Button fx:id="btnAddCategoryExpense" text="+ Gestionar"
-                            styleClass="btn-secondary" style="-fx-font-size: 12px; -fx-padding: 4px 10px;"
-                            onAction="#onManageCategories"/>
+                            styleClass="btn-secondary" style="-fx-font-size: 12px; -fx-padding: 4px 10px;"/>
                 </HBox>
                 <ListView fx:id="listCategoriesExpense" styleClass="list-view"
                           prefHeight="140"/>
@@ -123,11 +116,11 @@
                 <Region VBox.vgrow="ALWAYS"/>
                 <Button fx:id="btnAddExpense" text="Agregar Egreso"
                         styleClass="btn-primary" maxWidth="Infinity"
-                        style="-fx-background-color: rgb(239, 68, 68);"
-                        onAction="#onAddExpense"/>
+                        style="-fx-background-color: #DD6B20; -fx-text-fill: white;"/>
             </VBox>
 
-        </HBox>
+            </HBox>
+        </ScrollPane>
     </center>
 
 </BorderPane>

@@ -19,15 +19,20 @@ public class AccountsModule {
 
     @SuppressWarnings("unused")
     private static AccountController accountController;
+    private static Stage activeStage;
 
     /**
      * Initializes and displays the Accounts management window.
      * Should be called from the main application navigation.
      */
     public static void initAccountsModule() {
+        if (activeStage != null && activeStage.isShowing()) {
+            activeStage.toFront();
+            return;
+        }
         try {
             FXMLLoader loader = new FXMLLoader(
-                AccountsModule.class.getResource("/fxml/account.fxml"));
+                AccountsModule.class.getResource("/fxml/accounts/account.fxml"));
 
             Parent root = loader.load();
 
@@ -40,10 +45,13 @@ public class AccountsModule {
             // Seed the list with current data (Observer fires on next change)
             view.updateAccountList(AccountManager.getAccounts());
 
-            Stage stage = new Stage();
-            stage.setTitle("Gestión de Cuentas");
-            stage.setScene(new Scene(root, 900, 600));
-            stage.show();
+            activeStage = new Stage();
+            activeStage.setTitle("Gestión de Cuentas");
+            Scene scene = new Scene(root, 900, 600);
+            scene.getStylesheets().add(AccountsModule.class.getResource("/styles/app.css").toExternalForm());
+            activeStage.setScene(scene);
+            activeStage.setMaximized(true);
+            activeStage.show();
 
         } catch (Exception e) {
             e.printStackTrace();

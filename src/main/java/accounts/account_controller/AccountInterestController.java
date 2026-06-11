@@ -28,7 +28,7 @@ public class AccountInterestController {
 
     private void initDialog() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/account_interest.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/accounts/account_interest.fxml"));
             DialogPane pane = loader.load();
             this.view = loader.getController();
 

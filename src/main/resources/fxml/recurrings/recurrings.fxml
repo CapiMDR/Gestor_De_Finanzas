@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 
 <!--
     Recurring Movements View Layout
@@ -46,9 +47,15 @@
     <center>
         <VBox styleClass="list-panel" spacing="12">
             <ListView fx:id="listRecurrings" styleClass="recurrings-list" VBox.vgrow="ALWAYS"/>
-            <HBox spacing="10">
-                <Button fx:id="btnEditRecurring" styleClass="btn-icon"/>
-                <Button fx:id="btnDeleteRecurring" styleClass="btn-icon"/>
+            <HBox spacing="10" alignment="CENTER_RIGHT">
+                <Button fx:id="btnEditRecurring" styleClass="btn-icon">
+                    <graphic><FontIcon iconLiteral="mdi2p-pencil" iconSize="28"/></graphic>
+                    <tooltip><Tooltip text="Editar recurrente seleccionado"/></tooltip>
+                </Button>
+                <Button fx:id="btnDeleteRecurring" styleClass="btn-icon">
+                    <graphic><FontIcon iconLiteral="mdi2d-delete" iconSize="28"/></graphic>
+                    <tooltip><Tooltip text="Eliminar recurrente seleccionado"/></tooltip>
+                </Button>
             </HBox>
         </VBox>
     </center>

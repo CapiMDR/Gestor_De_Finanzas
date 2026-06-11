@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Label;
 import movements.movement_model.Movement;
@@ -44,7 +45,6 @@ public class FilterViewFX {
     @FXML
     private Label lblTotalExpense;
 
-    private FilterController controller;
     private List<Movement> currentIncomeMovements;
     private List<Movement> currentExpenseMovements;
 
@@ -55,11 +55,28 @@ public class FilterViewFX {
 
         btnApplyFilter.setOnAction(e -> applyFilter());
         btnClearFilter.setOnAction(e -> clearFilter());
+
+        listFilteredMovements.setCellFactory(lv -> new ListCell<String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    getStyleClass().removeAll("text-income", "text-expense");
+                } else {
+                    setText(item);
+                    getStyleClass().removeAll("text-income", "text-expense");
+                    if (item.contains("(INCOME)")) {
+                        getStyleClass().add("text-income");
+                    } else if (item.contains("(EXPENSE)")) {
+                        getStyleClass().add("text-expense");
+                    }
+                }
+            }
+        });
     }
 
-    public void setController(FilterController controller) {
-        this.controller = controller;
-    }
+
 
     public void updateCategories(List<Movement> income, List<Movement> expense, double totalIn, double totalOut) {
         this.currentIncomeMovements = income;

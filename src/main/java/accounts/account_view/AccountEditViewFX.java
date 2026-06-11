@@ -20,7 +20,7 @@ public class AccountEditViewFX {
      */
     @FXML
     public void initialize() {
-        cmbAccountType.setItems(FXCollections.observableArrayList("Cash", "Digital"));
+        cmbAccountType.setItems(FXCollections.observableArrayList("Efectivo", "Digital"));
         cmbCurrency.setItems(FXCollections.observableArrayList("MXN", "USD"));
     }
 
