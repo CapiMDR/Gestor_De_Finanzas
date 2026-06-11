@@ -83,31 +83,15 @@ public class ReportController implements ReportObserver, AccountObserver {
         Platform.runLater(() -> {
             // --- PieChart ---
             view.getPieChartMovements().getData().clear();
-            view.getPieChartMovements().getData().addAll(
-                new PieChart.Data("INCOME", 0),
-                new PieChart.Data("EXPENSE", 0)
-            );
 
             // --- BarChart ---
             view.getBarChartMovements().getData().clear();
             XYChart.Series<String, Number> series = new XYChart.Series<>();
             series.setName("Movimientos");
-            series.getData().add(new XYChart.Data<>("INCOME", 0));
-            series.getData().add(new XYChart.Data<>("EXPENSE", 0));
             view.getBarChartMovements().getData().add(series);
-
-            for (PieChart.Data d : view.getPieChartMovements().getData()) {
-                if (d.getNode() != null) {
-                    if ("INCOME".equals(d.getName())) d.getNode().setStyle("-fx-pie-color: -fx-success;");
-                    else d.getNode().setStyle("-fx-pie-color: -fx-danger;");
-                }
-            }
-            for (XYChart.Data<String, Number> d : series.getData()) {
-                if (d.getNode() != null) {
-                    if ("INCOME".equals(d.getXValue())) d.getNode().setStyle("-fx-bar-fill: -fx-success;");
-                    else d.getNode().setStyle("-fx-bar-fill: -fx-danger;");
-                }
-            }
+            
+            // Force layout to avoid label overlapping bug
+            view.getPieChartMovements().layout();
         });
     }
 
@@ -138,29 +122,39 @@ public class ReportController implements ReportObserver, AccountObserver {
         Platform.runLater(() -> {
             // --- PieChart ---
             view.getPieChartMovements().getData().clear();
-            view.getPieChartMovements().getData().addAll(
-                new PieChart.Data("INCOME", income.doubleValue()),
-                new PieChart.Data("EXPENSE", expense.doubleValue())
-            );
+            if (income.compareTo(BigDecimal.ZERO) > 0) {
+                view.getPieChartMovements().getData().add(new PieChart.Data("INGRESO", income.doubleValue()));
+            }
+            if (expense.compareTo(BigDecimal.ZERO) > 0) {
+                view.getPieChartMovements().getData().add(new PieChart.Data("EGRESO", expense.doubleValue()));
+            }
 
             // --- BarChart ---
             view.getBarChartMovements().getData().clear();
             XYChart.Series<String, Number> series = new XYChart.Series<>();
             series.setName(periodName);
-            series.getData().add(new XYChart.Data<>("INCOME", income.doubleValue()));
-            series.getData().add(new XYChart.Data<>("EXPENSE", expense.doubleValue()));
+            if (income.compareTo(BigDecimal.ZERO) > 0) {
+                series.getData().add(new XYChart.Data<>("INGRESO", income.doubleValue()));
+            }
+            if (expense.compareTo(BigDecimal.ZERO) > 0) {
+                series.getData().add(new XYChart.Data<>("EGRESO", expense.doubleValue()));
+            }
             view.getBarChartMovements().getData().add(series);
+
+            // Force layout before applying styles to ensure nodes exist
+            view.getPieChartMovements().layout();
+            view.getBarChartMovements().layout();
 
             for (PieChart.Data d : view.getPieChartMovements().getData()) {
                 if (d.getNode() != null) {
-                    if ("INCOME".equals(d.getName())) d.getNode().setStyle("-fx-pie-color: -fx-success;");
-                    else d.getNode().setStyle("-fx-pie-color: -fx-danger;");
+                    if ("INGRESO".equals(d.getName())) d.getNode().setStyle("-fx-pie-color: #3182CE;");
+                    else d.getNode().setStyle("-fx-pie-color: #DD6B20;");
                 }
             }
             for (XYChart.Data<String, Number> d : series.getData()) {
                 if (d.getNode() != null) {
-                    if ("INCOME".equals(d.getXValue())) d.getNode().setStyle("-fx-bar-fill: -fx-success;");
-                    else d.getNode().setStyle("-fx-bar-fill: -fx-danger;");
+                    if ("INGRESO".equals(d.getXValue())) d.getNode().setStyle("-fx-bar-fill: #3182CE;");
+                    else d.getNode().setStyle("-fx-bar-fill: #DD6B20;");
                 }
             }
         });

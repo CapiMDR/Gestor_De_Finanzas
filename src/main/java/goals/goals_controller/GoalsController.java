@@ -93,20 +93,34 @@ public class GoalsController implements AccountObserver {
                 }
             }
         });
+
+        // View Details (Button click)
+        mainView.getBtnViewGoalDetails().setOnAction(e -> {
+            Goal selected = getSelectedGoal();
+            if (selected != null) {
+                detailController.showDetails(selected);
+            } else {
+                showAlert(AlertType.WARNING, "Selección requerida", "Por favor selecciona una meta para ver sus detalles.");
+            }
+        });
         
         // Update progress bar on selection
         mainView.getListGoals().getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             Goal selected = getSelectedGoal();
             if (selected != null) {
+                mainView.getProgressContainer().setVisible(true);
                 double progress = 0.0;
                 if (selected.getTargetAmount().compareTo(BigDecimal.ZERO) > 0) {
                     progress = selected.getCurrentAmount().divide(selected.getTargetAmount(), 4, java.math.RoundingMode.HALF_UP).doubleValue();
                 }
                 mainView.getProgressBarGoal().setProgress(Math.min(1.0, progress));
             } else {
-                mainView.getProgressBarGoal().setProgress(0.0);
+                mainView.getProgressContainer().setVisible(false);
             }
         });
+
+        // Set initial state for progress container
+        mainView.getProgressContainer().setVisible(false);
     }
 
     private Goal getSelectedGoal() {

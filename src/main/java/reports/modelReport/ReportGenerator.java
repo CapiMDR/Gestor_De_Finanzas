@@ -41,7 +41,7 @@ public class ReportGenerator {
         BigDecimal total = amountTotal(movements);
 
         ReportData data = new ReportData(
-                "Today",
+                "Hoy",
                 movements,
                 total,
                 today.toString());
@@ -66,7 +66,7 @@ public class ReportGenerator {
         BigDecimal total = amountTotal(movements);
 
         ReportData data = new ReportData(
-                "Week Ago",
+                "Ultimos 7 días",
                 movements,
                 total,
                 start.toString() + "-" + end.toString());

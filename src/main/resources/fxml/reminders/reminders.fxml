@@ -48,12 +48,12 @@
     <center>
         <VBox styleClass="list-panel" spacing="12">
             <ListView fx:id="listReminders" styleClass="reminders-list" VBox.vgrow="ALWAYS"/>
-            <HBox spacing="10" alignment="CENTER_RIGHT">
-                <Button fx:id="btnEditReminder" text="Editar" styleClass="btn-icon">
+            <HBox spacing="10" alignment="CENTER">
+                <Button fx:id="btnEditReminder" styleClass="btn-icon">
                     <graphic><FontIcon iconLiteral="mdi2p-pencil" iconSize="28"/></graphic>
                     <tooltip><Tooltip text="Editar recordatorio seleccionado"/></tooltip>
                 </Button>
-                <Button fx:id="btnDeleteReminder" text="Eliminar" styleClass="btn-icon">
+                <Button fx:id="btnDeleteReminder" styleClass="btn-icon">
                     <graphic><FontIcon iconLiteral="mdi2d-delete" iconSize="28"/></graphic>
                     <tooltip><Tooltip text="Eliminar recordatorio seleccionado"/></tooltip>
                 </Button>

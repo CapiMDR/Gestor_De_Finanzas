@@ -32,16 +32,21 @@
          TOP — Account name, balance, and chart filter buttons
          ═══════════════════════════════════════════════════════════════ -->
     <top>
-        <VBox styleClass="dashboard-header">
+        <VBox styleClass="dashboard-header" alignment="CENTER" spacing="5">
 
             <!-- Account name -->
             <Label fx:id="lblAccountName" text="Cuenta"
                    styleClass="dashboard-account-name"/>
 
-            <!-- Balance + time filter row -->
-            <HBox alignment="CENTER_LEFT" spacing="20">
-                <Label fx:id="lblAccountBalance" text="\$0.00"
-                       styleClass="dashboard-balance" HBox.hgrow="ALWAYS"/>
+            <!-- Balance + icon row -->
+            <HBox alignment="CENTER" spacing="10">
+                <Label fx:id="lblAccountBalance" text="$0.00"
+                       styleClass="dashboard-balance"/>
+                <FontIcon iconLiteral="mdi2p-piggy-bank" iconSize="32" iconColor="#112B3C"/>
+            </HBox>
+
+            <!-- Time filter row -->
+            <HBox alignment="CENTER" spacing="10">
                 <Button fx:id="btnToday" text="Hoy"    styleClass="btn-filter"/>
                 <Button fx:id="btnWeek"  text="Semana" styleClass="btn-filter"/>
             </HBox>
@@ -61,7 +66,7 @@
             </HBox>
 
             <HBox fx:id="navGoals" styleClass="nav-item" alignment="CENTER_LEFT" spacing="10">
-                <FontIcon iconLiteral="mdi2t-target" iconSize="24"/>
+                <FontIcon iconLiteral="mdi2f-flag" iconSize="24"/>
                 <Label text="Metas" styleClass="nav-label"/>
             </HBox>
 
@@ -77,7 +82,7 @@
 
             <HBox fx:id="navFilters" styleClass="nav-item" alignment="CENTER_LEFT" spacing="10">
                 <FontIcon iconLiteral="mdi2m-magnify" iconSize="24"/>
-                <Label text="Filtros" styleClass="nav-label"/>
+                <Label text="Filtro de movimientos" styleClass="nav-label"/>
             </HBox>
 
             <HBox fx:id="navCredit" styleClass="nav-item" alignment="CENTER_LEFT" spacing="10">

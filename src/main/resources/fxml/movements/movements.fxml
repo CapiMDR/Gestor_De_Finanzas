@@ -63,7 +63,7 @@
                             styleClass="btn-secondary" style="-fx-font-size: 12px; -fx-padding: 4px 10px;"/>
                 </HBox>
                 <ListView fx:id="listCategoriesIncome" styleClass="list-view"
-                          prefHeight="140"/>
+                          minHeight="140" prefHeight="140"/>
 
                 <Label text="Fecha:" styleClass="form-label"/>
                 <DatePicker fx:id="datePickerIncome" styleClass="form-input" maxWidth="Infinity"/>
@@ -103,7 +103,7 @@
                             styleClass="btn-secondary" style="-fx-font-size: 12px; -fx-padding: 4px 10px;"/>
                 </HBox>
                 <ListView fx:id="listCategoriesExpense" styleClass="list-view"
-                          prefHeight="140"/>
+                          minHeight="160" prefHeight="200"/>
 
                 <Label text="Fecha:" styleClass="form-label"/>
                 <DatePicker fx:id="datePickerExpense" styleClass="form-input" maxWidth="Infinity"/>

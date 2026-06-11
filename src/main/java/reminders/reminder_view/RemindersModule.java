@@ -19,6 +19,9 @@ public class RemindersModule {
     
     private static Stage activeStage;
     
+    /** Forces static initialization to start the background thread globally. */
+    public static void initGlobalReminders() {}
+    
     public static void initReminders() {
         if (activeStage != null && activeStage.isShowing()) {
             activeStage.toFront();

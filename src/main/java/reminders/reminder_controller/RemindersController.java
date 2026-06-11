@@ -112,6 +112,7 @@ public class RemindersController {
     public void handleReminderAddition(String name, String message, LocalDateTime date) {
         if (!isValidReminder(name, message, date)) {
             logger.warn("Invalid reminder data rejected: name='{}', date={}.", name, date);
+            showAlert(Alert.AlertType.WARNING, "Datos incompletos", "Debe proporcionar al menos un nombre y la fecha del recordatorio.");
             return;
         }
 
@@ -191,6 +192,8 @@ public class RemindersController {
             editController.getTxtReminderName().setText(reminder.getName());
             editController.getTxtMessage().setText(reminder.getMessage());
             editController.getDatePicker().setValue(reminder.getDate().toLocalDate());
+            editController.getCmbHour().setValue(String.format("%02d", reminder.getDate().getHour()));
+            editController.getCmbMinute().setValue(String.format("%02d", reminder.getDate().getMinute()));
 
             Dialog<Reminder> dialog = new Dialog<>();
             dialog.setDialogPane(dialogPane);
@@ -202,14 +205,17 @@ public class RemindersController {
                         String name = editController.getTxtReminderName().getText().trim();
                         String msg = editController.getTxtMessage().getText().trim();
                         java.time.LocalDate d = editController.getDatePicker().getValue();
+                        int h = Integer.parseInt(editController.getCmbHour().getValue());
+                        int m = Integer.parseInt(editController.getCmbMinute().getValue());
+                        LocalDateTime dateTime = LocalDateTime.of(d, java.time.LocalTime.of(h, m));
 
-                        if (!isValidReminder(name, msg, d != null ? d.atStartOfDay() : null)) {
+                        if (!isValidReminder(name, msg, dateTime)) {
                             Alert alert = new Alert(Alert.AlertType.ERROR, "Datos inválidos");
                             alert.showAndWait();
                             return null;
                         }
 
-                        return new Reminder(name, msg, d.atStartOfDay());
+                        return new Reminder(name, msg, dateTime);
                     } catch (Exception e) {
                         return null;
                     }
@@ -224,5 +230,18 @@ public class RemindersController {
         } catch (IOException e) {
             logger.error("Failed to load reminder edit dialog", e);
         }
+    }
+
+    /**
+     * Displays a JavaFX Alert on the UI thread.
+     */
+    private void showAlert(Alert.AlertType type, String title, String content) {
+        Platform.runLater(() -> {
+            Alert alert = new Alert(type);
+            alert.setTitle(title);
+            alert.setHeaderText(null);
+            alert.setContentText(content);
+            alert.showAndWait();
+        });
     }
 }

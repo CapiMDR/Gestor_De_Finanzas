@@ -31,7 +31,7 @@
     <center>
         <VBox styleClass="list-panel" spacing="12">
             <ListView fx:id="listCategories" styleClass="list-view" VBox.vgrow="ALWAYS"/>
-            <HBox spacing="10" alignment="CENTER_RIGHT">
+            <HBox spacing="10" alignment="CENTER">
                 <Button fx:id="btnDeleteCategory" styleClass="btn-icon">
                     <graphic><FontIcon iconLiteral="mdi2d-delete" iconSize="28"/></graphic>
                     <tooltip><Tooltip text="Eliminar categoría seleccionada"/></tooltip>

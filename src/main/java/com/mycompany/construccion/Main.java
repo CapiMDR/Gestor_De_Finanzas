@@ -7,6 +7,8 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import reminders.reminder_view.RemindersModule;
+
 
 /**
  * Main entry point of the application (JavaFX).
@@ -22,6 +24,10 @@ public class Main extends Application {
         AppConfig.ensureDataDirExists();
         AccountManager.initAccountManager();
         AccountManager.loadInitialData();
+        
+        // Initialize global background thread for reminders
+        RemindersModule.initGlobalReminders();
+
         AccountsModule.initAccountsModule();
         logger.info("Main view displayed successfully.");
     }

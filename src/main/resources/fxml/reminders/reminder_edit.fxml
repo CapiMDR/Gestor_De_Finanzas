@@ -22,7 +22,12 @@
             <TextField fx:id="txtMessage" styleClass="form-input"/>
 
             <Label text="Fecha y Hora:" styleClass="form-label"/>
-            <DatePicker fx:id="datePicker" styleClass="form-input" maxWidth="Infinity"/>
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <DatePicker fx:id="datePicker" styleClass="form-input" maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
+                <ComboBox fx:id="cmbHour" styleClass="form-input" prefWidth="75"/>
+                <Label text=":" styleClass="form-label" style="-fx-font-weight: bold;"/>
+                <ComboBox fx:id="cmbMinute" styleClass="form-input" prefWidth="75"/>
+            </HBox>
         </VBox>
     </content>
 

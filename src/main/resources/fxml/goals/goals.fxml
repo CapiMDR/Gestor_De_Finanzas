@@ -44,8 +44,15 @@
     <center>
         <VBox styleClass="list-panel" spacing="12">
             <ListView fx:id="listGoals" styleClass="goals-list" VBox.vgrow="ALWAYS"/>
-            <ProgressBar fx:id="progressBarGoal" maxWidth="Infinity"/>
-            <HBox spacing="10" alignment="CENTER_RIGHT">
+            <VBox spacing="5" fx:id="progressContainer">
+                <Label text="Progreso" styleClass="form-label"/>
+                <ProgressBar fx:id="progressBarGoal" maxWidth="Infinity" minHeight="20"/>
+            </VBox>
+            <HBox spacing="10" alignment="CENTER">
+                <Button fx:id="btnViewGoalDetails" styleClass="btn-icon">
+                    <graphic><FontIcon iconLiteral="mdi2e-eye" iconSize="28"/></graphic>
+                    <tooltip><Tooltip text="Ver detalles de la meta"/></tooltip>
+                </Button>
                 <Button fx:id="btnEditGoal" styleClass="btn-icon">
                     <graphic><FontIcon iconLiteral="mdi2p-pencil" iconSize="28"/></graphic>
                     <tooltip><Tooltip text="Editar meta seleccionada"/></tooltip>
