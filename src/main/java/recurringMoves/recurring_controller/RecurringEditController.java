@@ -21,16 +21,15 @@ public class RecurringEditController {
             RecurringEditViewFX view = loader.getController();
 
             // Populate categories
-            view.getCmbCategory().getItems().addAll(
-                MovementCategory.MovementType.INCOME.name(),
-                MovementCategory.MovementType.EXPENSE.name()
-            );
+            view.getCmbCategory().getItems().addAll("Ingreso", "Egreso");
 
             // Populate fields
             view.getTxtDescription().setText(oldRecMove.getDescription());
             view.getTxtAmount().setText(oldRecMove.getAmount().toPlainString());
             if (oldRecMove.getCategory() != null && oldRecMove.getCategory().getType() != null) {
-                view.getCmbCategory().getSelectionModel().select(oldRecMove.getCategory().getType().name());
+                String typeStr = oldRecMove.getCategory().getType().name();
+                if ("INCOME".equals(typeStr)) view.getCmbCategory().getSelectionModel().select("Ingreso");
+                else if ("EXPENSE".equals(typeStr)) view.getCmbCategory().getSelectionModel().select("Egreso");
             }
             view.getDatePicker().setValue(oldRecMove.getInitialDate().toLocalDate());
 
@@ -72,7 +71,9 @@ public class RecurringEditController {
                 // Return the newly constructed move by simulating the result, or we can just reconstruct it here
                 String desc = view.getTxtDescription().getText().trim();
                 BigDecimal amount = new BigDecimal(view.getTxtAmount().getText().trim());
-                MovementCategory category = new MovementCategory(view.getCmbCategory().getSelectionModel().getSelectedItem(), MovementCategory.MovementType.valueOf(view.getCmbCategory().getSelectionModel().getSelectedItem()));
+                String categoryStr = view.getCmbCategory().getSelectionModel().getSelectedItem();
+                String typeEnumStr = "Ingreso".equals(categoryStr) ? "INCOME" : "EXPENSE";
+                MovementCategory category = new MovementCategory(typeEnumStr, MovementCategory.MovementType.valueOf(typeEnumStr));
                 java.time.LocalDate date = view.getDatePicker().getValue();
 
                 RecurringMove newRecMove = new RecurringMove(

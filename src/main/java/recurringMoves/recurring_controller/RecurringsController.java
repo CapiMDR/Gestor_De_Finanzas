@@ -73,9 +73,7 @@ public class RecurringsController {
 
         // Setup Category ComboBox
         recurringsView.getCmbCategory().getItems().clear();
-        for (MovementCategory.MovementType type : MovementCategory.MovementType.values()) {
-            recurringsView.getCmbCategory().getItems().add(type.name());
-        }
+        recurringsView.getCmbCategory().getItems().addAll("Ingreso", "Egreso");
 
         // Add Recurring
         recurringsView.getBtnAddRecurring().setOnAction(e -> handleRecurringAddition());
@@ -199,7 +197,8 @@ public class RecurringsController {
                 return;
             }
 
-            MovementCategory category = new MovementCategory(categoryStr, MovementCategory.MovementType.valueOf(categoryStr));
+            String typeEnumStr = "Ingreso".equals(categoryStr) ? "INCOME" : "EXPENSE";
+            MovementCategory category = new MovementCategory(typeEnumStr, MovementCategory.MovementType.valueOf(typeEnumStr));
             // Defaulting recurrence to Mensual for MVP, this can be added to UI later
             recurringsModel.addRecurring(concept, amount, concept, LocalDateTime.of(date, LocalTime.MIDNIGHT), RecurrenceType.Mensual, category);
             recurringsModel.saveRecurrings();

@@ -80,9 +80,9 @@ public class AccountViewFX {
         btnDeleteAccount.setGraphic(iconDelete);
         btnCalculateInterest.setGraphic(iconCalc);
 
-        // Limit account name to 18 characters
+        // Limit account name to 24 characters
         txtNameAccount.setTextFormatter(new javafx.scene.control.TextFormatter<>(change -> {
-            if (change.getControlNewText().length() > 18) {
+            if (change.getControlNewText().length() > 24) {
                 return null;
             }
             return change;
@@ -102,16 +102,17 @@ public class AccountViewFX {
                     } else {
                         icon.setIconLiteral("mdi2p-piggy-bank");
                     }
-                    icon.setIconSize(24);
-                    icon.setIconColor(javafx.scene.paint.Color.web("#112B3C"));
+                    icon.setIconSize(32);
+                    icon.getStyleClass().add("text-primary-dark");
 
                     javafx.scene.control.Label nameLabel = new javafx.scene.control.Label(
                             String.format("%s  —  $%.2f %s", item.getName(), item.getCurrentBalance(), item.getCoin())
                     );
                     nameLabel.setWrapText(true);
-                    nameLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #112B3C;");
+                    nameLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
+                    nameLabel.getStyleClass().add("text-primary-dark");
 
-                    javafx.scene.layout.HBox box = new javafx.scene.layout.HBox(12, icon, nameLabel);
+                    javafx.scene.layout.HBox box = new javafx.scene.layout.HBox(16, icon, nameLabel);
                     box.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
                     setGraphic(box);
                 }

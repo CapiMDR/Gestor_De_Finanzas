@@ -29,6 +29,17 @@ public class GoalsViewFX {
     @FXML private Button btnDeleteGoal;
     @FXML private Button btnViewGoalDetails;
 
+    @FXML
+    public void initialize() {
+        // Limit goal name to 30 characters
+        txtGoalName.setTextFormatter(new javafx.scene.control.TextFormatter<>(change -> {
+            if (change.getControlNewText().length() > 30) {
+                return null;
+            }
+            return change;
+        }));
+    }
+
     // ── Public Accessors for Controller ──────────────────────────────────────
 
     public ListView<String> getListGoals() { return listGoals; }

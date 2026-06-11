@@ -23,9 +23,9 @@ public class AccountEditViewFX {
         cmbAccountType.setItems(FXCollections.observableArrayList("Efectivo", "Digital"));
         cmbCurrency.setItems(FXCollections.observableArrayList("MXN", "USD"));
 
-        // Limit account name to 18 characters
+        // Limit account name to 24 characters
         txtNameAccount.setTextFormatter(new javafx.scene.control.TextFormatter<>(change -> {
-            if (change.getControlNewText().length() > 18) {
+            if (change.getControlNewText().length() > 24) {
                 return null;
             }
             return change;

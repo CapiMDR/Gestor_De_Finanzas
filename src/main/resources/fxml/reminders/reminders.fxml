@@ -29,12 +29,14 @@
             <TextField fx:id="txtReminderName" styleClass="form-input"
                        promptText="Reminder name"/>
 
-            <Label text="Fecha y Hora:" styleClass="form-label"/>
+            <Label text="Fecha:" styleClass="form-label"/>
+            <DatePicker fx:id="datePicker" styleClass="form-input" maxWidth="Infinity"/>
+            
+            <Label text="Hora:" styleClass="form-label"/>
             <HBox spacing="10" alignment="CENTER_LEFT">
-                <DatePicker fx:id="datePicker" styleClass="form-input" maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
-                <ComboBox fx:id="cmbHour" styleClass="form-input" prefWidth="90"/>
+                <ComboBox fx:id="cmbHour" prefWidth="90" styleClass="form-input"/>
                 <Label text=":" styleClass="form-label" style="-fx-font-weight: bold;"/>
-                <ComboBox fx:id="cmbMinute" styleClass="form-input" prefWidth="90"/>
+                <ComboBox fx:id="cmbMinute" prefWidth="90" styleClass="form-input"/>
             </HBox>
             <Label text="Mensaje:" styleClass="form-label"/>
             <TextField fx:id="txtMessage" styleClass="form-input"

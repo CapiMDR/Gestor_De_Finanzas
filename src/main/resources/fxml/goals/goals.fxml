@@ -25,8 +25,10 @@
     <left>
         <VBox styleClass="form-panel" spacing="16">
             <Label text="Nombre:" styleClass="form-label"/>
-            <TextField fx:id="txtGoalName" styleClass="form-input"
-                       promptText="Goal name"/>
+            <VBox spacing="4">
+                <TextField fx:id="txtGoalName" styleClass="form-input" promptText="Goal name"/>
+                <Label text="Máximo 30 caracteres" style="-fx-text-fill: #9CA3AF; -fx-font-size: 11px;"/>
+            </VBox>
 
             <Label text="Monto objetivo: $" styleClass="form-label"/>
             <TextField fx:id="txtTargetAmount" styleClass="form-input"

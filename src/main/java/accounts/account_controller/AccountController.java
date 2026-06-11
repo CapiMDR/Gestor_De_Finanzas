@@ -76,7 +76,12 @@ public class AccountController implements AccountObserver {
                 throw new IllegalArgumentException("El saldo no puede ser negativo");
             }
 
-            Account.AccountType type = Account.AccountType.valueOf(typeString.toUpperCase());
+            Account.AccountType type;
+            if ("Efectivo".equalsIgnoreCase(typeString)) {
+                type = Account.AccountType.CASH;
+            } else {
+                type = Account.AccountType.valueOf(typeString.toUpperCase());
+            }
             Account.Coin coin = Account.Coin.valueOf(coinStr.toUpperCase());
 
             AccountManager.addAccount(name, type, coin, balance);

@@ -18,7 +18,10 @@
     <left>
         <VBox styleClass="form-panel" spacing="16">
             <Label text="Nombre:" styleClass="form-label"/>
-            <TextField fx:id="txtNewNameCategory" styleClass="form-input" promptText="Nombre de la categoría"/>
+            <VBox spacing="4">
+                <TextField fx:id="txtNewNameCategory" styleClass="form-input" promptText="Nombre de la categoría"/>
+                <Label text="Máximo 24 caracteres" style="-fx-text-fill: #9CA3AF; -fx-font-size: 11px;"/>
+            </VBox>
 
             <Label text="Tipo:" styleClass="form-label"/>
             <ComboBox fx:id="cmbCategoryType" styleClass="form-input" maxWidth="Infinity"/>
@@ -33,12 +36,12 @@
             <!-- Legend -->
             <HBox spacing="20" alignment="CENTER">
                 <HBox spacing="6" alignment="CENTER">
-                    <Region style="-fx-background-color: #3182CE; -fx-min-width: 12px; -fx-min-height: 12px; -fx-max-width: 12px; -fx-max-height: 12px; -fx-background-radius: 6px;"/>
-                    <Label text="Ingreso" style="-fx-text-fill: #4B5563; -fx-font-weight: bold; -fx-font-size: 13px;"/>
+                    <Region styleClass="color-income" style="-fx-min-width: 12px; -fx-min-height: 12px; -fx-max-width: 12px; -fx-max-height: 12px; -fx-background-radius: 6px;"/>
+                    <Label text="Ingreso" styleClass="text-legend"/>
                 </HBox>
                 <HBox spacing="6" alignment="CENTER">
-                    <Region style="-fx-background-color: #DD6B20; -fx-min-width: 12px; -fx-min-height: 12px; -fx-max-width: 12px; -fx-max-height: 12px; -fx-background-radius: 6px;"/>
-                    <Label text="Egreso" style="-fx-text-fill: #4B5563; -fx-font-weight: bold; -fx-font-size: 13px;"/>
+                    <Region styleClass="color-expense" style="-fx-min-width: 12px; -fx-min-height: 12px; -fx-max-width: 12px; -fx-max-height: 12px; -fx-background-radius: 6px;"/>
+                    <Label text="Egreso" styleClass="text-legend"/>
                 </HBox>
             </HBox>
 

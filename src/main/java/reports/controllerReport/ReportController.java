@@ -105,9 +105,9 @@ public class ReportController implements ReportObserver, AccountObserver {
 
     private void initComponents() {
         Platform.runLater(() -> {
-            // Disable animation to prevent label overlap bug when updating frequently
-            view.getPieChartMovements().setAnimated(false);
-            view.getBarChartMovements().setAnimated(false);
+            // Re-enable animation for better UX, accepting the occasional label overlapping bug
+            view.getPieChartMovements().setAnimated(true);
+            view.getBarChartMovements().setAnimated(true);
 
             // --- PieChart ---
             view.getPieChartMovements().getData().clear();
@@ -185,14 +185,22 @@ public class ReportController implements ReportObserver, AccountObserver {
 
             for (PieChart.Data d : view.getPieChartMovements().getData()) {
                 if (d.getNode() != null) {
-                    if ("INGRESO".equals(d.getName())) d.getNode().setStyle("-fx-pie-color: #3182CE;");
-                    else d.getNode().setStyle("-fx-pie-color: #DD6B20;");
+                    d.getNode().getStyleClass().removeAll("color-income", "color-expense");
+                    if ("INGRESO".equals(d.getName())) {
+                        d.getNode().getStyleClass().add("color-income");
+                    } else {
+                        d.getNode().getStyleClass().add("color-expense");
+                    }
                 }
             }
             for (XYChart.Data<String, Number> d : series.getData()) {
                 if (d.getNode() != null) {
-                    if ("INGRESO".equals(d.getXValue())) d.getNode().setStyle("-fx-bar-fill: #3182CE;");
-                    else d.getNode().setStyle("-fx-bar-fill: #DD6B20;");
+                    d.getNode().getStyleClass().removeAll("color-income", "color-expense");
+                    if ("INGRESO".equals(d.getXValue())) {
+                        d.getNode().getStyleClass().add("color-income");
+                    } else {
+                        d.getNode().getStyleClass().add("color-expense");
+                    }
                 }
             }
 
@@ -201,10 +209,11 @@ public class ReportController implements ReportObserver, AccountObserver {
                 if (n instanceof javafx.scene.control.Label) {
                     javafx.scene.control.Label label = (javafx.scene.control.Label) n;
                     if (label.getGraphic() != null) {
+                        label.getGraphic().getStyleClass().removeAll("color-income", "color-expense");
                         if ("INGRESO".equals(label.getText())) {
-                            label.getGraphic().setStyle("-fx-background-color: #3182CE;");
+                            label.getGraphic().getStyleClass().add("color-income");
                         } else if ("EGRESO".equals(label.getText())) {
-                            label.getGraphic().setStyle("-fx-background-color: #DD6B20;");
+                            label.getGraphic().getStyleClass().add("color-expense");
                         }
                     }
                 }

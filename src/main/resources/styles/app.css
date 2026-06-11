@@ -13,6 +13,11 @@
  variants are kept as hardcoded rgba(R, G, B, alpha) values throughout.
 */
 
+@font-face {
+    font-family: 'Poppins';
+    font-weight: bold;
+    src: url('../fonts/Poppins-Bold.ttf');
+}
 
 .root {
     /* Brand Colors */
@@ -36,7 +41,8 @@
     -fx-text-muted:     rgb(107, 114, 128);  /* Muted gray text */
     -fx-on-primary:     rgb(255, 255, 255);  /* White text on primary/accent colors */
 
-    /* Typography */
+    /* Typography Standard */
+    /* Base Font: Inter (used for all normal text, labels, inputs) */
     -fx-font-family: "Inter", "Segoe UI", "Arial", sans-serif;
     -fx-font-size: 14px;
 }
@@ -55,6 +61,8 @@
 }
 
 .header-title {
+    /* Title Font Standard */
+    -fx-font-family: "Poppins", "Inter", sans-serif;
     -fx-font-size: 22px;
     -fx-font-weight: bold;
     -fx-text-fill: -fx-on-primary;
@@ -88,12 +96,14 @@
 
 /* Title for a form section — uses Orange for visual hierarchy */
 .form-section-title {
+    /* Title Font Standard */
+    -fx-font-family: "Poppins", "Inter", sans-serif;
     -fx-font-size: 18px;
     -fx-font-weight: bold;
     -fx-text-fill: -fx-accent;
 }
 
-.form-input, .combo-box, .date-picker {
+.form-input {
     -fx-background-color: #FAFAFA;
     -fx-border-color: -fx-border;
     -fx-border-radius: 6px;
@@ -104,7 +114,27 @@
 }
 
 .combo-box, .date-picker {
-    -fx-padding: 2px 4px;
+    -fx-background-color: #FAFAFA;
+    -fx-border-color: -fx-border;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-font-size: 14px;
+}
+
+/* Prevent .form-input from adding massive outer padding to these controls */
+.combo-box.form-input, .date-picker.form-input {
+    -fx-padding: 0;
+}
+
+/* Ensure the selected text inside the combo box is colored correctly and padded */
+.combo-box .list-cell {
+    -fx-padding: 8px 12px;
+    -fx-text-fill: -fx-text-main;
+}
+
+.date-picker > .text-field {
+    -fx-padding: 8px 12px;
+    -fx-background-color: transparent;
 }
 
 .form-input:focused, .combo-box:focused, .date-picker:focused {
@@ -358,4 +388,38 @@
     -fx-background-color: -fx-success; /* Use success color for progress */
     -fx-background-radius: 6px;
     -fx-border-radius: 6px;
+}
+
+/* SEMANTIC UTILITY CLASSES (Replaces Hardcoded Java Colors) */
+
+/* Chart & Legend indicators */
+.color-income {
+    -fx-background-color: -fx-success;
+    -fx-fill: -fx-success;
+    -fx-pie-color: -fx-success;
+    -fx-bar-fill: -fx-success;
+}
+
+.color-expense {
+    -fx-background-color: -fx-danger;
+    -fx-fill: -fx-danger;
+    -fx-pie-color: -fx-danger;
+    -fx-bar-fill: -fx-danger;
+}
+
+.color-neutral {
+    -fx-background-color: gray;
+    -fx-fill: gray;
+}
+
+/* Icon & Text utilities */
+.text-primary-dark {
+    -fx-text-fill: -fx-primary;
+    -fx-icon-color: -fx-primary; /* For Ikonli FontIcon */
+}
+
+.text-legend {
+    -fx-text-fill: #4B5563;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
 }

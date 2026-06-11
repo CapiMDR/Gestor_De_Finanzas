@@ -42,7 +42,7 @@ public class AccountEditController {
             view.getTxtNameAccount().setText(accountToEdit.getName());
             String typeStr = accountToEdit.getType().toString();
             if ("DIGITAL".equalsIgnoreCase(typeStr)) typeStr = "Digital";
-            else if ("EFECTIVO".equalsIgnoreCase(typeStr)) typeStr = "Efectivo";
+            else if ("CASH".equalsIgnoreCase(typeStr) || "EFECTIVO".equalsIgnoreCase(typeStr)) typeStr = "Efectivo";
             view.getCmbAccountType().setValue(typeStr);
             view.getCmbCurrency().setValue(accountToEdit.getCoin().toString());
 
@@ -70,7 +70,12 @@ public class AccountEditController {
         }
 
         try {
-            Account.AccountType newType = Account.AccountType.valueOf(newTypeStr.toUpperCase());
+            Account.AccountType newType;
+            if ("Efectivo".equalsIgnoreCase(newTypeStr)) {
+                newType = Account.AccountType.CASH;
+            } else {
+                newType = Account.AccountType.valueOf(newTypeStr.toUpperCase());
+            }
             Account.Coin newCoin = Account.Coin.valueOf(newCoinStr.toUpperCase());
 
             AccountManager.editAccount(accountToEdit, newName, newType, newCoin);

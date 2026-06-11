@@ -14,7 +14,6 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.shape.Circle;
-import javafx.scene.paint.Color;
 import javafx.geometry.Pos;
 
 public class MovementCategoriesViewFX {
@@ -27,8 +26,16 @@ public class MovementCategoriesViewFX {
 
     @FXML
     public void initialize() {
-        cmbCategoryType.setItems(FXCollections.observableArrayList("INCOME", "EXPENSE"));
+        cmbCategoryType.setItems(FXCollections.observableArrayList("Ingreso", "Egreso"));
         cmbCategoryType.getSelectionModel().selectFirst();
+
+        // Limit category name to 24 characters
+        txtNewNameCategory.setTextFormatter(new javafx.scene.control.TextFormatter<>(change -> {
+            if (change.getControlNewText().length() > 24) {
+                return null;
+            }
+            return change;
+        }));
 
         listCategories.setCellFactory(lv -> new ListCell<String>() {
             @Override
@@ -46,14 +53,15 @@ public class MovementCategoriesViewFX {
                     label.setWrapText(true);
                     label.setMaxWidth(Double.MAX_VALUE); // or a fixed width if inside a known container
 
+                    indicator.getStyleClass().removeAll("color-income", "color-expense", "color-neutral");
                     if (item.contains(" - [INCOME]")) {
-                        indicator.setFill(Color.web("#3182CE")); // Pastel blue
+                        indicator.getStyleClass().add("color-income");
                         label.setText(item.replace(" - [INCOME]", ""));
                     } else if (item.contains(" - [EXPENSE]")) {
-                        indicator.setFill(Color.web("#DD6B20")); // Pastel orange
+                        indicator.getStyleClass().add("color-expense");
                         label.setText(item.replace(" - [EXPENSE]", ""));
                     } else {
-                        indicator.setFill(Color.GRAY);
+                        indicator.getStyleClass().add("color-neutral");
                         label.setText(item);
                     }
 

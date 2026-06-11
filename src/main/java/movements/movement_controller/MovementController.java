@@ -233,7 +233,8 @@ public class MovementController implements CategoryObserver {
         name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
 
         try {
-            MovementType type = MovementType.valueOf(typeStr);
+            String typeEnumStr = "Ingreso".equals(typeStr) ? "INCOME" : "EXPENSE";
+            MovementType type = MovementType.valueOf(typeEnumStr);
 
             if (model.getCategories().containsKey(name)) {
                 categoriesView.showError("Error", "La categoría '" + name + "' ya existe.");
