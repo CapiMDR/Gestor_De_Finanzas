@@ -6,7 +6,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import accounts.account_model.Account;
 import filters.controllerFilter.FilterController;
-import filters.controllerFilter.FilterViewFX;
+import filters.viewFilter.FilterViewFX;
 
 import java.util.HashMap;
 import java.util.Map;

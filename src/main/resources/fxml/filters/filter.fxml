@@ -5,14 +5,14 @@
 
 <!--
     Filter View Layout
-    Controller: filters.controllerFilter.FilterViewFX
+    Controller: filters.viewFilter.FilterViewFX
     Stylesheet: /styles/app.css
 
     TODO: Implement layout — Phase 3.4 (Filter module migration)
 -->
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="filters.controllerFilter.FilterViewFX"
+            fx:controller="filters.viewFilter.FilterViewFX"
             styleClass="root-pane">
 
     <top>

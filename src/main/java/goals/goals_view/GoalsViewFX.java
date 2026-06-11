@@ -10,7 +10,7 @@ import javafx.scene.control.TextField;
  * JavaFX controller for the Goals view.
  * Replaces {@code GoalsView.java} (Swing).
  *
- * <p>Layout is defined declaratively in {@code /fxml/goals.fxml}.
+ * Layout is defined declaratively in {@code /fxml/goals.fxml}.
  * Business logic is delegated to {@code GoalsController}.
  *
  * @see goals.goals_controller.GoalsController

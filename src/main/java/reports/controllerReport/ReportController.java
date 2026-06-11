@@ -11,7 +11,7 @@ import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import goals.GoalsModule;
+import goals.goals_view.GoalsModule;
 import movements.movement_model.Movement;
 import movements.movement_model.MovementCategory;
 import movements.movement_view.MovementsModule;

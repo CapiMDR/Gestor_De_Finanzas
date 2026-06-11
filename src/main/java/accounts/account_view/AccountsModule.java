@@ -12,7 +12,7 @@ import javafx.stage.Stage;
  * Loads {@code account.fxml}, instantiates {@link AccountViewFX} via FXMLLoader,
  * then creates and wires {@link AccountController} to the view.
  *
- * <p>The controller wires all button events internally via {@code AssignEvents()},
+ * The controller wires all button events internally via {@code AssignEvents()},
  * preserving the original Observer pattern architecture.
  */
 public class AccountsModule {

@@ -7,7 +7,7 @@ import accounts.account_model.Account;
 import accounts.account_model.AccountManager;
 import accounts.account_model.AccountObserver;
 import accounts.account_view.AccountViewFX;
-import reports.ReportsModule;
+import reports.report_view.ReportsModule;
 
 /**
  * Controller in charge of managing actions related to the account view.

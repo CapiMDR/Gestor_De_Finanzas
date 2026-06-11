@@ -23,7 +23,7 @@ import javafx.scene.control.TextField;
  * JavaFX controller for the Account Management view.
  * Replaces {@code AccountView.java} (Swing).
  *
- * <p>
+ * 
  * This controller cooperates with {@link AccountController}, which holds
  * the full business logic. The view only handles UI interaction:
  * reading form fields, updating the list and showing dialogs.

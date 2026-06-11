@@ -4,6 +4,7 @@
  */
 package filters.controllerFilter;
 
+import filters.viewFilter.FilterViewFX;
 import accounts.account_model.Account;
 import accounts.account_model.AccountObserver;
 

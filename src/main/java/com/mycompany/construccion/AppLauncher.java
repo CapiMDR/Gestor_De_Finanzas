@@ -6,6 +6,7 @@ package com.mycompany.construccion;
  * from some IDEs can cause "JavaFX runtime components are missing" errors.
  * Launching through this separate class bypasses that issue.
  */
+
 public class AppLauncher {
     public static void main(String[] args) {
         Main.main(args);

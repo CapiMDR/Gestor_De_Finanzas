@@ -1,11 +1,10 @@
-package goals;
+package goals.goals_view;
 
 import accounts.account_model.Account;
 import accounts.account_model.AccountManagerSubject;
 import goals.goals_controller.GoalDetailControllerFX;
 import goals.goals_controller.GoalEditController;
 import goals.goals_controller.GoalsController;
-import goals.goals_view.GoalsViewFX;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;

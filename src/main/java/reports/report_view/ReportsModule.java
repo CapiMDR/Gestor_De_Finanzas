@@ -1,4 +1,4 @@
-package reports;
+package reports.report_view;
 
 import accounts.account_model.Account;
 import accounts.account_model.AccountManagerSubject;
@@ -9,7 +9,6 @@ import javafx.stage.Stage;
 import reports.controllerReport.ReportController;
 import reports.modelReport.ReportGenerator;
 import reports.modelReport.ReportSubject;
-import reports.report_view.ReportsViewFX;
 
 import java.util.HashMap;
 import java.util.Map;
