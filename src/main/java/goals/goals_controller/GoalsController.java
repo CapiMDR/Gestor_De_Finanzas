@@ -1,129 +1,173 @@
 package goals.goals_controller;
 
-import movements.movement_model.Movement;
+import java.math.BigDecimal;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import accounts.account_model.Account;
 import accounts.account_model.AccountManager;
 import accounts.account_model.AccountManagerSubject;
 import accounts.account_model.AccountObserver;
 import goals.goals_model.Goal;
-import goals.goals_view.GoalActionListener;
-import goals.goals_view.GoalEditView;
-import goals.goals_view.GoalsView;
-
-import java.math.BigDecimal;
-import java.util.List;
-import javax.swing.JOptionPane;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import goals.goals_view.GoalsViewFX;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ListCell;
+import movements.movement_model.Movement;
 
 /**
- * Main controller of the Goals Module.
+ * Main controller of the Goals Module for JavaFX.
  * Coordinates the interaction between Views, Models and Persistence.
- * Implements GoalActionListener to handle the events of the goal cards.
  * 
  * @author Jose Pablo
  */
-
-public class GoalsController implements GoalActionListener, AccountObserver {
+public class GoalsController implements AccountObserver {
 
     private static final Logger logger = LoggerFactory.getLogger(GoalsController.class);
 
-    private final GoalsView mainView;
-    private final GoalEditView editView;
-    private final GoalDetailController detailController;
+    private final GoalsViewFX mainView;
+    private final GoalEditController editController;
+    private final GoalDetailControllerFX detailController;
 
     private Account currentAccount;
 
-    public GoalsController(GoalsView mainView,
-            GoalEditView editView,
-            GoalDetailController detailController) {
+    public GoalsController(GoalsViewFX mainView,
+            GoalEditController editController,
+            GoalDetailControllerFX detailController) {
         this.mainView = mainView;
-        this.editView = editView;
+        this.editController = editController;
         this.detailController = detailController;
 
-        this.mainView.getBtnAddGoal().addActionListener(e -> handleAddGoalFromMainView());
-        this.mainView.setCardActionListener(this);
-        this.mainView.setController(this);
+        assignEvents();
         AccountManagerSubject.addObserver(this);
     }
 
-    /**
-     * Sets the active account and refreshes the view.
-     * 
-     * @param account The selected account.
-     */
+    private void assignEvents() {
+        // Setup ListView to display only the goal names
+        mainView.getListGoals().setCellFactory(param -> new ListCell<String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty ? null : item);
+            }
+        });
+
+        // Add Goal
+        mainView.getBtnAddGoal().setOnAction(e -> handleAddGoal());
+
+        // Edit Goal
+        mainView.getBtnEditGoal().setOnAction(e -> {
+            Goal selected = getSelectedGoal();
+            if (selected != null) {
+                boolean saved = editController.showEditDialog(selected);
+                if (saved) {
+                    AccountManager.saveAccountsData();
+                    refreshView();
+                }
+            } else {
+                showAlert(AlertType.WARNING, "Selección requerida", "Por favor selecciona una meta para editar.");
+            }
+        });
+
+        // Delete Goal
+        mainView.getBtnDeleteGoal().setOnAction(e -> {
+            Goal selected = getSelectedGoal();
+            if (selected != null) {
+                handleDeleteGoal(selected);
+            } else {
+                showAlert(AlertType.WARNING, "Selección requerida", "Por favor selecciona una meta para eliminar.");
+            }
+        });
+
+        // View Details (Double click on list)
+        mainView.getListGoals().setOnMouseClicked(e -> {
+            if (e.getClickCount() == 2) {
+                Goal selected = getSelectedGoal();
+                if (selected != null) {
+                    detailController.showDetails(selected);
+                }
+            }
+        });
+        
+        // Update progress bar on selection
+        mainView.getListGoals().getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            Goal selected = getSelectedGoal();
+            if (selected != null) {
+                double progress = 0.0;
+                if (selected.getTargetAmount().compareTo(BigDecimal.ZERO) > 0) {
+                    progress = selected.getCurrentAmount().divide(selected.getTargetAmount(), 4, java.math.RoundingMode.HALF_UP).doubleValue();
+                }
+                mainView.getProgressBarGoal().setProgress(Math.min(1.0, progress));
+            } else {
+                mainView.getProgressBarGoal().setProgress(0.0);
+            }
+        });
+    }
+
+    private Goal getSelectedGoal() {
+        int index = mainView.getListGoals().getSelectionModel().getSelectedIndex();
+        if (index >= 0 && currentAccount != null && index < currentAccount.getGoals().size()) {
+            return currentAccount.getGoals().get(index);
+        }
+        return null;
+    }
 
     public void setAccount(Account account) {
         this.currentAccount = account;
         if (currentAccount != null) {
-            String currency = "USD";
-            if (currentAccount.getCoin() != null) {
-                currency = currentAccount.getCoin().toString();
-            }
-            mainView.setCurrencyLabel(currency);
-
-            // Auto-fill account name
-            String accName = (currentAccount.getName() != null) ? currentAccount.getName() : "Current Account";
-            mainView.setAccountName(accName);
-
             onNotify(AccountManager.getAccounts());
         }
     }
 
     private void refreshView() {
-        if (currentAccount != null) {
-            mainView.updateGoalList(currentAccount.getGoals());
-        }
+        Platform.runLater(() -> {
+            if (currentAccount != null) {
+                List<String> goalNames = currentAccount.getGoals().stream()
+                        .map(Goal::getName)
+                        .toList();
+                mainView.getListGoals().setItems(FXCollections.observableArrayList(goalNames));
+            }
+        });
     }
-
-    /**
-     * Handles updates triggered by external modules (like Movements).
-     */
 
     @Override
     public void onNotify(List<Account> accountsList) {
-        if (currentAccount == null)
-            return;
+        if (currentAccount == null) return;
+        
+        // Find if this specific account was updated
+        for (Account a : accountsList) {
+            if (a.getName().equals(this.currentAccount.getName())) {
+                this.currentAccount = a;
+                break;
+            }
+        }
 
         List<Movement> movements = currentAccount.getMovements();
         recalculateGoalsProgress(currentAccount.getGoals(), movements);
 
-        // Saving accounts again after recalculating goals
         AccountManager.saveAccountsData();
         refreshView();
     }
 
-    /**
-     * Calculates the total balance (Initial + Movements).
-     * Returns the BigDecimal value directly.
-     */
-
     private BigDecimal calculateActualBalance() {
-        if (currentAccount == null)
-            return BigDecimal.ZERO;
+        if (currentAccount == null) return BigDecimal.ZERO;
 
-        // Get initial balance
         BigDecimal balance = currentAccount.getInitialBalance();
-        if (balance == null) {
-            balance = BigDecimal.ZERO;
-        }
+        if (balance == null) balance = BigDecimal.ZERO;
 
-        // Sumar y restar movimientos
         List<Movement> movements = currentAccount.getMovements();
         if (movements != null) {
             for (Movement m : movements) {
                 if (m.getCategory() != null) {
                     switch (m.getCategory().getType()) {
-                        case INCOME:
-                            balance = balance.add(m.getAmount());
-                            break;
-                        case EXPENSE:
-                            balance = balance.subtract(m.getAmount());
-                            break;
-                        default:
-                            // Entrada no valida, tipo no encontrado
-                            break;
+                        case INCOME: balance = balance.add(m.getAmount()); break;
+                        case EXPENSE: balance = balance.subtract(m.getAmount()); break;
+                        default: break;
                     }
                 }
             }
@@ -131,18 +175,9 @@ public class GoalsController implements GoalActionListener, AccountObserver {
         return balance;
     }
 
-    /**
-     * Updates the progress of the goals based on the account's initial
-     * balance and movements.
-     */
-
     private void recalculateGoalsProgress(List<Goal> goals, List<Movement> movements) {
-        // We calculate the current account balance
         BigDecimal totalBalance = calculateActualBalance();
 
-        // We assign the balance to the goals (without exceeding the target amount)
-        // Fix: Previously the progress was assigned to all goals equally,
-        // now the progress is distributed according to the target amount of each goal
         if (goals != null) {
             for (Goal goal : goals) {
                 BigDecimal progress = totalBalance.min(goal.getTargetAmount());
@@ -151,86 +186,68 @@ public class GoalsController implements GoalActionListener, AccountObserver {
         }
     }
 
-    public void createNewGoal(String name, BigDecimal target, String desc) {
-        Goal newGoal = new Goal(name, target, desc);
+    private void handleAddGoal() {
+        String name = mainView.getTxtGoalName().getText().trim();
+        String targetStr = mainView.getTxtTargetAmount().getText().trim();
+        String desc = mainView.getTxtDescription().getText().trim();
 
-        if (currentAccount != null) {
-            // We calculate the current balance and set it to the newly created goal
-            BigDecimal currentBalance = calculateActualBalance();
-            newGoal.setCurrentAmount(currentBalance);
-
-            currentAccount.getGoals().add(newGoal);
-            AccountManager.saveAccountsData();
-            refreshView();
-            logger.info("Goal created: '{}' with target={} for account '{}'.",
-                    name, target, currentAccount.getName());
-        }
-    }
-
-    /**
-     * Logic for the buttons in the view.
-     */
-
-    private void handleAddGoalFromMainView() {
-        String name = mainView.getGoalName();
-        BigDecimal target = mainView.getTargetAmount();
-        String desc = mainView.getDescription();
-
-        // Validate
-        if (name.isEmpty() || target.compareTo(BigDecimal.ZERO) <= 0) {
-            JOptionPane.showMessageDialog(mainView, "Por favor ingresa un nombre y monto objetivo válidos.");
+        if (name.isEmpty() || targetStr.isEmpty()) {
+            showAlert(AlertType.ERROR, "Datos incompletos", "Por favor ingresa un nombre y monto objetivo válidos.");
             return;
         }
 
-        createNewGoal(name, target, desc); // Testing in JUnit
-        mainView.clearForm();
-    }
-
-    @Override
-    public void onViewDetails(Goal goal) {
-        // Delegate visualization to the Detail Controller
-        detailController.showDetails(goal);
-    }
-
-    @Override
-    public void onEdit(Goal goal) {
-        editView.populateFields(goal.getName(), goal.getTargetAmount(), goal.getDescription());
-
-        editView.addSaveListener(e -> {
-            String newName = editView.getNameInput();
-            BigDecimal newTarget = editView.getTargetInput();
-
-            if (newName.isEmpty() || newTarget.compareTo(BigDecimal.ZERO) <= 0) {
-                JOptionPane.showMessageDialog(editView, "Datos inválidos.");
+        try {
+            BigDecimal target = new BigDecimal(targetStr);
+            if (target.compareTo(BigDecimal.ZERO) <= 0) {
+                showAlert(AlertType.ERROR, "Monto inválido", "El monto objetivo debe ser mayor a cero.");
                 return;
             }
 
-            goal.setName(newName);
-            goal.setTargetAmount(newTarget);
-            goal.setDescription(editView.getDescriptionInput());
+            Goal newGoal = new Goal(name, target, desc);
 
-            AccountManager.saveAccountsData();
-            refreshView();
-            editView.closeDialog();
-            logger.info("Goal edited: '{}' -> '{}', new target={}.",
-                    goal.getName(), newName, newTarget);
-        });
+            if (currentAccount != null) {
+                BigDecimal currentBalance = calculateActualBalance();
+                newGoal.setCurrentAmount(currentBalance);
 
-        editView.showDialog();
+                currentAccount.getGoals().add(newGoal);
+                AccountManager.saveAccountsData();
+                refreshView();
+                
+                // Clear fields
+                mainView.getTxtGoalName().clear();
+                mainView.getTxtTargetAmount().clear();
+                mainView.getTxtDescription().clear();
+                
+                logger.info("Goal created: '{}' with target={} for account '{}'.",
+                        name, target, currentAccount.getName());
+            }
+        } catch (NumberFormatException e) {
+            showAlert(AlertType.ERROR, "Formato inválido", "Por favor ingresa un monto numérico válido.");
+        }
     }
 
-    @Override
-    public void onDelete(Goal goal) {
-        int confirm = JOptionPane.showConfirmDialog(mainView,
-                "Are you sure you want to delete: " + goal.getName() + "?",
-                "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+    private void handleDeleteGoal(Goal goal) {
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Confirmar Eliminación");
+        alert.setHeaderText(null);
+        alert.setContentText("¿Estás seguro de que deseas eliminar la meta: " + goal.getName() + "?");
 
-        if (confirm == JOptionPane.YES_OPTION && currentAccount != null) {
-            logger.info("Goal deleted: '{}' from account '{}'.",
-                    goal.getName(), currentAccount.getName());
-            currentAccount.getGoals().remove(goal);
-            AccountManager.saveAccountsData();
-            refreshView();
+        if (alert.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
+            if (currentAccount != null) {
+                logger.info("Goal deleted: '{}' from account '{}'.",
+                        goal.getName(), currentAccount.getName());
+                currentAccount.getGoals().remove(goal);
+                AccountManager.saveAccountsData();
+                refreshView();
+            }
         }
+    }
+
+    private void showAlert(AlertType type, String title, String message) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

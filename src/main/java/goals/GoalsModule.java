@@ -1,55 +1,55 @@
 package goals;
 
-import javax.swing.JFrame;
-
 import accounts.account_model.Account;
 import accounts.account_model.AccountManagerSubject;
-import goals.goals_controller.GoalDetailController;
+import goals.goals_controller.GoalDetailControllerFX;
+import goals.goals_controller.GoalEditController;
 import goals.goals_controller.GoalsController;
-import goals.goals_view.GoalDetailView;
-import goals.goals_view.GoalEditView;
-import goals.goals_view.GoalsView;
+import goals.goals_view.GoalsViewFX;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 /**
- * Main entry point of the "Financial Manager" application.
+ * Main entry point of the Goals module (JavaFX).
  * Integrates the Accounts and Goals modules.
  *
  * @author Team Integration
  */
-
 public class GoalsModule {
 
+    @SuppressWarnings("unused")
+    private static GoalsController goalsController;
+
     public static void initGoals(Account selectedAccount) {
-        GoalsView goalsView = new GoalsView();
+        try {
+            FXMLLoader loader = new FXMLLoader(GoalsModule.class.getResource("/fxml/goals.fxml"));
+            Parent root = loader.load();
+            GoalsViewFX view = loader.getController();
 
-        JFrame frame = new JFrame("Metas");
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setSize(1040, 740);
-        frame.add(goalsView);
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
+            GoalEditController editController = new GoalEditController();
+            GoalDetailControllerFX detailController = new GoalDetailControllerFX();
 
-        GoalEditView goalEditView = new GoalEditView();
-        GoalDetailView goalDetailView = new GoalDetailView();
-        GoalDetailController goalDetailController = new GoalDetailController(goalDetailView);
-        GoalsController goalsController = new GoalsController(
-                goalsView,
-                goalEditView,
-                goalDetailController);
-        if (selectedAccount != null) {
-            // Pass the account to the goals module
-            goalsController.setAccount(selectedAccount);
-        }
-
-        // Unregister observer when closing the window to prevent accumulation
-        // de observers muertos y notificaciones duplicadas
-        frame.addWindowListener(new java.awt.event.WindowAdapter() {
-            @Override
-            public void windowClosed(java.awt.event.WindowEvent e) {
-                AccountManagerSubject.removeObserver(goalsController);
+            goalsController = new GoalsController(view, editController, detailController);
+            if (selectedAccount != null) {
+                // Pass the account to the goals module
+                goalsController.setAccount(selectedAccount);
             }
-        });
 
-        frame.setVisible(true);
+            Stage stage = new Stage();
+            stage.setTitle("Metas Financieras");
+            stage.setScene(new Scene(root, 900, 600));
+
+            // Unregister observer when closing the window to prevent accumulation
+            // of dead observers and duplicated notifications
+            stage.setOnCloseRequest(e -> {
+                AccountManagerSubject.removeObserver(goalsController);
+            });
+
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

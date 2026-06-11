@@ -11,6 +11,7 @@ import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import goals.GoalsModule;
 import movements.movement_model.Movement;
 import movements.movement_model.MovementCategory;
 import movements.movement_view.MovementsModule;
@@ -54,7 +55,10 @@ public class ReportController implements ReportObserver, AccountObserver {
             MovementsModule.initMovements(account);
         });
 
-        view.getNavGoals().setOnMouseClicked(e -> showUnderConstructionAlert("Metas"));
+        view.getNavGoals().setOnMouseClicked(e -> {
+            GoalsModule.initGoals(account);
+        });
+
         view.getNavReminders().setOnMouseClicked(e -> showUnderConstructionAlert("Recordatorios"));
         view.getNavRecurrings().setOnMouseClicked(e -> showUnderConstructionAlert("Recurrentes"));
         view.getNavFilters().setOnMouseClicked(e -> showUnderConstructionAlert("Filtros"));

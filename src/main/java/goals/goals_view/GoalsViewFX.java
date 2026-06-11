@@ -26,5 +26,14 @@ public class GoalsViewFX {
     @FXML private Button btnEditGoal;
     @FXML private Button btnDeleteGoal;
 
-    // TODO: Implement — Phase 3.4 (Goals module migration)
+    // ── Public Accessors for Controller ──────────────────────────────────────
+
+    public ListView<String> getListGoals() { return listGoals; }
+    public TextField getTxtGoalName() { return txtGoalName; }
+    public TextField getTxtTargetAmount() { return txtTargetAmount; }
+    public TextField getTxtDescription() { return txtDescription; }
+    public ProgressBar getProgressBarGoal() { return progressBarGoal; }
+    public Button getBtnAddGoal() { return btnAddGoal; }
+    public Button getBtnEditGoal() { return btnEditGoal; }
+    public Button getBtnDeleteGoal() { return btnDeleteGoal; }
 }
