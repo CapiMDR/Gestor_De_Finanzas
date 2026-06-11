@@ -39,8 +39,12 @@ public class RemindersController {
     /** Main view where reminders are shown. */
     private RemindersViewFX remindersView;
 
-    /** Scheduled executor to periodically check reminders. */
-    private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+    /** Scheduled executor to periodically check reminders. Uses a daemon thread so it doesn't block JVM exit. */
+    private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor(r -> {
+        Thread thread = new Thread(r, "Reminders-Scheduler");
+        thread.setDaemon(true);
+        return thread;
+    });
 
     /**
      * Creates the controller, shows the main view and schedules the
