@@ -1,39 +1,41 @@
 package reports.controllerReport;
 
-import org.jfree.data.category.DefaultCategoryDataset;
-import org.jfree.data.general.DefaultPieDataset;
-import com.mycompany.construccion.FrmMain;
-
-import java.awt.Image;
 import java.math.BigDecimal;
 import java.util.List;
-
-import javax.swing.ImageIcon;
 
 import accounts.account_model.Account;
 import accounts.account_model.AccountManagerSubject;
 import accounts.account_model.AccountObserver;
+import javafx.application.Platform;
+import javafx.scene.chart.PieChart;
+import javafx.scene.chart.XYChart;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import movements.movement_model.Movement;
 import movements.movement_model.MovementCategory;
+import movements.movement_view.MovementsModule;
 import reports.modelReport.ReportData;
 import reports.modelReport.ReportGenerator;
 import reports.modelReport.ReportObserver;
+import reports.report_view.ReportsViewFX;
 
 /**
  * Controller class that manages reports and charts view interactions.
  * Implements ReportObserver and AccountObserver to stay synced with model changes.
+ * Refactored for JavaFX migration.
  * @author villa
  */
 public class ReportController implements ReportObserver, AccountObserver {
 
-    private FrmMain view;
+    private ReportsViewFX view;
     private ReportGenerator reportGenerator;
     private Account account;
 
-    public void setViewModule(FrmMain view, ReportGenerator generator, Account selectedAccount) {
+    public void setViewModule(ReportsViewFX view, ReportGenerator generator, Account selectedAccount) {
         this.account = selectedAccount;
         this.view = view;
         this.reportGenerator = generator;
+        
         AccountManagerSubject.addObserver(this);
         reportGenerator.addObserver(this);
 
@@ -43,59 +45,54 @@ public class ReportController implements ReportObserver, AccountObserver {
     }
 
     private void assignActions() {
+        // Time filter actions
+        view.getBtnToday().setOnAction(e -> reportGenerator.today());
+        view.getBtnWeek().setOnAction(e -> reportGenerator.weekAgo());
 
-        view.btnToday.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent e) {
-                reportGenerator.today();
-            }
+        // Navigation actions
+        view.getNavAddMovement().setOnMouseClicked(e -> {
+            MovementsModule.initMovements(account);
         });
 
-        view.btnWeek.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent e) {
-                reportGenerator.weekAgo();
-            }
-        });
+        view.getNavGoals().setOnMouseClicked(e -> showUnderConstructionAlert("Metas"));
+        view.getNavReminders().setOnMouseClicked(e -> showUnderConstructionAlert("Recordatorios"));
+        view.getNavRecurrings().setOnMouseClicked(e -> showUnderConstructionAlert("Recurrentes"));
+        view.getNavFilters().setOnMouseClicked(e -> showUnderConstructionAlert("Filtros"));
+        view.getNavCredit().setOnMouseClicked(e -> showUnderConstructionAlert("Calculadora de Crédito"));
+    }
+
+    private void showUnderConstructionAlert(String moduleName) {
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("Módulo en Construcción");
+        alert.setHeaderText(null);
+        alert.setContentText("El módulo de " + moduleName + " está en construcción para JavaFX.");
+        alert.showAndWait();
     }
 
     private void initComponents() {
-        // --- PieChart ---
-        DefaultPieDataset<String> dataset = new DefaultPieDataset<>();
-        dataset.setValue("INCOME", 0);
-        dataset.setValue("EXPENSE", 0);
+        Platform.runLater(() -> {
+            // --- PieChart ---
+            view.getPieChartMovements().getData().clear();
+            view.getPieChartMovements().getData().addAll(
+                new PieChart.Data("INCOME", 0),
+                new PieChart.Data("EXPENSE", 0)
+            );
 
-        view.updateCharts(dataset);
-
-        // --- BarChart ---
-        DefaultCategoryDataset barDataset = new DefaultCategoryDataset();
-
-        barDataset.addValue(0, "INCOME", "INCOME");
-        barDataset.addValue(0, "EXPENSE", "EXPENSE");
-
-        view.updateBarChart(barDataset);
-
-        String pathImg = "";
-
-        if (account.getType() == Account.AccountType.CASH) {
-            pathImg = "/images/piggy.png";
-        } else {
-            pathImg = "/images/credit.png";
-        }
-
-        ImageIcon icon = new ImageIcon(getClass().getResource(pathImg));
-
-        Image img = icon.getImage().getScaledInstance(
-                view.credit.getWidth(),
-                view.credit.getHeight(),
-                Image.SCALE_SMOOTH);
-
-        view.credit.setIcon(new ImageIcon(img));
+            // --- BarChart ---
+            view.getBarChartMovements().getData().clear();
+            XYChart.Series<String, Number> series = new XYChart.Series<>();
+            series.setName("Movimientos");
+            series.getData().add(new XYChart.Data<>("INCOME", 0));
+            series.getData().add(new XYChart.Data<>("EXPENSE", 0));
+            view.getBarChartMovements().getData().add(series);
+        });
     }
 
     private void syncAccount() {
-        view.labelName.setText("" + account.getName());
-        view.labelMoney.setText("$" + account.getCurrentBalance());
+        Platform.runLater(() -> {
+            view.getLblAccountName().setText(account.getName());
+            view.getLblAccountBalance().setText("$" + account.getCurrentBalance().toPlainString());
+        });
     }
 
     @Override
@@ -115,24 +112,33 @@ public class ReportController implements ReportObserver, AccountObserver {
                 .map(Movement::getAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        // --- PieChart ---
-        DefaultPieDataset<String> dataset = new DefaultPieDataset<>();
-        dataset.setValue("INCOME", income);
-        dataset.setValue("EXPENSE", expense);
+        Platform.runLater(() -> {
+            // --- PieChart ---
+            view.getPieChartMovements().getData().clear();
+            view.getPieChartMovements().getData().addAll(
+                new PieChart.Data("INCOME", income.doubleValue()),
+                new PieChart.Data("EXPENSE", expense.doubleValue())
+            );
 
-        view.updateCharts(dataset);
-
-        // --- BarChart ---
-        DefaultCategoryDataset barDataset = new DefaultCategoryDataset();
-
-        barDataset.addValue(income, "INCOME", "INCOME");
-        barDataset.addValue(expense, "EXPENSE", "EXPENSE");
-
-        view.updateBarChart(barDataset);
+            // --- BarChart ---
+            view.getBarChartMovements().getData().clear();
+            XYChart.Series<String, Number> series = new XYChart.Series<>();
+            series.setName(periodName);
+            series.getData().add(new XYChart.Data<>("INCOME", income.doubleValue()));
+            series.getData().add(new XYChart.Data<>("EXPENSE", expense.doubleValue()));
+            view.getBarChartMovements().getData().add(series);
+        });
     }
 
     @Override
     public void onNotify(List<Account> accountsList) {
-        syncAccount();
+        // Find if this specific account was updated
+        for (Account a : accountsList) {
+            if (a.getName().equals(this.account.getName())) {
+                this.account = a;
+                syncAccount();
+                break;
+            }
+        }
     }
 }

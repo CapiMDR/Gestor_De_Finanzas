@@ -68,5 +68,21 @@ public class ReportsViewFX {
     /** Opens the Interest Calculator. */
     @FXML private HBox navCredit;
 
-    // TODO: Implement — Phase 3.4 (Reports/Dashboard module migration)
+    // ── Public Accessors for Controller ──────────────────────────────────────
+
+    public Label getLblAccountName() { return lblAccountName; }
+    public Label getLblAccountBalance() { return lblAccountBalance; }
+
+    public Button getBtnToday() { return btnToday; }
+    public Button getBtnWeek() { return btnWeek; }
+
+    public PieChart getPieChartMovements() { return pieChartMovements; }
+    public BarChart<String, Number> getBarChartMovements() { return barChartMovements; }
+
+    public HBox getNavAddMovement() { return navAddMovement; }
+    public HBox getNavGoals() { return navGoals; }
+    public HBox getNavReminders() { return navReminders; }
+    public HBox getNavRecurrings() { return navRecurrings; }
+    public HBox getNavFilters() { return navFilters; }
+    public HBox getNavCredit() { return navCredit; }
 }
