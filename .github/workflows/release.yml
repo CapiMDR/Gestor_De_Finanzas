@@ -5,6 +5,9 @@ on:
     tags:
       - 'v*' # Este workflow SOLO se ejecuta cuando subes un tag que empiece con "v" (ej. v1.0.1)
 
+env:
+  PROJECT_VERSION: "" # Declarado a nivel de workflow para silenciar la advertencia del IDE
+
 jobs:
   build-and-release:
     name: Build, Package and Release
