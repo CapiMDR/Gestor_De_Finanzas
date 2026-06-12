@@ -10,6 +10,9 @@ project:
     - Mauricio Villanueva
   license: MIT
   inceptionYear: 2026
+  links:
+    homepage: https://github.com/CapiMDR/Gestor_De_Finanzas
+    documentation: https://github.com/CapiMDR/Gestor_De_Finanzas/blob/main/README.md
 
 release:
   github:
