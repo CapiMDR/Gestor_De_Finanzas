@@ -58,6 +58,20 @@
           <version>1.4</version>
           <scope>compile</scope>
         </dependency>
+
+        <!-- TestFX for testing JavaFX applications -->
+        <dependency>
+            <groupId>org.testfx</groupId>
+            <artifactId>testfx-junit5</artifactId>
+            <version>4.0.18</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testfx</groupId>
+            <artifactId>testfx-core</artifactId>
+            <version>4.0.18</version>
+            <scope>test</scope>
+        </dependency>
         <!-- Logging: SLF4J API + Logback implementation -->
         <dependency>
           <groupId>org.slf4j</groupId>

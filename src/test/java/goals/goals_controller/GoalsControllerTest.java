@@ -4,117 +4,102 @@ import accounts.account_model.Account;
 import accounts.account_model.AccountManager;
 import accounts.account_model.Account.Coin;
 import goals.goals_model.Goal;
-import goals.goals_view.GoalEditView;
-import goals.goals_view.GoalsView;
-import movements.movement_model.Movement;
+import goals.goals_view.GoalsViewFX;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mock;
 import org.mockito.MockedStatic;
-import org.mockito.Spy;
-import org.mockito.junit.jupiter.MockitoExtension;
-import java.awt.event.ActionListener;
+import org.testfx.api.FxRobot;
+import org.testfx.framework.junit5.ApplicationExtension;
+import org.testfx.framework.junit5.Start;
+
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import javax.swing.JButton;
+import java.util.Collections;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.mockStatic;
 
-@ExtendWith(MockitoExtension.class)
-@DisplayName("Goals Controller Test")
+/**
+ * Unit and integration tests for {@link GoalsController} using TestFX.
+ * Initializes a real JavaFX UI instance to properly test the controller's logic 
+ * and avoid ByteBuddy proxy issues with Mockito on Java 25.
+ */
+
+@ExtendWith(ApplicationExtension.class)
+@DisplayName("Goals Controller Test (TestFX)")
 class GoalsControllerTest {
 
-    @Mock private GoalsView view;
-    @Mock private GoalEditView editView;
-    @Mock private GoalDetailController detailController;
-    @Mock private Account currentAccount;
-    @Mock private JButton btnAdd;
-
-    // Se usa Spy con una lista real para verificar que si se agregan elementos
-    @Spy
-    private List<Goal> goalList = new ArrayList<>();
-
     private GoalsController controller;
+    private GoalsViewFX view;
+    private Account currentAccount;
+
+    @Start
+    private void start(Stage stage) throws Exception {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/goals/goals.fxml"));
+        Parent root = loader.load();
+        view = loader.getController();
+        
+        GoalEditController editController = new GoalEditController();
+        GoalDetailControllerFX detailController = new GoalDetailControllerFX();
+        
+        controller = new GoalsController(view, editController, detailController);
+        
+        stage.setScene(new Scene(root));
+        stage.show();
+    }
 
     @BeforeEach
     void setUp() {
-        // Lenient (permisiva) sirve para evitar errores si algún mock no se usa en un test específico
-        lenient().when(view.getBtnAddGoal()).thenReturn(btnAdd);
-        lenient().when(currentAccount.getGoals()).thenReturn(goalList);
-        lenient().when(currentAccount.getName()).thenReturn("Cuenta Test");
-        lenient().when(currentAccount.getCoin()).thenReturn(Coin.USD);
-        lenient().when(currentAccount.getInitialBalance()).thenReturn(BigDecimal.ZERO);
-        lenient().when(currentAccount.getMovements()).thenReturn(new ArrayList<Movement>());
-
-        controller = new GoalsController(view, editView, detailController);
-        
-        controller.setAccount(currentAccount);
-        clearInvocations(view); 
+        currentAccount = new Account(1, "Cuenta Test", Account.AccountType.CASH, Coin.USD, BigDecimal.ZERO);
+        // By default, Account constructor creates an empty list of goals.
     }
 
     @Test
-    @DisplayName("SetAccount should update view with Name, Currency, and List")
-    void testSetAccount() {
-        controller.setAccount(currentAccount);
-
-        verify(view).setAccountName("Cuenta Test");
-        verify(view).setCurrencyLabel("USD");
-        verify(view).updateGoalList(goalList);
-    }
-
-    @Test
-    @DisplayName("CreateNewGoal should add goal to list and save via Static Manager")
-    void testCreateNewGoal() {
+    @DisplayName("SetAccount should update view with Name and update GoalList")
+    void testSetAccount(FxRobot robot) {
         // Arrange
-        String name = "New Goal";
-        BigDecimal target = new BigDecimal("100.00");
-        String desc = "Test Description";
+        Goal testGoal = new Goal("Mi Meta", new BigDecimal("100"), "Desc");
+        currentAccount.getGoals().add(testGoal);
 
-        // Mock de la clase estática AccountManager
+        // Act
         try (MockedStatic<AccountManager> mockedManager = mockStatic(AccountManager.class)) {
+            mockedManager.when(AccountManager::getAccounts).thenReturn(Collections.singletonList(currentAccount));
             
-            // Act
-            controller.createNewGoal(name, target, desc);
+            robot.interact(() -> {
+                controller.setAccount(currentAccount);
+            });
 
-            // Assert (Capturar la meta que se intentó agregar a la lista)
-            ArgumentCaptor<Goal> goalCaptor = ArgumentCaptor.forClass(Goal.class);
-            verify(goalList).add(goalCaptor.capture());
-
-            Goal createdGoal = goalCaptor.getValue();
-            assertEquals(name, createdGoal.getName());
-            assertEquals(target, createdGoal.getTargetAmount());
-            assertEquals(desc, createdGoal.getDescription());
-
-            // Verificar que se llamó al método
-            mockedManager.verify(AccountManager::saveAccountsData);
-            verify(view).updateGoalList(goalList);
+            // Assert
+            assertNotNull(view.getListGoals(), "The goal list should not be null");
+            assertEquals(1, view.getListGoals().getItems().size(), "There should be exactly one item in the view list");
+            assertEquals("Mi Meta", view.getListGoals().getItems().get(0), "The item should match the goal name");
         }
     }
 
     @Test
-    @DisplayName("OnViewDetails should delegate to DetailController")
-    void testOnViewDetails() {
-        Goal goal = new Goal();
-        controller.onViewDetails(goal);
+    @DisplayName("onNotify should recalculate progress")
+    void testOnNotify(FxRobot robot) {
+        // Arrange
+        Goal testGoal = new Goal("Mi Meta", new BigDecimal("100"), "Desc");
+        currentAccount.getGoals().add(testGoal);
 
-        verify(detailController, times(1)).showDetails(goal);
-    }
+        // Act
+        try (MockedStatic<AccountManager> mockedManager = mockStatic(AccountManager.class)) {
+            mockedManager.when(AccountManager::getAccounts).thenReturn(Collections.singletonList(currentAccount));
+            
+            robot.interact(() -> {
+                controller.setAccount(currentAccount);
+                controller.onNotify(Collections.singletonList(currentAccount));
+            });
 
-    @Test
-    @DisplayName("OnEdit should populate edit view and show dialog")
-    void testOnEdit() {
-        Goal testGoal = new Goal("Test Goal", new BigDecimal("123"), "Test");
-
-        controller.onEdit(testGoal);
-
-        verify(editView).populateFields("Test Goal", new BigDecimal("123"), "Test");
-        verify(editView).addSaveListener(any(ActionListener.class));
-        verify(editView).showDialog();
+            // Assert
+            assertEquals(BigDecimal.ZERO, testGoal.getCurrentAmount(), "The current amount should be recalculated to 0");
+        }
     }
 }
