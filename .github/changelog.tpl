@@ -27,12 +27,12 @@ Un **agradecimiento especial** a todos los miembros del equipo y usuarios que de
 
 ---
 
-### 📦 Download Installer / Descarga el Instalador
+### Download Installer / Descarga el Instalador
 👉 **[Download / Descargar GestorFinanzas-{{projectVersion}}.exe](https://github.com/CapiMDR/Gestor_De_Finanzas/releases/download/{{tagName}}/GestorFinanzas-{{projectVersion}}.exe)**
 
 *(Note: GitHub also attaches the installer automatically at the bottom of this page in the "Assets" section / Nota: GitHub también adjunta el instalador automáticamente al final de esta página en la sección "Assets").*
 
 ---
 
-### 📝 Changelog / Registro de Cambios
+### Changelog / Registro de Cambios
 {{changelogChanges}}
