@@ -333,6 +333,7 @@ both the fat-jar manifest and the `jpackage` configuration.
 | `1.0.0` | 2026 | Initial release — Java Swing UI |
 | `1.1.0` | June 2026 | Phase 3 start — JavaFX migration, Ikonli icons, FXML layouts |
 | `2.0.0` | June 2026 | Stable JavaFX release — all modules migrated, installer fixed, zombie process bug resolved |
+| `2.4.1` | June 2026 | Tab navigation, system tray background mode, overhauled notifications, UI polish and responsive fixes — see [FEATURES_UI-UX.md](FEATURES_UI-UX.md) |
 
 ---
 
@@ -503,6 +504,7 @@ No se requirieron cambios en `.github/workflows/release.yml`. El flujo es comple
 | `1.0.0` | 2026 | Versión inicial — UI Java Swing |
 | `1.1.0` | Junio 2026 | Inicio Fase 3 — migración a JavaFX, íconos Ikonli, layouts FXML |
 | `2.0.0` | Junio 2026 | Versión estable JavaFX — todos los módulos migrados, instalador corregido, bug de procesos zombie resuelto |
+| `2.4.1` | Junio 2026 | Navegación por pestañas, modo segundo plano (bandeja del sistema), notificaciones renovadas, pulido de UI y correcciones de responsividad — ver [FEATURES_UI-UX.md](FEATURES_UI-UX.md) |
 
 ---
 

@@ -19,7 +19,8 @@
 11. [Data Persistence](#data-persistence)
 12. [Contributing](#contributing)
 13. [Authors](#authors)
-14. [Versión en Español](#versión-en-español)
+14. [Features & UI/UX Changelog](docs/FEATURES_UI-UX.md)
+15. [Versión en Español](#versión-en-español)
 
 ---
 
@@ -27,7 +28,7 @@
 
 **Personal Finance Manager** is a desktop application built with **JavaFX** and Maven. It allows users to manage multiple financial accounts, register income and expense transactions, track savings goals, schedule recurring payments, set date-based reminders, and generate financial reports with charts powered by JFreeChart.
 
-> **v2.0.0** — The application was fully migrated from Java Swing to JavaFX in Phase 3 of the improvement plan. See [docs/MIGRATION_JAVAFX.md](docs/MIGRATION_JAVAFX.md) for the full migration log.
+> **v2.4.1** — The application was fully migrated from Java Swing to JavaFX in Phase 3 of the improvement plan, and this release introduces tab navigation, system tray background execution, and enhanced notifications. See [docs/MIGRATION_JAVAFX.md](docs/MIGRATION_JAVAFX.md) for the full migration log.
 
 ---
 
@@ -37,7 +38,7 @@
 |---|---|---|
 | ![Java](https://img.shields.io/badge/Java_21_LTS-ED8B00?style=flat-square&logo=openjdk&logoColor=white) | 21 LTS | Core language — all application logic is written in Java |
 | ![Maven](https://img.shields.io/badge/Apache_Maven-C71A36?style=flat-square&logo=apachemaven&logoColor=white) | 3.x | Build tool and dependency manager |
-| ![JavaFX](https://img.shields.io/badge/JavaFX_21-007396?style=flat-square&logo=openjdk&logoColor=white) | 21.0.3 | Modern desktop GUI framework — replaced Java Swing in v2.0.0 |
+| ![JavaFX](https://img.shields.io/badge/JavaFX_21-007396?style=flat-square&logo=openjdk&logoColor=white) | 21.0.3 | Modern desktop GUI framework — replaced Java Swing in v2.0.0 (Now v2.4.1) |
 | ![Ikonli](https://img.shields.io/badge/Ikonli-grey?style=flat-square&logoColor=white) | 12.3.1 | Vector icon library — Material Design 2 icon pack |
 | ![JFreeChart](https://img.shields.io/badge/JFreeChart-4285F4?style=flat-square&logoColor=white) | 1.5.4 | Chart rendering library used in the reports module |
 | ![JCalendar](https://img.shields.io/badge/JCalendar-grey?style=flat-square&logoColor=white) | 1.4 | Date picker widget used in forms (local JAR in `lib/`) |
@@ -68,12 +69,15 @@ The following documents were produced during the first project delivery and serv
 | Module | Functionality |
 |---|---|
 | **Account Management** | Create, edit and delete Cash or Digital accounts in MXN or USD. View current balance. Calculate interest. |
-| **Movements** | Register income and expense transactions per account, with categories and timestamps. |
+| **Movements** | Register income and expense transactions per account, with categories and timestamps. Fully responsive view. |
 | **Goals** | Define savings goals per account with a target amount and description. Track progress. |
 | **Recurring Moves** | Set up recurring payments/income (daily, weekly, biweekly, monthly, yearly) that auto-trigger when due. |
 | **Reminders** | Schedule date-based reminders with a name and message. Alerts fire automatically when the scheduled time passes. |
 | **Reports** | Generate movement reports filtered by today or the last 7 days, with totals and charts. |
 | **Filters** | Filter movements by categories (income/expense) within an account view. |
+| **Notifications** | In-app notification panel with read states, individual/bulk deletion, and type icons. |
+| **Background Mode** | Run silently in the system tray after closing the main window — keeps reminders firing. |
+| **Tab Navigation** | Navigate between account sub-modules (Movements, Goals, Recurring, Reminders, Reports) via tabs. |
 
 ---
 
@@ -148,9 +152,9 @@ gestorFinanzas/
 │           ├── goals/
 │           └── movements/
 ├── docs/
-│   ├── APP_FLOW.md                  # Technical architecture document
-│   ├── CONTRIBUTING.md              # Contribution guidelines
-│   └── MIGRATION_JAVAFX.md         # JavaFX migration log (v2.0.0)
+│   ├── MIGRATION_JAVAFX.md         # JavaFX migration log
+│   ├── FEATURES_UI-UX.md           # UI/UX feature changelog (v2.4.1)
+│   └── APP_FLOW.md                # Technical architecture document
 ├── .github/
 │   └── workflows/
 │       ├── sonarcloud.yml           # SonarCloud static analysis
@@ -199,7 +203,7 @@ mvn javafx:run
 **Or via the fat-jar (after packaging):**
 ```bash
 mvn package -DskipTests
-java -jar target/gestor-finanzas-2.0.0.jar
+java -jar target/gestor-finanzas-2.4.1.jar
 ```
 
 > **Data storage:** All JSON data files are saved to `~/.gestor-finanzas/` in the user's home directory, completely independent of the installation or execution path.
@@ -319,7 +323,7 @@ See [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) for full contribution guideline
 
 **Gestor de Finanzas** es una aplicación de escritorio desarrollada con **JavaFX** y Maven. Permite al usuario gestionar múltiples cuentas financieras, registrar movimientos de ingreso y gasto, hacer seguimiento de metas de ahorro, programar pagos recurrentes, establecer recordatorios por fecha y generar reportes financieros con gráficas mediante JFreeChart.
 
-> **v2.0.0** — La aplicación fue migrada completamente de Java Swing a JavaFX en la Fase 3 del plan de mejoras. Consulta [docs/MIGRATION_JAVAFX.md](docs/MIGRATION_JAVAFX.md) para el registro completo de la migración.
+> **v2.4.1** — La aplicación fue migrada completamente de Java Swing a JavaFX en la Fase 3 del plan de mejoras, y en esta versión se introduce el sistema de pestañas, el modo en segundo plano y mejoras masivas en notificaciones. Consulta [docs/MIGRATION_JAVAFX.md](docs/MIGRATION_JAVAFX.md) para el registro completo de la migración.
 
 ---
 
@@ -329,7 +333,7 @@ See [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) for full contribution guideline
 |---|---|---|
 | ![Java](https://img.shields.io/badge/Java_21_LTS-ED8B00?style=flat-square&logo=openjdk&logoColor=white) | 21 LTS | Lenguaje principal |
 | ![Maven](https://img.shields.io/badge/Apache_Maven-C71A36?style=flat-square&logo=apachemaven&logoColor=white) | 3.x | Herramienta de construcción y gestión de dependencias |
-| ![JavaFX](https://img.shields.io/badge/JavaFX_21-007396?style=flat-square&logo=openjdk&logoColor=white) | 21.0.3 | Framework moderno de GUI — reemplazó Java Swing en v2.0.0 |
+| ![JavaFX](https://img.shields.io/badge/JavaFX_21-007396?style=flat-square&logo=openjdk&logoColor=white) | 21.0.3 | Framework moderno de GUI — reemplazó Java Swing en v2.0.0 (Actual v2.4.1) |
 | ![Ikonli](https://img.shields.io/badge/Ikonli-grey?style=flat-square&logoColor=white) | 12.3.1 | Librería de íconos vectoriales — paquete Material Design 2 |
 | ![JFreeChart](https://img.shields.io/badge/JFreeChart-4285F4?style=flat-square&logoColor=white) | 1.5.4 | Biblioteca de gráficas en el módulo de reportes |
 | ![JCalendar](https://img.shields.io/badge/JCalendar-grey?style=flat-square&logoColor=white) | 1.4 | Selector de fechas (JAR local en `lib/`) |
@@ -427,7 +431,7 @@ mvn javafx:run
 **O mediante el fat-jar (después de empaquetar):**
 ```bash
 mvn package -DskipTests
-java -jar target/gestor-finanzas-2.0.0.jar
+java -jar target/gestor-finanzas-2.4.1.jar
 ```
 
 > **Almacenamiento de datos:** Todos los archivos JSON se guardan en `~/.gestor-finanzas/` dentro del directorio `home` del usuario, completamente independiente de la ruta de instalación.
