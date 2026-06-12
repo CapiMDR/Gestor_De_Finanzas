@@ -43,7 +43,15 @@ public class Main extends Application {
             Scene scene = new Scene(root, 1000, 700);
             scene.getStylesheets().add(getClass().getResource("/styles/app.css").toExternalForm());
             
-            primaryStage.setTitle("Gestor de Finanzas v2.0.0");
+            String version = getAppVersion();
+            primaryStage.setTitle("Gestor de Finanzas v" + version);
+            
+            try {
+                primaryStage.getIcons().add(new javafx.scene.image.Image(getClass().getResourceAsStream("/images/piggy.png")));
+            } catch (Exception ex) {
+                logger.warn("No se pudo cargar el icono de la ventana", ex);
+            }
+
             primaryStage.setScene(scene);
             primaryStage.setMaximized(true);
             
@@ -64,6 +72,19 @@ public class Main extends Application {
         } catch (Exception e) {
             logger.error("Failed to load main shell.", e);
         }
+    }
+
+    private String getAppVersion() {
+        try (java.io.InputStream is = getClass().getResourceAsStream("/META-INF/maven/io.github.capimdr/gestor-finanzas/pom.properties")) {
+            if (is != null) {
+                java.util.Properties p = new java.util.Properties();
+                p.load(is);
+                return p.getProperty("version", "Dev");
+            }
+        } catch (Exception e) {
+            logger.warn("No se pudo leer la versión del pom.properties", e);
+        }
+        return "Dev";
     }
 
     public static void main(String[] args) {

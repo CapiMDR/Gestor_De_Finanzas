@@ -29,12 +29,12 @@ jobs:
 
       - name: Construir y Empaquetar con Maven (JPackage)
         # 1. Extrae la versión del Tag (quita la letra 'v', ej. v2.0.0 -> 2.0.0)
-        # 2. Compila saltando pruebas para evitar el error de Mockito
+        # 2. Compila saltando la compilación de pruebas para evitar errores de clases Swing antiguas
         # 3. Genera el instalador pasándole la versión dinámica a Maven
         run: |
           $VERSION = "${{ github.ref_name }}".Substring(1)
           echo "PROJECT_VERSION=$VERSION" >> $env:GITHUB_ENV
-          mvn clean package -DskipTests
+          mvn clean package "-Dmaven.test.skip=true"
           mvn jpackage:jpackage "-Dapp.version=$VERSION"
 
       - name: Publicar en GitHub Releases con JReleaser
