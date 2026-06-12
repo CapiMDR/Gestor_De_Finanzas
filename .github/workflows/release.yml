@@ -30,6 +30,7 @@ jobs:
         # 3. Genera el instalador pasándole la versión dinámica a Maven
         run: |
           $VERSION = "${{ github.ref_name }}".Substring(1)
+          echo "PROJECT_VERSION=$VERSION" >> $env:GITHUB_ENV
           mvn clean package -DskipTests
           mvn jpackage:jpackage "-Dapp.version=$VERSION"
 
@@ -38,5 +39,6 @@ jobs:
         env:
           # Capi debe configurar este secreto en los Settings de su repositorio
           JRELEASER_GITHUB_TOKEN: ${{ secrets.JRELEASER_GITHUB_TOKEN }}
+          JRELEASER_PROJECT_VERSION: ${{ env.PROJECT_VERSION }}
         with:
           arguments: release

@@ -10,6 +10,9 @@ project:
     - Mauricio Villanueva
   license: MIT
   inceptionYear: 2026
+  links:
+    homepage: https://github.com/CapiMDR/Gestor_De_Finanzas
+    documentation: https://github.com/CapiMDR/Gestor_De_Finanzas/blob/main/README.md
 
 release:
   github:
@@ -17,7 +20,10 @@ release:
     name: Gestor_De_Finanzas
     overwrite: true # Permite sobreescribir el release si se re-ejecuta el Action
     changelog:
-      formatted: ALWAYS # Genera automáticamente un changelog con los commits
+      formatted: ALWAYS
+      preset: ''           # Desactiva la categorización (feat/fix/etc) para que no salga "desglosado"
+      format: '- {{commitTitle}}' # Formato limpio sin hashes
+      contentTemplate: .github/changelog.tpl
 
 distributions:
   gestorfinanzas:
