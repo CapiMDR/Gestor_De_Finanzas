@@ -1,0 +1,27 @@
+project:
+  name: GestorFinanzas
+  description: Gestor de Finanzas Personales
+  longDescription: Gestor de Finanzas Personales desarrollado en Java por el equipo RoastWare.
+  vendor: RoastWare
+  authors:
+    - Capi Madera
+    - José Pablo Martínez
+    - Martín Pool Chuc
+    - Mauricio Villanueva
+  license: MIT
+  inceptionYear: 2026
+
+release:
+  github:
+    owner: CapiMDR
+    name: Gestor_De_Finanzas
+    overwrite: true # Permite sobreescribir el release si se re-ejecuta el Action
+    changelog:
+      formatted: ALWAYS # Genera automáticamente un changelog con los commits
+
+distributions:
+  gestorfinanzas:
+    type: NATIVE_PACKAGE
+    artifacts:
+      - path: target/dist/GestorFinanzas-{{projectVersion}}.exe
+        platform: windows-x86_64

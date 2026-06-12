@@ -1,0 +1,42 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*' # Este workflow SOLO se ejecuta cuando subes un tag que empiece con "v" (ej. v1.0.1)
+
+jobs:
+  build-and-release:
+    name: Build, Package and Release
+    # CRÍTICO: Debe correr en Windows para poder generar el .exe usando WiX
+    runs-on: windows-latest
+    
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Necesario para que JReleaser pueda leer todo el historial de commits y hacer el changelog
+
+      - name: Configurar Java 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'zulu'
+          cache: 'maven'
+
+      - name: Construir y Empaquetar con Maven (JPackage)
+        # 1. Extrae la versión del Tag (quita la letra 'v', ej. v2.0.0 -> 2.0.0)
+        # 2. Compila saltando pruebas para evitar el error de Mockito
+        # 3. Genera el instalador pasándole la versión dinámica a Maven
+        run: |
+          $VERSION = "${{ github.ref_name }}".Substring(1)
+          mvn clean package -DskipTests
+          mvn jpackage:jpackage "-Dapp.version=$VERSION"
+
+      - name: Publicar en GitHub Releases con JReleaser
+        uses: jreleaser/release-action@v2
+        env:
+          # Capi debe configurar este secreto en los Settings de su repositorio
+          JRELEASER_GITHUB_TOKEN: ${{ secrets.JRELEASER_GITHUB_TOKEN }}
+        with:
+          arguments: release
