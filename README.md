@@ -279,8 +279,10 @@ See [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) for full contribution guideline
 
 | Name | Module(s) |
 |---|---|
+| RoastWare (Team) | Overall Application Architecture & Design |
+| Capi | Lead Developer & Repository Owner |
 | Martín Jesús Pool Chuc | Accounts, Movements, Movement Categories |
-| Jose Pablo Martinez | Goals |
+| Jose Pablo Martinez | Goals, General Refactoring & UI Improvements |
 | villa | Reports |
 
 > For a full list of contributors, see the [GitHub repository](https://github.com/CapiMDR/Gestor_De_Finanzas).
@@ -489,8 +491,10 @@ Consulta [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) para las guías completas 
 
 | Nombre | Módulo(s) |
 |---|---|
+| RoastWare (Equipo) | Arquitectura y Diseño General de la Aplicación |
+| Capi | Desarrollador Principal y Dueño del Repositorio |
 | Martín Jesús Pool Chuc | Cuentas, Movimientos, Categorías de Movimientos |
-| Jose Pablo Martinez | Metas de Ahorro |
+| Jose Pablo Martinez | Metas de Ahorro, Refactorización General y Mejoras de UI |
 | villa | Reportes |
 
 > Para la lista completa de contribuidores, visita el [repositorio en GitHub](https://github.com/CapiMDR/Gestor_De_Finanzas).

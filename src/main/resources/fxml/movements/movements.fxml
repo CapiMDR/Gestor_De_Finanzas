@@ -28,20 +28,24 @@
             <Label fx:id="lblAccountName"
                    style="-fx-background-color: rgba(255,255,255,0.15);
                           -fx-background-radius: 20px;
-                          -fx-padding: 4px 14px;
-                          -fx-text-fill: -fx-on-primary;
-                          -fx-font-size: 14px;"/>
+                          -fx-padding: 5px 15px;
+                          -fx-text-fill: white;
+                          -fx-font-size: 14px;
+                          -fx-font-weight: bold;"/>
+            <Region HBox.hgrow="ALWAYS" />
+            <Button fx:id="btnVolver" text="Dashboard" styleClass="btn-back" 
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-border-color: white; -fx-border-radius: 4px;"/>
         </HBox>
     </top>
 
     <!-- Content: two symmetric forms side by side -->
     <center>
         <ScrollPane fitToWidth="true" fitToHeight="true" style="-fx-background-color: transparent; -fx-background: transparent;">
-            <HBox spacing="0" HBox.hgrow="ALWAYS">
+            <HBox spacing="20" alignment="TOP_CENTER" style="-fx-padding: 20px;">
 
-            <!-- ── INCOME panel (left, pastel blue) ─────────────────── -->
-            <VBox styleClass="form-panel" HBox.hgrow="ALWAYS" spacing="12"
-                  style="-fx-background-color: #EBF8FF; -fx-background-radius: 8px 0 0 8px;">
+            <!-- ■■■ INCOME panel (left, pastel blue) ■■■■■■■■■■■■■■■■■■■■ -->
+            <VBox styleClass="form-panel" HBox.hgrow="ALWAYS" spacing="12" minWidth="350"
+                  style="-fx-background-color: #EBF8FF; -fx-background-radius: 8px; -fx-border-color: #bee3f8; -fx-border-radius: 8px;">
                 <padding><Insets top="25" right="20" bottom="20" left="20"/></padding>
 
                 <Label text="Agregar Ingreso" styleClass="form-section-title"
@@ -79,9 +83,9 @@
                         style="-fx-background-color: #3182CE; -fx-text-fill: white;"/>
             </VBox>
 
-            <!-- ── EXPENSE panel (right, pastel orange) ──────────────────── -->
-            <VBox styleClass="form-panel" HBox.hgrow="ALWAYS" spacing="12"
-                  style="-fx-background-color: #FFFAF0; -fx-background-radius: 0 8px 8px 0;">
+            <!-- ■■■ EXPENSE panel (right, pastel red) ■■■■■■■■■■■■■■■■■■■ -->
+            <VBox styleClass="form-panel" HBox.hgrow="ALWAYS" spacing="12" minWidth="350"
+                  style="-fx-background-color: #FEF2F2; -fx-background-radius: 8px; -fx-border-color: #fecaca; -fx-border-radius: 8px;">
                 <padding><Insets top="25" right="20" bottom="20" left="20"/></padding>
 
                 <Label text="Agregar Egreso" styleClass="form-section-title"

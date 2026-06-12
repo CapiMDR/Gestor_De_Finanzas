@@ -2,6 +2,7 @@ package goals.goals_view;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
@@ -27,10 +28,20 @@ public class GoalsViewFX {
     @FXML private Button btnAddGoal;
     @FXML private Button btnEditGoal;
     @FXML private Button btnDeleteGoal;
+    
+    @FXML private Label lblAccountName;
+    @FXML private Button btnVolver;
+
+    private Runnable onBack;
     @FXML private Button btnViewGoalDetails;
 
     @FXML
     public void initialize() {
+        if (btnVolver != null) {
+            btnVolver.setOnAction(e -> {
+                if (onBack != null) onBack.run();
+            });
+        }
         // Limit goal name to 30 characters
         txtGoalName.setTextFormatter(new javafx.scene.control.TextFormatter<>(change -> {
             if (change.getControlNewText().length() > 30) {
@@ -38,6 +49,16 @@ public class GoalsViewFX {
             }
             return change;
         }));
+    }
+
+    public void setOnBack(Runnable onBack) {
+        this.onBack = onBack;
+    }
+
+    public void setAccountName(String accountName) {
+        if (lblAccountName != null && accountName != null) {
+            lblAccountName.setText(accountName);
+        }
     }
 
     // ── Public Accessors for Controller ──────────────────────────────────────

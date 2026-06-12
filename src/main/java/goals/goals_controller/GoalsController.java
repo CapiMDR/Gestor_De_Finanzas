@@ -3,6 +3,8 @@ package goals.goals_controller;
 import java.math.BigDecimal;
 import java.util.List;
 
+import notifications.notification_controller.NotificationManager;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -134,6 +136,7 @@ public class GoalsController implements AccountObserver {
     public void setAccount(Account account) {
         this.currentAccount = account;
         if (currentAccount != null) {
+            mainView.setAccountName(currentAccount.getName());
             onNotify(AccountManager.getAccounts());
         }
     }
@@ -196,6 +199,25 @@ public class GoalsController implements AccountObserver {
             for (Goal goal : goals) {
                 BigDecimal progress = totalBalance.min(goal.getTargetAmount());
                 goal.setCurrentAmount(progress.max(BigDecimal.ZERO));
+                
+                // Fire notification if goal reached 100% and wasn't notified before
+                if (goal.getCurrentAmount().compareTo(goal.getTargetAmount()) >= 0) {
+                    if (!goal.isNotificadaCompleta()) {
+                        goal.setNotificadaCompleta(true);
+                        NotificationManager.getInstance().agregarNotificacion(
+                            new notifications.notification_model.AppNotification(
+                                notifications.notification_model.AppNotification.Tipo.META_CUMPLIDA,
+                                "¡Meta cumplida!",
+                                "Has alcanzado la meta '" + goal.getName() + "' en tu cuenta " + currentAccount.getName() + ".",
+                                java.time.LocalDateTime.now()
+                            )
+                        );
+                        logger.info("Meta cumplida notificada: {}", goal.getName());
+                    }
+                } else {
+                    // Reset flag if balance drops below target
+                    goal.setNotificadaCompleta(false);
+                }
             }
         }
     }

@@ -1,20 +1,20 @@
 package com.mycompany.construccion;
 
 import accounts.account_model.AccountManager;
-import accounts.account_view.AccountsModule;
 import config.AppConfig;
+import config.AppSettings;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reminders.reminder_view.RemindersModule;
 
-
 /**
  * Main entry point of the application (JavaFX).
- * Initializes the account manager and launches the JavaFX accounts view.
+ * Initializes the account manager and launches the JavaFX main shell.
  */
-
 public class Main extends Application {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
@@ -25,11 +25,45 @@ public class Main extends Application {
         AccountManager.initAccountManager();
         AccountManager.loadInitialData();
         
-        // Initialize global background thread for reminders
+        // Initialize global background threads
         RemindersModule.initGlobalReminders();
+        recurringMoves.recurring_view.RecurringsModule.initGlobalRecurrings();
 
-        AccountsModule.initAccountsModule();
-        logger.info("Main view displayed successfully.");
+        // Enable System Tray if user settings allow background mode
+        if (AppSettings.getInstance().getModoNotificaciones() == AppSettings.ModoNotificaciones.SEGUNDO_PLANO) {
+            notifications.SystemTrayManager.getInstance().enableTray();
+        }
+
+        try {
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
+                getClass().getResource("/fxml/main_shell.fxml"));
+            javafx.scene.Parent root = loader.load();
+            MainShell shell = loader.getController();
+
+            Scene scene = new Scene(root, 1000, 700);
+            scene.getStylesheets().add(getClass().getResource("/styles/app.css").toExternalForm());
+            
+            primaryStage.setTitle("Gestor de Finanzas v2.0.0");
+            primaryStage.setScene(scene);
+            primaryStage.setMaximized(true);
+            
+            primaryStage.setOnCloseRequest(e -> {
+                shell.alCerrar();
+                if (AppSettings.getInstance().getModoNotificaciones() == AppSettings.ModoNotificaciones.SEGUNDO_PLANO) {
+                    e.consume(); // Prevent the window from destroying the JVM
+                    primaryStage.hide();
+                    logger.info("Aplicación minimizada a la bandeja del sistema.");
+                } else {
+                    Platform.exit();
+                    System.exit(0);
+                }
+            });
+
+            primaryStage.show();
+            logger.info("Main shell displayed successfully.");
+        } catch (Exception e) {
+            logger.error("Failed to load main shell.", e);
+        }
     }
 
     public static void main(String[] args) {

@@ -7,7 +7,6 @@ import accounts.account_model.Account;
 import accounts.account_model.AccountManager;
 import accounts.account_model.AccountObserver;
 import accounts.account_view.AccountViewFX;
-import reports.report_view.ReportsModule;
 
 /**
  * Controller in charge of managing actions related to the account view.
@@ -44,13 +43,13 @@ public class AccountController implements AccountObserver {
     }
 
     /**
-     * Accesses the selected account and opens the reports module.
+     * Accesses the selected account and opens it in a new tab within the MainShell.
      */
     public void accessAccount() {
         int selectedIndex = view.getSelectedAccountIndex();
         Account selectedAccount = AccountManager.getAccountByIndex(selectedIndex);
         if (selectedAccount == null) return;
-        ReportsModule.initReportsModule(selectedAccount);
+        com.mycompany.construccion.MainShell.openAccountTab(selectedAccount);
     }
 
     /**

@@ -65,6 +65,26 @@ public class AppConfig {
     }
 
     /**
+     * Returns the absolute path to the user settings file.
+     *
+     * @return absolute path to {@code settings.json}
+     */
+    public static String getSettingsFilePath() {
+        return DATA_DIR + File.separator + "settings.json";
+    }
+
+    /**
+     * Returns the absolute path to the persisted unread notifications file.
+     * Used to restore pending notifications across sessions when running in
+     * foreground-only mode.
+     *
+     * @return absolute path to {@code notifications.json}
+     */
+    public static String getNotificationsFilePath() {
+        return DATA_DIR + File.separator + "notifications.json";
+    }
+
+    /**
      * Ensures the data directory exists, creating it (and any missing parent
      * directories) if necessary. Should be called once during application startup
      * before any file read/write is attempted.

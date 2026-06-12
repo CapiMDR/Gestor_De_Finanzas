@@ -57,4 +57,31 @@ public class AccountsModule {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Loads the accounts view and embeds it as the first, non-closeable tab
+     * in the given {@link javafx.scene.control.TabPane}.
+     *
+     * @param tabPane the TabPane from the MainShell
+     */
+    public static void embedInTab(javafx.scene.control.TabPane tabPane) {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                AccountsModule.class.getResource("/fxml/accounts/account.fxml"));
+            Parent root = loader.load();
+
+            AccountViewFX view = loader.getController();
+            accountController = new AccountController(view);
+            view.updateAccountList(AccountManager.getAccounts());
+
+            javafx.scene.control.Tab tab = new javafx.scene.control.Tab("Mis Cuentas");
+            tab.setClosable(false);
+            tab.setContent(root);
+            tab.getStyleClass().add("accounts-tab");
+
+            tabPane.getTabs().add(tab);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

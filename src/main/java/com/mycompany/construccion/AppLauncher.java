@@ -9,6 +9,10 @@ package com.mycompany.construccion;
 
 public class AppLauncher {
     public static void main(String[] args) {
+        if (!config.SingleInstanceGuard.checkAndLock()) {
+            System.out.println("La aplicación ya está en ejecución.");
+            System.exit(0);
+        }
         Main.main(args);
     }
 }

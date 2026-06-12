@@ -142,6 +142,27 @@
     -fx-background-color: -fx-surface;
 }
 
+/* --- Date Picker Popup Fixes --- */
+.date-picker-popup .month-year-pane .label {
+    -fx-text-fill: -fx-text-main;
+    -fx-font-weight: bold;
+}
+.date-picker-popup .day-name-cell, 
+.date-picker-popup .week-number-cell {
+    -fx-text-fill: -fx-text-muted;
+}
+.date-picker-popup .day-cell {
+    -fx-text-fill: -fx-text-main;
+}
+.date-picker-popup .day-cell:hover {
+    -fx-background-color: -fx-primary;
+    -fx-text-fill: -fx-on-primary;
+}
+.date-picker-popup .day-cell:selected {
+    -fx-background-color: -fx-accent;
+    -fx-text-fill: -fx-on-primary;
+}
+
 /* --- Buttons --- */
 .button {
     -fx-cursor: hand;
@@ -423,3 +444,188 @@
     -fx-font-weight: bold;
     -fx-font-size: 13px;
 }
+
+/* --- Notifications Panel --- */
+.notification-panel {
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 15, 0, 0, 4);
+    -fx-border-color: -fx-border;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+}
+
+.notification-panel-header {
+    -fx-padding: 15px;
+    -fx-border-color: transparent transparent -fx-border transparent;
+    -fx-border-width: 0 0 1px 0;
+}
+
+.notification-panel-title {
+    -fx-font-family: "Poppins", "Inter", sans-serif;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-primary;
+}
+
+.notification-list {
+    -fx-background-color: transparent;
+    -fx-padding: 5px;
+    -fx-border-width: 0;
+}
+.notification-list .list-cell {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.notification-card {
+    -fx-background-color: -fx-surface;
+    -fx-padding: 12px;
+    -fx-background-radius: 6px;
+    -fx-border-color: transparent transparent -fx-border transparent;
+    -fx-border-width: 0 0 1px 0;
+    -fx-border-radius: 0;
+}
+.notification-card-leida {
+    -fx-background-color: -fx-background;
+    -fx-padding: 12px;
+    -fx-background-radius: 6px;
+    -fx-border-color: transparent transparent -fx-border transparent;
+    -fx-border-width: 0 0 1px 0;
+    -fx-border-radius: 0;
+    -fx-opacity: 0.7;
+}
+
+.notification-titulo {
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-text-fill: -fx-text-main;
+}
+
+.notification-cuerpo {
+    -fx-font-size: 12px;
+    -fx-text-fill: -fx-text-muted;
+}
+
+.notification-tiempo {
+    -fx-font-size: 10px;
+    -fx-text-fill: -fx-text-muted;
+}
+
+/* --- Settings & Info Dialogs --- */
+.settings-dialog, .info-dialog {
+    -fx-background-color: -fx-surface;
+    -fx-font-family: "Inter", sans-serif;
+}
+
+.settings-section-title, .info-section-title {
+    -fx-font-family: "Poppins", "Inter", sans-serif;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-primary;
+}
+
+.settings-help-label .ikonli-font-icon {
+    -fx-icon-color: -fx-accent;
+}
+.settings-help-label {
+    -fx-cursor: hand;
+}
+.settings-help-label:hover .ikonli-font-icon {
+    -fx-icon-color: -fx-primary;
+}
+.settings-help-label:hover {
+    -fx-scale-x: 1.2;
+    -fx-scale-y: 1.2;
+}
+
+.info-title {
+    -fx-font-family: "Poppins", "Inter", sans-serif;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-primary;
+}
+.info-version {
+    -fx-font-size: 14px;
+    -fx-text-fill: -fx-accent;
+    -fx-font-weight: bold;
+}
+.info-logo {
+    -fx-icon-color: -fx-primary;
+}
+.info-text {
+    -fx-font-size: 13px;
+    -fx-text-fill: -fx-text-main;
+}
+.info-subtitle {
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-text-fill: -fx-text-main;
+    -fx-padding: 10px 0 0 0;
+}
+.info-list Label {
+    -fx-font-size: 13px;
+    -fx-text-fill: -fx-text-muted;
+}
+.info-footer {
+    -fx-font-size: 12px;
+    -fx-text-fill: -fx-text-muted;
+    -fx-font-weight: bold;
+}
+.info-footer-small {
+    -fx-font-size: 10px;
+    -fx-text-fill: -fx-text-muted;
+}
+
+/* --- Tutorial Overlay --- */
+.tutorial-popup {
+    -fx-background-color: -fx-primary-dark;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 20, 0, 0, 5);
+    -fx-border-color: rgba(255,255,255,0.1);
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+}
+
+.tutorial-title {
+    -fx-font-family: "Poppins", "Inter", sans-serif;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-on-primary;
+}
+
+.tutorial-text {
+    -fx-font-size: 13px;
+    -fx-text-fill: rgba(255, 255, 255, 0.85);
+    -fx-padding: 0 0 10px 0;
+}
+
+.btn-back {
+    -fx-cursor: hand;
+    -fx-transition: -fx-background-color 0.2s ease-in-out, -fx-text-fill 0.2s ease-in-out;
+}
+.btn-back:hover {
+    -fx-background-color: white !important;
+    -fx-text-fill: -fx-primary !important;
+}
+
+
+.btn-text-danger {
+    -fx-text-fill: -fx-danger;
+}
+.btn-text-danger:hover {
+    -fx-text-fill: #9B2C2C;
+    -fx-underline: true;
+}
+.notification-list .list-cell:selected {
+    -fx-background-color: transparent;
+    -fx-text-fill: -fx-text-color;
+}
+.notification-item-btn-delete {
+    -fx-opacity: 0;
+    -fx-cursor: hand;
+}
+.notification-list .list-cell:hover .notification-item-btn-delete {
+    -fx-opacity: 1;
+}
+

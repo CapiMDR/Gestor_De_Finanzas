@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<!--
+    Main Application Shell
+    Controller: com.mycompany.construccion.MainShell
+    Layout: BorderPane with a custom top navigation bar, and a TabPane in the center.
+-->
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.mycompany.construccion.MainShell"
+            styleClass="root-pane">
+
+    <!-- ── Top Application Bar ────────────────────────────────────────────── -->
+    <top>
+        <HBox styleClass="app-header" alignment="CENTER_LEFT" spacing="20">
+            <padding>
+                <Insets top="12" right="24" bottom="12" left="24"/>
+            </padding>
+
+            <!-- App Logo / Title -->
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <FontIcon iconLiteral="mdi2f-finance" iconSize="28" styleClass="app-header-logo"/>
+                <Label text="Gestor de Finanzas" styleClass="app-header-title"/>
+            </HBox>
+
+            <!-- Flexible spacer to push the rest to the right -->
+            <Region HBox.hgrow="ALWAYS" />
+
+            <!-- Right tools: Notifications, Info, Settings -->
+            <HBox alignment="CENTER_RIGHT" spacing="16">
+                <!-- Notifications Bell -->
+                <StackPane onMouseClicked="#toggleNotificaciones" styleClass="btn-icon">
+                    <FontIcon iconLiteral="mdi2b-bell-outline" iconSize="24"/>
+                    <!-- Notification Badge (Red Dot) -->
+                    <Label fx:id="lblBadge" text="0" visible="false"
+                           styleClass="notification-badge" StackPane.alignment="TOP_RIGHT">
+                        <StackPane.margin><Insets top="-4" right="-4"/></StackPane.margin>
+                    </Label>
+                </StackPane>
+
+                <!-- Information -->
+                <StackPane onMouseClicked="#abrirInfo" styleClass="btn-icon">
+                    <FontIcon iconLiteral="mdi2i-information-outline" iconSize="24"/>
+                </StackPane>
+
+                <!-- Settings -->
+                <StackPane onMouseClicked="#abrirConfiguracion" styleClass="btn-icon">
+                    <FontIcon iconLiteral="mdi2c-cog-outline" iconSize="24"/>
+                </StackPane>
+            </HBox>
+        </HBox>
+    </top>
+
+    <!-- ── Center: TabPane for Navigation ─────────────────────────────────── -->
+    <center>
+        <StackPane>
+            <TabPane fx:id="tabPrincipal" tabClosingPolicy="ALL_TABS" styleClass="main-tab-pane">
+                <!-- Tabs are added dynamically by the controllers -->
+            </TabPane>
+
+            <!-- ── Overlay: Notification Panel ────────────────────────────────── -->
+            <VBox fx:id="panelNotificaciones" visible="false" managed="false"
+                  styleClass="notification-panel" StackPane.alignment="TOP_RIGHT"
+                  maxWidth="350" maxHeight="400">
+                <StackPane.margin>
+                    <Insets top="10" right="20" bottom="0" left="0"/>
+                </StackPane.margin>
+                
+                <HBox alignment="CENTER_LEFT" styleClass="notification-panel-header" spacing="5">
+                    <Label text="Notificaciones" styleClass="notification-panel-title"/>
+                    <Region HBox.hgrow="ALWAYS" />
+                    <Button styleClass="btn-icon, btn-text-danger" onAction="#eliminarTodasLasNotificaciones">
+                        <graphic>
+                            <FontIcon iconLiteral="mdi2d-delete-sweep" iconSize="18" />
+                        </graphic>
+                        <tooltip>
+                            <Tooltip text="Eliminar todas las notificaciones" />
+                        </tooltip>
+                    </Button>
+                    <Button styleClass="btn-icon" onAction="#marcarTodasLeidas">
+                        <graphic>
+                            <FontIcon iconLiteral="mdi2c-check-all" iconSize="18" />
+                        </graphic>
+                        <tooltip>
+                            <Tooltip text="Marcar todas como leídas" />
+                        </tooltip>
+                    </Button>
+                </HBox>
+
+                <!-- List of notifications -->
+                <ListView fx:id="listNotificaciones" VBox.vgrow="ALWAYS"
+                          styleClass="notification-list"/>
+            </VBox>
+        </StackPane>
+    </center>
+
+</BorderPane>

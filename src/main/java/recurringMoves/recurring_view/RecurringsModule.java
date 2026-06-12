@@ -51,4 +51,33 @@ public class RecurringsModule {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Loads the recurring movements view and returns its root node for embedding
+     * inside an {@link accounts.account_view.AccountShell} tab.
+     * The existing background controller is reused (same scheduler, same view injection).
+     *
+     * @param selectedAccount ignored for now — recurrings are global, not per-account
+     * @param onBack callback to run when back button is pressed
+     * @return the root node of the recurrings view, or {@code null} on error
+     */
+    public static javafx.scene.Node loadForAccount(accounts.account_model.Account selectedAccount, Runnable onBack) {
+        if (selectedAccount == null) return null;
+        try {
+            FXMLLoader loader = new FXMLLoader(RecurringsModule.class.getResource("/fxml/recurrings/recurrings.fxml"));
+            Parent root = loader.load();
+            RecurringsViewFX view = loader.getController();
+            if (selectedAccount != null) view.setAccountName(selectedAccount.getName());
+            view.setOnBack(onBack);
+            controller.setView(view);
+            root.getStylesheets().add(RecurringsModule.class.getResource("/styles/app.css").toExternalForm());
+            return root;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /** Forces static initialization so the background scheduler starts at app launch. */
+    public static void initGlobalRecurrings() {}
 }

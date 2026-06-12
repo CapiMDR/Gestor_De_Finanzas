@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import notifications.notification_controller.NotificationManager;
 import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -144,7 +145,17 @@ public class RecurringsController {
         logger.info("Recurring movement triggered: '{}' (recurrence={}).",
                 recMove.getConcept(), recMove.getRecurrence());
         
-        Platform.runLater(() -> showRecurringMoveView(recMove));
+        Platform.runLater(() -> {
+            NotificationManager.getInstance().agregarNotificacion(
+                new notifications.notification_model.AppNotification(
+                    notifications.notification_model.AppNotification.Tipo.RECURRENTE_VENCIDO,
+                    "Pago Recurrente",
+                    "El movimiento recurrente '" + recMove.getConcept() + "' está listo para ser aplicado.",
+                    java.time.LocalDateTime.now()
+                )
+            );
+            showRecurringMoveView(recMove);
+        });
     }
 
     private void showRecurringMoveView(RecurringMove recMove) {

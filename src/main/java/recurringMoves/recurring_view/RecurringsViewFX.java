@@ -27,6 +27,29 @@ public class RecurringsViewFX {
     @FXML private Button btnAddRecurring;
     @FXML private Button btnEditRecurring;
     @FXML private Button btnDeleteRecurring;
+    @FXML private javafx.scene.control.Label lblAccountName;
+    @FXML private Button btnVolver;
+
+    private Runnable onBack;
+
+    @FXML
+    public void initialize() {
+        if (btnVolver != null) {
+            btnVolver.setOnAction(e -> {
+                if (onBack != null) onBack.run();
+            });
+        }
+    }
+
+    public void setOnBack(Runnable onBack) {
+        this.onBack = onBack;
+    }
+
+    public void setAccountName(String accountName) {
+        if (lblAccountName != null && accountName != null) {
+            lblAccountName.setText(accountName);
+        }
+    }
 
     // ── Public Accessors for Controller ──────────────────────────────────────
 

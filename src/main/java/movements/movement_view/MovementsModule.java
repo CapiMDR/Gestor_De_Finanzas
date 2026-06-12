@@ -81,4 +81,35 @@ public class MovementsModule {
             alert.showAndWait();
         }
     }
+
+    /**
+     * Loads the movements view for the given account and returns its root node
+     * for embedding inside an {@link accounts.account_view.AccountShell} tab.
+     * No {@link Stage} is created.
+     *
+     * @param selectedAccount the account to show movements for
+     * @return the root {@link javafx.scene.Node} of the movements view, or {@code null} on error
+     */
+    public static javafx.scene.Node loadForAccount(Account selectedAccount, Runnable onBack) {
+        if (selectedAccount == null) return null;
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                MovementsModule.class.getResource("/fxml/movements/movements.fxml"));
+            Parent root = loader.load();
+            MovementsViewFX movementView = loader.getController();
+            if (onBack != null) movementView.setOnBack(onBack);
+
+            JsonDataHandler dataHandler = new JsonDataHandler();
+            MovementManagerSubject movementSubject = new MovementManagerSubject();
+            CategoryManager movementModel = new CategoryManager(movementSubject, dataHandler);
+            new MovementController(movementModel, movementView, selectedAccount);
+
+            root.getStylesheets().add(
+                MovementsModule.class.getResource("/styles/app.css").toExternalForm());
+            return root;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

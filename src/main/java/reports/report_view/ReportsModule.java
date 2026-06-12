@@ -63,4 +63,35 @@ public class ReportsModule {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Loads the reports dashboard view for the given account and returns its root node
+     * for embedding inside an {@link accounts.account_view.AccountShell} tab.
+     * No {@link Stage} is created.
+     *
+     * @param selectedAccount the account to show reports for
+     * @return the root node of the reports view, or {@code null} on error
+     */
+    public static javafx.scene.Node loadForAccount(Account selectedAccount) {
+        if (selectedAccount == null) return null;
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                ReportsModule.class.getResource("/fxml/reports/reports.fxml"));
+            
+            Parent root = loader.load();
+            ReportsViewFX view = loader.getController();
+
+            ReportSubject subject = new ReportSubject();
+            ReportGenerator generator = new ReportGenerator(subject, selectedAccount);
+
+            ReportController controller = new ReportController();
+            controller.setViewModule(view, generator, selectedAccount);
+
+            root.getStylesheets().add(ReportsModule.class.getResource("/styles/app.css").toExternalForm());
+            return root;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

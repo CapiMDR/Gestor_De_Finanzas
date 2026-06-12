@@ -2,6 +2,7 @@ package reminders.reminder_view;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListView;
@@ -30,11 +31,20 @@ public class RemindersViewFX {
     @FXML private Button btnAddReminder;
     @FXML private Button btnEditReminder;
     @FXML private Button btnDeleteReminder;
+    @FXML private Label lblAccountName;
+    @FXML private Button btnVolver;
+
+    private Runnable onBack;
 
     private reminders.reminder_controller.RemindersController controller;
 
     @FXML
     public void initialize() {
+        if (btnVolver != null) {
+            btnVolver.setOnAction(e -> {
+                if (onBack != null) onBack.run();
+            });
+        }
         if (cmbHour != null && cmbMinute != null) {
             for (int i = 0; i < 24; i++) cmbHour.getItems().add(String.format("%02d", i));
             for (int i = 0; i < 60; i++) cmbMinute.getItems().add(String.format("%02d", i));
@@ -45,6 +55,16 @@ public class RemindersViewFX {
         btnAddReminder.setOnAction(e -> addReminder());
         btnDeleteReminder.setOnAction(e -> deleteReminder());
         btnEditReminder.setOnAction(e -> editReminder());
+    }
+
+    public void setOnBack(Runnable onBack) {
+        this.onBack = onBack;
+    }
+
+    public void setAccountName(String accountName) {
+        if (lblAccountName != null && accountName != null) {
+            lblAccountName.setText(accountName);
+        }
     }
 
     public void setController(reminders.reminder_controller.RemindersController controller) {

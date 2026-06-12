@@ -39,6 +39,10 @@ public class MovementsViewFX {
     @FXML private TextArea txtDescriptionIncome;
     @FXML private Button btnAddIncome;
     @FXML private Button btnAddCategoryIncome;
+    @FXML private Button btnFilter;
+    @FXML private Button btnVolver;
+
+    private Runnable onBack;
 
     // ── Expense form ──────────────────────────────────────────────────────────
     @FXML private TextField txtAccountExpense;
@@ -57,24 +61,28 @@ public class MovementsViewFX {
     public void initialize() {
         datePickerIncome.setValue(LocalDate.now());
         datePickerExpense.setValue(LocalDate.now());
+        if (btnVolver != null) {
+            btnVolver.setOnAction(e -> {
+                if (onBack != null) onBack.run();
+            });
+        }
     }
 
-    // ── Public methods used by MovementController ─────────────────────────────
+    public void setOnBack(Runnable onBack) {
+        this.onBack = onBack;
+    }
 
-    /**
-     * Sets the account name displayed in the header chip and the read-only
-     * account fields in both income and expense forms.
-     * Mirrors {@code loadInitialData()} in the Swing controller.
-     *
-     * @param accountName the name of the currently selected account
-     */
     public void setAccountName(String accountName) {
         Platform.runLater(() -> {
-            lblAccountName.setText(accountName);
+            if (lblAccountName != null) {
+                lblAccountName.setText(accountName);
+            }
             txtAccountIncome.setText(accountName);
             txtAccountExpense.setText(accountName);
         });
     }
+
+    // ── Public methods used by MovementController ─────────────────────────────
 
     /**
      * Updates the income category list shown in the view.

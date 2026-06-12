@@ -64,4 +64,32 @@ public class GoalsModule {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Loads the goals view for the given account and returns its root node
+     * for embedding inside an {@link accounts.account_view.AccountShell} tab.
+     *
+     * @param selectedAccount the account to show goals for
+     * @return the root node of the goals view, or {@code null} on error
+     */
+    public static javafx.scene.Node loadForAccount(Account selectedAccount, Runnable onBack) {
+        if (selectedAccount == null) return null;
+        try {
+            FXMLLoader loader = new FXMLLoader(GoalsModule.class.getResource("/fxml/goals/goals.fxml"));
+            Parent root = loader.load();
+            GoalsViewFX view = loader.getController();
+            if (onBack != null) view.setOnBack(onBack);
+
+            GoalEditController editController = new GoalEditController();
+            GoalDetailControllerFX detailController = new GoalDetailControllerFX();
+            GoalsController controller = new GoalsController(view, editController, detailController);
+            controller.setAccount(selectedAccount);
+
+            root.getStylesheets().add(GoalsModule.class.getResource("/styles/app.css").toExternalForm());
+            return root;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

@@ -11,6 +11,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 import javafx.fxml.FXMLLoader;
+import notifications.notification_controller.NotificationManager;
 
 import reminders.reminder_model.RemindersModel;
 import reminders.reminder_model.Reminder;
@@ -39,10 +40,11 @@ public class RemindersController {
     /** Main view where reminders are shown. */
     private RemindersViewFX remindersView;
 
-    /** Scheduled executor to periodically check reminders. Uses a daemon thread so it doesn't block JVM exit. */
+    /** Scheduled executor to periodically check reminders. Uses a daemon thread so it doesn't block JVM exit unless background mode is enabled. */
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor(r -> {
         Thread thread = new Thread(r, "Reminders-Scheduler");
-        thread.setDaemon(true);
+        boolean isBackground = config.AppSettings.getInstance().getModoNotificaciones() == config.AppSettings.ModoNotificaciones.SEGUNDO_PLANO;
+        thread.setDaemon(!isBackground);
         return thread;
     });
 
@@ -97,6 +99,15 @@ public class RemindersController {
         reminder.setTriggered(true);
         remindersModel.saveReminders();
         Platform.runLater(() -> {
+            NotificationManager.getInstance().agregarNotificacion(
+                new notifications.notification_model.AppNotification(
+                    notifications.notification_model.AppNotification.Tipo.RECORDATORIO,
+                    "Recordatorio",
+                    reminder.getName() + " - " + reminder.getMessage(),
+                    java.time.LocalDateTime.now()
+                )
+            );
+            refreshView();
             showReminderAlert(reminder);
         });
     }

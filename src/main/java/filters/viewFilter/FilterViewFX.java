@@ -45,11 +45,21 @@ public class FilterViewFX {
     @FXML
     private Label lblTotalExpense;
 
+    @FXML private Label lblAccountName;
+    @FXML private Button btnVolver;
+
+    private Runnable onBack;
+
     private List<Movement> currentIncomeMovements;
     private List<Movement> currentExpenseMovements;
 
     @FXML
     public void initialize() {
+        if (btnVolver != null) {
+            btnVolver.setOnAction(e -> {
+                if (onBack != null) onBack.run();
+            });
+        }
         cmbCategory.getItems().addAll("TODAS", MovementType.INCOME.name(), MovementType.EXPENSE.name());
         cmbCategory.getSelectionModel().selectFirst();
 
@@ -76,7 +86,15 @@ public class FilterViewFX {
         });
     }
 
+    public void setOnBack(Runnable onBack) {
+        this.onBack = onBack;
+    }
 
+    public void setAccountName(String accountName) {
+        if (lblAccountName != null && accountName != null) {
+            lblAccountName.setText(accountName);
+        }
+    }
 
     public void updateCategories(List<Movement> income, List<Movement> expense, double totalIn, double totalOut) {
         this.currentIncomeMovements = income;
