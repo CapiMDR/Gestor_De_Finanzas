@@ -18,10 +18,16 @@ public class FilterModule {
 
             FilterViewFX view = loader.getController();
             if (selectedAccount != null) view.setAccountName(selectedAccount.getName());
-            if (onBack != null) view.setOnBack(onBack);
             FilterController controller = new FilterController();
             
             controller.setViewModule(view, selectedAccount);
+
+            if (onBack != null) {
+                view.setOnBack(() -> {
+                    controller.dispose();
+                    onBack.run();
+                });
+            }
 
             return root;
         } catch (Exception e) {

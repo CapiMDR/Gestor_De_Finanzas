@@ -40,6 +40,12 @@ public class RemindersModule {
             Scene scene = new Scene(root, 900, 600);
             scene.getStylesheets().add(RemindersModule.class.getResource("/styles/app.css").toExternalForm());
             activeStage.setScene(scene);
+            
+            // Un-inject view when window closes to prevent leak
+            activeStage.setOnCloseRequest(e -> {
+                controller.setView(null);
+            });
+            
             activeStage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -62,7 +68,12 @@ public class RemindersModule {
 
             RemindersViewFX view = loader.getController();
             if (selectedAccount != null) view.setAccountName(selectedAccount.getName());
-            if (onBack != null) view.setOnBack(onBack);
+            if (onBack != null) {
+                view.setOnBack(() -> {
+                    controller.setView(null);
+                    onBack.run();
+                });
+            }
             view.setController(controller);
             controller.setView(view);
 

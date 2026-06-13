@@ -1,7 +1,6 @@
 package goals.goals_view;
 
 import accounts.account_model.Account;
-import accounts.account_model.AccountManagerSubject;
 import goals.goals_controller.GoalDetailControllerFX;
 import goals.goals_controller.GoalEditController;
 import goals.goals_controller.GoalsController;
@@ -21,7 +20,6 @@ import java.util.Map;
 public class GoalsModule {
 
 
-    private static GoalsController goalsController;
     private static Map<String, Stage> activeStages = new HashMap<>();
 
     public static void initGoals(Account selectedAccount) {
@@ -39,10 +37,10 @@ public class GoalsModule {
             GoalEditController editController = new GoalEditController();
             GoalDetailControllerFX detailController = new GoalDetailControllerFX();
 
-            goalsController = new GoalsController(view, editController, detailController);
+            GoalsController controller = new GoalsController(view, editController, detailController);
             if (selectedAccount != null) {
                 // Pass the account to the goals module
-                goalsController.setAccount(selectedAccount);
+                controller.setAccount(selectedAccount);
             }
 
             Stage stage = new Stage();
@@ -55,7 +53,7 @@ public class GoalsModule {
             // Unregister observer when closing the window to prevent accumulation
             // of dead observers and duplicated notifications
             stage.setOnCloseRequest(e -> {
-                AccountManagerSubject.removeObserver(goalsController);
+                controller.dispose();
                 activeStages.remove(accountId);
             });
 
@@ -78,12 +76,19 @@ public class GoalsModule {
             FXMLLoader loader = new FXMLLoader(GoalsModule.class.getResource("/fxml/goals/goals.fxml"));
             Parent root = loader.load();
             GoalsViewFX view = loader.getController();
-            if (onBack != null) view.setOnBack(onBack);
 
             GoalEditController editController = new GoalEditController();
             GoalDetailControllerFX detailController = new GoalDetailControllerFX();
+            
             GoalsController controller = new GoalsController(view, editController, detailController);
             controller.setAccount(selectedAccount);
+            
+            if (onBack != null) {
+                view.setOnBack(() -> {
+                    controller.dispose();
+                    onBack.run();
+                });
+            }
 
             root.getStylesheets().add(GoalsModule.class.getResource("/styles/app.css").toExternalForm());
             return root;

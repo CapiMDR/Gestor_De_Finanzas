@@ -68,7 +68,12 @@ public class RecurringsModule {
             Parent root = loader.load();
             RecurringsViewFX view = loader.getController();
             if (selectedAccount != null) view.setAccountName(selectedAccount.getName());
-            view.setOnBack(onBack);
+            if (onBack != null) {
+                view.setOnBack(() -> {
+                    controller.setView(null);
+                    onBack.run();
+                });
+            }
             controller.setView(view);
             root.getStylesheets().add(RecurringsModule.class.getResource("/styles/app.css").toExternalForm());
             return root;

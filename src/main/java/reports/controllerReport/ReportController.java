@@ -232,4 +232,14 @@ public class ReportController implements ReportObserver, AccountObserver {
             }
         }
     }
+
+    /**
+     * Unregisters this controller as an observer to prevent memory leaks.
+     */
+    public void dispose() {
+        AccountManagerSubject.removeObserver(this);
+        if (reportGenerator != null) {
+            reportGenerator.removeObserver(this);
+        }
+    }
 }

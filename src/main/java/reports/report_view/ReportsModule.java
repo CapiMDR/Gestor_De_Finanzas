@@ -1,7 +1,6 @@
 package reports.report_view;
 
 import accounts.account_model.Account;
-import accounts.account_model.AccountManagerSubject;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -21,7 +20,6 @@ import java.util.Map;
 public class ReportsModule {
 
    
-    private static ReportController reportController;
     private static Map<String, Stage> activeStages = new HashMap<>();
 
     public static void initReportsModule(Account selectedAccount) {
@@ -41,8 +39,8 @@ public class ReportsModule {
             ReportSubject subject = new ReportSubject();
             ReportGenerator generator = new ReportGenerator(subject, selectedAccount);
 
-            reportController = new ReportController();
-            reportController.setViewModule(view, generator, selectedAccount);
+            ReportController controller = new ReportController();
+            controller.setViewModule(view, generator, selectedAccount);
 
             Stage stage = new Stage();
             activeStages.put(accountId, stage);
@@ -51,10 +49,8 @@ public class ReportsModule {
             scene.getStylesheets().add(ReportsModule.class.getResource("/styles/app.css").toExternalForm());
             stage.setScene(scene);
 
-            // Unregister observer when closing the window to prevent accumulation
-            // of dead observers and duplicated notifications
             stage.setOnCloseRequest(e -> {
-                AccountManagerSubject.removeObserver(reportController);
+                controller.dispose();
                 activeStages.remove(accountId);
             });
 

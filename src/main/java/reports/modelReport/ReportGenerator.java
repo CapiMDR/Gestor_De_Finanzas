@@ -144,4 +144,13 @@ public class ReportGenerator {
     public void addObserver(ReportObserver obs) {
         reportSubject.add(obs);
     }
+
+    /**
+     * Removes an observer from the report subject to prevent memory leaks.
+     *
+     * @param obs the observer to remove
+     */
+    public void removeObserver(ReportObserver obs) {
+        reportSubject.remove(obs);
+    }
 }

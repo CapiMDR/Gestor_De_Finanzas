@@ -286,4 +286,11 @@ public class GoalsController implements AccountObserver {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+    /**
+     * Unregisters this controller as an observer to prevent memory leaks.
+     */
+    public void dispose() {
+        AccountManagerSubject.removeObserver(this);
+    }
 }

@@ -45,6 +45,7 @@ public class CategoriesModule {
             
             stage.setOnCloseRequest(e -> {
                 activeStages.remove(accountId);
+                controller.dispose();
             });
             
             stage.show();

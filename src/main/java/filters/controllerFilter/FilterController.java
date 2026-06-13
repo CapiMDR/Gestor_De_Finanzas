@@ -26,12 +26,21 @@ public class FilterController implements AccountObserver {
     private FilterViewFX view;
     private Account account;
 
+    /**
+     * Initializes the controller with the view and account.
+     *
+     * @param view            the FilterViewFX to control
+     * @param selectedAccount the account from which to pull movements
+     */
     public void setViewModule(FilterViewFX view, Account selectedAccount) {
         this.view = view;
         this.account = selectedAccount;
         loadCategoriesToView();
     }
 
+    /**
+     * Calculates the total income and expenses and updates the view.
+     */
     private void loadCategoriesToView() {
         if (account != null) {
             List<Movement> movements = account.getMovements();
@@ -74,6 +83,11 @@ public class FilterController implements AccountObserver {
         }
     }
 
+    /**
+     * Observer pattern method executed when the account lists change.
+     *
+     * @param accountsList the updated list of accounts
+     */
     @Override
     public void onNotify(List<Account> accountsList) {
         if (account != null) {
@@ -87,7 +101,17 @@ public class FilterController implements AccountObserver {
         }
     }
 
+    /**
+     * Reloads categories and updates the view manually.
+     */
     public void reloadCategories() {
         loadCategoriesToView();
+    }
+
+    /**
+     * Unregisters this controller as an observer to prevent memory leaks.
+     */
+    public void dispose() {
+        accounts.account_model.AccountManager.removeObserver(this);
     }
 }

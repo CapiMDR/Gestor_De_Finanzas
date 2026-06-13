@@ -25,8 +25,6 @@ import java.util.Map;
  */
 public class MovementsModule {
 
-    @SuppressWarnings("unused")
-    private static MovementController movementController;
     private static Map<String, Stage> activeStages = new HashMap<>();
 
     /**
@@ -57,7 +55,7 @@ public class MovementsModule {
             CategoryManager movementModel = new CategoryManager(movementSubject, testDataHandler);
 
             // Controller registers itself as Observer and wires button events
-            movementController = new MovementController(movementModel, movementView, selectedAccount);
+            MovementController controller = new MovementController(movementModel, movementView, selectedAccount);
 
             Stage stage = new Stage();
             activeStages.put(accountId, stage);
@@ -68,6 +66,7 @@ public class MovementsModule {
             
             stage.setOnCloseRequest(e -> {
                 activeStages.remove(accountId);
+                movementModel.removeObserver(controller);
             });
             
             stage.show();
@@ -97,12 +96,18 @@ public class MovementsModule {
                 MovementsModule.class.getResource("/fxml/movements/movements.fxml"));
             Parent root = loader.load();
             MovementsViewFX movementView = loader.getController();
-            if (onBack != null) movementView.setOnBack(onBack);
-
             JsonDataHandler dataHandler = new JsonDataHandler();
             MovementManagerSubject movementSubject = new MovementManagerSubject();
             CategoryManager movementModel = new CategoryManager(movementSubject, dataHandler);
-            new MovementController(movementModel, movementView, selectedAccount);
+            
+            MovementController controller = new MovementController(movementModel, movementView, selectedAccount);
+
+            if (onBack != null) {
+                movementView.setOnBack(() -> {
+                    movementModel.removeObserver(controller);
+                    onBack.run();
+                });
+            }
 
             root.getStylesheets().add(
                 MovementsModule.class.getResource("/styles/app.css").toExternalForm());
