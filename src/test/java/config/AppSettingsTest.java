@@ -31,6 +31,7 @@ class AppSettingsTest {
     void setUp() throws Exception {
         // Mock the file path to use a temporary file for persistence testing
         tempSettingsFile = Files.createTempFile("test_settings", ".json");
+        Files.writeString(tempSettingsFile, "{}", StandardCharsets.UTF_8);
         mockedAppConfig = mockStatic(AppConfig.class);
         mockedAppConfig.when(AppConfig::getSettingsFilePath)
                        .thenReturn(tempSettingsFile.toAbsolutePath().toString());
