@@ -38,17 +38,32 @@ public class RecurringsController {
 
     private static final Logger logger = LoggerFactory.getLogger(RecurringsController.class);
 
-    private final RecurringsModel recurringsModel = new RecurringsModel();
+    private final RecurringsModel recurringsModel;
     private RecurringsViewFX recurringsView;
     
     private final RecurringEditController editController = new RecurringEditController();
     private final RecurringAlertController alertController = new RecurringAlertController();
 
-    private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+    private final ScheduledExecutorService scheduler;
 
+    /**
+     * Default constructor. Initializes with default model and a background scheduler.
+     */
     public RecurringsController() {
+        this(new RecurringsModel(), Executors.newSingleThreadScheduledExecutor());
+    }
+
+    /**
+     * Constructor for dependency injection, useful for testing.
+     *
+     * @param model     the RecurringsModel instance
+     * @param scheduler the ScheduledExecutorService to run the background task
+     */
+    public RecurringsController(RecurringsModel model, ScheduledExecutorService scheduler) {
+        this.recurringsModel = model;
+        this.scheduler = scheduler;
         logger.info("RecurringsController background scheduler initialized.");
-        scheduler.scheduleAtFixedRate(this::watchRecurrings, 0, 1, TimeUnit.SECONDS);
+        this.scheduler.scheduleAtFixedRate(this::watchRecurrings, 0, 1, TimeUnit.SECONDS);
     }
 
     /**

@@ -1,152 +1,209 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package reports.modelReport;
 
-/**
- *
- * @author villa
- */
-/*
- * import org.junit.jupiter.api.Test;
- * import java.time.LocalDate;
- * import java.time.LocalDateTime;
- * import java.util.List;
- * 
- * import static org.junit.jupiter.api.Assertions.*;
- */
+import accounts.account_model.Account;
+import movements.movement_model.Movement;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Collections;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.*;
 
 /**
- * Unit tests for ReportGenerator.
+ * Unit tests for {@link ReportGenerator}.
+ * Validates the generation of reports for different time periods.
  */
-// public class ReportGeneratorTest {
+@ExtendWith(MockitoExtension.class)
+@DisplayName("Report Generator Test")
+class ReportGeneratorTest {
 
-/**
- * Dummy persistence class used to mock movement loading.
- *//*
-    * private static class FakePersistence extends JSONControllerPersistence {
-    * private List<Movement> movements;
-    * 
-    * public FakePersistence(List<Movement> movements) {
-    * this.movements = movements;
-    * }
-    * 
-    * @Override
-    * public List<Movement> loadAllMovements() {
-    * return movements;
-    * }
-    * }
-    */
+    @Mock
+    private ReportSubject reportSubject;
 
-/**
- * Dummy observer subject used to capture sent report data.
- *//*
-    * private static class FakeSubject extends ReportSubject {
-    * 
-    * public ReportData lastData;
-    * 
-    * @Override
-    * public void notifyObservers(ReportData data) {
-    * this.lastData = data;
-    * }
-    * 
-    * @Override
-    * public void add(ReportObserver o) {
-    * // Not needed for test
-    * }
-    * }
-    */
-/**
- * Helper method to create movement.
- *//*
-    * private Movement movement(double amount, LocalDate date) {
-    * return new Movement(amount, LocalDateTime.of(date,
-    * java.time.LocalTime.NOON));
-    * }
-    */
-/*
- * @Test
- * void testTodayReport() {
- * LocalDate today = LocalDate.now();
- * 
- * FakePersistence persistence = new FakePersistence(List.of(
- * movement(10, today),
- * movement(5, today.minusDays(1))
- * ));
- * 
- * FakeSubject subject = new FakeSubject();
- * ReportGenerator generator = new ReportGenerator(subject, persistence);
- * 
- * generator.today();
- * 
- * assertEquals("Today", subject.lastData.getName());
- * assertEquals(1, subject.lastData.getMovements().size());
- * assertEquals(10, subject.lastData.getTotal());
- * }
- * 
- * @Test
- * void testWeekAgoReport() {
- * LocalDate today = LocalDate.now();
- * 
- * FakePersistence persistence = new FakePersistence(List.of(
- * movement(10, today),
- * movement(20, today.minusDays(3)),
- * movement(5, today.minusDays(10)) // outside range
- * ));
- * 
- * FakeSubject subject = new FakeSubject();
- * ReportGenerator generator = new ReportGenerator(subject, persistence);
- * 
- * generator.weekAgo();
- * 
- * assertEquals("Week Ago", subject.lastData.getName());
- * assertEquals(2, subject.lastData.getMovements().size());
- * assertEquals(30, subject.lastData.getTotal());
- * }
- * 
- * @Test
- * void testSelectPeriod() {
- * LocalDate start = LocalDate.now().minusDays(5);
- * LocalDate end = LocalDate.now().minusDays(2);
- * 
- * FakePersistence persistence = new FakePersistence(List.of(
- * movement(10, start),
- * movement(20, start.plusDays(1)),
- * movement(30, end),
- * movement(5, end.plusDays(1)) // outside range
- * ));
- * 
- * FakeSubject subject = new FakeSubject();
- * ReportGenerator generator = new ReportGenerator(subject, persistence);
- * 
- * generator.selectPeriod(start, end);
- * 
- * assertEquals("Selected Period", subject.lastData.getName());
- * assertEquals(3, subject.lastData.getMovements().size());
- * assertEquals(60, subject.lastData.getTotal());
- * }
- * 
- * @Test
- * void testAmountTotal() throws Exception {
- * FakePersistence persistence = new FakePersistence(List.of());
- * FakeSubject subject = new FakeSubject();
- * 
- * ReportGenerator generator = new ReportGenerator(subject, persistence);
- * 
- * var movements = List.of(
- * movement(10, LocalDate.now()),
- * movement(25.5, LocalDate.now())
- * );
- * 
- * // Access private method via reflection
- * var method = ReportGenerator.class.getDeclaredMethod("amountTotal",
- * List.class);
- * method.setAccessible(true);
- * 
- * double total = (double) method.invoke(generator, movements);
- * 
- * assertEquals(35.5, total);
- * }
- * }
- */
+    @Mock
+    private Account account;
+
+    private ReportGenerator reportGenerator;
+
+    /**
+     * Captures the ReportData object passed to the observer to verify its contents.
+     */
+    @Captor
+    private ArgumentCaptor<ReportData> reportDataCaptor;
+
+    /**
+     * Initializes the ReportGenerator instance with mocked dependencies.
+     */
+    @BeforeEach
+    void setUp() {
+        reportGenerator = new ReportGenerator(reportSubject, account);
+    }
+
+    /**
+     * Helper method to create a mock Movement with a specific amount and date.
+     *
+     * @param amountStr the amount as a string
+     * @param date      the date and time of the movement
+     * @return the mocked Movement instance
+     */
+    private Movement createMockMovement(String amountStr, LocalDateTime date) {
+        Movement m = mock(Movement.class);
+        lenient().when(m.getAmount()).thenReturn(new BigDecimal(amountStr));
+        lenient().when(m.getDate()).thenReturn(date);
+        return m;
+    }
+
+    /**
+     * Tests that the {@code today()} method correctly filters movements 
+     * to include only those occurring on the current day.
+     */
+    @Test
+    @DisplayName("today() should filter only today's movements")
+    void testTodayReport() {
+        // Arrange
+        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime yesterday = today.minusDays(1);
+        
+        Movement m1 = createMockMovement("100.50", today);
+        Movement m2 = createMockMovement("50.00", yesterday);
+
+        when(account.getMovements()).thenReturn(Arrays.asList(m1, m2));
+
+        // Act
+        reportGenerator.today();
+
+        // Assert
+        verify(reportSubject).notifyObservers(reportDataCaptor.capture());
+        ReportData data = reportDataCaptor.getValue();
+
+        assertEquals("Hoy", data.getPeriodName());
+        assertEquals(1, data.getMovements().size());
+        assertEquals(new BigDecimal("100.50"), data.getTotalAmount());
+        assertTrue(data.getMovements().contains(m1));
+    }
+
+    /**
+     * Tests that the {@code weekAgo()} method correctly filters movements 
+     * to include only those occurring within the last 7 days.
+     */
+    @Test
+    @DisplayName("weekAgo() should filter movements from the last 7 days")
+    void testWeekAgoReport() {
+        // Arrange
+        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime threeDaysAgo = today.minusDays(3);
+        LocalDateTime eightDaysAgo = today.minusDays(8);
+
+        Movement m1 = createMockMovement("200.00", today);
+        Movement m2 = createMockMovement("50.00", threeDaysAgo);
+        Movement m3 = createMockMovement("10.00", eightDaysAgo);
+
+        when(account.getMovements()).thenReturn(Arrays.asList(m1, m2, m3));
+
+        // Act
+        reportGenerator.weekAgo();
+
+        // Assert
+        verify(reportSubject).notifyObservers(reportDataCaptor.capture());
+        ReportData data = reportDataCaptor.getValue();
+
+        assertEquals("Ultimos 7 días", data.getPeriodName());
+        assertEquals(2, data.getMovements().size());
+        assertEquals(new BigDecimal("250.00"), data.getTotalAmount());
+        assertTrue(data.getMovements().containsAll(Arrays.asList(m1, m2)));
+    }
+
+    /**
+     * Tests that the {@code yesterday()} method correctly filters movements 
+     * to include only those occurring exactly one day ago.
+     */
+    @Test
+    @DisplayName("yesterday() should filter only yesterday's movements")
+    void testYesterdayReport() {
+        // Arrange
+        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime yesterday = today.minusDays(1);
+        LocalDateTime twoDaysAgo = today.minusDays(2);
+
+        Movement m1 = createMockMovement("100.00", today);
+        Movement m2 = createMockMovement("30.00", yesterday);
+        Movement m3 = createMockMovement("10.00", twoDaysAgo);
+
+        when(account.getMovements()).thenReturn(Arrays.asList(m1, m2, m3));
+
+        // Act
+        reportGenerator.yesterday();
+
+        // Assert
+        verify(reportSubject).notifyObservers(reportDataCaptor.capture());
+        ReportData data = reportDataCaptor.getValue();
+
+        assertEquals("Ayer", data.getPeriodName());
+        assertEquals(1, data.getMovements().size());
+        assertEquals(new BigDecimal("30.00"), data.getTotalAmount());
+        assertTrue(data.getMovements().contains(m2));
+    }
+
+    /**
+     * Tests that the {@code currentWeek()} method correctly filters movements 
+     * from Monday to Sunday of the current week.
+     */
+    @Test
+    @DisplayName("currentWeek() should filter movements from current week (Mon-Sun)")
+    void testCurrentWeekReport() {
+        // Arrange
+        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime monday = today.toLocalDate().with(java.time.DayOfWeek.MONDAY).atStartOfDay();
+        LocalDateTime previousSunday = monday.minusDays(1);
+
+        Movement m1 = createMockMovement("40.00", today);
+        Movement m2 = createMockMovement("20.00", monday);
+        Movement m3 = createMockMovement("100.00", previousSunday);
+
+        when(account.getMovements()).thenReturn(Arrays.asList(m1, m2, m3));
+
+        // Act
+        reportGenerator.currentWeek();
+
+        // Assert
+        verify(reportSubject).notifyObservers(reportDataCaptor.capture());
+        ReportData data = reportDataCaptor.getValue();
+
+        assertEquals("Semana Actual", data.getPeriodName());
+        assertEquals(2, data.getMovements().size());
+        assertEquals(new BigDecimal("60.00"), data.getTotalAmount());
+        assertTrue(data.getMovements().containsAll(Arrays.asList(m1, m2)));
+    }
+
+    /**
+     * Tests that when there are no movements, the total calculated amount
+     * is correctly returned as zero.
+     */
+    @Test
+    @DisplayName("amountTotal() logic works correctly (empty list returns ZERO)")
+    void testEmptyMovements() {
+        // Arrange
+        when(account.getMovements()).thenReturn(Collections.emptyList());
+
+        // Act
+        reportGenerator.today();
+
+        // Assert
+        verify(reportSubject).notifyObservers(reportDataCaptor.capture());
+        ReportData data = reportDataCaptor.getValue();
+
+        assertTrue(data.getMovements().isEmpty());
+        assertEquals(new BigDecimal("0"), data.getTotalAmount());
+    }
+}

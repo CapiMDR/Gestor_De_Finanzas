@@ -35,26 +35,38 @@ public class RemindersController {
     private static final Logger logger = LoggerFactory.getLogger(RemindersController.class);
 
     /** Model that manages the collection of reminders. */
-    private final RemindersModel remindersModel = new RemindersModel();
+    private final RemindersModel remindersModel;
 
     /** Main view where reminders are shown. */
     private RemindersViewFX remindersView;
 
-    /** Scheduled executor to periodically check reminders. Uses a daemon thread so it doesn't block JVM exit unless background mode is enabled. */
-    private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor(r -> {
-        Thread thread = new Thread(r, "Reminders-Scheduler");
-        boolean isBackground = config.AppSettings.getInstance().getModoNotificaciones() == config.AppSettings.ModoNotificaciones.SEGUNDO_PLANO;
-        thread.setDaemon(!isBackground);
-        return thread;
-    });
+    /** Scheduled executor to periodically check reminders. */
+    private final ScheduledExecutorService scheduler;
 
     /**
      * Creates the controller, shows the main view and schedules the
-     * periodic reminder watch task.
+     * periodic reminder watch task using default dependencies.
      */
     public RemindersController() {
+        this(new RemindersModel(), Executors.newSingleThreadScheduledExecutor(r -> {
+            Thread thread = new Thread(r, "Reminders-Scheduler");
+            boolean isBackground = config.AppSettings.getInstance().getModoNotificaciones() == config.AppSettings.ModoNotificaciones.SEGUNDO_PLANO;
+            thread.setDaemon(!isBackground);
+            return thread;
+        }));
+    }
+
+    /**
+     * Creates the controller using the provided dependencies. Useful for testing.
+     * 
+     * @param model    the model for reminders
+     * @param scheduler the scheduler for watching reminders
+     */
+    public RemindersController(RemindersModel model, ScheduledExecutorService scheduler) {
+        this.remindersModel = model;
+        this.scheduler = scheduler;
         logger.info("RemindersController initialized.");
-        scheduler.scheduleAtFixedRate(this::watchReminders, 0, 1, TimeUnit.SECONDS);
+        this.scheduler.scheduleAtFixedRate(this::watchReminders, 0, 1, TimeUnit.SECONDS);
     }
 
     public void setView(RemindersViewFX view) {
