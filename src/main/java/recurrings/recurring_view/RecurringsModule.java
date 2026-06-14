@@ -48,7 +48,7 @@ public class RecurringsModule {
 
             activeStage.show();
         } catch (Exception e) {
-            e.printStackTrace();
+            org.slf4j.LoggerFactory.getLogger("GlobalExceptionHandler").error("Excepción detectada", e);
         }
     }
 
@@ -78,7 +78,7 @@ public class RecurringsModule {
             root.getStylesheets().add(RecurringsModule.class.getResource("/styles/app.css").toExternalForm());
             return root;
         } catch (Exception e) {
-            e.printStackTrace();
+            org.slf4j.LoggerFactory.getLogger("GlobalExceptionHandler").error("Excepción detectada", e);
             return null;
         }
     }

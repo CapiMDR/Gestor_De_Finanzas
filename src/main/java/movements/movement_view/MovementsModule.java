@@ -72,7 +72,7 @@ public class MovementsModule {
             stage.show();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            org.slf4j.LoggerFactory.getLogger("GlobalExceptionHandler").error("Excepción detectada", e);
             javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
             alert.setTitle("Error de Carga");
             alert.setHeaderText("Error al abrir el módulo de Movimientos");
@@ -113,7 +113,7 @@ public class MovementsModule {
                 MovementsModule.class.getResource("/styles/app.css").toExternalForm());
             return root;
         } catch (Exception e) {
-            e.printStackTrace();
+            org.slf4j.LoggerFactory.getLogger("GlobalExceptionHandler").error("Excepción detectada", e);
             return null;
         }
     }

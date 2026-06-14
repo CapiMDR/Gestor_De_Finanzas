@@ -65,7 +65,7 @@ public class GoalEditController {
             return dialog.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK;
 
         } catch (Exception e) {
-            e.printStackTrace();
+            org.slf4j.LoggerFactory.getLogger("GlobalExceptionHandler").error("Excepción detectada", e);
             return false;
         }
     }

@@ -59,7 +59,7 @@ public class GoalsModule {
 
             stage.show();
         } catch (Exception e) {
-            e.printStackTrace();
+            org.slf4j.LoggerFactory.getLogger("GlobalExceptionHandler").error("Excepción detectada", e);
         }
     }
 
@@ -93,7 +93,7 @@ public class GoalsModule {
             root.getStylesheets().add(GoalsModule.class.getResource("/styles/app.css").toExternalForm());
             return root;
         } catch (Exception e) {
-            e.printStackTrace();
+            org.slf4j.LoggerFactory.getLogger("GlobalExceptionHandler").error("Excepción detectada", e);
             return null;
         }
     }

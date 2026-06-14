@@ -218,7 +218,7 @@ public class MovementController implements CategoryObserver {
 
             categoriesStage.showAndWait();
         } catch (Exception e) {
-            e.printStackTrace();
+            org.slf4j.LoggerFactory.getLogger("GlobalExceptionHandler").error("Excepción detectada", e);
             showAlert(AlertType.ERROR, ERROR_TITLE, "No se pudo cargar la vista de categorías.");
         }
     }

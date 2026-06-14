@@ -50,7 +50,7 @@ public class CategoriesModule {
             
             stage.show();
         } catch (Exception e) {
-            e.printStackTrace();
+            org.slf4j.LoggerFactory.getLogger("GlobalExceptionHandler").error("Excepción detectada", e);
             javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
             alert.setTitle("Error de Carga");
             alert.setHeaderText("Error al abrir el módulo de Categorías");

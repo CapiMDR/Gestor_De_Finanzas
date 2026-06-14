@@ -54,7 +54,7 @@ public class AccountsModule {
             activeStage.show();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            org.slf4j.LoggerFactory.getLogger("GlobalExceptionHandler").error("Excepción detectada", e);
         }
     }
 
@@ -81,7 +81,7 @@ public class AccountsModule {
 
             tabPane.getTabs().add(tab);
         } catch (Exception e) {
-            e.printStackTrace();
+            org.slf4j.LoggerFactory.getLogger("GlobalExceptionHandler").error("Excepción detectada", e);
         }
     }
 }

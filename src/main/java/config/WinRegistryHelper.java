@@ -35,7 +35,7 @@ public class WinRegistryHelper {
 
         try {
             // reg add HKCU\Software\Microsoft\Windows\CurrentVersion\Run /v GestorFinanzas /t REG_SZ /d "path\to\app.exe" /f
-            ProcessBuilder pb = new ProcessBuilder("reg", "add", REG_RUN_KEY, "/v", APP_NAME, "/t", "REG_SZ", "/d", appPath, "/f");
+            ProcessBuilder pb = new ProcessBuilder("C:\\Windows\\System32\\reg.exe", "add", REG_RUN_KEY, "/v", APP_NAME, "/t", "REG_SZ", "/d", appPath, "/f");
             Process process = pb.start();
             process.waitFor();
             logger.info("Aplicación registrada en el inicio de Windows.");
@@ -50,7 +50,7 @@ public class WinRegistryHelper {
     public static void unregisterAutostart() {
         try {
             // reg delete HKCU\Software\Microsoft\Windows\CurrentVersion\Run /v GestorFinanzas /f
-            ProcessBuilder pb = new ProcessBuilder("reg", "delete", REG_RUN_KEY, "/v", APP_NAME, "/f");
+            ProcessBuilder pb = new ProcessBuilder("C:\\Windows\\System32\\reg.exe", "delete", REG_RUN_KEY, "/v", APP_NAME, "/f");
             Process process = pb.start();
             process.waitFor();
             logger.info("Aplicación removida del inicio de Windows.");

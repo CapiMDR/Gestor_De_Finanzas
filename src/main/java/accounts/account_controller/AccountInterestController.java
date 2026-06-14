@@ -43,7 +43,7 @@ public class AccountInterestController {
             assignEvents();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            org.slf4j.LoggerFactory.getLogger("GlobalExceptionHandler").error("Excepción detectada", e);
         }
     }
 

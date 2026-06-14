@@ -48,7 +48,7 @@ public class RemindersModule {
             
             activeStage.show();
         } catch (IOException e) {
-            e.printStackTrace();
+            org.slf4j.LoggerFactory.getLogger("GlobalExceptionHandler").error("Excepción detectada", e);
         }
     }
 
@@ -80,7 +80,7 @@ public class RemindersModule {
             root.getStylesheets().add(RemindersModule.class.getResource("/styles/app.css").toExternalForm());
             return root;
         } catch (IOException e) {
-            e.printStackTrace();
+            org.slf4j.LoggerFactory.getLogger("GlobalExceptionHandler").error("Excepción detectada", e);
             return null;
         }
     }

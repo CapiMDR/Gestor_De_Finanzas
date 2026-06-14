@@ -56,7 +56,7 @@ public class ReportsModule {
 
             stage.show();
         } catch (Exception e) {
-            e.printStackTrace();
+            org.slf4j.LoggerFactory.getLogger("GlobalExceptionHandler").error("Excepción detectada", e);
         }
     }
 
@@ -86,7 +86,7 @@ public class ReportsModule {
             root.getStylesheets().add(ReportsModule.class.getResource("/styles/app.css").toExternalForm());
             return root;
         } catch (Exception e) {
-            e.printStackTrace();
+            org.slf4j.LoggerFactory.getLogger("GlobalExceptionHandler").error("Excepción detectada", e);
             return null;
         }
     }

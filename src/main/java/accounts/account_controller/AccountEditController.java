@@ -49,7 +49,7 @@ public class AccountEditController {
             view.getCmbCurrency().setValue(accountToEdit.getCoin().toString());
 
         } catch (Exception e) {
-            e.printStackTrace();
+            org.slf4j.LoggerFactory.getLogger("GlobalExceptionHandler").error("Excepción detectada", e);
         }
     }
 
