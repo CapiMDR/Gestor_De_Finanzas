@@ -199,26 +199,28 @@ public class GoalsController implements AccountObserver {
             for (Goal goal : goals) {
                 BigDecimal progress = totalBalance.min(goal.getTargetAmount());
                 goal.setCurrentAmount(progress.max(BigDecimal.ZERO));
-                
-                // Fire notification if goal reached 100% and wasn't notified before
-                if (goal.getCurrentAmount().compareTo(goal.getTargetAmount()) >= 0) {
-                    if (!goal.isNotificadaCompleta()) {
-                        goal.setNotificadaCompleta(true);
-                        NotificationManager.getInstance().agregarNotificacion(
-                            new notifications.notification_model.AppNotification(
-                                notifications.notification_model.AppNotification.Tipo.META_CUMPLIDA,
-                                "¡Meta cumplida!",
-                                "Has alcanzado la meta '" + goal.getName() + "' en tu cuenta " + currentAccount.getName() + ".",
-                                java.time.LocalDateTime.now()
-                            )
-                        );
-                        logger.info("Meta cumplida notificada: {}", goal.getName());
-                    }
-                } else {
-                    // Reset flag if balance drops below target
-                    goal.setNotificadaCompleta(false);
-                }
+                checkAndNotifyGoalReached(goal);
             }
+        }
+    }
+
+    private void checkAndNotifyGoalReached(Goal goal) {
+        if (goal.getCurrentAmount().compareTo(goal.getTargetAmount()) >= 0) {
+            if (!goal.isNotificadaCompleta()) {
+                goal.setNotificadaCompleta(true);
+                NotificationManager.getInstance().agregarNotificacion(
+                    new notifications.notification_model.AppNotification(
+                        notifications.notification_model.AppNotification.Tipo.META_CUMPLIDA,
+                        "¡Meta cumplida!",
+                        "Has alcanzado la meta '" + goal.getName() + "' en tu cuenta " + currentAccount.getName() + ".",
+                        java.time.LocalDateTime.now()
+                    )
+                );
+                logger.info("Meta cumplida notificada: {}", goal.getName());
+            }
+        } else {
+            // Reset flag if balance drops below target
+            goal.setNotificadaCompleta(false);
         }
     }
 
@@ -239,26 +241,30 @@ public class GoalsController implements AccountObserver {
                 return;
             }
 
-            Goal newGoal = new Goal(name, target, desc);
-
-            if (currentAccount != null) {
-                BigDecimal currentBalance = calculateActualBalance();
-                newGoal.setCurrentAmount(currentBalance);
-
-                currentAccount.getGoals().add(newGoal);
-                AccountManager.saveAccountsData();
-                refreshView();
-                
-                // Clear fields
-                mainView.getTxtGoalName().clear();
-                mainView.getTxtTargetAmount().clear();
-                mainView.getTxtDescription().clear();
-                
-                logger.info("Goal created: '{}' with target={} for account '{}'.",
-                        name, target, currentAccount.getName());
-            }
+            saveNewGoal(name, target, desc);
         } catch (NumberFormatException e) {
             showAlert(AlertType.ERROR, "Formato inválido", "Por favor ingresa un monto numérico válido.");
+        }
+    }
+
+    private void saveNewGoal(String name, BigDecimal target, String desc) {
+        Goal newGoal = new Goal(name, target, desc);
+
+        if (currentAccount != null) {
+            BigDecimal currentBalance = calculateActualBalance();
+            newGoal.setCurrentAmount(currentBalance);
+
+            currentAccount.getGoals().add(newGoal);
+            AccountManager.saveAccountsData();
+            refreshView();
+            
+            // Clear fields
+            mainView.getTxtGoalName().clear();
+            mainView.getTxtTargetAmount().clear();
+            mainView.getTxtDescription().clear();
+            
+            logger.info("Goal created: '{}' with target={} for account '{}'.",
+                    name, target, currentAccount.getName());
         }
     }
 

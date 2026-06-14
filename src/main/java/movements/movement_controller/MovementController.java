@@ -63,14 +63,14 @@ public class MovementController implements CategoryObserver {
         }
 
         model.addObserver(this);
-        AssignEvents();
+        assignEvents();
         loadInitialData();
     }
 
     /**
      * Assigns user interface events to their respective handlers.
      */
-    private void AssignEvents() {
+    private void assignEvents() {
         this.view.getBtnAddIncome().setOnAction(e -> handleAddMovement(MovementType.INCOME));
         this.view.getBtnAddExpense().setOnAction(e -> handleAddMovement(MovementType.EXPENSE));
         this.view.getBtnAddCategoryIncome().setOnAction(e -> showCategoriesManagerView());

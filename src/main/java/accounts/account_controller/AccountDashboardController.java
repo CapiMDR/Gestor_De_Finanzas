@@ -16,9 +16,9 @@ import movements.movement_model.MovementCategory;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import reports.modelReport.ReportData;
-import reports.modelReport.ReportGenerator;
-import reports.modelReport.ReportObserver;
+import reports.report_model.ReportData;
+import reports.report_model.ReportGenerator;
+import reports.report_model.ReportObserver;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -83,7 +83,7 @@ public class AccountDashboardController implements AccountObserver, ReportObserv
         }
 
         // Initialize ReportGenerator for the charts
-        reportGenerator = new ReportGenerator(new reports.modelReport.ReportSubject(), cuenta);
+        reportGenerator = new ReportGenerator(new reports.report_model.ReportSubject(), cuenta);
         reportGenerator.addObserver(this);
         AccountManagerSubject.addObserver(this);
 
@@ -182,66 +182,82 @@ public class AccountDashboardController implements AccountObserver, ReportObserv
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         Platform.runLater(() -> {
-            // --- PieChart ---
-            pieChartMovements.getData().clear();
-            if (income.compareTo(BigDecimal.ZERO) > 0) {
-                pieChartMovements.getData().add(new PieChart.Data("INGRESO", income.doubleValue()));
-            }
-            if (expense.compareTo(BigDecimal.ZERO) > 0) {
-                pieChartMovements.getData().add(new PieChart.Data("EGRESO", expense.doubleValue()));
-            }
-
-            // --- BarChart ---
-            barChartMovements.getData().clear();
-            XYChart.Series<String, Number> series = new XYChart.Series<>();
-            series.setName(periodName);
-            if (income.compareTo(BigDecimal.ZERO) > 0) {
-                series.getData().add(new XYChart.Data<>("INGRESO", income.doubleValue()));
-            }
-            if (expense.compareTo(BigDecimal.ZERO) > 0) {
-                series.getData().add(new XYChart.Data<>("EGRESO", expense.doubleValue()));
-            }
-            barChartMovements.getData().add(series);
-
+            updatePieChart(income, expense);
+            XYChart.Series<String, Number> series = updateBarChart(periodName, income, expense);
+            
             // Force layout before applying styles to ensure nodes exist
             pieChartMovements.layout();
             barChartMovements.layout();
 
-            for (PieChart.Data d : pieChartMovements.getData()) {
-                if (d.getNode() != null) {
-                    d.getNode().getStyleClass().removeAll(COLOR_INCOME, COLOR_EXPENSE);
-                    if ("INGRESO".equals(d.getName())) {
-                        d.getNode().getStyleClass().add(COLOR_INCOME);
-                    } else {
-                        d.getNode().getStyleClass().add(COLOR_EXPENSE);
-                    }
-                }
-            }
-            for (XYChart.Data<String, Number> d : series.getData()) {
-                if (d.getNode() != null) {
-                    d.getNode().getStyleClass().removeAll(COLOR_INCOME, COLOR_EXPENSE);
-                    if ("INGRESO".equals(d.getXValue())) {
-                        d.getNode().getStyleClass().add(COLOR_INCOME);
-                    } else {
-                        d.getNode().getStyleClass().add(COLOR_EXPENSE);
-                    }
-                }
-            }
-
-            // Fix pie chart legend
-            for (javafx.scene.Node n : pieChartMovements.lookupAll(".chart-legend-item")) {
-                if (n instanceof javafx.scene.control.Label label) {
-                    if (label.getGraphic() != null) {
-                        label.getGraphic().getStyleClass().removeAll(COLOR_INCOME, COLOR_EXPENSE);
-                        if ("INGRESO".equals(label.getText())) {
-                            label.getGraphic().getStyleClass().add(COLOR_INCOME);
-                        } else if ("EGRESO".equals(label.getText())) {
-                            label.getGraphic().getStyleClass().add(COLOR_EXPENSE);
-                        }
-                    }
-                }
-            }
+            applyPieChartStyles();
+            applyBarChartStyles(series);
+            fixPieChartLegend();
         });
+    }
+
+    private void updatePieChart(BigDecimal income, BigDecimal expense) {
+        pieChartMovements.getData().clear();
+        if (income.compareTo(BigDecimal.ZERO) > 0) {
+            pieChartMovements.getData().add(new PieChart.Data("INGRESO", income.doubleValue()));
+        }
+        if (expense.compareTo(BigDecimal.ZERO) > 0) {
+            pieChartMovements.getData().add(new PieChart.Data("EGRESO", expense.doubleValue()));
+        }
+    }
+
+    private XYChart.Series<String, Number> updateBarChart(String periodName, BigDecimal income, BigDecimal expense) {
+        barChartMovements.getData().clear();
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName(periodName);
+        if (income.compareTo(BigDecimal.ZERO) > 0) {
+            series.getData().add(new XYChart.Data<>("INGRESO", income.doubleValue()));
+        }
+        if (expense.compareTo(BigDecimal.ZERO) > 0) {
+            series.getData().add(new XYChart.Data<>("EGRESO", expense.doubleValue()));
+        }
+        barChartMovements.getData().add(series);
+        return series;
+    }
+
+    private void applyPieChartStyles() {
+        for (PieChart.Data d : pieChartMovements.getData()) {
+            if (d.getNode() != null) {
+                d.getNode().getStyleClass().removeAll(COLOR_INCOME, COLOR_EXPENSE);
+                if ("INGRESO".equals(d.getName())) {
+                    d.getNode().getStyleClass().add(COLOR_INCOME);
+                } else {
+                    d.getNode().getStyleClass().add(COLOR_EXPENSE);
+                }
+            }
+        }
+    }
+
+    private void applyBarChartStyles(XYChart.Series<String, Number> series) {
+        for (XYChart.Data<String, Number> d : series.getData()) {
+            if (d.getNode() != null) {
+                d.getNode().getStyleClass().removeAll(COLOR_INCOME, COLOR_EXPENSE);
+                if ("INGRESO".equals(d.getXValue())) {
+                    d.getNode().getStyleClass().add(COLOR_INCOME);
+                } else {
+                    d.getNode().getStyleClass().add(COLOR_EXPENSE);
+                }
+            }
+        }
+    }
+
+    private void fixPieChartLegend() {
+        for (javafx.scene.Node n : pieChartMovements.lookupAll(".chart-legend-item")) {
+            if (n instanceof javafx.scene.control.Label label) {
+                if (label.getGraphic() != null) {
+                    label.getGraphic().getStyleClass().removeAll(COLOR_INCOME, COLOR_EXPENSE);
+                    if ("INGRESO".equals(label.getText())) {
+                        label.getGraphic().getStyleClass().add(COLOR_INCOME);
+                    } else if ("EGRESO".equals(label.getText())) {
+                        label.getGraphic().getStyleClass().add(COLOR_EXPENSE);
+                    }
+                }
+            }
+        }
     }
 
     // ── Callback setters ─────────────────────────────────────────────────────

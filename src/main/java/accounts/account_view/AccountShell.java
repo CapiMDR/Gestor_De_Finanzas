@@ -13,9 +13,9 @@ import javafx.scene.layout.StackPane;
 import movements.movement_view.MovementsModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import recurringMoves.recurring_view.RecurringsModule;
+import recurrings.recurring_view.RecurringsModule;
 import reminders.reminder_view.RemindersModule;
-import filters.viewFilter.FilterModule;
+import filters.filter_view.FilterModule;
 
 import java.io.IOException;
 

@@ -27,7 +27,7 @@ public class Main extends Application {
         
         // Initialize global background threads
         RemindersModule.initGlobalReminders();
-        recurringMoves.recurring_view.RecurringsModule.initGlobalRecurrings();
+        recurrings.recurring_view.RecurringsModule.initGlobalRecurrings();
 
         // Enable System Tray if user settings allow background mode
         if (AppSettings.getInstance().getModoNotificaciones() == AppSettings.ModoNotificaciones.SEGUNDO_PLANO) {

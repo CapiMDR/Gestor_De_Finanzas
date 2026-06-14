@@ -31,13 +31,13 @@ public class AccountController implements AccountObserver {
     public AccountController(AccountViewFX view) {
         this.view = view;
         AccountManager.addObserver(this);
-        AssignEvents();
+        assignEvents();
     }
 
     /**
      * Assigns listeners to the view's buttons.
      */
-    private void AssignEvents() {
+    private void assignEvents() {
         this.view.getBtnAccessAccount().setOnAction(e -> accessAccount());
         this.view.getBtnAddAccount().setOnAction(e -> addAccount());
         this.view.getBtnDeleteAccount().setOnAction(e -> deleteAccount());

@@ -6,7 +6,7 @@
 
 <!--
     Recurring Movements View Layout
-    Controller: recurringMoves.recurring_view.RecurringsViewFX
+    Controller: recurrings.recurring_view.RecurringsViewFX
     Stylesheet: /styles/app.css
 
     Note: Uses native JavaFX DatePicker — JCalendar dependency eliminated.
@@ -14,7 +14,7 @@
 -->
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="recurringMoves.recurring_view.RecurringsViewFX"
+            fx:controller="recurrings.recurring_view.RecurringsViewFX"
             styleClass="root-pane">
 
     <top>

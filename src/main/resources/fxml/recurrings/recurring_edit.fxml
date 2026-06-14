@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<DialogPane prefWidth="420.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="recurringMoves.recurring_view.RecurringEditViewFX">
+<DialogPane prefWidth="420.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="recurrings.recurring_view.RecurringEditViewFX">
    <content>
       <GridPane hgap="10.0" vgap="15.0">
         <columnConstraints>

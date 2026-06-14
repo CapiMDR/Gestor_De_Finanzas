@@ -5,9 +5,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import reports.controllerReport.ReportController;
-import reports.modelReport.ReportGenerator;
-import reports.modelReport.ReportSubject;
+import reports.report_controller.ReportController;
+import reports.report_model.ReportGenerator;
+import reports.report_model.ReportSubject;
 
 import java.util.HashMap;
 import java.util.Map;

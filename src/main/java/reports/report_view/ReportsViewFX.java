@@ -24,7 +24,7 @@ import javafx.scene.layout.HBox;
  * <p>Layout is defined declaratively in {@code /fxml/reports.fxml}.
  * Business logic is delegated to {@code ReportController}.
  *
- * @see reports.controllerReport.ReportController
+ * @see reports.report_controller.ReportController
  */
 public class ReportsViewFX {
 

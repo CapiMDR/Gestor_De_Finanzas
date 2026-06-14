@@ -40,14 +40,14 @@ public class AccountInterestController {
             view.getTxtInitialBalance().setText(account.getCurrentBalance().toPlainString());
 
             // Assign events for live calculation
-            AssignEvents();
+            assignEvents();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void AssignEvents() {
+    private void assignEvents() {
         view.getTxtInterestRate().textProperty().addListener((obs, oldVal, newVal) -> calculateInterest());
         view.getTxtTimeYears().textProperty().addListener((obs, oldVal, newVal) -> calculateInterest());
     }
