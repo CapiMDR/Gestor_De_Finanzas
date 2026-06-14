@@ -67,7 +67,7 @@ public class SystemTrayManager {
                 // Execute proper shutdown
                 Platform.runLater(() -> {
                     if (MainShell.getInstance() != null) {
-                        MainShell.getInstance().alCerrar();
+                        MainShell.getInstance().onClose();
                     }
                     Platform.exit();
                     System.exit(0);

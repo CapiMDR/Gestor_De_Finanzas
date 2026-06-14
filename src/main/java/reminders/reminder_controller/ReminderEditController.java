@@ -15,10 +15,7 @@ public class ReminderEditController {
 
     @FXML
     public void initialize() {
-        if (cmbHour != null && cmbMinute != null) {
-            for (int i = 0; i < 24; i++) cmbHour.getItems().add(String.format("%02d", i));
-            for (int i = 0; i < 60; i++) cmbMinute.getItems().add(String.format("%02d", i));
-        }
+        config.UIUtils.setupTimeComboBoxes(cmbHour, cmbMinute);
     }
 
     public TextField getTxtReminderName() { return txtReminderName; }

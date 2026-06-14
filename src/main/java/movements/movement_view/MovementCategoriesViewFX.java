@@ -6,10 +6,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.application.Platform;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -86,37 +82,18 @@ public class MovementCategoriesViewFX {
 
     // -- Dialog Helpers --
     public void showInfo(String title, String message) {
-        Platform.runLater(() -> {
-            Alert alert = new Alert(AlertType.INFORMATION, message, ButtonType.OK);
-            alert.setTitle(title);
-            alert.setHeaderText(null);
-            alert.showAndWait();
-        });
+        config.UIUtils.showInfo(title, message);
     }
 
     public void showError(String title, String message) {
-        Platform.runLater(() -> {
-            Alert alert = new Alert(AlertType.ERROR, message, ButtonType.OK);
-            alert.setTitle(title);
-            alert.setHeaderText(null);
-            alert.showAndWait();
-        });
+        config.UIUtils.showError(title, message);
     }
 
     public void showWarning(String title, String message) {
-        Platform.runLater(() -> {
-            Alert alert = new Alert(AlertType.WARNING, message, ButtonType.OK);
-            alert.setTitle(title);
-            alert.setHeaderText(null);
-            alert.showAndWait();
-        });
+        config.UIUtils.showWarning(title, message);
     }
 
     public boolean showConfirmation(String title, String message) {
-        Alert alert = new Alert(AlertType.CONFIRMATION, message, ButtonType.YES, ButtonType.NO);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.showAndWait();
-        return alert.getResult() == ButtonType.YES;
+        return config.UIUtils.showConfirm(title, message);
     }
 }

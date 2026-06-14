@@ -34,7 +34,7 @@
             <!-- Right tools: Notifications, Info, Settings -->
             <HBox alignment="CENTER_RIGHT" spacing="16">
                 <!-- Notifications Bell -->
-                <StackPane onMouseClicked="#toggleNotificaciones" styleClass="btn-icon">
+                <StackPane onMouseClicked="#toggleNotifications" styleClass="btn-icon">
                     <FontIcon iconLiteral="mdi2b-bell-outline" iconSize="24"/>
                     <!-- Notification Badge (Red Dot) -->
                     <Label fx:id="lblBadge" text="0" visible="false"
@@ -44,12 +44,12 @@
                 </StackPane>
 
                 <!-- Information -->
-                <StackPane onMouseClicked="#abrirInfo" styleClass="btn-icon">
+                <StackPane onMouseClicked="#openInfo" styleClass="btn-icon">
                     <FontIcon iconLiteral="mdi2i-information-outline" iconSize="24"/>
                 </StackPane>
 
                 <!-- Settings -->
-                <StackPane onMouseClicked="#abrirConfiguracion" styleClass="btn-icon">
+                <StackPane onMouseClicked="#openSettings" styleClass="btn-icon">
                     <FontIcon iconLiteral="mdi2c-cog-outline" iconSize="24"/>
                 </StackPane>
             </HBox>
@@ -59,12 +59,12 @@
     <!-- ── Center: TabPane for Navigation ─────────────────────────────────── -->
     <center>
         <StackPane>
-            <TabPane fx:id="tabPrincipal" tabClosingPolicy="ALL_TABS" styleClass="main-tab-pane">
+            <TabPane fx:id="mainTabPane" tabClosingPolicy="ALL_TABS" styleClass="main-tab-pane">
                 <!-- Tabs are added dynamically by the controllers -->
             </TabPane>
 
             <!-- ── Overlay: Notification Panel ────────────────────────────────── -->
-            <VBox fx:id="panelNotificaciones" visible="false" managed="false"
+            <VBox fx:id="notificationPanel" visible="false" managed="false"
                   styleClass="notification-panel" StackPane.alignment="TOP_RIGHT"
                   maxWidth="350" maxHeight="400">
                 <StackPane.margin>
@@ -74,7 +74,7 @@
                 <HBox alignment="CENTER_LEFT" styleClass="notification-panel-header" spacing="5">
                     <Label text="Notificaciones" styleClass="notification-panel-title"/>
                     <Region HBox.hgrow="ALWAYS" />
-                    <Button styleClass="btn-icon, btn-text-danger" onAction="#eliminarTodasLasNotificaciones">
+                    <Button styleClass="btn-icon, btn-text-danger" onAction="#deleteAllNotifications">
                         <graphic>
                             <FontIcon iconLiteral="mdi2d-delete-sweep" iconSize="18" />
                         </graphic>
@@ -82,7 +82,7 @@
                             <Tooltip text="Eliminar todas las notificaciones" />
                         </tooltip>
                     </Button>
-                    <Button styleClass="btn-icon" onAction="#marcarTodasLeidas">
+                    <Button styleClass="btn-icon" onAction="#markAllAsRead">
                         <graphic>
                             <FontIcon iconLiteral="mdi2c-check-all" iconSize="18" />
                         </graphic>
@@ -93,7 +93,7 @@
                 </HBox>
 
                 <!-- List of notifications -->
-                <ListView fx:id="listNotificaciones" VBox.vgrow="ALWAYS"
+                <ListView fx:id="notificationList" VBox.vgrow="ALWAYS"
                           styleClass="notification-list"/>
             </VBox>
         </StackPane>

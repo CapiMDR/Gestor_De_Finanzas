@@ -45,12 +45,7 @@ public class RemindersViewFX {
                 if (onBack != null) onBack.run();
             });
         }
-        if (cmbHour != null && cmbMinute != null) {
-            for (int i = 0; i < 24; i++) cmbHour.getItems().add(String.format("%02d", i));
-            for (int i = 0; i < 60; i++) cmbMinute.getItems().add(String.format("%02d", i));
-            cmbHour.getSelectionModel().select("12");
-            cmbMinute.getSelectionModel().select("00");
-        }
+        config.UIUtils.setupTimeComboBoxes(cmbHour, cmbMinute);
 
         btnAddReminder.setOnAction(e -> addReminder());
         btnDeleteReminder.setOnAction(e -> deleteReminder());

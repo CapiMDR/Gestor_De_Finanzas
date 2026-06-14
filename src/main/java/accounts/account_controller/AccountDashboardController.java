@@ -57,33 +57,33 @@ public class AccountDashboardController implements AccountObserver, ReportObserv
     @FXML private HBox navFilters;
 
     // Navigation callbacks provided by AccountShell
-    private Runnable onMovimientos;
-    private Runnable onMetas;
-    private Runnable onRecurrentes;
-    private Runnable onRecordatorios;
-    private Runnable onReportes; 
+    private Runnable onMovements;
+    private Runnable onGoals;
+    private Runnable onRecurrings;
+    private Runnable onReminders;
+    private Runnable onReports; 
 
-    private Account cuenta;
+    private Account account;
     private ReportGenerator reportGenerator;
 
     private static final String COLOR_INCOME = "color-income";
     private static final String COLOR_EXPENSE = "color-expense";
     private static final String BTN_FILTER_SELECTED = "btn-filter-selected";
 
-    public void setAccount(Account cuenta) {
-        this.cuenta = cuenta;
+    public void setAccount(Account account) {
+        this.account = account;
         
-        lblAccountName.setText(cuenta.getName());
-        refreshBalance(cuenta);
+        lblAccountName.setText(account.getName());
+        refreshBalance(account);
 
-        if (cuenta.getType() == Account.AccountType.DIGITAL) {
+        if (account.getType() == Account.AccountType.DIGITAL) {
             accountIcon.setIconLiteral("mdi2c-credit-card");
         } else {
             accountIcon.setIconLiteral("mdi2p-piggy-bank");
         }
 
         // Initialize ReportGenerator for the charts
-        reportGenerator = new ReportGenerator(new reports.report_model.ReportSubject(), cuenta);
+        reportGenerator = new ReportGenerator(new reports.report_model.ReportSubject(), account);
         reportGenerator.addObserver(this);
         AccountManagerSubject.addObserver(this);
 
@@ -109,11 +109,11 @@ public class AccountDashboardController implements AccountObserver, ReportObserv
 
     private void assignActions() {
         // Navigation actions
-        navAddMovement.setOnMouseClicked(e -> fireCallback(onMovimientos, "Movimientos"));
-        navGoals.setOnMouseClicked(e -> fireCallback(onMetas, "Metas"));
-        navReminders.setOnMouseClicked(e -> fireCallback(onRecordatorios, "Recordatorios"));
-        navRecurrings.setOnMouseClicked(e -> fireCallback(onRecurrentes, "Recurrentes"));
-        navFilters.setOnMouseClicked(e -> fireCallback(onReportes, "Filtros/Reportes"));
+        navAddMovement.setOnMouseClicked(e -> fireCallback(onMovements, "Movimientos"));
+        navGoals.setOnMouseClicked(e -> fireCallback(onGoals, "Metas"));
+        navReminders.setOnMouseClicked(e -> fireCallback(onReminders, "Recordatorios"));
+        navRecurrings.setOnMouseClicked(e -> fireCallback(onRecurrings, "Recurrentes"));
+        navFilters.setOnMouseClicked(e -> fireCallback(onReports, "Filtros/Reportes"));
 
         // Time filter actions
         btnToday.setOnAction(e -> {
@@ -142,10 +142,10 @@ public class AccountDashboardController implements AccountObserver, ReportObserv
         activeButton.getStyleClass().add(BTN_FILTER_SELECTED);
     }
 
-    public void refreshBalance(Account cuenta) {
-        if (cuenta != null) {
+    public void refreshBalance(Account account) {
+        if (account != null) {
             Platform.runLater(() -> {
-                lblAccountBalance.setText(String.format("$%,.2f", cuenta.getCurrentBalance()));
+                lblAccountBalance.setText(String.format("$%,.2f", account.getCurrentBalance()));
             });
         }
     }
@@ -155,9 +155,9 @@ public class AccountDashboardController implements AccountObserver, ReportObserv
     @Override
     public void onNotify(List<Account> accountsList) {
         for (Account a : accountsList) {
-            if (a.getName().equals(this.cuenta.getName())) {
-                this.cuenta = a;
-                refreshBalance(this.cuenta);
+            if (a.getName().equals(this.account.getName())) {
+                this.account = a;
+                refreshBalance(this.account);
                 // Refresh charts on account update
                 Platform.runLater(() -> reportGenerator.weekAgo());
                 break;
@@ -262,11 +262,11 @@ public class AccountDashboardController implements AccountObserver, ReportObserv
 
     // ── Callback setters ─────────────────────────────────────────────────────
 
-    public void setOnMovimientos(Runnable r)   { this.onMovimientos   = r; }
-    public void setOnMetas(Runnable r)         { this.onMetas         = r; }
-    public void setOnRecurrentes(Runnable r)   { this.onRecurrentes   = r; }
-    public void setOnRecordatorios(Runnable r) { this.onRecordatorios = r; }
-    public void setOnReportes(Runnable r)      { this.onReportes      = r; }
+    public void setOnMovements(Runnable r)   { this.onMovements   = r; }
+    public void setOnGoals(Runnable r)         { this.onGoals         = r; }
+    public void setOnRecurrings(Runnable r)   { this.onRecurrings   = r; }
+    public void setOnReminders(Runnable r) { this.onReminders = r; }
+    public void setOnReports(Runnable r)      { this.onReports      = r; }
 
     private void fireCallback(Runnable callback, String name) {
         if (callback != null) {

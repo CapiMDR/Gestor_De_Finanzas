@@ -43,15 +43,15 @@ public class MainShell {
     public static MainShell getInstance() { return instance; }
 
     // ── FXML fields ──────────────────────────────────────────────────────────
-    @FXML private TabPane tabPrincipal;
+    @FXML private TabPane mainTabPane;
     @FXML private Label   lblBadge;
-    @FXML private VBox    panelNotificaciones;
-    @FXML private ListView<AppNotification> listNotificaciones;
+    @FXML private VBox    notificationPanel;
+    @FXML private ListView<AppNotification> notificationList;
 
     // ── State ────────────────────────────────────────────────────────────────
 
     /** Maps account names to their open tab, preventing duplicates. */
-    private final Map<String, Tab> tabsPorCuenta = new HashMap<>();
+    private final Map<String, Tab> accountTabs = new HashMap<>();
 
     // ── JavaFX lifecycle ─────────────────────────────────────────────────────
 
@@ -60,19 +60,19 @@ public class MainShell {
         instance = this;
 
         // Wire the "Mis Cuentas" tab (always first, not closeable)
-        AccountsModule.embedInTab(tabPrincipal);
+        AccountsModule.embedInTab(mainTabPane);
 
         // Connect notification manager callback → update badge on the FX thread
         NotificationManager.getInstance().setCallbackNuevaNotificacion(
-                () -> Platform.runLater(this::actualizarBadge)
+                () -> Platform.runLater(this::updateBadge)
         );
 
         // Load any unread notifications from the previous session
         NotificationManager.getInstance().cargarPendientes();
-        actualizarBadge();
+        updateBadge();
 
         // Configure notification list cell factory
-        listNotificaciones.setCellFactory(lv -> new ListCell<>() {
+        notificationList.setCellFactory(lv -> new ListCell<>() {
             @Override
             protected void updateItem(AppNotification item, boolean empty) {
                 super.updateItem(item, empty);
@@ -122,10 +122,10 @@ public class MainShell {
                 btnDelete.setStyle("-fx-background-color: transparent; -fx-padding: 2;");
                 btnDelete.setOnAction(e -> {
                     NotificationManager.getInstance().eliminarNotificacion(item);
-                    listNotificaciones.setItems(
+                    notificationList.setItems(
                         FXCollections.observableArrayList(NotificationManager.getInstance().getPendientes())
                     );
-                    actualizarBadge();
+                    updateBadge();
                 });
 
                 javafx.scene.layout.HBox tarjeta = new javafx.scene.layout.HBox(10, icon, contenido, btnDelete);
@@ -137,10 +137,10 @@ public class MainShell {
         });
 
         // Setup and start tutorial
-        Platform.runLater(this::iniciarTutorial);
+        Platform.runLater(this::startTutorial);
     }
 
-    private void iniciarTutorial() {
+    private void startTutorial() {
         if (config.AppSettings.getInstance().isTutorialMostrado()) {
             return;
         }
@@ -156,7 +156,7 @@ public class MainShell {
             new tutorial.tutorial_model.TutorialStep(
                 "Tus Cuentas",
                 "Puedes ver y administrar tus cuentas en esta pestaña principal. Al abrir una cuenta, se creará una nueva pestaña.",
-                tabPrincipal,
+                mainTabPane,
                 javafx.geometry.Pos.BOTTOM_CENTER
             ),
             new tutorial.tutorial_model.TutorialStep(
@@ -175,8 +175,8 @@ public class MainShell {
 
         tutorial.tutorial_controller.TutorialManager tutorialManager = new tutorial.tutorial_controller.TutorialManager(steps);
         // Ensure the scene and window are ready
-        if (tabPrincipal.getScene() != null && tabPrincipal.getScene().getWindow() != null) {
-            tutorialManager.startIfFirstRun(tabPrincipal.getScene().getWindow());
+        if (mainTabPane.getScene() != null && mainTabPane.getScene().getWindow() != null) {
+            tutorialManager.startIfFirstRun(mainTabPane.getScene().getWindow());
         }
     }
 
@@ -190,16 +190,16 @@ public class MainShell {
      */
     public static void openAccountTab(Account cuenta) {
         if (instance == null) return;
-        Platform.runLater(() -> instance.abrirOEnfocarPestaña(cuenta));
+        Platform.runLater(() -> instance.openOrFocusTab(cuenta));
     }
 
     // ── Tab management ────────────────────────────────────────────────────────
 
-    private void abrirOEnfocarPestaña(Account cuenta) {
+    private void openOrFocusTab(Account cuenta) {
         // If a tab for this account already exists, focus it
-        Tab existente = tabsPorCuenta.get(cuenta.getName());
+        Tab existente = accountTabs.get(cuenta.getName());
         if (existente != null) {
-            tabPrincipal.getSelectionModel().select(existente);
+            mainTabPane.getSelectionModel().select(existente);
             return;
         }
 
@@ -213,49 +213,49 @@ public class MainShell {
 
         // Unregister when the tab is closed
         tab.setOnClosed(e -> {
-            tabsPorCuenta.remove(cuenta.getName());
+            accountTabs.remove(cuenta.getName());
             shell.dispose();
             logger.info("Pestaña cerrada: {}", cuenta.getName());
         });
 
-        tabsPorCuenta.put(cuenta.getName(), tab);
-        tabPrincipal.getTabs().add(tab);
-        tabPrincipal.getSelectionModel().select(tab);
+        accountTabs.put(cuenta.getName(), tab);
+        mainTabPane.getTabs().add(tab);
+        mainTabPane.getSelectionModel().select(tab);
         logger.info("Pestaña abierta: {}", cuenta.getName());
     }
 
     // ── Notification panel ────────────────────────────────────────────────────
 
     @FXML
-    private void toggleNotificaciones() {
-        boolean visible = panelNotificaciones.isVisible();
+    private void toggleNotifications() {
+        boolean visible = notificationPanel.isVisible();
         if (!visible) {
             // Populate the list
-            listNotificaciones.setItems(
+            notificationList.setItems(
                     FXCollections.observableArrayList(NotificationManager.getInstance().getPendientes())
             );
         }
-        panelNotificaciones.setVisible(!visible);
-        panelNotificaciones.setManaged(!visible);
+        notificationPanel.setVisible(!visible);
+        notificationPanel.setManaged(!visible);
     }
 
     @FXML
-    private void marcarTodasLeidas() {
+    private void markAllAsRead() {
         NotificationManager.getInstance().marcarTodasLeidas();
-        listNotificaciones.refresh();
-        actualizarBadge();
+        notificationList.refresh();
+        updateBadge();
     }
 
     @FXML
-    private void eliminarTodasLasNotificaciones() {
+    private void deleteAllNotifications() {
         NotificationManager.getInstance().eliminarTodas();
-        listNotificaciones.setItems(
+        notificationList.setItems(
             FXCollections.observableArrayList(NotificationManager.getInstance().getPendientes())
         );
-        actualizarBadge();
+        updateBadge();
     }
 
-    private void actualizarBadge() {
+    private void updateBadge() {
         int count = NotificationManager.getInstance().getConteoNoLeidas();
         if (count > 0) {
             lblBadge.setText(count > 9 ? "9+" : String.valueOf(count));
@@ -268,7 +268,7 @@ public class MainShell {
     // ── Top-bar actions ───────────────────────────────────────────────────────
 
     @FXML
-    private void abrirConfiguracion() {
+    private void openSettings() {
         try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/fxml/settings/settings_panel.fxml"));
@@ -284,7 +284,7 @@ public class MainShell {
     }
 
     @FXML
-    private void abrirInfo() {
+    private void openInfo() {
         try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/fxml/info/info_panel.fxml"));
@@ -305,7 +305,7 @@ public class MainShell {
      * Called by {@link Main} when the application is about to close.
      * Saves unread notifications to disk so they survive in foreground-only mode.
      */
-    public void alCerrar() {
+    public void onClose() {
         if (AppSettings.getInstance().getModoNotificaciones()
                 == AppSettings.ModoNotificaciones.SOLO_PRIMER_PLANO) {
             NotificationManager.getInstance().guardarPendientes();

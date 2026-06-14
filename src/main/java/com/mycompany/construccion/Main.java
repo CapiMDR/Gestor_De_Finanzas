@@ -56,7 +56,7 @@ public class Main extends Application {
             primaryStage.setMaximized(true);
             
             primaryStage.setOnCloseRequest(e -> {
-                shell.alCerrar();
+                shell.onClose();
                 if (AppSettings.getInstance().getModoNotificaciones() == AppSettings.ModoNotificaciones.SEGUNDO_PLANO) {
                     e.consume(); // Prevent the window from destroying the JVM
                     primaryStage.hide();

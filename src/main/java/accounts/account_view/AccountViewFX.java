@@ -11,10 +11,7 @@ import accounts.account_model.Account;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -192,63 +189,20 @@ public class AccountViewFX {
 
     // ── Dialog helpers (replace JOptionPane) ─────────────────────────────────
 
-    /**
-     * Shows an informational alert dialog.
-     *
-     * @param title   dialog title
-     * @param message message body
-     */
     public void showInfo(String title, String message) {
-        Platform.runLater(() -> {
-            Alert alert = new Alert(AlertType.INFORMATION, message, ButtonType.OK);
-            alert.setTitle(title);
-            alert.setHeaderText(null);
-            alert.showAndWait();
-        });
+        config.UIUtils.showInfo(title, message);
     }
 
-    /**
-     * Shows an error alert dialog.
-     *
-     * @param title   dialog title
-     * @param message error message body
-     */
     public void showError(String title, String message) {
-        Platform.runLater(() -> {
-            Alert alert = new Alert(AlertType.ERROR, message, ButtonType.OK);
-            alert.setTitle(title);
-            alert.setHeaderText(null);
-            alert.showAndWait();
-        });
+        config.UIUtils.showError(title, message);
     }
 
-    /**
-     * Shows a warning alert dialog.
-     *
-     * @param title   dialog title
-     * @param message warning message body
-     */
     public void showWarning(String title, String message) {
-        Platform.runLater(() -> {
-            Alert alert = new Alert(AlertType.WARNING, message, ButtonType.OK);
-            alert.setTitle(title);
-            alert.setHeaderText(null);
-            alert.showAndWait();
-        });
+        config.UIUtils.showWarning(title, message);
     }
 
-    /**
-     * Shows a yes/no confirmation dialog.
-     *
-     * @param title   dialog title
-     * @param message confirmation question
-     * @return {@code true} if the user clicked YES
-     */
     public boolean showConfirm(String title, String message) {
-        Alert alert = new Alert(AlertType.CONFIRMATION, message, ButtonType.YES, ButtonType.NO);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        return alert.showAndWait().filter(r -> r == ButtonType.YES).isPresent();
+        return config.UIUtils.showConfirm(title, message);
     }
 
     // ── Button getters (used by AccountController#AssignEvents) ──────────────

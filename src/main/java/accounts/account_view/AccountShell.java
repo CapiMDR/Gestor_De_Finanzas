@@ -37,30 +37,29 @@ public class AccountShell implements AccountObserver {
 
     private static final Logger logger = LoggerFactory.getLogger(AccountShell.class);
 
-    private final Account cuenta;
+    private final Account account;
     private final BorderPane root;
-    private final StackPane contenido;
+    private final StackPane content;
 
     // Dashboard node + controller (loaded once, reused)
     private Parent dashboardNode;
     private AccountDashboardController dashboardController;
 
     public AccountShell(Account cuenta) {
-        this.cuenta = cuenta;
+        this.account = cuenta;
 
         // ── Content area ─────────────────────────────────────────────────────
-        contenido = new StackPane();
+        content = new StackPane();
 
         // ── Root layout ──────────────────────────────────────────────────────
         root = new BorderPane();
-        root.setCenter(contenido);
+        root.setCenter(content);
 
         // Register as Observer to keep the balance updated
         AccountManager.addObserver(this);
 
-        // Load and show the dashboard
-        cargarDashboard();
-        mostrarDashboard();
+        loadDashboard();
+        showDashboard();
     }
 
     /** @return the root node to be set as the tab content */
@@ -68,7 +67,7 @@ public class AccountShell implements AccountObserver {
 
     // ── Dashboard ─────────────────────────────────────────────────────────────
 
-    private void cargarDashboard() {
+    private void loadDashboard() {
         try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/fxml/accounts/account_dashboard.fxml"));
@@ -76,22 +75,22 @@ public class AccountShell implements AccountObserver {
             dashboardController = loader.getController();
 
             // Populate account data
-            dashboardController.setAccount(cuenta);
+            dashboardController.setAccount(account);
 
             // Wire navigation callbacks
-            dashboardController.setOnMovimientos(   () -> mostrarModulo(cargarMovimientos()));
-            dashboardController.setOnMetas(         () -> mostrarModulo(cargarMetas()));
-            dashboardController.setOnRecurrentes(   () -> mostrarModulo(cargarRecurrentes()));
-            dashboardController.setOnRecordatorios( () -> mostrarModulo(cargarRecordatorios()));
-            dashboardController.setOnReportes(      () -> mostrarModulo(cargarReportes()));
+            dashboardController.setOnMovements(   () -> showModule(loadMovements()));
+            dashboardController.setOnGoals(         () -> showModule(loadGoals()));
+            dashboardController.setOnRecurrings(   () -> showModule(loadRecurrings()));
+            dashboardController.setOnReminders( () -> showModule(loadReminders()));
+            dashboardController.setOnReports(      () -> showModule(loadReports()));
 
         } catch (IOException e) {
-            logger.error("Error al cargar el dashboard de la cuenta {}.", cuenta.getName(), e);
+            logger.error("Error al cargar el dashboard de la cuenta {}.", account.getName(), e);
         }
     }
 
-    private void mostrarDashboard() {
-        contenido.getChildren().setAll(dashboardNode);
+    private void showDashboard() {
+        content.getChildren().setAll(dashboardNode);
     }
 
     // ── Sub-module loaders ────────────────────────────────────────────────────
@@ -101,29 +100,29 @@ public class AccountShell implements AccountObserver {
      *
      * @param modulo the loaded sub-module root node; may be {@code null} if loading failed
      */
-    private void mostrarModulo(Node modulo) {
+    private void showModule(Node modulo) {
         if (modulo == null) return;
-        contenido.getChildren().setAll(modulo);
+        content.getChildren().setAll(modulo);
     }
 
-    private Node cargarMovimientos() {
-        return MovementsModule.loadForAccount(cuenta, this::mostrarDashboard);
+    private Node loadMovements() {
+        return MovementsModule.loadForAccount(account, this::showDashboard);
     }
 
-    private Node cargarMetas() {
-        return GoalsModule.loadForAccount(cuenta, this::mostrarDashboard);
+    private Node loadGoals() {
+        return GoalsModule.loadForAccount(account, this::showDashboard);
     }
 
-    private Node cargarRecurrentes() {
-        return RecurringsModule.loadForAccount(cuenta, this::mostrarDashboard);
+    private Node loadRecurrings() {
+        return RecurringsModule.loadForAccount(account, this::showDashboard);
     }
 
-    private Node cargarRecordatorios() {
-        return RemindersModule.loadForAccount(cuenta, this::mostrarDashboard);
+    private Node loadReminders() {
+        return RemindersModule.loadForAccount(account, this::showDashboard);
     }
 
-    private Node cargarReportes() {
-        return FilterModule.loadForAccount(cuenta, this::mostrarDashboard);
+    private Node loadReports() {
+        return FilterModule.loadForAccount(account, this::showDashboard);
     }
 
     // ── AccountObserver ───────────────────────────────────────────────────────
@@ -132,9 +131,9 @@ public class AccountShell implements AccountObserver {
     public void onNotify(java.util.List<Account> accountsList) {
         // Refresh balance in the dashboard header when the model changes
         Account actualizada = accountsList.stream()
-                .filter(a -> a.getName().equals(cuenta.getName()))
+                .filter(a -> a.getName().equals(account.getName()))
                 .findFirst()
-                .orElse(cuenta);
+                .orElse(account);
         if (dashboardController != null) {
             javafx.application.Platform.runLater(() -> dashboardController.refreshBalance(actualizada));
         }
@@ -145,6 +144,6 @@ public class AccountShell implements AccountObserver {
      */
     public void dispose() {
         AccountManager.removeObserver(this);
-        logger.debug("AccountShell liberado para cuenta: {}", cuenta.getName());
+        logger.debug("AccountShell liberado para cuenta: {}", account.getName());
     }
 }
