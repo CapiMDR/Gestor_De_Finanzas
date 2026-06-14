@@ -15,7 +15,7 @@ public class ReminderEditController {
 
     @FXML
     public void initialize() {
-        config.UIUtils.setupTimeComboBoxes(cmbHour, cmbMinute);
+        utils.UIUtils.setupTimeComboBoxes(cmbHour, cmbMinute);
     }
 
     public TextField getTxtReminderName() { return txtReminderName; }

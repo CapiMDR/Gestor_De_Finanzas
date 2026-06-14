@@ -82,18 +82,18 @@ public class MovementCategoriesViewFX {
 
     // -- Dialog Helpers --
     public void showInfo(String title, String message) {
-        config.UIUtils.showInfo(title, message);
+        utils.UIUtils.showInfo(title, message);
     }
 
     public void showError(String title, String message) {
-        config.UIUtils.showError(title, message);
+        utils.UIUtils.showError(title, message);
     }
 
     public void showWarning(String title, String message) {
-        config.UIUtils.showWarning(title, message);
+        utils.UIUtils.showWarning(title, message);
     }
 
     public boolean showConfirmation(String title, String message) {
-        return config.UIUtils.showConfirm(title, message);
+        return utils.UIUtils.showConfirm(title, message);
     }
 }

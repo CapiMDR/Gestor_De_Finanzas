@@ -143,7 +143,7 @@ AccountManager (Subject)
   │
   ├── notifies → AccountController (Observer)
   ├── notifies → MovementsController (Observer)
-  └── notifies → ReportsController (Observer)
+  └── notifies → AccountDashboardController (Observer)
 
 Flow of a change:
   User adds account
@@ -186,10 +186,13 @@ gestorFinanzas/src/main/java/
 │   └── reminder_controller/ ← RemindersController (daemon thread scheduler)
 │
 ├── reports/
-│   └── modelReport/         ← ReportGenerator, ReportSubject
+│   └── report_model/        ← ReportGenerator, ReportSubject
 │
 ├── filters/
-│   └── controllerFilter/    ← FilterController
+│   └── filter_view/         ← FilterViewFX (Category filters)
+│
+├── utils/
+│   └── UIUtils.java         ← Shared UI utilities
 │
 └── config/
     └── AppConfig.java       ← Centralized data paths

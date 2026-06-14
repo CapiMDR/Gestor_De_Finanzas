@@ -129,8 +129,9 @@ gestorFinanzas/
 │   │   │   │   ├── reminder_controller/
 │   │   │   │   ├── reminder_model/
 │   │   │   │   └── reminder_view/   # RemindersViewFX.java (JavaFX)
-│   │   │   ├── reports/             # Financial reports module
+│   │   │   ├── reports/             # Financial reports module (Model only, UI in accounts)
 │   │   │   ├── filters/             # Category filters module
+│   │   │   ├── utils/               # Shared utilities (UIUtils, etc.)
 │   │   │   ├── config/
 │   │   │   │   └── AppConfig.java   # Centralized data paths
 │   │   │   └── com/mycompany/construccion/

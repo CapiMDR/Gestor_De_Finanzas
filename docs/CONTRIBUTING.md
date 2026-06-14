@@ -40,8 +40,9 @@ gestorFinanzas/
 │   │   │   ├── goals/           ← Financial goals module
 │   │   │   ├── recurringMoves/  ← Recurring movements module
 │   │   │   ├── reminders/       ← Reminders module
-│   │   │   ├── reports/         ← Reports and data generation module
+│   │   │   ├── reports/         ← Reports and data generation module (model only)
 │   │   │   ├── filters/         ← Category and date filters module
+│   │   │   ├── utils/           ← Shared utilities (UIUtils, etc.)
 │   │   │   ├── config/          ← Central configuration (AppConfig.java)
 │   │   │   └── com/mycompany/construccion/  ← Entry point (Main.java / MainApp.java)
 │   │   └── resources/

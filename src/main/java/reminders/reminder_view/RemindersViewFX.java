@@ -45,7 +45,7 @@ public class RemindersViewFX {
                 if (onBack != null) onBack.run();
             });
         }
-        config.UIUtils.setupTimeComboBoxes(cmbHour, cmbMinute);
+        utils.UIUtils.setupTimeComboBoxes(cmbHour, cmbMinute);
 
         btnAddReminder.setOnAction(e -> addReminder());
         btnDeleteReminder.setOnAction(e -> deleteReminder());
