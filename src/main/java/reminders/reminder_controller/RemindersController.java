@@ -253,9 +253,7 @@ public class RemindersController {
                 return null;
             });
 
-            dialog.showAndWait().ifPresent(editedReminder -> {
-                handleReminderEdit(reminder, editedReminder);
-            });
+            dialog.showAndWait().ifPresent(editedReminder -> handleReminderEdit(reminder, editedReminder));
 
         } catch (IOException e) {
             logger.error("Failed to load reminder edit dialog", e);

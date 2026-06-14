@@ -59,8 +59,8 @@ public class MovementsViewFX {
      */
     @FXML
     public void initialize() {
-        datePickerIncome.setValue(LocalDate.now());
-        datePickerExpense.setValue(LocalDate.now());
+        datePickerIncome.setValue(LocalDate.now(java.time.ZoneId.systemDefault()));
+        datePickerExpense.setValue(LocalDate.now(java.time.ZoneId.systemDefault()));
         if (btnVolver != null) {
             btnVolver.setOnAction(e -> {
                 if (onBack != null) onBack.run();
@@ -113,7 +113,7 @@ public class MovementsViewFX {
             txtAmountIncome.clear();
             txtDescriptionIncome.clear();
             listCategoriesIncome.getSelectionModel().clearSelection();
-            datePickerIncome.setValue(LocalDate.now());
+            datePickerIncome.setValue(LocalDate.now(java.time.ZoneId.systemDefault()));
         });
     }
 
@@ -126,7 +126,7 @@ public class MovementsViewFX {
             txtAmountExpense.clear();
             txtDescriptionExpense.clear();
             listCategoriesExpense.getSelectionModel().clearSelection();
-            datePickerExpense.setValue(LocalDate.now());
+            datePickerExpense.setValue(LocalDate.now(java.time.ZoneId.systemDefault()));
         });
     }
 

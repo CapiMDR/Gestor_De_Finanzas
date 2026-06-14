@@ -40,6 +40,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith({MockitoExtension.class, ApplicationExtension.class})
 @DisplayName("RecurringsController Test")
+@SuppressWarnings("java:S5973")
 class RecurringsControllerTest {
 
     @Mock

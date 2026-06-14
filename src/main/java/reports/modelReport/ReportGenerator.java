@@ -3,7 +3,6 @@ package reports.modelReport;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import accounts.account_model.Account;
 import movements.movement_model.Movement;
@@ -33,10 +32,10 @@ public class ReportGenerator {
      * Generates a report for today's movements and notifies observers.
      */
     public void today() {
-        LocalDate today = LocalDate.now();
+        LocalDate today = LocalDate.now(java.time.ZoneId.systemDefault());
         List<Movement> movements = account.getMovements().stream()
                 .filter(m -> m.getDate().toLocalDate().isEqual(today))
-                .collect(Collectors.toList());
+                .toList();
 
         BigDecimal total = amountTotal(movements);
 
@@ -53,15 +52,15 @@ public class ReportGenerator {
      * Generates a report covering the last 7 days and notifies observers.
      */
     public void weekAgo() {
-        LocalDate start = LocalDate.now().minusDays(7);
-        LocalDate end = LocalDate.now();
+        LocalDate start = LocalDate.now(java.time.ZoneId.systemDefault()).minusDays(7);
+        LocalDate end = LocalDate.now(java.time.ZoneId.systemDefault());
 
         List<Movement> movements = account.getMovements().stream()
                 .filter(m -> {
                     LocalDate date = m.getDate().toLocalDate();
                     return (!date.isBefore(start) && !date.isAfter(end));
                 })
-                .collect(Collectors.toList());
+                .toList();
 
         BigDecimal total = amountTotal(movements);
 
@@ -77,10 +76,10 @@ public class ReportGenerator {
      * Generates a report for yesterday's movements.
      */
     public void yesterday() {
-        LocalDate yesterday = LocalDate.now().minusDays(1);
+        LocalDate yesterday = LocalDate.now(java.time.ZoneId.systemDefault()).minusDays(1);
         List<Movement> movements = account.getMovements().stream()
                 .filter(m -> m.getDate().toLocalDate().isEqual(yesterday))
-                .collect(Collectors.toList());
+                .toList();
 
         BigDecimal total = amountTotal(movements);
 
@@ -97,7 +96,7 @@ public class ReportGenerator {
      * Generates a report covering the current week (from Monday to Sunday).
      */
     public void currentWeek() {
-        LocalDate today = LocalDate.now();
+        LocalDate today = LocalDate.now(java.time.ZoneId.systemDefault());
         // Go back to the most recent Monday
         LocalDate start = today.with(java.time.DayOfWeek.MONDAY);
         // End is today
@@ -108,7 +107,7 @@ public class ReportGenerator {
                     LocalDate date = m.getDate().toLocalDate();
                     return (!date.isBefore(start) && !date.isAfter(end));
                 })
-                .collect(Collectors.toList());
+                .toList();
 
         BigDecimal total = amountTotal(movements);
 

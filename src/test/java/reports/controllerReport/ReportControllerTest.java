@@ -43,6 +43,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("ReportController Test")
+@SuppressWarnings("java:S5973")
 class ReportControllerTest {
 
     @Mock

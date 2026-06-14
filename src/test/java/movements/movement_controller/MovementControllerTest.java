@@ -36,6 +36,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("MovementController Test")
+@SuppressWarnings("java:S5973")
 class MovementControllerTest {
 
     @Mock

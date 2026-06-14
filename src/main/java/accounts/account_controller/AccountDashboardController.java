@@ -66,6 +66,10 @@ public class AccountDashboardController implements AccountObserver, ReportObserv
     private Account cuenta;
     private ReportGenerator reportGenerator;
 
+    private static final String COLOR_INCOME = "color-income";
+    private static final String COLOR_EXPENSE = "color-expense";
+    private static final String BTN_FILTER_SELECTED = "btn-filter-selected";
+
     public void setAccount(Account cuenta) {
         this.cuenta = cuenta;
         
@@ -131,11 +135,11 @@ public class AccountDashboardController implements AccountObserver, ReportObserv
     }
 
     private void setActiveFilterButton(Button activeButton) {
-        btnToday.getStyleClass().remove("btn-filter-selected");
-        btnYesterday.getStyleClass().remove("btn-filter-selected");
-        btnCurrentWeek.getStyleClass().remove("btn-filter-selected");
-        btnWeek.getStyleClass().remove("btn-filter-selected");
-        activeButton.getStyleClass().add("btn-filter-selected");
+        btnToday.getStyleClass().remove(BTN_FILTER_SELECTED);
+        btnYesterday.getStyleClass().remove(BTN_FILTER_SELECTED);
+        btnCurrentWeek.getStyleClass().remove(BTN_FILTER_SELECTED);
+        btnWeek.getStyleClass().remove(BTN_FILTER_SELECTED);
+        activeButton.getStyleClass().add(BTN_FILTER_SELECTED);
     }
 
     public void refreshBalance(Account cuenta) {
@@ -205,35 +209,34 @@ public class AccountDashboardController implements AccountObserver, ReportObserv
 
             for (PieChart.Data d : pieChartMovements.getData()) {
                 if (d.getNode() != null) {
-                    d.getNode().getStyleClass().removeAll("color-income", "color-expense");
+                    d.getNode().getStyleClass().removeAll(COLOR_INCOME, COLOR_EXPENSE);
                     if ("INGRESO".equals(d.getName())) {
-                        d.getNode().getStyleClass().add("color-income");
+                        d.getNode().getStyleClass().add(COLOR_INCOME);
                     } else {
-                        d.getNode().getStyleClass().add("color-expense");
+                        d.getNode().getStyleClass().add(COLOR_EXPENSE);
                     }
                 }
             }
             for (XYChart.Data<String, Number> d : series.getData()) {
                 if (d.getNode() != null) {
-                    d.getNode().getStyleClass().removeAll("color-income", "color-expense");
+                    d.getNode().getStyleClass().removeAll(COLOR_INCOME, COLOR_EXPENSE);
                     if ("INGRESO".equals(d.getXValue())) {
-                        d.getNode().getStyleClass().add("color-income");
+                        d.getNode().getStyleClass().add(COLOR_INCOME);
                     } else {
-                        d.getNode().getStyleClass().add("color-expense");
+                        d.getNode().getStyleClass().add(COLOR_EXPENSE);
                     }
                 }
             }
 
             // Fix pie chart legend
             for (javafx.scene.Node n : pieChartMovements.lookupAll(".chart-legend-item")) {
-                if (n instanceof javafx.scene.control.Label) {
-                    javafx.scene.control.Label label = (javafx.scene.control.Label) n;
+                if (n instanceof javafx.scene.control.Label label) {
                     if (label.getGraphic() != null) {
-                        label.getGraphic().getStyleClass().removeAll("color-income", "color-expense");
+                        label.getGraphic().getStyleClass().removeAll(COLOR_INCOME, COLOR_EXPENSE);
                         if ("INGRESO".equals(label.getText())) {
-                            label.getGraphic().getStyleClass().add("color-income");
+                            label.getGraphic().getStyleClass().add(COLOR_INCOME);
                         } else if ("EGRESO".equals(label.getText())) {
-                            label.getGraphic().getStyleClass().add("color-expense");
+                            label.getGraphic().getStyleClass().add(COLOR_EXPENSE);
                         }
                     }
                 }

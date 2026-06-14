@@ -33,6 +33,10 @@ public class ReportController implements ReportObserver, AccountObserver {
     private ReportGenerator reportGenerator;
     private Account account;
 
+    private static final String COLOR_INCOME = "color-income";
+    private static final String COLOR_EXPENSE = "color-expense";
+    private static final String BTN_FILTER_SELECTED = "btn-filter-selected";
+
     public void setViewModule(ReportsViewFX view, ReportGenerator generator, Account selectedAccount) {
         this.account = selectedAccount;
         this.view = view;
@@ -66,23 +70,15 @@ public class ReportController implements ReportObserver, AccountObserver {
         });
 
         // Navigation actions
-        view.getNavAddMovement().setOnMouseClicked(e -> {
-            MovementsModule.initMovements(account);
-        });
+        view.getNavAddMovement().setOnMouseClicked(e -> MovementsModule.initMovements(account));
 
-        view.getNavGoals().setOnMouseClicked(e -> {
-            GoalsModule.initGoals(account);
-        });
+        view.getNavGoals().setOnMouseClicked(e -> GoalsModule.initGoals(account));
 
-        view.getNavReminders().setOnMouseClicked(e -> {
-            reminders.reminder_view.RemindersModule.initReminders();
-        });
-        view.getNavRecurrings().setOnMouseClicked(e -> {
-            recurringMoves.recurring_view.RecurringsModule.initRecurrings();
-        });
-        view.getNavFilters().setOnMouseClicked(e -> {
-            filters.modelFilter.CategoriesModule.initCategories(account);
-        });
+        view.getNavReminders().setOnMouseClicked(e -> reminders.reminder_view.RemindersModule.initReminders());
+        
+        view.getNavRecurrings().setOnMouseClicked(e -> recurringMoves.recurring_view.RecurringsModule.initRecurrings());
+        
+        view.getNavFilters().setOnMouseClicked(e -> filters.modelFilter.CategoriesModule.initCategories(account));
         view.getNavCredit().setOnMouseClicked(e -> showUnderConstructionAlert("Calculadora de Crédito"));
     }
 
@@ -95,12 +91,12 @@ public class ReportController implements ReportObserver, AccountObserver {
     }
 
     private void setActiveFilterButton(Button activeButton) {
-        view.getBtnToday().getStyleClass().remove("btn-filter-selected");
-        view.getBtnYesterday().getStyleClass().remove("btn-filter-selected");
-        view.getBtnCurrentWeek().getStyleClass().remove("btn-filter-selected");
-        view.getBtnWeek().getStyleClass().remove("btn-filter-selected");
+        view.getBtnToday().getStyleClass().remove(BTN_FILTER_SELECTED);
+        view.getBtnYesterday().getStyleClass().remove(BTN_FILTER_SELECTED);
+        view.getBtnCurrentWeek().getStyleClass().remove(BTN_FILTER_SELECTED);
+        view.getBtnWeek().getStyleClass().remove(BTN_FILTER_SELECTED);
         
-        activeButton.getStyleClass().add("btn-filter-selected");
+        activeButton.getStyleClass().add(BTN_FILTER_SELECTED);
     }
 
     private void initComponents() {
@@ -185,35 +181,34 @@ public class ReportController implements ReportObserver, AccountObserver {
 
             for (PieChart.Data d : view.getPieChartMovements().getData()) {
                 if (d.getNode() != null) {
-                    d.getNode().getStyleClass().removeAll("color-income", "color-expense");
+                    d.getNode().getStyleClass().removeAll(COLOR_INCOME, COLOR_EXPENSE);
                     if ("INGRESO".equals(d.getName())) {
-                        d.getNode().getStyleClass().add("color-income");
+                        d.getNode().getStyleClass().add(COLOR_INCOME);
                     } else {
-                        d.getNode().getStyleClass().add("color-expense");
+                        d.getNode().getStyleClass().add(COLOR_EXPENSE);
                     }
                 }
             }
             for (XYChart.Data<String, Number> d : series.getData()) {
                 if (d.getNode() != null) {
-                    d.getNode().getStyleClass().removeAll("color-income", "color-expense");
+                    d.getNode().getStyleClass().removeAll(COLOR_INCOME, COLOR_EXPENSE);
                     if ("INGRESO".equals(d.getXValue())) {
-                        d.getNode().getStyleClass().add("color-income");
+                        d.getNode().getStyleClass().add(COLOR_INCOME);
                     } else {
-                        d.getNode().getStyleClass().add("color-expense");
+                        d.getNode().getStyleClass().add(COLOR_EXPENSE);
                     }
                 }
             }
 
             // Fix pie chart legend
             for (javafx.scene.Node n : view.getPieChartMovements().lookupAll(".chart-legend-item")) {
-                if (n instanceof javafx.scene.control.Label) {
-                    javafx.scene.control.Label label = (javafx.scene.control.Label) n;
+                if (n instanceof javafx.scene.control.Label label) {
                     if (label.getGraphic() != null) {
-                        label.getGraphic().getStyleClass().removeAll("color-income", "color-expense");
+                        label.getGraphic().getStyleClass().removeAll(COLOR_INCOME, COLOR_EXPENSE);
                         if ("INGRESO".equals(label.getText())) {
-                            label.getGraphic().getStyleClass().add("color-income");
+                            label.getGraphic().getStyleClass().add(COLOR_INCOME);
                         } else if ("EGRESO".equals(label.getText())) {
-                            label.getGraphic().getStyleClass().add("color-expense");
+                            label.getGraphic().getStyleClass().add(COLOR_EXPENSE);
                         }
                     }
                 }

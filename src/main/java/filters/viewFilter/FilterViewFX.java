@@ -131,7 +131,7 @@ public class FilterViewFX {
                     boolean beforeTo = (toDate == null) || !moveDate.isAfter(toDate);
                     return afterFrom && beforeTo;
                 })
-                .collect(Collectors.toList());
+                .toList();
 
         listFilteredMovements.getItems().clear();
         for (Movement m : finalFiltered) {

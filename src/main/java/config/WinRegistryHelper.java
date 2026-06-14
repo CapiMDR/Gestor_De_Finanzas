@@ -11,6 +11,10 @@ import java.io.IOException;
  */
 public class WinRegistryHelper {
 
+    private WinRegistryHelper() {
+        throw new UnsupportedOperationException("Utility class");
+    }
+
     private static final Logger logger = LoggerFactory.getLogger(WinRegistryHelper.class);
     
     // The registry key where autostart programs for the current user are stored

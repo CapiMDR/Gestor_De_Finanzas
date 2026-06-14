@@ -42,6 +42,8 @@ public class MovementController implements CategoryObserver {
     private Stage categoriesStage;
     private Account currentAccount;
 
+    private static final String ERROR_TITLE = "Error";
+
     /**
      * Constructor for the movement controller.
      *
@@ -108,7 +110,7 @@ public class MovementController implements CategoryObserver {
             BigDecimal amount = new BigDecimal(amountStr);
 
             if (amount.compareTo(BigDecimal.ZERO) <= 0) {
-                showAlert(AlertType.ERROR, "Error", "El monto debe ser mayor a cero.");
+                showAlert(AlertType.ERROR, ERROR_TITLE, "El monto debe ser mayor a cero.");
                 return;
             }
 
@@ -127,7 +129,7 @@ public class MovementController implements CategoryObserver {
         } catch (IllegalArgumentException ex) {
             showAlert(AlertType.ERROR, "Error de Validación", ex.getMessage());
         } catch (Exception ex) {
-            showAlert(AlertType.ERROR, "Error", "Error al procesar el movimiento: " + ex.getMessage());
+            showAlert(AlertType.ERROR, ERROR_TITLE, "Error al procesar el movimiento: " + ex.getMessage());
         }
     }
 
@@ -217,7 +219,7 @@ public class MovementController implements CategoryObserver {
             categoriesStage.showAndWait();
         } catch (Exception e) {
             e.printStackTrace();
-            showAlert(AlertType.ERROR, "Error", "No se pudo cargar la vista de categorías.");
+            showAlert(AlertType.ERROR, ERROR_TITLE, "No se pudo cargar la vista de categorías.");
         }
     }
 
@@ -242,7 +244,7 @@ public class MovementController implements CategoryObserver {
             MovementType type = MovementType.valueOf(typeEnumStr);
 
             if (model.getCategories().containsKey(name)) {
-                categoriesView.showError("Error", "La categoría '" + name + "' ya existe.");
+                categoriesView.showError(ERROR_TITLE, "La categoría '" + name + "' ya existe.");
                 return;
             }
 
@@ -252,7 +254,7 @@ public class MovementController implements CategoryObserver {
             categoriesView.clearFields();
 
         } catch (IllegalArgumentException ex) {
-            categoriesView.showError("Error", "Error al procesar el tipo de categoría.");
+            categoriesView.showError(ERROR_TITLE, "Error al procesar el tipo de categoría.");
         }
     }
 
@@ -282,7 +284,7 @@ public class MovementController implements CategoryObserver {
                 model.removeCategory(categoryToRemove);
                 categoriesView.showInfo("Éxito", "Categoría eliminada: " + categoryName);
             } else {
-                categoriesView.showError("Error", "Error al encontrar la categoría en el modelo");
+                categoriesView.showError(ERROR_TITLE, "Error al encontrar la categoría en el modelo");
             }
         }
     }

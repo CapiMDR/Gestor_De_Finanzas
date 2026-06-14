@@ -32,6 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Tests applying filters, clearing filters, and filtering by date range.
  */
 @DisplayName("Filter Logic Test")
+@SuppressWarnings("java:S5973")
 class FilterControllerTest {
 
     private FilterViewFX view;

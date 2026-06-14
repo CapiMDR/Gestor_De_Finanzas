@@ -22,6 +22,7 @@ import java.nio.file.StandardCopyOption;
 public class AppSettings {
 
     private static final Logger logger = LoggerFactory.getLogger(AppSettings.class);
+    private static final String KEY_MODO_NOTIFICACIONES = "modoNotificaciones";
 
     /**
      * Controls when the background reminder scheduler keeps the JVM alive.
@@ -80,7 +81,7 @@ public class AppSettings {
     /** Saves current settings to {@code settings.json} using an atomic write. */
     public void guardar() {
         JSONObject obj = new JSONObject();
-        obj.put("modoNotificaciones", modoNotificaciones.name());
+        obj.put(KEY_MODO_NOTIFICACIONES, modoNotificaciones.name());
         obj.put("autostart", autostart);
         obj.put("tutorialMostrado", tutorialMostrado);
 
@@ -104,8 +105,8 @@ public class AppSettings {
             String json = Files.readString(path, StandardCharsets.UTF_8);
             JSONObject obj = new JSONObject(json);
 
-            if (obj.has("modoNotificaciones")) {
-                modoNotificaciones = ModoNotificaciones.valueOf(obj.getString("modoNotificaciones"));
+            if (obj.has(KEY_MODO_NOTIFICACIONES)) {
+                modoNotificaciones = ModoNotificaciones.valueOf(obj.getString(KEY_MODO_NOTIFICACIONES));
             }
             autostart = obj.optBoolean("autostart", false);
             tutorialMostrado = obj.optBoolean("tutorialMostrado", false);

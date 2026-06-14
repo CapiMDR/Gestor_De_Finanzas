@@ -21,6 +21,7 @@ import static org.mockito.Mockito.*;
  * Verifies adding, reading, clearing, and persistence of notifications.
  */
 @DisplayName("NotificationManager Test")
+@SuppressWarnings("java:S5973")
 class NotificationManagerTest {
 
     private NotificationManager manager;

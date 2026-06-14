@@ -22,6 +22,8 @@ public class AccountEditController {
     private final Dialog<ButtonType> dialog;
     private AccountEditViewFX view;
 
+    private static final String ERROR_TITLE = "Error";
+
     public AccountEditController(Account accountToEdit) {
         this.accountToEdit = accountToEdit;
         this.dialog = new Dialog<>();
@@ -85,7 +87,7 @@ public class AccountEditController {
         } catch (IllegalArgumentException ex) {
             showAlert(AlertType.ERROR, "Error de Configuración", "Error de mapeo. Verifique que Tipo o Moneda seleccionados sean válidos.");
         } catch (Exception ex) {
-            showAlert(AlertType.ERROR, "Error", "Error inesperado al editar la cuenta: " + ex.getMessage());
+            showAlert(AlertType.ERROR, ERROR_TITLE, "Error inesperado al editar la cuenta: " + ex.getMessage());
         }
     }
 

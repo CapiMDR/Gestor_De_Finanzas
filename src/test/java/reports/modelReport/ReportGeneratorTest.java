@@ -26,6 +26,7 @@ import static org.mockito.Mockito.*;
  */
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Report Generator Test")
+@SuppressWarnings("java:S5973")
 class ReportGeneratorTest {
 
     @Mock

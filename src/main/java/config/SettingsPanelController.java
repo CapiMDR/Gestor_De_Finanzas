@@ -45,9 +45,7 @@ public class SettingsPanelController {
             DialogPane pane = (DialogPane) rbSoloPrimerPlano.getScene().getRoot();
             javafx.scene.control.Button applyBtn = (javafx.scene.control.Button) pane.lookupButton(ButtonType.APPLY);
             if (applyBtn != null) {
-                applyBtn.addEventFilter(javafx.event.ActionEvent.ACTION, event -> {
-                    guardarConfiguracion();
-                });
+                applyBtn.addEventFilter(javafx.event.ActionEvent.ACTION, event -> guardarConfiguracion());
             }
         });
     }

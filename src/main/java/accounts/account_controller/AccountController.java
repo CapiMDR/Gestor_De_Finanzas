@@ -19,6 +19,9 @@ import accounts.account_view.AccountViewFX;
 public class AccountController implements AccountObserver {
     private AccountViewFX view;
 
+    private static final String ERROR_TITLE = "Error";
+    private static final String WARNING_TITLE = "Advertencia";
+
     /**
      * Constructor of the controller that initializes the view and registers the
      * observer.
@@ -93,7 +96,7 @@ public class AccountController implements AccountObserver {
         } catch (IllegalArgumentException ex) {
             view.showError("Error de Validación", ex.getMessage());
         } catch (Exception ex) {
-            view.showError("Error", "Error al procesar la cuenta: " + ex.getMessage());
+            view.showError(ERROR_TITLE, "Error al procesar la cuenta: " + ex.getMessage());
         }
     }
 
@@ -104,14 +107,14 @@ public class AccountController implements AccountObserver {
         int selectedIndex = view.getSelectedAccountIndex();
 
         if (selectedIndex < 0) {
-            view.showWarning("Advertencia", "Debe seleccionar una cuenta para eliminarla");
+            view.showWarning(WARNING_TITLE, "Debe seleccionar una cuenta para eliminarla");
             return;
         }
 
         Account selectedAccount = AccountManager.getAccountByIndex(selectedIndex);
 
         if (selectedAccount == null) {
-            view.showError("Error", "Error al obtener la cuenta seleccionada. Intente de nuevo.");
+            view.showError(ERROR_TITLE, "Error al obtener la cuenta seleccionada. Intente de nuevo.");
             return;
         }
 
@@ -131,7 +134,7 @@ public class AccountController implements AccountObserver {
     private void editAccount() {
         int selectedIndex = view.getSelectedAccountIndex();
         if (selectedIndex < 0) {
-            view.showWarning("Advertencia", "Debe seleccionar una cuenta para editar.");
+            view.showWarning(WARNING_TITLE, "Debe seleccionar una cuenta para editar.");
             return;
         }
 
@@ -140,7 +143,7 @@ public class AccountController implements AccountObserver {
             AccountEditController editController = new AccountEditController(accountToEdit);
             editController.show();
         } else {
-            view.showError("Error", "Error al obtener la cuenta seleccionada.");
+            view.showError(ERROR_TITLE, "Error al obtener la cuenta seleccionada.");
         }
     }
 
@@ -160,14 +163,14 @@ public class AccountController implements AccountObserver {
         int selectedIndex = view.getSelectedAccountIndex();
 
         if (selectedIndex < 0) {
-            view.showWarning("Advertencia", "Debe seleccionar una cuenta para calcular el interés");
+            view.showWarning(WARNING_TITLE, "Debe seleccionar una cuenta para calcular el interés");
             return;
         }
 
         Account selectedAccount = AccountManager.getAccountByIndex(selectedIndex);
 
         if (selectedAccount == null) {
-            view.showError("Error", "No se pudo obtener la cuenta seleccionada");
+            view.showError(ERROR_TITLE, "No se pudo obtener la cuenta seleccionada");
             return;
         }
 
