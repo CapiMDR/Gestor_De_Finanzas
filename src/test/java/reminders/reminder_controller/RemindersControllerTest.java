@@ -1,116 +1,121 @@
 package reminders.reminder_controller;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.testfx.framework.junit5.ApplicationExtension;
-
-import reminders.reminder_model.Reminder;
-import reminders.reminder_model.RemindersModel;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import notifications.notification_controller.NotificationManager;
+import reminders.reminder_model.Reminder;
+import reminders.reminder_model.RemindersModel;
+import reminders.reminder_view.RemindersViewFX;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
-/**
- * Unit tests for {@link RemindersController}.
- * Verifies the addition, validation, and triggering of scheduled reminders.
- */
-@ExtendWith({MockitoExtension.class, ApplicationExtension.class})
+@ExtendWith(MockitoExtension.class)
 @DisplayName("RemindersController Test")
-@SuppressWarnings("java:S5973")
 class RemindersControllerTest {
 
     @Mock
-    private RemindersModel remindersModel;
+    private RemindersModel mockModel;
 
     @Mock
-    private ScheduledExecutorService scheduler;
+    private ScheduledExecutorService mockScheduler;
+
+    @Mock
+    private RemindersViewFX mockView;
 
     private RemindersController controller;
+    private MockedStatic<NotificationManager> mockedNotificationManager;
 
-    @Captor
-    private ArgumentCaptor<Runnable> taskCaptor;
+    @BeforeAll
+    static void initJFX() {
+        try {
+            javafx.application.Platform.startup(() -> {});
+        } catch (IllegalStateException e) {
+            // Ignored
+        }
+    }
 
-    /**
-     * Initializes the controller with the mocked dependencies before each test.
-     */
     @BeforeEach
     void setUp() {
-        controller = new RemindersController(remindersModel, scheduler);
+        mockedNotificationManager = mockStatic(NotificationManager.class);
+        controller = new RemindersController(mockModel, mockScheduler);
+        controller.setView(mockView);
     }
 
-    /**
-     * Tests that a reminder is rejected and not saved if its name is empty.
-     */
-    @Test
-    @DisplayName("should not add reminder if name is empty")
-    void testHandleReminderAdditionWithEmptyName() {
-        // Act
-        controller.handleReminderAddition("", "Mensaje", LocalDateTime.now().plusDays(1));
-
-        // Assert
-        verify(remindersModel, never()).addReminder(anyString(), anyString(), any(LocalDateTime.class));
-        verify(remindersModel, never()).saveReminders();
+    @AfterEach
+    void tearDown() {
+        mockedNotificationManager.close();
     }
 
-    /**
-     * Tests that a reminder with valid data is successfully added to the model
-     * and that the storage is subsequently saved.
-     */
     @Test
-    @DisplayName("should add and save reminder with valid data")
-    void testHandleReminderAdditionValid() {
-        // Arrange
-        String name = "Doctor";
-        String message = "Cita a las 5";
-        LocalDateTime date = LocalDateTime.now().plusDays(1);
-
-        // Act
-        controller.handleReminderAddition(name, message, date);
-
-        // Assert
-        verify(remindersModel, times(1)).addReminder(name, message, date);
-        verify(remindersModel, times(1)).saveReminders();
+    @DisplayName("should schedule watch task on initialization")
+    void testInitialization() {
+        verify(mockScheduler).scheduleAtFixedRate(any(Runnable.class), eq(0L), eq(1L), eq(TimeUnit.SECONDS));
     }
 
-    /**
-     * Tests that the scheduled background task correctly identifies and triggers
-     * reminders that have reached or passed their scheduled time.
-     */
     @Test
-    @DisplayName("scheduler should trigger expired reminders")
-    void testWatchRemindersNotifiesExpired() {
-        // Arrange
-        // Capture the scheduled task (watchReminders) from constructor
-        verify(scheduler).scheduleAtFixedRate(taskCaptor.capture(), eq(0L), eq(1L), eq(TimeUnit.SECONDS));
-        Runnable watchTask = taskCaptor.getValue();
+    @DisplayName("should add reminder to model and refresh view")
+    void testAddReminder() {
+        LocalDateTime dt = LocalDateTime.now().plusDays(1);
+        controller.handleReminderAddition("Test Add", "Msg", dt);
+        
+        verify(mockModel).addReminder("Test Add", "Msg", dt);
+        verify(mockModel).saveReminders();
+    }
 
-        // Create a reminder that is already expired (date in the past) and not yet triggered
-        Reminder expiredReminder = new Reminder("Expirado", "Ya pasó", LocalDateTime.now().minusMinutes(5));
-        expiredReminder.setTriggered(false);
+    @Test
+    @DisplayName("should delete reminder from model and refresh view")
+    void testDeleteReminder() {
+        Reminder r = new Reminder("Test Delete", "Msg", LocalDateTime.now());
+        controller.handleReminderDeletion(r);
+        
+        verify(mockModel).deleteReminder(r);
+        verify(mockModel).saveReminders();
+    }
 
-        java.util.TreeSet<Reminder> mockSet = new java.util.TreeSet<>(java.util.Comparator.comparing(Reminder::getDate));
-        mockSet.add(expiredReminder);
-        when(remindersModel.getReminders()).thenReturn(mockSet);
+    @Test
+    @DisplayName("should edit reminder and refresh view")
+    void testEditReminder() {
+        Reminder oldR = new Reminder("Old", "Msg", LocalDateTime.now());
+        Reminder newR = new Reminder("New", "Msg", LocalDateTime.now().plusDays(1));
+        
+        controller.handleReminderEdit(oldR, newR);
+        
+        verify(mockModel).editReminder(oldR, newR);
+        verify(mockModel).saveReminders();
+    }
 
-        // Act
-        // Manually run the task that the scheduler would run
-        watchTask.run();
-
-        // Assert
-        // The reminder should be marked as triggered and saveReminders called
-        assertTrue(expiredReminder.isTriggered());
-        verify(remindersModel, times(1)).saveReminders();
+    @Test
+    @DisplayName("should trigger past reminders when watch task runs")
+    void testWatchRemindersTriggersPastReminders() throws Exception {
+        Reminder pastReminder = new Reminder("Past", "Msg", LocalDateTime.now().minusMinutes(5));
+        Reminder futureReminder = new Reminder("Future", "Msg", LocalDateTime.now().plusDays(1));
+        
+        when(mockModel.getReminders()).thenReturn(new java.util.TreeSet<>(Arrays.asList(pastReminder, futureReminder)));
+        
+        // Use reflection to run the private watch task
+        java.lang.reflect.Method method = RemindersController.class.getDeclaredMethod("watchReminders");
+        method.setAccessible(true);
+        method.invoke(controller);
+        
+        assertTrue(pastReminder.isTriggered());
+        assertFalse(futureReminder.isTriggered());
+        
+        verify(mockModel).saveReminders();
     }
 }

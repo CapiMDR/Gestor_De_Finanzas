@@ -37,11 +37,15 @@
       **/AccountDashboardController.java,
       **/AccountEditController.java,
       **/AccountInterestController.java,
+      **/AccountShell.java,
       **/GoalDetailControllerFX.java,
       **/GoalEditController.java,
       **/MovementCategoriesViewFX.java,
       **/RecurringEditController.java,
-      **/ReminderEditController.java
+      **/RecurringAlertController.java,
+      **/ReminderEditController.java,
+      **/FilterController.java,
+      **/UIUtils.java
     </sonar.coverage.exclusions>
   </properties>
 

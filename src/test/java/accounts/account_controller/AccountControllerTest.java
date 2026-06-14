@@ -163,4 +163,41 @@ class AccountControllerTest {
         // Assert
         verify(view).updateAccountList(accounts);
     }
+
+    @Test
+    @DisplayName("should show warning when editAccount is called without selection")
+    void testEditAccountNoSelection() throws Exception {
+        when(view.getSelectedAccountIndex()).thenReturn(-1);
+
+        java.lang.reflect.Method method = AccountController.class.getDeclaredMethod("editAccount");
+        method.setAccessible(true);
+        method.invoke(controller);
+
+        verify(view).showWarning(anyString(), anyString());
+    }
+
+    @Test
+    @DisplayName("should show warning when calculateInterest is called without selection")
+    void testCalculateInterestNoSelection() throws Exception {
+        when(view.getSelectedAccountIndex()).thenReturn(-1);
+
+        java.lang.reflect.Method method = AccountController.class.getDeclaredMethod("calculateInterest");
+        method.setAccessible(true);
+        method.invoke(controller);
+
+        verify(view).showWarning(anyString(), anyString());
+    }
+
+    @Test
+    @DisplayName("should not throw error when accessAccount is called without selection")
+    void testAccessAccountNoSelection() throws Exception {
+        when(view.getSelectedAccountIndex()).thenReturn(-1);
+
+        java.lang.reflect.Method method = AccountController.class.getDeclaredMethod("accessAccount");
+        method.setAccessible(true);
+        method.invoke(controller);
+
+        // Should return early
+        mockedAccountManager.verify(() -> AccountManager.getAccountByIndex(anyInt()), times(1));
+    }
 }

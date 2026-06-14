@@ -3,10 +3,8 @@ package reminders.reminder_view;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
 import reminders.reminder_model.Reminder;
 
 
@@ -20,14 +18,9 @@ import reminders.reminder_model.Reminder;
  *
  * @see reminders.reminder_controller.RemindersController
  */
-public class RemindersViewFX {
+public class RemindersViewFX extends AbstractReminderForm {
 
     @FXML private ListView<String> listReminders;
-    @FXML private TextField txtReminderName;
-    @FXML private TextField txtMessage;
-    @FXML private DatePicker datePicker;
-    @FXML private ComboBox<String> cmbHour;
-    @FXML private ComboBox<String> cmbMinute;
     @FXML private Button btnAddReminder;
     @FXML private Button btnEditReminder;
     @FXML private Button btnDeleteReminder;
@@ -45,7 +38,7 @@ public class RemindersViewFX {
                 if (onBack != null) onBack.run();
             });
         }
-        utils.UIUtils.setupTimeComboBoxes(cmbHour, cmbMinute);
+        initTimeComboBoxes();
 
         btnAddReminder.setOnAction(e -> addReminder());
         btnDeleteReminder.setOnAction(e -> deleteReminder());

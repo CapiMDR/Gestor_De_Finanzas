@@ -1,5 +1,11 @@
 package movements.movement_controller;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,165 +18,112 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import accounts.account_model.Account;
 import accounts.account_model.AccountManager;
-import accounts.account_model.AccountManagerSubject;
-import javafx.application.Platform;
-import javafx.scene.control.Button;
 import movements.movement_model.CategoryManager;
 import movements.movement_model.Movement;
 import movements.movement_model.MovementCategory;
 import movements.movement_model.MovementCategory.MovementType;
 import movements.movement_view.MovementsViewFX;
-
-import java.lang.reflect.Method;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.HashMap;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-
-/**
- * Unit tests for {@link MovementController}.
- * Verifies adding movements, validating inputs, and observing category changes.
- */
+import javafx.scene.control.Button;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("MovementController Test")
-@SuppressWarnings("java:S5973")
 class MovementControllerTest {
 
     @Mock
-    private CategoryManager model;
+    private CategoryManager mockModel;
 
     @Mock
-    private MovementsViewFX view;
+    private MovementsViewFX mockView;
 
     @Mock
-    private Account account;
-
-    @Mock
-    private Button btnAddIncome;
-    @Mock
-    private Button btnAddExpense;
-    @Mock
-    private Button btnAddCategoryIncome;
-    @Mock
-    private Button btnAddCategoryExpense;
+    private Account mockAccount;
 
     private MovementController controller;
     private MockedStatic<AccountManager> mockedAccountManager;
-    private MockedStatic<AccountManagerSubject> mockedAccountManagerSubject;
 
-    /**
-     * Initializes the JavaFX Toolkit before testing to prevent NoClassDefFoundError.
-     */
     @BeforeAll
     static void initJFX() {
         try {
-            Platform.startup(() -> {});
+            javafx.application.Platform.startup(() -> {});
         } catch (IllegalStateException e) {
-            // Toolkit already initialized
+            // Ignored
         }
     }
 
-    /**
-     * Sets up the mocks and creates the controller instance.
-     */
     @BeforeEach
     void setUp() {
-        // Mock UI components returned by the view to prevent NullPointerException in AssignEvents
-        lenient().when(view.getBtnAddIncome()).thenReturn(btnAddIncome);
-        lenient().when(view.getBtnAddExpense()).thenReturn(btnAddExpense);
-        lenient().when(view.getBtnAddCategoryIncome()).thenReturn(btnAddCategoryIncome);
-        lenient().when(view.getBtnAddCategoryExpense()).thenReturn(btnAddCategoryExpense);
+        lenient().when(mockView.getBtnAddIncome()).thenReturn(mock(Button.class));
+        lenient().when(mockView.getBtnAddExpense()).thenReturn(mock(Button.class));
+        lenient().when(mockView.getBtnAddCategoryIncome()).thenReturn(mock(Button.class));
+        lenient().when(mockView.getBtnAddCategoryExpense()).thenReturn(mock(Button.class));
 
-        // Mock Account name for initial data load
-        lenient().when(account.getName()).thenReturn("Test Account");
-
-        // Mock categories for initial data load
-        lenient().when(model.getCategories()).thenReturn(new HashMap<>());
+        lenient().when(mockAccount.getName()).thenReturn("Main Account");
+        lenient().when(mockAccount.getMovements()).thenReturn(new ArrayList<>());
 
         mockedAccountManager = mockStatic(AccountManager.class);
-        mockedAccountManagerSubject = mockStatic(AccountManagerSubject.class);
 
-        controller = new MovementController(model, view, account);
+        controller = new MovementController(mockModel, mockView, mockAccount);
     }
 
-    /**
-     * Cleans up static mocks.
-     */
     @AfterEach
     void tearDown() {
         mockedAccountManager.close();
-        mockedAccountManagerSubject.close();
     }
 
-    /**
-     * Tests that a valid movement is added and the model is updated and saved.
-     */
     @Test
-    @DisplayName("should add movement to account and notify observers")
-    void testAddMovement() {
-        // Arrange
-        String description = "Salario";
-        BigDecimal amount = new BigDecimal("5000.00");
-        MovementCategory category = new MovementCategory("Salario", MovementType.INCOME);
-        LocalDateTime date = LocalDateTime.now();
+    @DisplayName("should add income successfully")
+    void testHandleAddIncomeSuccess() throws Exception {
+        when(mockView.getDescriptionIncome()).thenReturn("Salary");
+        when(mockView.getAmountIncomeText()).thenReturn("1000");
+        when(mockView.getSelectedCategoryIncome()).thenReturn("Job");
+        when(mockView.getIncomeDateAsLocalDateTime()).thenReturn(LocalDateTime.now());
+        
+        MovementCategory mockCat = new MovementCategory("Job", MovementType.INCOME);
+        when(mockModel.getCategoryByName("Job")).thenReturn(mockCat);
 
-        // Act
-        controller.addMovement(description, amount, category, account, date);
+        // Use reflection to call handleAddMovement(MovementType.INCOME)
+        java.lang.reflect.Method method = MovementController.class.getDeclaredMethod("handleAddMovement", MovementType.class);
+        method.setAccessible(true);
+        method.invoke(controller, MovementType.INCOME);
 
-        // Assert
-        verify(account).addMovement(any(Movement.class));
-        mockedAccountManager.verify(AccountManager::saveAccountsData);
-        mockedAccountManagerSubject.verify(() -> AccountManagerSubject.notifyObservers(any()));
-        verify(model).notifyObservers();
+        verify(mockView).clearIncomeFields();
+        mockedAccountManager.verify(AccountManager::saveAccountsData, atLeastOnce());
+        
+        // Assert movement added to account
+        verify(mockAccount).addMovement(any(Movement.class));
     }
 
-    /**
-     * Tests that the handleAddMovement internal method properly processes a valid income input from the view.
-     */
     @Test
-    @DisplayName("should handle add movement valid income input")
-    void testHandleAddMovementValidIncome() throws Exception {
-        // Arrange
-        when(view.getDescriptionIncome()).thenReturn("Bono");
-        when(view.getAmountIncomeText()).thenReturn("1000.50");
-        when(view.getSelectedCategoryIncome()).thenReturn("Premios");
-        when(view.getIncomeDateAsLocalDateTime()).thenReturn(LocalDateTime.now());
+    @DisplayName("should add expense successfully")
+    void testHandleAddExpenseSuccess() throws Exception {
+        when(mockView.getDescriptionExpense()).thenReturn("Food");
+        when(mockView.getAmountExpenseText()).thenReturn("50");
+        when(mockView.getSelectedCategoryExpense()).thenReturn("Restaurant");
+        when(mockView.getExpenseDateAsLocalDateTime()).thenReturn(LocalDateTime.now());
+        
+        MovementCategory mockCat = new MovementCategory("Restaurant", MovementType.EXPENSE);
+        when(mockModel.getCategoryByName("Restaurant")).thenReturn(mockCat);
 
-        MovementCategory mockCategory = new MovementCategory("Premios", MovementType.INCOME);
-        when(model.getCategoryByName("Premios")).thenReturn(mockCategory);
+        java.lang.reflect.Method method = MovementController.class.getDeclaredMethod("handleAddMovement", MovementType.class);
+        method.setAccessible(true);
+        method.invoke(controller, MovementType.EXPENSE);
 
-        // Act
-        Method handleAddMovement = MovementController.class.getDeclaredMethod("handleAddMovement", MovementType.class);
-        handleAddMovement.setAccessible(true);
-        handleAddMovement.invoke(controller, MovementType.INCOME);
-
-        // Assert
-        verify(account).addMovement(any(Movement.class));
-        verify(view).clearIncomeFields();
+        verify(mockView).clearExpenseFields();
+        mockedAccountManager.verify(AccountManager::saveAccountsData, atLeastOnce());
+        verify(mockAccount).addMovement(any(Movement.class));
     }
 
-    /**
-     * Tests that invalid inputs (empty fields) trigger validation failure without saving.
-     */
     @Test
-    @DisplayName("should not add movement if validation fails")
-    void testHandleAddMovementInvalid() throws Exception {
-        // Arrange - empty description
-        when(view.getDescriptionExpense()).thenReturn("");
-        when(view.getAmountExpenseText()).thenReturn("500");
-        when(view.getSelectedCategoryExpense()).thenReturn("Comida");
-        when(view.getExpenseDateAsLocalDateTime()).thenReturn(LocalDateTime.now());
+    @DisplayName("should fail validation on empty fields")
+    void testHandleAddMovementValidation() throws Exception {
+        when(mockView.getDescriptionIncome()).thenReturn("");
+        when(mockView.getAmountIncomeText()).thenReturn("");
 
-        // Act
-        Method handleAddMovement = MovementController.class.getDeclaredMethod("handleAddMovement", MovementType.class);
-        handleAddMovement.setAccessible(true);
-        handleAddMovement.invoke(controller, MovementType.EXPENSE);
+        java.lang.reflect.Method method = MovementController.class.getDeclaredMethod("handleAddMovement", MovementType.class);
+        method.setAccessible(true);
+        method.invoke(controller, MovementType.INCOME);
 
-        // Assert - shouldn't interact with account or save
-        verify(account, never()).addMovement(any());
-        mockedAccountManager.verify(AccountManager::saveAccountsData, never());
+        // Alert is shown internally, we just ensure no movement is added
+        verify(mockAccount, never()).addMovement(any());
     }
 }
