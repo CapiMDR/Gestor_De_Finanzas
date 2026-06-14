@@ -50,7 +50,12 @@ public class RecurringsController {
      * Default constructor. Initializes with default model and a background scheduler.
      */
     public RecurringsController() {
-        this(new RecurringsModel(), Executors.newSingleThreadScheduledExecutor());
+        this(new RecurringsModel(), Executors.newSingleThreadScheduledExecutor(r -> {
+            Thread thread = new Thread(r, "Recurrings-Scheduler");
+            boolean isBackground = config.AppSettings.getInstance().getModoNotificaciones() == config.AppSettings.ModoNotificaciones.SEGUNDO_PLANO;
+            thread.setDaemon(!isBackground);
+            return thread;
+        }));
     }
 
     /**
