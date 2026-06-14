@@ -39,8 +39,11 @@ public class WinRegistryHelper {
             Process process = pb.start();
             process.waitFor();
             logger.info("Aplicación registrada en el inicio de Windows.");
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
             logger.error("Error al registrar en el inicio de Windows.", e);
+        } catch (InterruptedException e) {
+            logger.error("Error al registrar en el inicio de Windows.", e);
+            Thread.currentThread().interrupt();
         }
     }
 
@@ -54,14 +57,18 @@ public class WinRegistryHelper {
             Process process = pb.start();
             process.waitFor();
             logger.info("Aplicación removida del inicio de Windows.");
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
             logger.error("Error al remover del inicio de Windows.", e);
+        } catch (InterruptedException e) {
+            logger.error("Error al remover del inicio de Windows.", e);
+            Thread.currentThread().interrupt();
         }
     }
     
     /**
      * Attempts to find the path to the current executable or JAR.
      */
+    
     private static String getExecutablePath() {
         try {
             // Get the location of the JAR or compiled classes

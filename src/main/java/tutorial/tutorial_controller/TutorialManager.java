@@ -43,14 +43,9 @@ public class TutorialManager {
         }
 
         // Slight delay to allow the UI to fully layout before calculating bounds
-        Platform.runLater(() -> {
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                // Ignore
-            }
-            Platform.runLater(() -> start(ownerWindow));
-        });
+        javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(Duration.millis(500));
+        pause.setOnFinished(e -> start(ownerWindow));
+        pause.play();
     }
 
     private void start(Window ownerWindow) {
