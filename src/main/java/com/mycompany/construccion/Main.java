@@ -43,7 +43,7 @@ public class Main extends Application {
             Scene scene = new Scene(root, 1000, 700);
             scene.getStylesheets().add(getClass().getResource("/styles/app.css").toExternalForm());
             
-            String version = getAppVersion();
+            String version = utils.UIUtils.getAppVersion();
             primaryStage.setTitle("Gestor de Finanzas v" + version);
             
             try {
@@ -74,18 +74,7 @@ public class Main extends Application {
         }
     }
 
-    private String getAppVersion() {
-        try (java.io.InputStream is = getClass().getResourceAsStream("/META-INF/maven/io.github.capimdr/gestor-finanzas/pom.properties")) {
-            if (is != null) {
-                java.util.Properties p = new java.util.Properties();
-                p.load(is);
-                return p.getProperty("version", "Dev");
-            }
-        } catch (Exception e) {
-            logger.warn("No se pudo leer la versión del pom.properties", e);
-        }
-        return "Dev";
-    }
+
 
     public static void main(String[] args) {
         launch(args);

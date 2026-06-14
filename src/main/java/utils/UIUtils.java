@@ -12,6 +12,8 @@ import javafx.scene.control.ComboBox;
 
 public class UIUtils {
 
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(UIUtils.class);
+
     /**
      * Shows an informational alert dialog.
      *
@@ -88,5 +90,22 @@ public class UIUtils {
             cmbHour.getSelectionModel().select("12");
             cmbMinute.getSelectionModel().select("00");
         }
+    }
+
+    /**
+     * Reads the application version dynamically from pom.properties.
+     * @return the version string or "Dev" if not found.
+     */
+    public static String getAppVersion() {
+        try (java.io.InputStream is = UIUtils.class.getResourceAsStream("/version.properties")) {
+            if (is != null) {
+                java.util.Properties p = new java.util.Properties();
+                p.load(is);
+                return p.getProperty("app.version", "Dev");
+            }
+        } catch (Exception e) {
+            logger.warn("No se pudo leer la versión de version.properties", e);
+        }
+        return "Dev";
     }
 }

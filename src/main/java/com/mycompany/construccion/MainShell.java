@@ -289,6 +289,12 @@ public class MainShell {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/fxml/info/info_panel.fxml"));
             DialogPane pane = loader.load();
+            
+            javafx.scene.control.Label lblVersion = (javafx.scene.control.Label) pane.lookup("#lblVersion");
+            if (lblVersion != null) {
+                lblVersion.setText("Versión " + utils.UIUtils.getAppVersion());
+            }
+
             pane.getStylesheets().add(getClass().getResource("/styles/app.css").toExternalForm());
             Dialog<Void> dialog = new Dialog<>();
             dialog.setDialogPane(pane);

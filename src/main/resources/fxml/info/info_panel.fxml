@@ -17,7 +17,7 @@
                 <FontIcon iconLiteral="mdi2f-finance" iconSize="48" styleClass="info-logo"/>
                 <VBox>
                     <Label text="Gestor de Finanzas" styleClass="info-title"/>
-                    <Label text="Versión 2.4.1" styleClass="info-version"/>
+                    <Label fx:id="lblVersion" text="Versión 2.4.1" styleClass="info-version"/>
                 </VBox>
             </HBox>
 
