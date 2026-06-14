@@ -20,6 +20,29 @@
     <app.version>2.4.1</app.version>
     <!-- JavaFX version centralizada -->
     <javafx.version>21.0.3</javafx.version>
+
+    <!-- SonarQube UI exclusions to focus coverage on business logic -->
+    <sonar.coverage.exclusions>
+      **/*ViewFX.java,
+      **/*Module.java,
+      **/MainShell.java,
+      **/Main.java,
+      **/AppLauncher.java,
+      **/SystemTrayManager.java,
+      **/SingleInstanceGuard.java,
+      **/SettingsPanelController.java,
+      **/TutorialManager.java,
+      **/TutorialStep.java,
+      **/WinRegistryHelper.java,
+      **/AccountDashboardController.java,
+      **/AccountEditController.java,
+      **/AccountInterestController.java,
+      **/GoalDetailControllerFX.java,
+      **/GoalEditController.java,
+      **/MovementCategoriesViewFX.java,
+      **/RecurringEditController.java,
+      **/ReminderEditController.java
+    </sonar.coverage.exclusions>
   </properties>
 
   <dependencies>

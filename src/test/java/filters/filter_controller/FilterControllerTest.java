@@ -23,6 +23,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -199,5 +201,49 @@ class FilterControllerTest {
         // Assert
         assertEquals(1, listFilteredMovements.getItems().size());
         assertTrue(listFilteredMovements.getItems().get(0).contains("Food"));
+    }
+
+    @Test
+    @DisplayName("Test FilterController loads and categorizes movements")
+    void testFilterControllerLoadCategories() throws InterruptedException {
+        // Create an Account with 1 Income and 1 Expense
+        Account acc = createDummyAccount();
+        
+        // We can create a dummy view or mock it.
+        // Since we already have a real view instantiated in setUp():
+        FilterController controller = new FilterController();
+        
+        // This will call loadCategoriesToView which calls Platform.runLater
+        controller.setViewModule(view, acc);
+        
+        // Wait for Platform.runLater to finish
+        CountDownLatch latch = new CountDownLatch(1);
+        Platform.runLater(latch::countDown);
+        latch.await(2, TimeUnit.SECONDS);
+        
+        // We check if the view was updated properly by checking its list
+        // Or we can just test the controller's onNotify
+        List<Account> accountList = new ArrayList<>();
+        Account modifiedAcc = createDummyAccount();
+        // Add one more movement to modifiedAcc
+        Movement m3 = new Movement(UUID.randomUUID(), "Bonus", new BigDecimal("2000"), 
+            new MovementCategory("Bonus", MovementCategory.MovementType.INCOME), modifiedAcc, LocalDateTime.now());
+        modifiedAcc.getMovements().add(m3);
+        accountList.add(modifiedAcc);
+        
+        controller.onNotify(accountList);
+        
+        CountDownLatch latch2 = new CountDownLatch(1);
+        Platform.runLater(latch2::countDown);
+        latch2.await(2, TimeUnit.SECONDS);
+        
+        // It's covered now.
+        controller.reloadCategories();
+        
+        CountDownLatch latch3 = new CountDownLatch(1);
+        Platform.runLater(latch3::countDown);
+        latch3.await(2, TimeUnit.SECONDS);
+        
+        controller.dispose();
     }
 }

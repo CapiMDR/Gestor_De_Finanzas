@@ -4,7 +4,6 @@ import tutorial.tutorial_model.TutorialStep;
 
 import config.AppSettings;
 import javafx.animation.FadeTransition;
-import javafx.application.Platform;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
