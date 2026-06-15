@@ -5,9 +5,10 @@
       "type": "java",
       "name": "Launch Gestor Finanzas",
       "request": "launch",
-      "mainClass": "com.mycompany.construccion.Main",
+      "mainClass": "com.mycompany.construccion.AppLauncher",
       "projectName": "gestor-finanzas",
-      "cwd": "${workspaceFolder}"
+      "cwd": "${workspaceFolder}",
+      "preLaunchTask": "run-tests"
     }
   ]
 }

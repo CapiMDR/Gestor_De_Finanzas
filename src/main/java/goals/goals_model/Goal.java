@@ -15,9 +15,11 @@ public class Goal {
     private BigDecimal targetAmount;
     private BigDecimal currentAmount;
     private String description;
+    private boolean notificadaCompleta;
 
     public Goal() {
         this.currentAmount = BigDecimal.ZERO;
+        this.notificadaCompleta = false;
     }
 
     public Goal(String name, BigDecimal targetAmount, String description) {
@@ -25,6 +27,7 @@ public class Goal {
         this.targetAmount = targetAmount;
         this.description = description;
         this.currentAmount = BigDecimal.ZERO;
+        this.notificadaCompleta = false;
     }
 
     public String getName() {
@@ -57,6 +60,14 @@ public class Goal {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public boolean isNotificadaCompleta() {
+        return notificadaCompleta;
+    }
+
+    public void setNotificadaCompleta(boolean notificadaCompleta) {
+        this.notificadaCompleta = notificadaCompleta;
     }
 
     @Override

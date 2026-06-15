@@ -5,14 +5,21 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import javax.swing.JOptionPane;
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.DialogPane;
+import javafx.fxml.FXMLLoader;
+import notifications.notification_controller.NotificationManager;
 
 import reminders.reminder_model.RemindersModel;
 import reminders.reminder_model.Reminder;
-import reminders.reminder_view.RemindersEditorView;
-import reminders.reminder_view.RemindersView;
+import reminders.reminder_view.RemindersViewFX;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 /**
  * Main controller in charge of coordinating the interaction between the
@@ -28,25 +35,49 @@ public class RemindersController {
     private static final Logger logger = LoggerFactory.getLogger(RemindersController.class);
 
     /** Model that manages the collection of reminders. */
-    private final RemindersModel remindersModel = new RemindersModel();
+    private final RemindersModel remindersModel;
 
     /** Main view where reminders are shown. */
-    private final RemindersView remindersView = new RemindersView(this, remindersModel);
+    private RemindersViewFX remindersView;
 
     /** Scheduled executor to periodically check reminders. */
-    private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+    private final ScheduledExecutorService scheduler;
 
     /**
      * Creates the controller, shows the main view and schedules the
-     * periodic reminder watch task.
+     * periodic reminder watch task using default dependencies.
      */
     public RemindersController() {
-        logger.info("RemindersController initialized.");
-        scheduler.scheduleAtFixedRate(this::watchReminders, 0, 1, TimeUnit.SECONDS);
+        this(new RemindersModel(), Executors.newSingleThreadScheduledExecutor(r -> {
+            Thread thread = new Thread(r, "Reminders-Scheduler");
+            boolean isBackground = config.AppSettings.getInstance().getModoNotificaciones() == config.AppSettings.ModoNotificaciones.SEGUNDO_PLANO;
+            thread.setDaemon(!isBackground);
+            return thread;
+        }));
     }
 
-    public void showRemindersView() {
-        remindersView.setVisible(true);
+    /**
+     * Creates the controller using the provided dependencies. Useful for testing.
+     * 
+     * @param model    the model for reminders
+     * @param scheduler the scheduler for watching reminders
+     */
+    public RemindersController(RemindersModel model, ScheduledExecutorService scheduler) {
+        this.remindersModel = model;
+        this.scheduler = scheduler;
+        logger.info("RemindersController initialized.");
+        this.scheduler.scheduleAtFixedRate(this::watchReminders, 0, 1, TimeUnit.SECONDS);
+    }
+
+    public void setView(RemindersViewFX view) {
+        this.remindersView = view;
+        refreshView();
+    }
+
+    private void refreshView() {
+        if (remindersView != null) {
+            Platform.runLater(() -> remindersView.refreshList(new java.util.ArrayList<>(remindersModel.getReminders())));
+        }
     }
 
     /**
@@ -57,13 +88,15 @@ public class RemindersController {
      * be triggered yet, the following ones shouldn't either.
      */
     private void watchReminders() {
+        LocalDateTime now = LocalDateTime.now(java.time.ZoneId.systemDefault());
         for (Reminder reminder : remindersModel.getReminders()) {
-            if (reminder.shouldTrigger()) {
-                triggerReminder(reminder);
-            } else {
-                // Since reminders are sorted by their date, if the current one has not
-                // reached its time, the others won't either
+            if (reminder.getDate().isAfter(now)) {
+                // Since reminders are sorted by date, if this one is in the future,
+                // all subsequent ones are also in the future.
                 break;
+            }
+            if (!reminder.isTriggered()) {
+                triggerReminder(reminder);
             }
         }
     }
@@ -76,16 +109,27 @@ public class RemindersController {
     private void triggerReminder(Reminder reminder) {
         logger.info("Reminder triggered: '{}' scheduled for {}.", reminder.getName(), reminder.getDate());
         reminder.setTriggered(true);
-        javax.swing.SwingUtilities.invokeLater(() -> {
+        remindersModel.saveReminders();
+        Platform.runLater(() -> {
+            NotificationManager.getInstance().agregarNotificacion(
+                new notifications.notification_model.AppNotification(
+                    notifications.notification_model.AppNotification.Tipo.RECORDATORIO,
+                    "Recordatorio",
+                    reminder.getName() + " - " + reminder.getMessage(),
+                    java.time.LocalDateTime.now(java.time.ZoneId.systemDefault())
+                )
+            );
+            refreshView();
             showReminderAlert(reminder);
         });
     }
 
     private void showReminderAlert(Reminder reminder) {
-        JOptionPane.showMessageDialog(remindersView,
-                reminder.getMessage(),
-                reminder.getName() + " - Recordatorio",
-                JOptionPane.INFORMATION_MESSAGE);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(reminder.getName() + " - Recordatorio");
+        alert.setHeaderText(null);
+        alert.setContentText(reminder.getMessage());
+        alert.show();
     }
 
     /**
@@ -98,12 +142,14 @@ public class RemindersController {
     public void handleReminderAddition(String name, String message, LocalDateTime date) {
         if (!isValidReminder(name, message, date)) {
             logger.warn("Invalid reminder data rejected: name='{}', date={}.", name, date);
+            showAlert(Alert.AlertType.WARNING, "Datos incompletos", "Debe proporcionar al menos un nombre y la fecha del recordatorio.");
             return;
         }
 
         remindersModel.addReminder(name, message, date);
         remindersModel.saveReminders();
         logger.info("Reminder added: '{}' scheduled for {}.", name, date);
+        refreshView();
     }
 
     /**
@@ -131,6 +177,14 @@ public class RemindersController {
         remindersModel.deleteReminder(reminder);
         remindersModel.saveReminders();
         logger.info("Reminder deleted: '{}'.", reminder.getName());
+        refreshView();
+    }
+
+    public void deleteReminderByIndex(int index) {
+        java.util.List<Reminder> list = new java.util.ArrayList<>(remindersModel.getReminders());
+        if (index >= 0 && index < list.size()) {
+            handleReminderDeletion(list.get(index));
+        }
     }
 
     /**
@@ -144,6 +198,14 @@ public class RemindersController {
         remindersModel.editReminder(oldReminder, newReminder);
         remindersModel.saveReminders();
         logger.info("Reminder edited: '{}' -> '{}'.", oldReminder.getName(), newReminder.getName());
+        refreshView();
+    }
+
+    public void editReminderByIndex(int index) {
+        java.util.List<Reminder> list = new java.util.ArrayList<>(remindersModel.getReminders());
+        if (index >= 0 && index < list.size()) {
+            onEditRequest(list.get(index));
+        }
     }
 
     /**
@@ -152,11 +214,62 @@ public class RemindersController {
      * @param reminder Reminder to edit.
      */
     public void onEditRequest(Reminder reminder) {
-        RemindersEditorView editor = new RemindersEditorView(null, reminder);
-        editor.setVisible(true);
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/reminders/reminder_edit.fxml"));
+            DialogPane dialogPane = loader.load();
+            ReminderEditController editController = loader.getController();
 
-        Reminder editedReminder = editor.getEditedReminder();
-        if (editedReminder != null)
-            handleReminderEdit(reminder, editedReminder);
+            editController.getTxtReminderName().setText(reminder.getName());
+            editController.getTxtMessage().setText(reminder.getMessage());
+            editController.getDatePicker().setValue(reminder.getDate().toLocalDate());
+            editController.getCmbHour().setValue(String.format("%02d", reminder.getDate().getHour()));
+            editController.getCmbMinute().setValue(String.format("%02d", reminder.getDate().getMinute()));
+
+            Dialog<Reminder> dialog = new Dialog<>();
+            dialog.setDialogPane(dialogPane);
+            dialog.setTitle("Editar Recordatorio");
+
+            dialog.setResultConverter(dialogButton -> {
+                if (dialogButton == ButtonType.OK) {
+                    try {
+                        String name = editController.getTxtReminderName().getText().trim();
+                        String msg = editController.getTxtMessage().getText().trim();
+                        java.time.LocalDate d = editController.getDatePicker().getValue();
+                        int h = Integer.parseInt(editController.getCmbHour().getValue());
+                        int m = Integer.parseInt(editController.getCmbMinute().getValue());
+                        LocalDateTime dateTime = LocalDateTime.of(d, java.time.LocalTime.of(h, m));
+
+                        if (!isValidReminder(name, msg, dateTime)) {
+                            Alert alert = new Alert(Alert.AlertType.ERROR, "Datos inválidos");
+                            alert.showAndWait();
+                            return null;
+                        }
+
+                        return new Reminder(name, msg, dateTime);
+                    } catch (Exception e) {
+                        return null;
+                    }
+                }
+                return null;
+            });
+
+            dialog.showAndWait().ifPresent(editedReminder -> handleReminderEdit(reminder, editedReminder));
+
+        } catch (IOException e) {
+            logger.error("Failed to load reminder edit dialog", e);
+        }
+    }
+
+    /**
+     * Displays a JavaFX Alert on the UI thread.
+     */
+    private void showAlert(Alert.AlertType type, String title, String content) {
+        Platform.runLater(() -> {
+            Alert alert = new Alert(type);
+            alert.setTitle(title);
+            alert.setHeaderText(null);
+            alert.setContentText(content);
+            alert.showAndWait();
+        });
     }
 }

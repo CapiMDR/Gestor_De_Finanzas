@@ -1,120 +1,162 @@
 package goals.goals_controller;
 
-import accounts.account_model.Account;
-import accounts.account_model.AccountManager;
-import accounts.account_model.Account.Coin;
-import goals.goals_model.Goal;
-import goals.goals_view.GoalEditView;
-import goals.goals_view.GoalsView;
-import movements.movement_model.Movement;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import java.awt.event.ActionListener;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import javax.swing.JButton;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
+import accounts.account_model.Account;
+import accounts.account_model.AccountManager;
+import goals.goals_model.Goal;
+import goals.goals_view.GoalsViewFX;
+import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
+import javafx.scene.control.MultipleSelectionModel;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("Goals Controller Test")
+@DisplayName("GoalsController Test")
 class GoalsControllerTest {
 
-    @Mock private GoalsView view;
-    @Mock private GoalEditView editView;
-    @Mock private GoalDetailController detailController;
-    @Mock private Account currentAccount;
-    @Mock private JButton btnAdd;
+    @Mock
+    private GoalsViewFX mainView;
 
-    // Se usa Spy con una lista real para verificar que si se agregan elementos
-    @Spy
-    private List<Goal> goalList = new ArrayList<>();
+    @Mock
+    private GoalEditController editController;
+
+    @Mock
+    private GoalDetailControllerFX detailController;
 
     private GoalsController controller;
+    private MockedStatic<AccountManager> mockedAccountManager;
 
-    @BeforeEach
-    void setUp() {
-        // Lenient (permisiva) sirve para evitar errores si algún mock no se usa en un test específico
-        lenient().when(view.getBtnAddGoal()).thenReturn(btnAdd);
-        lenient().when(currentAccount.getGoals()).thenReturn(goalList);
-        lenient().when(currentAccount.getName()).thenReturn("Cuenta Test");
-        lenient().when(currentAccount.getCoin()).thenReturn(Coin.USD);
-        lenient().when(currentAccount.getInitialBalance()).thenReturn(BigDecimal.ZERO);
-        lenient().when(currentAccount.getMovements()).thenReturn(new ArrayList<Movement>());
-
-        controller = new GoalsController(view, editView, detailController);
-        
-        controller.setAccount(currentAccount);
-        clearInvocations(view); 
-    }
-
-    @Test
-    @DisplayName("SetAccount should update view with Name, Currency, and List")
-    void testSetAccount() {
-        controller.setAccount(currentAccount);
-
-        verify(view).setAccountName("Cuenta Test");
-        verify(view).setCurrencyLabel("USD");
-        verify(view).updateGoalList(goalList);
-    }
-
-    @Test
-    @DisplayName("CreateNewGoal should add goal to list and save via Static Manager")
-    void testCreateNewGoal() {
-        // Arrange
-        String name = "New Goal";
-        BigDecimal target = new BigDecimal("100.00");
-        String desc = "Test Description";
-
-        // Mock de la clase estática AccountManager
-        try (MockedStatic<AccountManager> mockedManager = mockStatic(AccountManager.class)) {
-            
-            // Act
-            controller.createNewGoal(name, target, desc);
-
-            // Assert (Capturar la meta que se intentó agregar a la lista)
-            ArgumentCaptor<Goal> goalCaptor = ArgumentCaptor.forClass(Goal.class);
-            verify(goalList).add(goalCaptor.capture());
-
-            Goal createdGoal = goalCaptor.getValue();
-            assertEquals(name, createdGoal.getName());
-            assertEquals(target, createdGoal.getTargetAmount());
-            assertEquals(desc, createdGoal.getDescription());
-
-            // Verificar que se llamó al método
-            mockedManager.verify(AccountManager::saveAccountsData);
-            verify(view).updateGoalList(goalList);
+    @BeforeAll
+    static void initJFX() {
+        try {
+            javafx.application.Platform.startup(() -> {});
+        } catch (IllegalStateException e) {
+            // Toolkit already initialized
         }
     }
 
-    @Test
-    @DisplayName("OnViewDetails should delegate to DetailController")
-    void testOnViewDetails() {
-        Goal goal = new Goal();
-        controller.onViewDetails(goal);
+    @BeforeEach
+    void setUp() {
+        // Mock UI elements returned by view to avoid NPE in assignEvents()
+        lenient().when(mainView.getBtnAddGoal()).thenReturn(mock(Button.class));
+        lenient().when(mainView.getBtnEditGoal()).thenReturn(mock(Button.class));
+        lenient().when(mainView.getBtnDeleteGoal()).thenReturn(mock(Button.class));
+        lenient().when(mainView.getBtnViewGoalDetails()).thenReturn(mock(Button.class));
+        
+        @SuppressWarnings("unchecked")
+        ListView<String> mockList = mock(ListView.class);
+        @SuppressWarnings("unchecked")
+        MultipleSelectionModel<String> mockSelectionModel = mock(MultipleSelectionModel.class);
+        @SuppressWarnings("unchecked")
+        javafx.beans.property.ReadOnlyObjectProperty<String> mockProperty = mock(javafx.beans.property.ReadOnlyObjectProperty.class);
+        lenient().when(mockSelectionModel.selectedItemProperty()).thenReturn(mockProperty);
+        lenient().when(mockList.getSelectionModel()).thenReturn(mockSelectionModel);
+        lenient().when(mainView.getListGoals()).thenReturn(mockList);
+        
+        lenient().when(mainView.getProgressContainer()).thenReturn(mock(VBox.class));
+        lenient().when(mainView.getProgressBarGoal()).thenReturn(mock(ProgressBar.class));
 
-        verify(detailController, times(1)).showDetails(goal);
+        mockedAccountManager = mockStatic(AccountManager.class);
+        
+        controller = new GoalsController(mainView, editController, detailController);
+    }
+
+    @AfterEach
+    void tearDown() {
+        mockedAccountManager.close();
     }
 
     @Test
-    @DisplayName("OnEdit should populate edit view and show dialog")
-    void testOnEdit() {
-        Goal testGoal = new Goal("Test Goal", new BigDecimal("123"), "Test");
+    @DisplayName("should set account and trigger notify")
+    void testSetAccount() {
+        Account mockAccount = mock(Account.class);
+        when(mockAccount.getName()).thenReturn("Savings");
+        when(mockAccount.getGoals()).thenReturn(new ArrayList<>());
+        
+        // Mock getAccounts to return our mock account
+        mockedAccountManager.when(AccountManager::getAccounts).thenReturn(Collections.singletonList(mockAccount));
+        
+        controller.setAccount(mockAccount);
+        
+        verify(mainView).setAccountName("Savings");
+        // Verify saveAccountsData is called during onNotify triggered by setAccount
+        mockedAccountManager.verify(AccountManager::saveAccountsData, times(1));
+    }
 
-        controller.onEdit(testGoal);
+    @Test
+    @DisplayName("should add goal successfully when valid inputs are provided")
+    void testHandleAddGoalSuccess() throws Exception {
+        Account mockAccount = mock(Account.class);
+        when(mockAccount.getName()).thenReturn("Savings");
+        when(mockAccount.getGoals()).thenReturn(new ArrayList<>());
+        when(mockAccount.getMovements()).thenReturn(new ArrayList<>());
+        
+        mockedAccountManager.when(AccountManager::getAccounts).thenReturn(Collections.singletonList(mockAccount));
+        controller.setAccount(mockAccount);
 
-        verify(editView).populateFields("Test Goal", new BigDecimal("123"), "Test");
-        verify(editView).addSaveListener(any(ActionListener.class));
-        verify(editView).showDialog();
+        TextField mockNameField = mock(TextField.class);
+        when(mockNameField.getText()).thenReturn("Car");
+        when(mainView.getTxtGoalName()).thenReturn(mockNameField);
+
+        TextField mockTargetField = mock(TextField.class);
+        when(mockTargetField.getText()).thenReturn("50000");
+        when(mainView.getTxtTargetAmount()).thenReturn(mockTargetField);
+
+        TextField mockDescField = mock(TextField.class);
+        when(mockDescField.getText()).thenReturn("");
+        lenient().when(mainView.getTxtDescription()).thenReturn(mockDescField);
+
+        // Use reflection to invoke handleAddGoal
+        java.lang.reflect.Method method = GoalsController.class.getDeclaredMethod("handleAddGoal");
+        method.setAccessible(true);
+        method.invoke(controller);
+
+        verify(mockNameField).clear();
+        verify(mockTargetField).clear();
+        mockedAccountManager.verify(AccountManager::saveAccountsData, atLeastOnce());
+        assertEquals(1, mockAccount.getGoals().size());
+        assertEquals("Car", mockAccount.getGoals().get(0).getName());
+    }
+
+    @Test
+    @org.junit.jupiter.api.Disabled("Requires JavaFX Thread for Alert")
+    @DisplayName("should delete goal successfully")
+    void testHandleDeleteGoal() throws Exception {
+        Account mockAccount = mock(Account.class);
+        Goal mockGoal = new Goal("Car", new BigDecimal("50000"), "Save for a car");
+        ArrayList<Goal> goalsList = new ArrayList<>(Collections.singletonList(mockGoal));
+        when(mockAccount.getName()).thenReturn("Savings");
+        when(mockAccount.getGoals()).thenReturn(goalsList);
+        when(mockAccount.getMovements()).thenReturn(new ArrayList<>());
+
+        mockedAccountManager.when(AccountManager::getAccounts).thenReturn(Collections.singletonList(mockAccount));
+        controller.setAccount(mockAccount);
+
+        // Act
+        java.lang.reflect.Method method = GoalsController.class.getDeclaredMethod("handleDeleteGoal", Goal.class);
+        method.setAccessible(true);
+        method.invoke(controller, mockGoal);
+
+        // Assert
+        assertEquals(0, goalsList.size());
+        mockedAccountManager.verify(AccountManager::saveAccountsData, atLeastOnce());
     }
 }

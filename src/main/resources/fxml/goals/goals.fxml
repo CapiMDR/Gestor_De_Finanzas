@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<!--
+    Goals View Layout
+    Controller: goals.goals_view.GoalsViewFX
+    Stylesheet: /styles/app.css
+
+    TODO: Implement layout — Phase 3.4 (Goals module migration)
+-->
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="goals.goals_view.GoalsViewFX"
+            styleClass="root-pane">
+
+    <top>
+        <HBox styleClass="header-bar" spacing="15" alignment="CENTER_LEFT">
+            <Label text="METAS FINANCIERAS" styleClass="header-title"/>
+            <Label fx:id="lblAccountName"
+                   style="-fx-background-color: rgba(255,255,255,0.15);
+                          -fx-background-radius: 20px;
+                          -fx-padding: 5px 15px;
+                          -fx-text-fill: white;
+                          -fx-font-size: 14px;
+                          -fx-font-weight: bold;"/>
+            <Region HBox.hgrow="ALWAYS" />
+            <Button fx:id="btnVolver" text="Volver" styleClass="btn-back" 
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-border-color: white; -fx-border-radius: 4px;"/>
+        </HBox>
+    </top>
+
+    <left>
+        <VBox styleClass="form-panel" spacing="16">
+            <Label text="Nombre:" styleClass="form-label"/>
+            <VBox spacing="4">
+                <TextField fx:id="txtGoalName" styleClass="form-input" promptText="Goal name"/>
+                <Label text="Máximo 30 caracteres" style="-fx-text-fill: #9CA3AF; -fx-font-size: 11px;"/>
+            </VBox>
+
+            <Label text="Monto objetivo: $" styleClass="form-label"/>
+            <TextField fx:id="txtTargetAmount" styleClass="form-input"
+                       promptText="0.00"/>
+
+            <Label text="Descripción:" styleClass="form-label"/>
+            <TextField fx:id="txtDescription" styleClass="form-input"
+                       promptText="Description"/>
+
+            <Button fx:id="btnAddGoal" text="Agregar Meta"
+                    styleClass="btn-primary" maxWidth="Infinity"/>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox styleClass="list-panel" spacing="12">
+            <ListView fx:id="listGoals" styleClass="goals-list" VBox.vgrow="ALWAYS"/>
+            <VBox spacing="5" fx:id="progressContainer">
+                <Label text="Progreso" styleClass="form-label"/>
+                <ProgressBar fx:id="progressBarGoal" maxWidth="Infinity" minHeight="20"/>
+            </VBox>
+            <HBox spacing="10" alignment="CENTER">
+                <Button fx:id="btnViewGoalDetails" styleClass="btn-icon">
+                    <graphic><FontIcon iconLiteral="mdi2e-eye" iconSize="28"/></graphic>
+                    <tooltip><Tooltip text="Ver detalles de la meta"/></tooltip>
+                </Button>
+                <Button fx:id="btnEditGoal" styleClass="btn-icon">
+                    <graphic><FontIcon iconLiteral="mdi2p-pencil" iconSize="28"/></graphic>
+                    <tooltip><Tooltip text="Editar meta seleccionada"/></tooltip>
+                </Button>
+                <Button fx:id="btnDeleteGoal" styleClass="btn-icon">
+                    <graphic><FontIcon iconLiteral="mdi2d-delete" iconSize="28"/></graphic>
+                    <tooltip><Tooltip text="Eliminar meta seleccionada"/></tooltip>
+                </Button>
+            </HBox>
+        </VBox>
+    </center>
+
+</BorderPane>

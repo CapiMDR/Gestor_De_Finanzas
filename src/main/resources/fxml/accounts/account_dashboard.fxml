@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<!--
+    Reports View Layout Account Dashboard
+    Controller: reports.report_view.ReportsViewFX
+    Stylesheet: /styles/app.css
+
+    This is the main dashboard screen shown after selecting an account.
+    It has two roles:
+      1. Navigation hub: buttons to access all other modules
+      2. Account summary: name, balance, and time-filtered charts
+
+    Mirrors the structure of FrmMain.java (Swing):
+      - Top bar:    account name + balance + time filter buttons
+      - Left panel: module navigation icons
+      - Center:     pie chart (income/expense) + bar chart (movements by date)
+-->
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="accounts.account_controller.AccountDashboardController"
+            styleClass="root-pane">
+
+    <!-- TOP  Account name, balance, and chart filter buttons -->
+    <top>
+        <VBox styleClass="dashboard-header" alignment="CENTER" spacing="5">
+
+            <!-- Account name -->
+            <Label fx:id="lblAccountName" text="Cuenta"
+                   styleClass="dashboard-account-name"/>
+
+            <!-- Balance + icon row -->
+            <HBox alignment="CENTER" spacing="10">
+                <Label fx:id="lblAccountBalance" text="\$0.00"
+                       styleClass="dashboard-balance"/>
+                <FontIcon fx:id="accountIcon" iconLiteral="mdi2p-piggy-bank" iconSize="48" iconColor="#112B3C"/>
+            </HBox>
+
+            <!-- Time filter row -->
+            <HBox alignment="CENTER" spacing="10">
+                <Button fx:id="btnToday" text="Hoy"    styleClass="btn-filter"/>
+                <Button fx:id="btnYesterday" text="Ayer" styleClass="btn-filter"/>
+                <Button fx:id="btnCurrentWeek" text="Semana Actual" styleClass="btn-filter"/>
+                <Button fx:id="btnWeek"  text="Ultimos 7 dias" styleClass="btn-filter"/>
+            </HBox>
+
+        </VBox>
+    </top>
+    
+    <left>
+        <VBox styleClass="nav-panel" spacing="8">
+
+            <HBox fx:id="navAddMovement" styleClass="nav-item" alignment="CENTER_LEFT" spacing="10">
+                <FontIcon iconLiteral="mdi2p-plus-circle" iconSize="24"/>
+                <Label text="Agregar Movimiento" styleClass="nav-label" wrapText="true"/>
+            </HBox>
+
+            <HBox fx:id="navGoals" styleClass="nav-item" alignment="CENTER_LEFT" spacing="10">
+                <FontIcon iconLiteral="mdi2f-flag" iconSize="24"/>
+                <Label text="Metas" styleClass="nav-label" wrapText="true"/>
+            </HBox>
+
+            <HBox fx:id="navReminders" styleClass="nav-item" alignment="CENTER_LEFT" spacing="10">
+                <FontIcon iconLiteral="mdi2b-bell" iconSize="24"/>
+                <Label text="Recordatorios" styleClass="nav-label" wrapText="true"/>
+            </HBox>
+
+            <HBox fx:id="navRecurrings" styleClass="nav-item" alignment="CENTER_LEFT" spacing="10">
+                <FontIcon iconLiteral="mdi2r-repeat" iconSize="24"/>
+                <Label text="Recurrentes" styleClass="nav-label" wrapText="true"/>
+            </HBox>
+
+            <HBox fx:id="navFilters" styleClass="nav-item" alignment="CENTER_LEFT" spacing="10">
+                <FontIcon iconLiteral="mdi2m-magnify" iconSize="24"/>
+                <Label text="Filtro de movimientos" styleClass="nav-label" wrapText="true"/>
+            </HBox>
+
+        </VBox>
+    </left>
+
+    <!--  CENTER  Charts area (pie + bar) -->
+    <center>
+        <VBox styleClass="charts-panel" spacing="12">
+
+            <!-- Pie chart: income vs expense distribution -->
+            <PieChart fx:id="pieChartMovements"
+                      title="Movimientos"
+                      styleClass="dashboard-chart"
+                      VBox.vgrow="ALWAYS"/>
+
+            <!-- Bar chart: movement amounts by date -->
+            <BarChart fx:id="barChartMovements"
+                      styleClass="dashboard-chart"
+                      VBox.vgrow="ALWAYS">
+                <xAxis>
+                    <CategoryAxis label="Fecha"/>
+                </xAxis>
+                <yAxis>
+                    <NumberAxis label="Monto ($)"/>
+                </yAxis>
+            </BarChart>
+
+        </VBox>
+    </center>
+
+</BorderPane>

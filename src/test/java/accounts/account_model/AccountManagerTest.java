@@ -1,7 +1,15 @@
 package accounts.account_model;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+import config.AppConfig;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+import static org.mockito.Mockito.mockStatic;
 
 import accounts.account_model.Account.AccountType;
 import accounts.account_model.Account.Coin;
@@ -15,9 +23,21 @@ import java.util.List;
 
 class AccountManagerTest {
 
+    private MockedStatic<AppConfig> mockedAppConfig;
+    private Path tempAccountsFile;
+
     @BeforeEach
-    void setUp() {
+    void setUp() throws IOException {
+        tempAccountsFile = Files.createTempFile("test_accounts_", ".json");
+        mockedAppConfig = mockStatic(AppConfig.class);
+        mockedAppConfig.when(AppConfig::getAccountsFilePath).thenReturn(tempAccountsFile.toString());
         AccountManager.clearForTesting();
+    }
+
+    @AfterEach
+    void tearDown() throws IOException {
+        mockedAppConfig.close();
+        Files.deleteIfExists(tempAccountsFile);
     }
 
     @Test

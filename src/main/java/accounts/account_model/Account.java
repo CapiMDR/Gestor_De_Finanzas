@@ -19,7 +19,7 @@ public class Account {
      * Available account types.
      */
     public enum AccountType {
-        /** Cash account. */
+        /** Fisical account. */
         CASH,
         /** Digital account. */
         DIGITAL

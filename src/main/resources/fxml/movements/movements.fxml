@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<!--
+    Movements Module — Income & Expense Management View
+    Controller: movements.movement_view.MovementsViewFX
+
+    Structure:
+      Top:    Header bar with account name chip
+      Center: TabPane with two symmetric tabs:
+                - "Ingresos" tab  (green accent): amount, category, date, description
+                - "Egresos"  tab  (red accent):   amount, category, date, description
+      Each tab has its own "Agregar" button and "Gestionar categorías" link.
+-->
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="movements.movement_view.MovementsViewFX"
+            styleClass="root-pane">
+
+    <!-- Header -->
+    <top>
+        <HBox styleClass="header-bar" spacing="15" alignment="CENTER_LEFT">
+            <Label text="MOVIMIENTOS" styleClass="header-title"/>
+            <!-- Account name chip injected at runtime via fx:id -->
+            <Label fx:id="lblAccountName"
+                   style="-fx-background-color: rgba(255,255,255,0.15);
+                          -fx-background-radius: 20px;
+                          -fx-padding: 5px 15px;
+                          -fx-text-fill: white;
+                          -fx-font-size: 14px;
+                          -fx-font-weight: bold;"/>
+            <Region HBox.hgrow="ALWAYS" />
+            <Button fx:id="btnVolver" text="Volver" styleClass="btn-back" 
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-border-color: white; -fx-border-radius: 4px;"/>
+        </HBox>
+    </top>
+
+    <!-- Content: two symmetric forms side by side -->
+    <center>
+        <ScrollPane fitToWidth="true" fitToHeight="true" style="-fx-background-color: transparent; -fx-background: transparent;">
+            <HBox spacing="20" alignment="TOP_CENTER" style="-fx-padding: 20px;">
+
+            <!-- ■■■ INCOME panel (left, pastel blue) ■■■■■■■■■■■■■■■■■■■■ -->
+            <VBox styleClass="form-panel" HBox.hgrow="ALWAYS" spacing="12" minWidth="350"
+                  style="-fx-background-color: #EBF8FF; -fx-background-radius: 8px; -fx-border-color: #bee3f8; -fx-border-radius: 8px;">
+                <padding><Insets top="25" right="20" bottom="20" left="20"/></padding>
+
+                <Label text="Agregar Ingreso" styleClass="form-section-title"
+                       style="-fx-text-fill: #2B6CB0;"/>
+                <Separator/>
+
+                <Label text="Cuenta:" styleClass="form-label"/>
+                <TextField fx:id="txtAccountIncome" styleClass="form-input"
+                           editable="false" focusTraversable="false"
+                           style="-fx-opacity: 0.7;"/>
+
+                <Label text="Monto: $" styleClass="form-label"/>
+                <TextField fx:id="txtAmountIncome" styleClass="form-input" promptText="0.00"/>
+
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <Label text="Categoría:" styleClass="form-label"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="btnAddCategoryIncome" text="+ Gestionar"
+                            styleClass="btn-secondary" style="-fx-font-size: 12px; -fx-padding: 4px 10px;"/>
+                </HBox>
+                <ListView fx:id="listCategoriesIncome" styleClass="list-view"
+                          minHeight="140" prefHeight="140"/>
+
+                <Label text="Fecha:" styleClass="form-label"/>
+                <DatePicker fx:id="datePickerIncome" styleClass="form-input" maxWidth="Infinity"/>
+
+                <Label text="Descripción:" styleClass="form-label"/>
+                <TextArea fx:id="txtDescriptionIncome" styleClass="form-input"
+                          promptText="Descripción del ingreso..."
+                          prefRowCount="3" wrapText="true"/>
+
+                <Region VBox.vgrow="ALWAYS"/>
+                <Button fx:id="btnAddIncome" text="Agregar Ingreso"
+                        styleClass="btn-primary" maxWidth="Infinity"
+                        style="-fx-background-color: #3182CE; -fx-text-fill: white;"/>
+            </VBox>
+
+            <!-- ■■■ EXPENSE panel (right, pastel red) ■■■■■■■■■■■■■■■■■■■ -->
+            <VBox styleClass="form-panel" HBox.hgrow="ALWAYS" spacing="12" minWidth="350"
+                  style="-fx-background-color: #FEF2F2; -fx-background-radius: 8px; -fx-border-color: #fecaca; -fx-border-radius: 8px;">
+                <padding><Insets top="25" right="20" bottom="20" left="20"/></padding>
+
+                <Label text="Agregar Egreso" styleClass="form-section-title"
+                       style="-fx-text-fill: #DD6B20;"/>
+                <Separator/>
+
+                <Label text="Cuenta:" styleClass="form-label"/>
+                <TextField fx:id="txtAccountExpense" styleClass="form-input"
+                           editable="false" focusTraversable="false"
+                           style="-fx-opacity: 0.7;"/>
+
+                <Label text="Monto: $" styleClass="form-label"/>
+                <TextField fx:id="txtAmountExpense" styleClass="form-input" promptText="0.00"/>
+
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <Label text="Categoría:" styleClass="form-label"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="btnAddCategoryExpense" text="+ Gestionar"
+                            styleClass="btn-secondary" style="-fx-font-size: 12px; -fx-padding: 4px 10px;"/>
+                </HBox>
+                <ListView fx:id="listCategoriesExpense" styleClass="list-view"
+                          minHeight="140" prefHeight="140"/>
+
+                <Label text="Fecha:" styleClass="form-label"/>
+                <DatePicker fx:id="datePickerExpense" styleClass="form-input" maxWidth="Infinity"/>
+
+                <Label text="Descripción:" styleClass="form-label"/>
+                <TextArea fx:id="txtDescriptionExpense" styleClass="form-input"
+                          promptText="Descripción del egreso..."
+                          prefRowCount="3" wrapText="true"/>
+
+                <Region VBox.vgrow="ALWAYS"/>
+                <Button fx:id="btnAddExpense" text="Agregar Egreso"
+                        styleClass="btn-primary" maxWidth="Infinity"
+                        style="-fx-background-color: #DD6B20; -fx-text-fill: white;"/>
+            </VBox>
+
+            </HBox>
+        </ScrollPane>
+    </center>
+
+</BorderPane>

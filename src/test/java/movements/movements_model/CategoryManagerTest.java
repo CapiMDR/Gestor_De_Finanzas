@@ -1,28 +1,47 @@
 package movements.movements_model;
 
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+import config.AppConfig;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+import static org.mockito.Mockito.mockStatic;
 
 import movements.movement_model.CategoryManager;
 import movements.movement_model.MovementCategory;
-import movements.movement_model.MovementManagerSubject;
 import movements.movement_model.MovementCategory.MovementType;
 import accounts.account_model.JsonDataHandler;
 class CategoryManagerTest {
 
     private CategoryManager categoryManager;
-    private MovementManagerSubject subject;
+
     private JsonDataHandler dataHandler;
 
+    private MockedStatic<AppConfig> mockedAppConfig;
+    private Path tempCategoriesFile;
+
     @BeforeEach
-    void setUp() {
-        subject = new MovementManagerSubject();
+    void setUp() throws IOException {
+        tempCategoriesFile = Files.createTempFile("test_categories_", ".json");
+        mockedAppConfig = mockStatic(AppConfig.class);
+        mockedAppConfig.when(AppConfig::getCategoriesFilePath).thenReturn(tempCategoriesFile.toString());
+
         dataHandler = new JsonDataHandler(); 
         
-        categoryManager = new CategoryManager(subject, dataHandler);
+        categoryManager = new CategoryManager(dataHandler);
         
         categoryManager.getCategories().clear();
+    }
+
+    @AfterEach
+    void tearDown() throws IOException {
+        mockedAppConfig.close();
+        Files.deleteIfExists(tempCategoriesFile);
     }
 
     @Test

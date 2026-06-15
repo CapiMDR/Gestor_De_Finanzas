@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<DialogPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="config.SettingsPanelController"
+            styleClass="settings-dialog">
+
+    <content>
+        <VBox spacing="20">
+            <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+            <!-- Modo de notificaciones -->
+            <VBox spacing="8">
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="Notificaciones y Recordatorios" styleClass="settings-section-title"/>
+                    <Label styleClass="settings-help-label">
+                        <tooltip><Tooltip text="Activa el modo en segundo plano para seguir recibiendo recordatorios incluso cuando cierres la ventana principal."/></tooltip>
+                        <graphic>
+                            <FontIcon iconLiteral="mdi2h-help-circle-outline" iconSize="18" styleClass="settings-help-icon" />
+                        </graphic>
+                    </Label>
+                </HBox>
+                <RadioButton fx:id="rbSoloPrimerPlano" text="Solo con la aplicación abierta (Primer Plano)" />
+                <RadioButton fx:id="rbSegundoPlano" text="Permitir notificaciones en Segundo Plano" />
+            </VBox>
+
+            <Separator />
+
+            <!-- Iniciar con Windows -->
+            <VBox spacing="8">
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="Arranque del Sistema" styleClass="settings-section-title"/>
+                    <Label styleClass="settings-help-label">
+                        <tooltip><Tooltip text="Si se activa, la aplicación se iniciará automáticamente, pero de forma silenciosa, cuando enciendas tu computadora."/></tooltip>
+                        <graphic>
+                            <FontIcon iconLiteral="mdi2h-help-circle-outline" iconSize="18" styleClass="settings-help-icon" />
+                        </graphic>
+                    </Label>
+                </HBox>
+                <CheckBox fx:id="chkAutostart" text="Iniciar automáticamente con Windows" />
+            </VBox>
+        </VBox>
+    </content>
+
+    <buttonTypes>
+        <ButtonType fx:constant="APPLY" />
+        <ButtonType fx:constant="CANCEL" />
+    </buttonTypes>
+
+</DialogPane>

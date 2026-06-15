@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<DialogPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="reminders.reminder_controller.ReminderEditController"
+            prefWidth="400" prefHeight="300"
+            styleClass="root-pane">
+
+    <header>
+        <Label text="EDITAR RECORDATORIO" styleClass="header-title"/>
+    </header>
+
+    <content>
+        <VBox spacing="10" styleClass="form-panel">
+            <Label text="Nombre:" styleClass="form-label"/>
+            <TextField fx:id="txtReminderName" styleClass="form-input"/>
+
+            <Label text="Mensaje:" styleClass="form-label"/>
+            <TextField fx:id="txtMessage" styleClass="form-input"/>
+
+            <Label text="Fecha:" styleClass="form-label"/>
+            <DatePicker fx:id="datePicker" styleClass="form-input" maxWidth="Infinity"/>
+            
+            <Label text="Hora:" styleClass="form-label"/>
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <ComboBox fx:id="cmbHour" prefWidth="90" styleClass="form-input"/>
+                <Label text=":" styleClass="form-label" style="-fx-font-weight: bold;"/>
+                <ComboBox fx:id="cmbMinute" prefWidth="90" styleClass="form-input"/>
+            </HBox>
+        </VBox>
+    </content>
+
+    <ButtonType fx:constant="OK" />
+    <ButtonType fx:constant="CANCEL" />
+</DialogPane>

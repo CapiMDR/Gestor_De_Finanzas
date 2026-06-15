@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<!--
+    Account Module — Full Interactive Layout
+    Controller: accounts.account_view.AccountViewFX
+
+    Structure:
+      Top:    Header bar "GESTIÓN DE CUENTAS"
+      Left:   Account creation form (name, type, currency, initial balance + Add button)
+      Center: Accounts list + action toolbar (Edit, Delete, Interest calc, Enter)
+-->
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="accounts.account_view.AccountViewFX"
+            styleClass="root-pane">
+
+    <!-- Header -->
+    <top>
+        <HBox styleClass="header-bar" spacing="15" alignment="CENTER_LEFT">
+            <Label text="GESTIÓN DE CUENTAS" styleClass="header-title"/>
+        </HBox>
+    </top>
+
+    <!-- Left: Account creation form -->
+    <left>
+        <VBox styleClass="form-panel" spacing="12">
+            <padding><Insets top="25" right="20" bottom="25" left="20"/></padding>
+            <Label text="Nueva cuenta" styleClass="form-section-title"/>
+            <Separator/>
+
+            <Label text="Nombre:" styleClass="form-label"/>
+            <VBox spacing="4">
+                <TextField fx:id="txtNameAccount" styleClass="form-input"
+                           promptText="Ej. Cuenta de ahorros"/>
+                <Label text="Máximo 24 caracteres" style="-fx-text-fill: #9CA3AF; -fx-font-size: 11px;"/>
+            </VBox>
+
+            <Label text="Tipo:" styleClass="form-label"/>
+            <ComboBox fx:id="cmbAccountType" styleClass="form-input"
+                      maxWidth="Infinity" promptText="Selecciona un tipo"/>
+
+            <Label text="Moneda:" styleClass="form-label"/>
+            <ComboBox fx:id="cmbCurrency" styleClass="form-input"
+                      maxWidth="Infinity" promptText="Selecciona una moneda"/>
+
+            <Label text="Saldo inicial: $" styleClass="form-label"/>
+            <TextField fx:id="txtInitialBalance" styleClass="form-input"
+                       promptText="0.00"/>
+
+            <Region VBox.vgrow="ALWAYS"/>
+
+            <Button fx:id="btnAddAccount" text="Agregar cuenta"
+                    styleClass="btn-primary" maxWidth="Infinity"/>
+        </VBox>
+    </left>
+
+    <!-- Center: Accounts list + action buttons -->
+    <center>
+        <VBox styleClass="list-panel" spacing="16"
+              style="-fx-background-color: rgba(32, 83, 117, 0.04);">
+            <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+            <Label text="Mis cuentas" styleClass="form-section-title"/>
+
+            <ListView fx:id="listAccounts" styleClass="list-view" VBox.vgrow="ALWAYS"/>
+
+            <!-- Action row: icon buttons and primary action -->
+            <HBox spacing="15" alignment="CENTER">
+                <Button fx:id="btnEditAccount" styleClass="btn-icon">
+                    <graphic><FontIcon iconLiteral="mdi2p-pencil" iconSize="28"/></graphic>
+                    <tooltip><Tooltip text="Editar cuenta"/></tooltip>
+                </Button>
+                <Button fx:id="btnDeleteAccount" styleClass="btn-icon">
+                    <graphic><FontIcon iconLiteral="mdi2d-delete" iconSize="28"/></graphic>
+                    <tooltip><Tooltip text="Eliminar cuenta"/></tooltip>
+                </Button>
+                <Button fx:id="btnCalculateInterest" styleClass="btn-icon">
+                    <graphic><FontIcon iconLiteral="mdi2c-calculator" iconSize="28"/></graphic>
+                    <tooltip><Tooltip text="Calcular intereses"/></tooltip>
+                </Button>
+                
+                <Button fx:id="btnAccessAccount" text="Entrar a la Cuenta"
+                        styleClass="btn-primary"/>
+            </HBox>
+
+        </VBox>
+    </center>
+
+</BorderPane>
