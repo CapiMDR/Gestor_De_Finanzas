@@ -45,7 +45,7 @@ public class SystemTrayManager {
 
             // Load an icon (using a dummy fallback if none found)
             Image image = Toolkit.getDefaultToolkit().createImage(
-                    getClass().getResource("/icon.png") // Ensure this file exists in resources
+                    getClass().getResource("/images/piggy.png") // Ensure this file exists in resources
             );
 
             // Fallback if null
