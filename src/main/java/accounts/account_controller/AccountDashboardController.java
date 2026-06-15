@@ -215,11 +215,14 @@ public class AccountDashboardController implements AccountObserver, ReportObserv
         XYChart.Series<String, Number> series;
         if (barChartMovements.getData().isEmpty()) {
             series = new XYChart.Series<>();
-            series.getData().add(new XYChart.Data<>(LABEL_INGRESO, 0.0));
-            series.getData().add(new XYChart.Data<>(LABEL_EGRESO, 0.0));
             barChartMovements.getData().add(series);
         } else {
             series = barChartMovements.getData().get(0);
+        }
+        
+        if (series.getData().isEmpty()) {
+            series.getData().add(new XYChart.Data<>(LABEL_INGRESO, 0.0));
+            series.getData().add(new XYChart.Data<>(LABEL_EGRESO, 0.0));
         }
         
         series.setName(periodName);

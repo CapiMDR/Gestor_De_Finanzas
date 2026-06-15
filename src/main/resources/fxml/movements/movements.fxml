@@ -33,7 +33,7 @@
                           -fx-font-size: 14px;
                           -fx-font-weight: bold;"/>
             <Region HBox.hgrow="ALWAYS" />
-            <Button fx:id="btnVolver" text="Dashboard" styleClass="btn-back" 
+            <Button fx:id="btnVolver" text="Volver" styleClass="btn-back" 
                     style="-fx-background-color: transparent; -fx-text-fill: white; -fx-border-color: white; -fx-border-radius: 4px;"/>
         </HBox>
     </top>
@@ -52,7 +52,7 @@
                        style="-fx-text-fill: #2B6CB0;"/>
                 <Separator/>
 
-                <Label text="Cuenta destino:" styleClass="form-label"/>
+                <Label text="Cuenta:" styleClass="form-label"/>
                 <TextField fx:id="txtAccountIncome" styleClass="form-input"
                            editable="false" focusTraversable="false"
                            style="-fx-opacity: 0.7;"/>
@@ -92,7 +92,7 @@
                        style="-fx-text-fill: #DD6B20;"/>
                 <Separator/>
 
-                <Label text="Cuenta origen:" styleClass="form-label"/>
+                <Label text="Cuenta:" styleClass="form-label"/>
                 <TextField fx:id="txtAccountExpense" styleClass="form-input"
                            editable="false" focusTraversable="false"
                            style="-fx-opacity: 0.7;"/>
