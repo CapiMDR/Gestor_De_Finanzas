@@ -181,6 +181,12 @@ public class NotificationManager {
             logger.info("Notificaciones previas cargadas: {} items.", array.length());
         } catch (Exception e) {
             logger.error("Error al cargar notificaciones previas.", e);
+            try {
+                Files.copy(path, Paths.get(path.toString() + ".bak"), StandardCopyOption.REPLACE_EXISTING);
+                logger.error("Corrupted notifications file backed up to .bak");
+            } catch (IOException ioEx) {
+                logger.error("Failed to backup corrupted notifications file", ioEx);
+            }
         }
     }
 }

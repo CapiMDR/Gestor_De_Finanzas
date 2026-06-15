@@ -1,7 +1,5 @@
 package recurrings.recurring_model;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -88,15 +86,14 @@ public class RecurringJSONHandler {
      */
     public static TreeSet<RecurringMove> loadRecurrings() {
         TreeSet<RecurringMove> recMoves = new TreeSet<>(REMINDER_COMPARATOR);
-        StringBuilder jsonText = new StringBuilder();
+        java.io.File file = new java.io.File(AppConfig.getRecurringsFilePath());
+        if (!file.exists() || file.length() == 0) {
+            return recMoves;
+        }
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(AppConfig.getRecurringsFilePath()))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                jsonText.append(line);
-            }
-
-            JSONArray arr = new JSONArray(jsonText.toString());
+        try {
+            String content = Files.readString(Paths.get(AppConfig.getRecurringsFilePath()), StandardCharsets.UTF_8);
+            JSONArray arr = new JSONArray(content);
 
             for (int i = 0; i < arr.length(); i++) {
                 JSONObject obj = arr.getJSONObject(i);
@@ -122,7 +119,15 @@ public class RecurringJSONHandler {
             }
 
         } catch (IOException e) {
-            logger.error("Error loading recurring movements: {}", e.getMessage(), e);
+            logger.error("Error reading recurring movements file: {}", e.getMessage(), e);
+        } catch (Exception e) {
+            logger.error("Error parsing recurring movements JSON: {}", e.getMessage(), e);
+            try {
+                Files.copy(Paths.get(AppConfig.getRecurringsFilePath()), Paths.get(AppConfig.getRecurringsFilePath() + ".bak"), StandardCopyOption.REPLACE_EXISTING);
+                logger.error("Corrupted recurrings file backed up to .bak");
+            } catch (IOException ioEx) {
+                logger.error("Failed to backup corrupted recurrings file", ioEx);
+            }
         }
 
         logger.info("Recurring movements loaded — {} record(s).", recMoves.size());

@@ -1,7 +1,5 @@
 package reminders.reminder_model;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -84,15 +82,14 @@ public class ReminderJSONHandler {
      */
     public static TreeSet<Reminder> loadReminders() {
         TreeSet<Reminder> reminders = new TreeSet<>(REMINDER_COMPARATOR);
-        StringBuilder jsonText = new StringBuilder();
+        java.io.File file = new java.io.File(AppConfig.getRemindersFilePath());
+        if (!file.exists() || file.length() == 0) {
+            return reminders;
+        }
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(AppConfig.getRemindersFilePath()))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                jsonText.append(line);
-            }
-
-            JSONArray arr = new JSONArray(jsonText.toString());
+        try {
+            String content = Files.readString(Paths.get(AppConfig.getRemindersFilePath()), StandardCharsets.UTF_8);
+            JSONArray arr = new JSONArray(content);
 
             for (int i = 0; i < arr.length(); i++) {
                 JSONObject obj = arr.getJSONObject(i);
@@ -110,7 +107,15 @@ public class ReminderJSONHandler {
             }
 
         } catch (IOException e) {
-            logger.error("Error loading reminders: {}", e.getMessage(), e);
+            logger.error("Error reading reminders file: {}", e.getMessage(), e);
+        } catch (Exception e) {
+            logger.error("Error parsing reminders JSON: {}", e.getMessage(), e);
+            try {
+                Files.copy(Paths.get(AppConfig.getRemindersFilePath()), Paths.get(AppConfig.getRemindersFilePath() + ".bak"), StandardCopyOption.REPLACE_EXISTING);
+                logger.error("Corrupted reminders file backed up to .bak");
+            } catch (IOException ioEx) {
+                logger.error("Failed to backup corrupted reminders file", ioEx);
+            }
         }
 
         logger.info("Reminders loaded — {} reminder(s).", reminders.size());

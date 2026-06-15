@@ -198,26 +198,40 @@ public class AccountDashboardController implements AccountObserver, ReportObserv
     }
 
     private void updatePieChart(BigDecimal income, BigDecimal expense) {
-        pieChartMovements.getData().clear();
-        if (income.compareTo(BigDecimal.ZERO) > 0) {
-            pieChartMovements.getData().add(new PieChart.Data(LABEL_INGRESO, income.doubleValue()));
+        if (pieChartMovements.getData().isEmpty()) {
+            pieChartMovements.getData().add(new PieChart.Data(LABEL_INGRESO, 0));
+            pieChartMovements.getData().add(new PieChart.Data(LABEL_EGRESO, 0));
         }
-        if (expense.compareTo(BigDecimal.ZERO) > 0) {
-            pieChartMovements.getData().add(new PieChart.Data(LABEL_EGRESO, expense.doubleValue()));
+        for (PieChart.Data d : pieChartMovements.getData()) {
+            if (LABEL_INGRESO.equals(d.getName())) {
+                d.setPieValue(income.doubleValue());
+            } else if (LABEL_EGRESO.equals(d.getName())) {
+                d.setPieValue(expense.doubleValue());
+            }
         }
     }
 
     private XYChart.Series<String, Number> updateBarChart(String periodName, BigDecimal income, BigDecimal expense) {
-        barChartMovements.getData().clear();
-        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        XYChart.Series<String, Number> series;
+        if (barChartMovements.getData().isEmpty()) {
+            series = new XYChart.Series<>();
+            series.getData().add(new XYChart.Data<>(LABEL_INGRESO, 0.0));
+            series.getData().add(new XYChart.Data<>(LABEL_EGRESO, 0.0));
+            barChartMovements.getData().add(series);
+        } else {
+            series = barChartMovements.getData().get(0);
+        }
+        
         series.setName(periodName);
-        if (income.compareTo(BigDecimal.ZERO) > 0) {
-            series.getData().add(new XYChart.Data<>(LABEL_INGRESO, income.doubleValue()));
+
+        for (XYChart.Data<String, Number> d : series.getData()) {
+            if (LABEL_INGRESO.equals(d.getXValue())) {
+                d.setYValue(income.doubleValue());
+            } else if (LABEL_EGRESO.equals(d.getXValue())) {
+                d.setYValue(expense.doubleValue());
+            }
         }
-        if (expense.compareTo(BigDecimal.ZERO) > 0) {
-            series.getData().add(new XYChart.Data<>(LABEL_EGRESO, expense.doubleValue()));
-        }
-        barChartMovements.getData().add(series);
+        
         return series;
     }
 

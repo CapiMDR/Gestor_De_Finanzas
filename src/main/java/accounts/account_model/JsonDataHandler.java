@@ -304,7 +304,7 @@ public class JsonDataHandler {
         }
 
         try {
-            String content = new String(Files.readAllBytes(Paths.get(AppConfig.getAccountsFilePath())));
+            String content = Files.readString(Paths.get(AppConfig.getAccountsFilePath()), StandardCharsets.UTF_8);
             JSONArray jsonArray = new JSONArray(content);
             List<Account> loaded = jsonToAccounts(jsonArray);
             logger.info("Accounts loaded successfully — {} account(s).", loaded.size());
@@ -313,6 +313,12 @@ public class JsonDataHandler {
             logger.error("Error reading accounts file: {}", e.getMessage(), e);
         } catch (Exception e) {
             logger.error("Error parsing accounts JSON: {}", e.getMessage(), e);
+            try {
+                Files.copy(Paths.get(AppConfig.getAccountsFilePath()), Paths.get(AppConfig.getAccountsFilePath() + ".bak"), StandardCopyOption.REPLACE_EXISTING);
+                logger.error("Corrupted accounts file backed up to .bak");
+            } catch (IOException ioEx) {
+                logger.error("Failed to backup corrupted accounts file", ioEx);
+            }
         }
         return new ArrayList<>();
     }
@@ -329,7 +335,7 @@ public class JsonDataHandler {
         }
 
         try {
-            String content = new String(Files.readAllBytes(Paths.get(AppConfig.getCategoriesFilePath())));
+            String content = Files.readString(Paths.get(AppConfig.getCategoriesFilePath()), StandardCharsets.UTF_8);
             JSONArray jsonArray = new JSONArray(content);
             HashMap<String, MovementCategory> cats = jsonToCategories(jsonArray);
             logger.info("Categories loaded successfully — {} category/categories.", cats.size());
@@ -338,6 +344,12 @@ public class JsonDataHandler {
             logger.error("Error reading categories file: {}", e.getMessage(), e);
         } catch (Exception e) {
             logger.error("Error parsing categories JSON: {}", e.getMessage(), e);
+            try {
+                Files.copy(Paths.get(AppConfig.getCategoriesFilePath()), Paths.get(AppConfig.getCategoriesFilePath() + ".bak"), StandardCopyOption.REPLACE_EXISTING);
+                logger.error("Corrupted categories file backed up to .bak");
+            } catch (IOException ioEx) {
+                logger.error("Failed to backup corrupted categories file", ioEx);
+            }
         }
         return new HashMap<>();
     }

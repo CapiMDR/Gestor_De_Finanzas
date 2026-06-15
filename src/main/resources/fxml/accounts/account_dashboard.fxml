@@ -7,30 +7,26 @@
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
 <!--
-    Reports View Layout â€” Account Dashboard
+    Reports View Layout Account Dashboard
     Controller: reports.report_view.ReportsViewFX
     Stylesheet: /styles/app.css
 
     This is the main dashboard screen shown after selecting an account.
     It has two roles:
-      1. Navigation hub â€” buttons to access all other modules
-      2. Account summary â€” name, balance, and time-filtered charts
+      1. Navigation hub: buttons to access all other modules
+      2. Account summary: name, balance, and time-filtered charts
 
     Mirrors the structure of FrmMain.java (Swing):
       - Top bar:    account name + balance + time filter buttons
       - Left panel: module navigation icons
       - Center:     pie chart (income/expense) + bar chart (movements by date)
-
-    TODO: Implement full layout â€” Phase 3.4 (Reports/Dashboard module migration)
 -->
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="accounts.account_controller.AccountDashboardController"
             styleClass="root-pane">
 
-    <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-         TOP â€” Account name, balance, and chart filter buttons
-         â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+    <!-- TOP  Account name, balance, and chart filter buttons -->
     <top>
         <VBox styleClass="dashboard-header" alignment="CENTER" spacing="5">
 
@@ -87,9 +83,7 @@
         </VBox>
     </left>
 
-    <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-         CENTER â€” Charts area (pie + bar)
-         â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+    <!--  CENTER  Charts area (pie + bar) -->
     <center>
         <VBox styleClass="charts-panel" spacing="12">
 
