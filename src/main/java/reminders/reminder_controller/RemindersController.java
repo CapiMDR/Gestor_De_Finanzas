@@ -88,7 +88,7 @@ public class RemindersController {
      * be triggered yet, the following ones shouldn't either.
      */
     private void watchReminders() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now(java.time.ZoneId.systemDefault());
         for (Reminder reminder : remindersModel.getReminders()) {
             if (reminder.getDate().isAfter(now)) {
                 // Since reminders are sorted by date, if this one is in the future,
@@ -116,7 +116,7 @@ public class RemindersController {
                     notifications.notification_model.AppNotification.Tipo.RECORDATORIO,
                     "Recordatorio",
                     reminder.getName() + " - " + reminder.getMessage(),
-                    java.time.LocalDateTime.now()
+                    java.time.LocalDateTime.now(java.time.ZoneId.systemDefault())
                 )
             );
             refreshView();

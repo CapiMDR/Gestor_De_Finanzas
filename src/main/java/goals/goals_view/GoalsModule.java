@@ -38,10 +38,8 @@ public class GoalsModule {
             GoalDetailControllerFX detailController = new GoalDetailControllerFX();
 
             GoalsController controller = new GoalsController(view, editController, detailController);
-            if (selectedAccount != null) {
-                // Pass the account to the goals module
-                controller.setAccount(selectedAccount);
-            }
+            // Pass the account to the goals module
+            controller.setAccount(selectedAccount);
 
             Stage stage = new Stage();
             activeStages.put(accountId, stage);

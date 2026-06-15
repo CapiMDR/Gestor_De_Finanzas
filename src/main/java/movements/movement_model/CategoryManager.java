@@ -20,11 +20,7 @@ public class CategoryManager {
      */
     private HashMap<String, MovementCategory> categories;
 
-    /**
-     * Subject responsible for notifying observers when there is
-     * a change in the categories.
-     */
-    private MovementManagerSubject subject;
+
     protected JsonDataHandler dataHandler;
 
     /**
@@ -35,8 +31,8 @@ public class CategoryManager {
      * @param subject     Subject used to notify observers.
      * @param dataHandler Handler to load/save JSON data.
      */
-    public CategoryManager(MovementManagerSubject subject, JsonDataHandler dataHandler) {
-        this.subject = subject;
+    public CategoryManager(JsonDataHandler dataHandler) {
+        this.dataHandler = dataHandler;
         this.dataHandler = dataHandler;
         this.categories = dataHandler.loadCategories();
         if (this.categories == null) {
@@ -45,7 +41,6 @@ public class CategoryManager {
     }
 
     public CategoryManager() {
-        this.subject = new MovementManagerSubject();
         this.dataHandler = new JsonDataHandler();
         this.categories = dataHandler.loadCategories();
         if (this.categories == null) {
@@ -111,7 +106,5 @@ public class CategoryManager {
         return categories;
     }
 
-    public MovementManagerSubject getSubject() {
-        return subject;
-    }
+
 }

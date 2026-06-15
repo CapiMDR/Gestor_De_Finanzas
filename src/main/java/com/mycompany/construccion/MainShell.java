@@ -57,7 +57,7 @@ public class MainShell {
 
     @FXML
     public void initialize() {
-        instance = this;
+        setInstance(this);
 
         // Wire the "Mis Cuentas" tab (always first, not closeable)
         AccountsModule.embedInTab(mainTabPane);
@@ -316,5 +316,9 @@ public class MainShell {
                 == AppSettings.ModoNotificaciones.SOLO_PRIMER_PLANO) {
             NotificationManager.getInstance().guardarPendientes();
         }
+    }
+
+    private static void setInstance(MainShell shell) {
+        instance = shell;
     }
 }

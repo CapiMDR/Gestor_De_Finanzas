@@ -67,7 +67,7 @@ public class RecurringsModule {
             FXMLLoader loader = new FXMLLoader(RecurringsModule.class.getResource("/fxml/recurrings/recurrings.fxml"));
             Parent root = loader.load();
             RecurringsViewFX view = loader.getController();
-            if (selectedAccount != null) view.setAccountName(selectedAccount.getName());
+            view.setAccountName(selectedAccount.getName());
             if (onBack != null) {
                 view.setOnBack(() -> {
                     controller.setView(null);
@@ -84,5 +84,7 @@ public class RecurringsModule {
     }
 
     /** Forces static initialization so the background scheduler starts at app launch. */
-    public static void initGlobalRecurrings() {}
+    public static void initGlobalRecurrings() {
+        // Empty method to trigger static initialization block
+    }
 }

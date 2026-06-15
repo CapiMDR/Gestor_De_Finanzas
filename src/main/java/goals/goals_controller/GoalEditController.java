@@ -12,8 +12,10 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 
 public class GoalEditController {
+    private static final String STR_ERROR = "Error";
 
     public GoalEditController() {
+        // Default constructor
     }
 
     public boolean showEditDialog(Goal goal) {
@@ -39,13 +41,13 @@ public class GoalEditController {
                         String newDesc = view.getTxtDescription().getText().trim();
 
                         if (newName.isEmpty() || newTargetStr.isEmpty()) {
-                            showAlert("Error", "Nombre y Monto son requeridos.");
+                            showAlert(STR_ERROR, "Nombre y Monto son requeridos.");
                             return null;
                         }
 
                         BigDecimal newTarget = new BigDecimal(newTargetStr);
                         if (newTarget.compareTo(BigDecimal.ZERO) <= 0) {
-                            showAlert("Error", "El monto debe ser mayor a 0.");
+                            showAlert(STR_ERROR, "El monto debe ser mayor a 0.");
                             return null;
                         }
 
@@ -55,7 +57,7 @@ public class GoalEditController {
 
                         return ButtonType.OK;
                     } catch (NumberFormatException e) {
-                        showAlert("Error", "Monto inválido.");
+                        showAlert(STR_ERROR, "Monto inválido.");
                         return null;
                     }
                 }

@@ -11,7 +11,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import java.util.Arrays;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -85,7 +84,7 @@ class RecurringsControllerTest {
     @Test
     @DisplayName("should refresh view when setView is called")
     void testSetViewRefreshesList() {
-        when(mockModel.getRecurrings()).thenReturn(new java.util.TreeSet<>());
+        lenient().when(mockModel.getRecurrings()).thenReturn(new java.util.TreeSet<>(recurrings.recurring_model.RecurringJSONHandler.REMINDER_COMPARATOR));
         controller.setView(mockView);
     }
 
@@ -96,7 +95,9 @@ class RecurringsControllerTest {
         RecurringMove mockMove = new RecurringMove("Rent", new BigDecimal("500"), "Desc", 
                 LocalDateTime.now().minusMinutes(5), RecurrenceType.Mensual, mockCat);
         
-        when(mockModel.getRecurrings()).thenReturn(new java.util.TreeSet<>(Arrays.asList(mockMove)));
+        java.util.TreeSet<RecurringMove> set = new java.util.TreeSet<>(recurrings.recurring_model.RecurringJSONHandler.REMINDER_COMPARATOR);
+        set.add(mockMove);
+        when(mockModel.getRecurrings()).thenReturn(set);
         
         java.lang.reflect.Method method = RecurringsController.class.getDeclaredMethod("watchRecurrings");
         method.setAccessible(true);

@@ -20,7 +20,9 @@ public class RemindersModule {
     private static Stage activeStage;
     
     /** Forces static initialization to start the background thread globally. */
-    public static void initGlobalReminders() {}
+    public static void initGlobalReminders() {
+        // Empty method to trigger static initialization block
+    }
     
     public static void initReminders() {
         if (activeStage != null && activeStage.isShowing()) {
@@ -67,7 +69,7 @@ public class RemindersModule {
             Parent root = loader.load();
 
             RemindersViewFX view = loader.getController();
-            if (selectedAccount != null) view.setAccountName(selectedAccount.getName());
+            view.setAccountName(selectedAccount.getName());
             if (onBack != null) {
                 view.setOnBack(() -> {
                     controller.setView(null);

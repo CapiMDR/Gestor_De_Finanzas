@@ -13,6 +13,9 @@ import recurrings.recurring_model.RecurringMove;
 import recurrings.recurring_view.RecurringEditViewFX;
 
 public class RecurringEditController {
+    private static final String STR_INGRESO = "Ingreso";
+    private static final String STR_EGRESO = "Egreso";
+    private static final String STR_ERROR = "Error";
 
     public RecurringMove showEditDialog(RecurringMove oldRecMove) {
         try {
@@ -46,13 +49,13 @@ public class RecurringEditController {
     }
 
     private void populateFields(RecurringMove oldRecMove, RecurringEditViewFX view) {
-        view.getCmbCategory().getItems().addAll("Ingreso", "Egreso");
+        view.getCmbCategory().getItems().addAll(STR_INGRESO, STR_EGRESO);
         view.getTxtDescription().setText(oldRecMove.getDescription());
         view.getTxtAmount().setText(oldRecMove.getAmount().toPlainString());
         if (oldRecMove.getCategory() != null && oldRecMove.getCategory().getType() != null) {
             String typeStr = oldRecMove.getCategory().getType().name();
-            if ("INCOME".equals(typeStr)) view.getCmbCategory().getSelectionModel().select("Ingreso");
-            else if ("EXPENSE".equals(typeStr)) view.getCmbCategory().getSelectionModel().select("Egreso");
+            if ("INCOME".equals(typeStr)) view.getCmbCategory().getSelectionModel().select(STR_INGRESO);
+            else if ("EXPENSE".equals(typeStr)) view.getCmbCategory().getSelectionModel().select(STR_EGRESO);
         }
         view.getDatePicker().setValue(oldRecMove.getInitialDate().toLocalDate());
     }
@@ -64,19 +67,19 @@ public class RecurringEditController {
         java.time.LocalDate date = view.getDatePicker().getValue();
 
         if (desc.isEmpty() || amountStr.isEmpty() || categoryStr == null || date == null) {
-            showAlert("Error", "Todos los campos son requeridos.");
+            showAlert(STR_ERROR, "Todos los campos son requeridos.");
             return false;
         }
 
         try {
             BigDecimal amount = new BigDecimal(amountStr);
             if (amount.compareTo(BigDecimal.ZERO) <= 0) {
-                showAlert("Error", "El monto debe ser mayor a 0.");
+                showAlert(STR_ERROR, "El monto debe ser mayor a 0.");
                 return false;
             }
             return true;
         } catch (NumberFormatException e) {
-            showAlert("Error", "Monto inválido.");
+            showAlert(STR_ERROR, "Monto inválido.");
             return false;
         }
     }
@@ -85,7 +88,7 @@ public class RecurringEditController {
         String desc = view.getTxtDescription().getText().trim();
         BigDecimal amount = new BigDecimal(view.getTxtAmount().getText().trim());
         String categoryStr = view.getCmbCategory().getSelectionModel().getSelectedItem();
-        String typeEnumStr = "Ingreso".equals(categoryStr) ? "INCOME" : "EXPENSE";
+        String typeEnumStr = STR_INGRESO.equals(categoryStr) ? "INCOME" : "EXPENSE";
         MovementCategory category = new MovementCategory(typeEnumStr, MovementCategory.MovementType.valueOf(typeEnumStr));
         java.time.LocalDate date = view.getDatePicker().getValue();
 

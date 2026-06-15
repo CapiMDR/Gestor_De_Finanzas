@@ -9,7 +9,7 @@ import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
+
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -144,7 +144,7 @@ public class RecurringsController {
             Platform.runLater(() -> {
                 List<String> names = recurringsModel.getRecurrings().stream()
                         .map(RecurringMove::getConcept)
-                        .collect(Collectors.toList());
+                        .toList();
                 recurringsView.getListRecurrings().setItems(FXCollections.observableArrayList(names));
             });
         }
@@ -171,7 +171,7 @@ public class RecurringsController {
                     notifications.notification_model.AppNotification.Tipo.RECURRENTE_VENCIDO,
                     "Pago Recurrente",
                     "El movimiento recurrente '" + recMove.getConcept() + "' está listo para ser aplicado.",
-                    java.time.LocalDateTime.now()
+                    java.time.LocalDateTime.now(java.time.ZoneId.systemDefault())
                 )
             );
             showRecurringMoveView(recMove);
@@ -203,7 +203,7 @@ public class RecurringsController {
     private void performMovement(RecurringMove recMove, Account account) {
         Movement movement = new Movement(UUID.randomUUID(), recMove.getDescription(), recMove.getAmount(),
                 recMove.getCategory(),
-                account, LocalDateTime.now());
+                account, LocalDateTime.now(java.time.ZoneId.systemDefault()));
 
         account.addMovement(movement);
         AccountManager.saveAccountsData();
@@ -251,8 +251,7 @@ public class RecurringsController {
             LocalDateTime initialDate, RecurrenceType recurrence) {
         if (concept == null || concept.isEmpty()) return false;
         if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) return false;
-        if (amount.scale() > 2) return false;
-        return true;
+        return amount.scale() <= 2;
     }
 
     public void handleRecurringDeletion(RecurringMove recMove) {

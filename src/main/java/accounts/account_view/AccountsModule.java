@@ -17,6 +17,8 @@ import javafx.stage.Stage;
  */
 public class AccountsModule {
 
+    private AccountsModule() {}
+
     @SuppressWarnings("unused")
     private static AccountController accountController;
     private static Stage activeStage;

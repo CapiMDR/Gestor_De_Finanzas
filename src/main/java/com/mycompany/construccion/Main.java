@@ -46,11 +46,7 @@ public class Main extends Application {
             String version = utils.UIUtils.getAppVersion();
             primaryStage.setTitle("Gestor de Finanzas v" + version);
             
-            try {
-                primaryStage.getIcons().add(new javafx.scene.image.Image(getClass().getResourceAsStream("/images/piggy.png")));
-            } catch (Exception ex) {
-                logger.warn("No se pudo cargar el icono de la ventana", ex);
-            }
+            setAppIcon(primaryStage);
 
             primaryStage.setScene(scene);
             primaryStage.setMaximized(true);
@@ -78,5 +74,13 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    private void setAppIcon(javafx.stage.Stage stage) {
+        try {
+            stage.getIcons().add(new javafx.scene.image.Image(getClass().getResourceAsStream("/images/piggy.png")));
+        } catch (Exception ex) {
+            logger.warn("No se pudo cargar el icono de la ventana", ex);
+        }
     }
 }

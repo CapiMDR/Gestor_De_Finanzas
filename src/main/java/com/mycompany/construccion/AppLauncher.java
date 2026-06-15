@@ -8,9 +8,11 @@ package com.mycompany.construccion;
  */
 
 public class AppLauncher {
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(AppLauncher.class);
+
     public static void main(String[] args) {
         if (!config.SingleInstanceGuard.checkAndLock()) {
-            System.out.println("La aplicación ya está en ejecución.");
+            logger.warn("La aplicación ya está en ejecución.");
             System.exit(0);
         }
         Main.main(args);

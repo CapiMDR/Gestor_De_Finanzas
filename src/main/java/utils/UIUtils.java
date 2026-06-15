@@ -12,6 +12,8 @@ import javafx.scene.control.ComboBox;
 
 public class UIUtils {
 
+    private UIUtils() {}
+
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(UIUtils.class);
 
     /**

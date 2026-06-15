@@ -4,7 +4,6 @@ import accounts.account_model.Account;
 import accounts.account_model.JsonDataHandler;
 import movements.movement_controller.MovementController;
 import movements.movement_model.CategoryManager;
-import movements.movement_model.MovementManagerSubject;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -51,8 +50,7 @@ public class MovementsModule {
             MovementsViewFX movementView = loader.getController();
 
             JsonDataHandler testDataHandler = new JsonDataHandler();
-            MovementManagerSubject movementSubject = new MovementManagerSubject();
-            CategoryManager movementModel = new CategoryManager(movementSubject, testDataHandler);
+            CategoryManager movementModel = new CategoryManager(testDataHandler);
 
             // Controller registers itself as Observer and wires button events
             MovementController controller = new MovementController(movementModel, movementView, selectedAccount);
@@ -97,8 +95,7 @@ public class MovementsModule {
             Parent root = loader.load();
             MovementsViewFX movementView = loader.getController();
             JsonDataHandler dataHandler = new JsonDataHandler();
-            MovementManagerSubject movementSubject = new MovementManagerSubject();
-            CategoryManager movementModel = new CategoryManager(movementSubject, dataHandler);
+            CategoryManager movementModel = new CategoryManager(dataHandler);
             
             MovementController controller = new MovementController(movementModel, movementView, selectedAccount);
 

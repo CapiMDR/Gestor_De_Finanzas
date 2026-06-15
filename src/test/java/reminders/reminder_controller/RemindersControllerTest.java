@@ -11,12 +11,12 @@ import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import notifications.notification_controller.NotificationManager;
 import reminders.reminder_model.Reminder;
+import reminders.reminder_model.ReminderJSONHandler;
 import reminders.reminder_model.RemindersModel;
 import reminders.reminder_view.RemindersViewFX;
 
@@ -106,7 +106,10 @@ class RemindersControllerTest {
         Reminder pastReminder = new Reminder("Past", "Msg", LocalDateTime.now().minusMinutes(5));
         Reminder futureReminder = new Reminder("Future", "Msg", LocalDateTime.now().plusDays(1));
         
-        when(mockModel.getReminders()).thenReturn(new java.util.TreeSet<>(Arrays.asList(pastReminder, futureReminder)));
+        java.util.TreeSet<Reminder> set = new java.util.TreeSet<>(ReminderJSONHandler.REMINDER_COMPARATOR);
+        set.add(pastReminder);
+        set.add(futureReminder);
+        when(mockModel.getReminders()).thenReturn(set);
         
         // Use reflection to run the private watch task
         java.lang.reflect.Method method = RemindersController.class.getDeclaredMethod("watchReminders");

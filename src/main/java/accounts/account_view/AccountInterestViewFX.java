@@ -22,8 +22,12 @@ public class AccountInterestViewFX {
     public TextField getTxtTimeYears() { return txtTimeYears; }
     public Label getLblFutureBalance() { return lblFutureBalance; }
 
-    public void setAccount(accounts.account_model.Account account) {}
-    public void setOnBack(Runnable onBack) {}
+    public void setAccount(accounts.account_model.Account account) {
+        // No-op
+    }
+    public void setOnBack(Runnable onBack) {
+        // No-op
+    }
 
     /**
      * Loads the account interest view and returns its root node for embedding

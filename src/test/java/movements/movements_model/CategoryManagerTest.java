@@ -14,13 +14,12 @@ import static org.mockito.Mockito.mockStatic;
 
 import movements.movement_model.CategoryManager;
 import movements.movement_model.MovementCategory;
-import movements.movement_model.MovementManagerSubject;
 import movements.movement_model.MovementCategory.MovementType;
 import accounts.account_model.JsonDataHandler;
 class CategoryManagerTest {
 
     private CategoryManager categoryManager;
-    private MovementManagerSubject subject;
+
     private JsonDataHandler dataHandler;
 
     private MockedStatic<AppConfig> mockedAppConfig;
@@ -32,10 +31,9 @@ class CategoryManagerTest {
         mockedAppConfig = mockStatic(AppConfig.class);
         mockedAppConfig.when(AppConfig::getCategoriesFilePath).thenReturn(tempCategoriesFile.toString());
 
-        subject = new MovementManagerSubject();
         dataHandler = new JsonDataHandler(); 
         
-        categoryManager = new CategoryManager(subject, dataHandler);
+        categoryManager = new CategoryManager(dataHandler);
         
         categoryManager.getCategories().clear();
     }

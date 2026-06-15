@@ -68,6 +68,8 @@ public class AccountDashboardController implements AccountObserver, ReportObserv
 
     private static final String COLOR_INCOME = "color-income";
     private static final String COLOR_EXPENSE = "color-expense";
+    private static final String LABEL_INGRESO = "INGRESO";
+    private static final String LABEL_EGRESO = "EGRESO";
     private static final String BTN_FILTER_SELECTED = "btn-filter-selected";
 
     public void setAccount(Account account) {
@@ -198,10 +200,10 @@ public class AccountDashboardController implements AccountObserver, ReportObserv
     private void updatePieChart(BigDecimal income, BigDecimal expense) {
         pieChartMovements.getData().clear();
         if (income.compareTo(BigDecimal.ZERO) > 0) {
-            pieChartMovements.getData().add(new PieChart.Data("INGRESO", income.doubleValue()));
+            pieChartMovements.getData().add(new PieChart.Data(LABEL_INGRESO, income.doubleValue()));
         }
         if (expense.compareTo(BigDecimal.ZERO) > 0) {
-            pieChartMovements.getData().add(new PieChart.Data("EGRESO", expense.doubleValue()));
+            pieChartMovements.getData().add(new PieChart.Data(LABEL_EGRESO, expense.doubleValue()));
         }
     }
 
@@ -210,10 +212,10 @@ public class AccountDashboardController implements AccountObserver, ReportObserv
         XYChart.Series<String, Number> series = new XYChart.Series<>();
         series.setName(periodName);
         if (income.compareTo(BigDecimal.ZERO) > 0) {
-            series.getData().add(new XYChart.Data<>("INGRESO", income.doubleValue()));
+            series.getData().add(new XYChart.Data<>(LABEL_INGRESO, income.doubleValue()));
         }
         if (expense.compareTo(BigDecimal.ZERO) > 0) {
-            series.getData().add(new XYChart.Data<>("EGRESO", expense.doubleValue()));
+            series.getData().add(new XYChart.Data<>(LABEL_EGRESO, expense.doubleValue()));
         }
         barChartMovements.getData().add(series);
         return series;
@@ -223,7 +225,7 @@ public class AccountDashboardController implements AccountObserver, ReportObserv
         for (PieChart.Data d : pieChartMovements.getData()) {
             if (d.getNode() != null) {
                 d.getNode().getStyleClass().removeAll(COLOR_INCOME, COLOR_EXPENSE);
-                if ("INGRESO".equals(d.getName())) {
+                if (LABEL_INGRESO.equals(d.getName())) {
                     d.getNode().getStyleClass().add(COLOR_INCOME);
                 } else {
                     d.getNode().getStyleClass().add(COLOR_EXPENSE);
@@ -236,7 +238,7 @@ public class AccountDashboardController implements AccountObserver, ReportObserv
         for (XYChart.Data<String, Number> d : series.getData()) {
             if (d.getNode() != null) {
                 d.getNode().getStyleClass().removeAll(COLOR_INCOME, COLOR_EXPENSE);
-                if ("INGRESO".equals(d.getXValue())) {
+                if (LABEL_INGRESO.equals(d.getXValue())) {
                     d.getNode().getStyleClass().add(COLOR_INCOME);
                 } else {
                     d.getNode().getStyleClass().add(COLOR_EXPENSE);
@@ -247,16 +249,14 @@ public class AccountDashboardController implements AccountObserver, ReportObserv
 
     private void fixPieChartLegend() {
         for (javafx.scene.Node n : pieChartMovements.lookupAll(".chart-legend-item")) {
-            if (n instanceof javafx.scene.control.Label label) {
-                if (label.getGraphic() != null) {
+            if (n instanceof javafx.scene.control.Label label && label.getGraphic() != null) {
                     label.getGraphic().getStyleClass().removeAll(COLOR_INCOME, COLOR_EXPENSE);
-                    if ("INGRESO".equals(label.getText())) {
+                    if (LABEL_INGRESO.equals(label.getText())) {
                         label.getGraphic().getStyleClass().add(COLOR_INCOME);
-                    } else if ("EGRESO".equals(label.getText())) {
+                    } else if (LABEL_EGRESO.equals(label.getText())) {
                         label.getGraphic().getStyleClass().add(COLOR_EXPENSE);
                     }
                 }
-            }
         }
     }
 

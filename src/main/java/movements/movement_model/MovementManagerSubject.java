@@ -12,6 +12,7 @@ import java.util.List;
  * @author Martín Jesús Pool Chuc
  */
 public class MovementManagerSubject {
+    private MovementManagerSubject() {}
     private static List<CategoryObserver> observers = new ArrayList<>();
 
     public static void addObserver(CategoryObserver observer) {

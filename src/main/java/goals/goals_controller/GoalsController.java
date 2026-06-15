@@ -36,6 +36,8 @@ public class GoalsController implements AccountObserver {
     private final GoalEditController editController;
     private final GoalDetailControllerFX detailController;
 
+    private static final String STR_SELECCION_REQUERIDA = "Selección requerida";
+
     private Account currentAccount;
 
     public GoalsController(GoalsViewFX mainView,
@@ -50,7 +52,22 @@ public class GoalsController implements AccountObserver {
     }
 
     private void assignEvents() {
-        // Setup ListView to display only the goal names
+        setupListCellFactory();
+        mainView.getBtnAddGoal().setOnAction(e -> handleAddGoal());
+        mainView.getBtnEditGoal().setOnAction(e -> handleEditAction());
+        mainView.getBtnDeleteGoal().setOnAction(e -> handleDeleteAction());
+        
+        mainView.getListGoals().setOnMouseClicked(e -> {
+            if (e.getClickCount() == 2) handleViewDetailsAction();
+        });
+        mainView.getBtnViewGoalDetails().setOnAction(e -> handleViewDetailsAction());
+        
+        mainView.getListGoals().getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> handleListSelection());
+        
+        mainView.getProgressContainer().setVisible(false);
+    }
+
+    private void setupListCellFactory() {
         mainView.getListGoals().setCellFactory(param -> new ListCell<String>() {
             @Override
             protected void updateItem(String item, boolean empty) {
@@ -58,71 +75,50 @@ public class GoalsController implements AccountObserver {
                 setText(empty ? null : item);
             }
         });
+    }
 
-        // Add Goal
-        mainView.getBtnAddGoal().setOnAction(e -> handleAddGoal());
-
-        // Edit Goal
-        mainView.getBtnEditGoal().setOnAction(e -> {
-            Goal selected = getSelectedGoal();
-            if (selected != null) {
-                boolean saved = editController.showEditDialog(selected);
-                if (saved) {
-                    AccountManager.saveAccountsData();
-                    refreshView();
-                }
-            } else {
-                showAlert(AlertType.WARNING, "Selección requerida", "Por favor selecciona una meta para editar.");
+    private void handleEditAction() {
+        Goal selected = getSelectedGoal();
+        if (selected != null) {
+            if (editController.showEditDialog(selected)) {
+                AccountManager.saveAccountsData();
+                refreshView();
             }
-        });
+        } else {
+            showAlert(AlertType.WARNING, STR_SELECCION_REQUERIDA, "Por favor selecciona una meta para editar.");
+        }
+    }
 
-        // Delete Goal
-        mainView.getBtnDeleteGoal().setOnAction(e -> {
-            Goal selected = getSelectedGoal();
-            if (selected != null) {
-                handleDeleteGoal(selected);
-            } else {
-                showAlert(AlertType.WARNING, "Selección requerida", "Por favor selecciona una meta para eliminar.");
-            }
-        });
+    private void handleDeleteAction() {
+        Goal selected = getSelectedGoal();
+        if (selected != null) {
+            handleDeleteGoal(selected);
+        } else {
+            showAlert(AlertType.WARNING, STR_SELECCION_REQUERIDA, "Por favor selecciona una meta para eliminar.");
+        }
+    }
 
-        // View Details (Double click on list)
-        mainView.getListGoals().setOnMouseClicked(e -> {
-            if (e.getClickCount() == 2) {
-                Goal selected = getSelectedGoal();
-                if (selected != null) {
-                    detailController.showDetails(selected);
-                }
-            }
-        });
+    private void handleViewDetailsAction() {
+        Goal selected = getSelectedGoal();
+        if (selected != null) {
+            detailController.showDetails(selected);
+        } else {
+            showAlert(AlertType.WARNING, STR_SELECCION_REQUERIDA, "Por favor selecciona una meta para ver sus detalles.");
+        }
+    }
 
-        // View Details (Button click)
-        mainView.getBtnViewGoalDetails().setOnAction(e -> {
-            Goal selected = getSelectedGoal();
-            if (selected != null) {
-                detailController.showDetails(selected);
-            } else {
-                showAlert(AlertType.WARNING, "Selección requerida", "Por favor selecciona una meta para ver sus detalles.");
+    private void handleListSelection() {
+        Goal selected = getSelectedGoal();
+        if (selected != null) {
+            mainView.getProgressContainer().setVisible(true);
+            double progress = 0.0;
+            if (selected.getTargetAmount().compareTo(BigDecimal.ZERO) > 0) {
+                progress = selected.getCurrentAmount().divide(selected.getTargetAmount(), 4, java.math.RoundingMode.HALF_UP).doubleValue();
             }
-        });
-        
-        // Update progress bar on selection
-        mainView.getListGoals().getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            Goal selected = getSelectedGoal();
-            if (selected != null) {
-                mainView.getProgressContainer().setVisible(true);
-                double progress = 0.0;
-                if (selected.getTargetAmount().compareTo(BigDecimal.ZERO) > 0) {
-                    progress = selected.getCurrentAmount().divide(selected.getTargetAmount(), 4, java.math.RoundingMode.HALF_UP).doubleValue();
-                }
-                mainView.getProgressBarGoal().setProgress(Math.min(1.0, progress));
-            } else {
-                mainView.getProgressContainer().setVisible(false);
-            }
-        });
-
-        // Set initial state for progress container
-        mainView.getProgressContainer().setVisible(false);
+            mainView.getProgressBarGoal().setProgress(Math.min(1.0, progress));
+        } else {
+            mainView.getProgressContainer().setVisible(false);
+        }
     }
 
     private Goal getSelectedGoal() {
@@ -274,14 +270,12 @@ public class GoalsController implements AccountObserver {
         alert.setHeaderText(null);
         alert.setContentText("¿Estás seguro de que deseas eliminar la meta: " + goal.getName() + "?");
 
-        if (alert.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
-            if (currentAccount != null) {
+        if (alert.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK && currentAccount != null) {
                 logger.info("Goal deleted: '{}' from account '{}'.",
                         goal.getName(), currentAccount.getName());
                 currentAccount.getGoals().remove(goal);
                 AccountManager.saveAccountsData();
                 refreshView();
-            }
         }
     }
 

@@ -13,6 +13,8 @@ import java.net.ServerSocket;
  */
 public class SingleInstanceGuard {
 
+    private SingleInstanceGuard() {}
+
     private static final Logger logger = LoggerFactory.getLogger(SingleInstanceGuard.class);
     private static final int PORT = 49152; // A port in the dynamic/private range
 

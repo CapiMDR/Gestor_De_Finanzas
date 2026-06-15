@@ -10,6 +10,8 @@ import javafx.scene.Parent;
  */
 public class FilterModule {
 
+    private FilterModule() {}
+
     public static javafx.scene.Node loadForAccount(Account selectedAccount, Runnable onBack) {
         if (selectedAccount == null) return null;
         try {
@@ -17,7 +19,7 @@ public class FilterModule {
             Parent root = loader.load();
 
             FilterViewFX view = loader.getController();
-            if (selectedAccount != null) view.setAccountName(selectedAccount.getName());
+            view.setAccountName(selectedAccount.getName());
             FilterController controller = new FilterController();
             
             controller.setViewModule(view, selectedAccount);

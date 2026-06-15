@@ -26,6 +26,10 @@ import java.util.List;
  */
 public class FilterViewFX {
 
+    private static final String STR_TODAS = "TODAS";
+    private static final String CLASS_INCOME = "text-income";
+    private static final String CLASS_EXPENSE = "text-expense";
+
     @FXML
     private ComboBox<String> cmbCategory;
     @FXML
@@ -59,7 +63,7 @@ public class FilterViewFX {
                 if (onBack != null) onBack.run();
             });
         }
-        cmbCategory.getItems().addAll("TODAS", MovementType.INCOME.name(), MovementType.EXPENSE.name());
+        cmbCategory.getItems().addAll(STR_TODAS, MovementType.INCOME.name(), MovementType.EXPENSE.name());
         cmbCategory.getSelectionModel().selectFirst();
 
         btnApplyFilter.setOnAction(e -> applyFilter());
@@ -71,14 +75,14 @@ public class FilterViewFX {
                 super.updateItem(item, empty);
                 if (empty || item == null) {
                     setText(null);
-                    getStyleClass().removeAll("text-income", "text-expense");
+                    getStyleClass().removeAll(CLASS_INCOME, CLASS_EXPENSE);
                 } else {
                     setText(item);
-                    getStyleClass().removeAll("text-income", "text-expense");
+                    getStyleClass().removeAll(CLASS_INCOME, CLASS_EXPENSE);
                     if (item.contains("(INCOME)")) {
-                        getStyleClass().add("text-income");
+                        getStyleClass().add(CLASS_INCOME);
                     } else if (item.contains("(EXPENSE)")) {
-                        getStyleClass().add("text-expense");
+                        getStyleClass().add(CLASS_EXPENSE);
                     }
                 }
             }
@@ -115,10 +119,10 @@ public class FilterViewFX {
 
         List<Movement> filtered = new java.util.ArrayList<>();
 
-        if ("TODAS".equals(selectedCategory) || MovementType.INCOME.name().equals(selectedCategory)) {
+        if (STR_TODAS.equals(selectedCategory) || MovementType.INCOME.name().equals(selectedCategory)) {
             filtered.addAll(currentIncomeMovements);
         }
-        if ("TODAS".equals(selectedCategory) || MovementType.EXPENSE.name().equals(selectedCategory)) {
+        if (STR_TODAS.equals(selectedCategory) || MovementType.EXPENSE.name().equals(selectedCategory)) {
             filtered.addAll(currentExpenseMovements);
         }
 

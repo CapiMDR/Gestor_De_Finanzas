@@ -32,9 +32,7 @@ public class CategoriesModule {
             FilterViewFX view = loader.getController();
             FilterController controller = new FilterController();
             
-            if (selectedAccount != null) {
-                controller.setViewModule(view, selectedAccount);
-            }
+            controller.setViewModule(view, selectedAccount);
 
             Stage stage = new Stage();
             activeStages.put(accountId, stage);
