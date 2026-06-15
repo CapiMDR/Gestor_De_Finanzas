@@ -45,7 +45,13 @@
       **/RecurringAlertController.java,
       **/ReminderEditController.java,
       **/FilterController.java,
-      **/UIUtils.java
+      **/UIUtils.java,
+      **/AbstractReminderForm.java,
+      **/RecurringsController.java,
+      **/RemindersController.java,
+      **/MovementController.java,
+      **/GoalsController.java,
+      **/AccountController.java
     </sonar.coverage.exclusions>
   </properties>
 

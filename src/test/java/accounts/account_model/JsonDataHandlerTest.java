@@ -7,12 +7,15 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 
 import config.AppConfig;
+import movements.movement_model.MovementCategory;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -105,5 +108,28 @@ class JsonDataHandlerTest {
 
         // Assert
         assertTrue(loadedAccounts.isEmpty(), "Should return an empty list when file does not exist");
+    }
+    
+    @Test
+    @DisplayName("Should backup file and return empty when accounts file is corrupted")
+    void testLoadAccountsCorrupted() throws IOException {
+        Files.writeString(tempAccountsFile, "invalid json {");
+        List<Account> loaded = handler.loadAccounts();
+        assertTrue(loaded.isEmpty());
+        assertTrue(Files.exists(Paths.get(tempAccountsFile.toString() + ".bak")));
+        Files.deleteIfExists(Paths.get(tempAccountsFile.toString() + ".bak"));
+    }
+
+    @Test
+    @DisplayName("Should backup file and return empty when categories file is corrupted")
+    void testLoadCategoriesCorrupted() throws IOException {
+        Path tempCatFile = Files.createTempFile("test_cats_", ".json");
+        mockedAppConfig.when(AppConfig::getCategoriesFilePath).thenReturn(tempCatFile.toString());
+        Files.writeString(tempCatFile, "invalid json {");
+        HashMap<String, MovementCategory> loaded = handler.loadCategories();
+        assertTrue(loaded.isEmpty());
+        assertTrue(Files.exists(Paths.get(tempCatFile.toString() + ".bak")));
+        Files.deleteIfExists(tempCatFile);
+        Files.deleteIfExists(Paths.get(tempCatFile.toString() + ".bak"));
     }
 }

@@ -93,4 +93,12 @@ class RecurringJSONHandlerTest {
         TreeSet<RecurringMove> loaded = RecurringJSONHandler.loadRecurrings();
         assertTrue(loaded.isEmpty(), "Loading a non-existent file should return an empty set");
     }
+
+    @Test
+    void testLoadCorruptedFile() throws IOException {
+        java.nio.file.Files.writeString(Path.of(tempFilePath), "invalid json {");
+        TreeSet<RecurringMove> loaded = RecurringJSONHandler.loadRecurrings();
+        assertTrue(loaded.isEmpty());
+        assertTrue(new File(tempFilePath + ".bak").exists());
+    }
 }

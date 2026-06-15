@@ -84,4 +84,12 @@ class ReminderJSONHandlerTest {
         TreeSet<Reminder> loaded = ReminderJSONHandler.loadReminders();
         assertTrue(loaded.isEmpty(), "Loading a non-existent file should return an empty set");
     }
+
+    @Test
+    void testLoadCorruptedFile() throws IOException {
+        java.nio.file.Files.writeString(Path.of(tempFilePath), "invalid json {");
+        TreeSet<Reminder> loaded = ReminderJSONHandler.loadReminders();
+        assertTrue(loaded.isEmpty());
+        assertTrue(new File(tempFilePath + ".bak").exists());
+    }
 }
