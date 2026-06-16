@@ -1,5 +1,7 @@
 package reminders.reminder_model;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 import config.AppConfig;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -57,7 +59,7 @@ class ReminderJSONHandlerTest {
     @Test
     void testSaveAndLoadReminders() throws IOException {
         TreeSet<Reminder> reminders = new TreeSet<>(ReminderJSONHandler.reminderComparator);
-        Reminder r1 = new Reminder("Cita medica", "Ir al doctor", LocalDateTime.of(2026, 6, 15, 10, 0));
+        Reminder r1 = new Reminder("Cita medica", "Ir al doctor", LocalDateTime.of(2026, java.time.Month.JUNE, 15, 10, 0));
         r1.setTriggered(true);
         reminders.add(r1);
 
@@ -72,7 +74,7 @@ class ReminderJSONHandlerTest {
         Reminder loadedReminder = loaded.first();
         assertEquals("Cita medica", loadedReminder.getName());
         assertEquals("Ir al doctor", loadedReminder.getMessage());
-        assertEquals(LocalDateTime.of(2026, 6, 15, 10, 0), loadedReminder.getDate());
+        assertEquals(LocalDateTime.of(2026, java.time.Month.JUNE, 15, 10, 0), loadedReminder.getDate());
         assertTrue(loadedReminder.isTriggered());
     }
 
@@ -102,7 +104,7 @@ class ReminderJSONHandlerTest {
             mockedFiles.when(() -> java.nio.file.Files.writeString(org.mockito.Mockito.any(), org.mockito.Mockito.anyString(), org.mockito.Mockito.any()))
                     .thenThrow(new IOException("Simulated write error"));
             
-            ReminderJSONHandler.saveReminders(reminders);
+            assertDoesNotThrow(() -> ReminderJSONHandler.saveReminders(reminders));
         }
     }
 

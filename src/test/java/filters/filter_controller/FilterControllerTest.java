@@ -124,11 +124,11 @@ class FilterControllerTest {
         
         // Income movement: 2 days ago
         Movement m1 = new Movement(UUID.randomUUID(), "Salary", new BigDecimal("1000"), 
-            new MovementCategory("Salary", MovementCategory.MovementType.INCOME), acc, LocalDateTime.of(2026, 6, 15, 10, 0).minusDays(2));
+            new MovementCategory("Salary", MovementCategory.MovementType.INCOME), acc, LocalDateTime.of(2026, java.time.Month.JUNE, 15, 10, 0).minusDays(2));
             
         // Expense movement: 5 days ago
         Movement m2 = new Movement(UUID.randomUUID(), "Food", new BigDecimal("500"), 
-            new MovementCategory("Food", MovementCategory.MovementType.EXPENSE), acc, LocalDateTime.of(2026, 6, 15, 10, 0).minusDays(5));
+            new MovementCategory("Food", MovementCategory.MovementType.EXPENSE), acc, LocalDateTime.of(2026, java.time.Month.JUNE, 15, 10, 0).minusDays(5));
             
         moves.add(m1);
         moves.add(m2);
@@ -179,8 +179,8 @@ class FilterControllerTest {
     @DisplayName("testFilterByDateRange should filter movements between dates")
     void testFilterByDateRange() {
         // Arrange: Filter from 3 days ago to today (should only include the 2-days-ago movement)
-        LocalDate fromDate = LocalDate.of(2026, 6, 15).minusDays(3);
-        LocalDate toDate = LocalDate.of(2026, 6, 15);
+        LocalDate fromDate = LocalDate.of(2026, java.time.Month.JUNE, 15).minusDays(3);
+        LocalDate toDate = LocalDate.of(2026, java.time.Month.JUNE, 15);
         datePickerFrom.setValue(fromDate);
         datePickerTo.setValue(toDate);
 
@@ -192,8 +192,8 @@ class FilterControllerTest {
         assertTrue(listFilteredMovements.getItems().get(0).contains("Salary"));
         
         // Second Arrange: Filter from 10 days ago to 4 days ago (should only include the 5-days-ago movement)
-        datePickerFrom.setValue(LocalDate.of(2026, 6, 15).minusDays(10));
-        datePickerTo.setValue(LocalDate.of(2026, 6, 15).minusDays(4));
+        datePickerFrom.setValue(LocalDate.of(2026, java.time.Month.JUNE, 15).minusDays(10));
+        datePickerTo.setValue(LocalDate.of(2026, java.time.Month.JUNE, 15).minusDays(4));
         
         // Act
         btnApplyFilter.fire();
@@ -227,7 +227,7 @@ class FilterControllerTest {
         Account modifiedAcc = createDummyAccount();
         // Add one more movement to modifiedAcc
         Movement m3 = new Movement(UUID.randomUUID(), "Bonus", new BigDecimal("2000"), 
-            new MovementCategory("Bonus", MovementCategory.MovementType.INCOME), modifiedAcc, LocalDateTime.of(2026, 6, 15, 10, 0));
+            new MovementCategory("Bonus", MovementCategory.MovementType.INCOME), modifiedAcc, LocalDateTime.of(2026, java.time.Month.JUNE, 15, 10, 0));
         modifiedAcc.getMovements().add(m3);
         accountList.add(modifiedAcc);
         

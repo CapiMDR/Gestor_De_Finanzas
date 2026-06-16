@@ -95,7 +95,7 @@ class RecurringsControllerTest {
     void testWatchRecurringsTriggersAlert() throws Exception {
         MovementCategory mockCat = new MovementCategory("Egreso", MovementType.EXPENSE);
         RecurringMove mockMove = new RecurringMove("Rent", new BigDecimal("500"), "Desc", 
-                LocalDateTime.of(2026, 6, 15, 10, 0).minusMinutes(5), RecurrenceType.Mensual, mockCat);
+                LocalDateTime.of(2026, java.time.Month.JUNE, 15, 10, 0).minusMinutes(5), RecurrenceType.Mensual, mockCat);
         
         TreeSet<RecurringMove> set = new TreeSet<>(RecurringJSONHandler.recurringComparator);
         set.add(mockMove);

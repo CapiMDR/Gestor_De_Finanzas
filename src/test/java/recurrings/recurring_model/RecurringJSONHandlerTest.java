@@ -1,5 +1,7 @@
 package recurrings.recurring_model;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 import config.AppConfig;
 import movements.movement_model.MovementCategory;
 import movements.movement_model.MovementCategory.MovementType;
@@ -64,7 +66,7 @@ class RecurringJSONHandlerTest {
         TreeSet<RecurringMove> moves = new TreeSet<>(RecurringJSONHandler.recurringComparator);
         MovementCategory cat = new MovementCategory("Suscripciones", MovementType.EXPENSE);
         RecurringMove move1 = new RecurringMove("Netflix", new BigDecimal("15.99"), "Pago mensual",
-                LocalDateTime.of(2026, 1, 1, 10, 0), RecurrenceType.Mensual, cat);
+                LocalDateTime.of(2026, java.time.Month.JANUARY, 1, 10, 0), RecurrenceType.Mensual, cat);
         
         moves.add(move1);
 
@@ -111,7 +113,7 @@ class RecurringJSONHandlerTest {
             mockedFiles.when(() -> java.nio.file.Files.writeString(org.mockito.Mockito.any(), org.mockito.Mockito.anyString(), org.mockito.Mockito.any()))
                     .thenThrow(new IOException("Simulated write error"));
             
-            RecurringJSONHandler.saveRecurrings(moves); // Should catch and log error
+            assertDoesNotThrow(() -> RecurringJSONHandler.saveRecurrings(moves)); // Should catch and log error
         }
     }
 

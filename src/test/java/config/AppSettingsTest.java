@@ -1,5 +1,7 @@
 package config;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -97,7 +99,7 @@ class AppSettingsTest {
                     .thenThrow(new java.io.IOException("Simulated write error"));
             
             // Should not throw, should be caught and logged
-            settings.guardar();
+            assertDoesNotThrow(() -> settings.guardar());
         }
     }
 

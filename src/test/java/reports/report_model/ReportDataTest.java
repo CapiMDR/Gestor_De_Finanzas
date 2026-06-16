@@ -20,7 +20,7 @@ class ReportDataTest {
         String periodName = "Mensual";
         List<Movement> movements = new ArrayList<>();
         MovementCategory cat = new MovementCategory("Food", MovementType.EXPENSE);
-        movements.add(new Movement(java.util.UUID.randomUUID(), "Lunch", new BigDecimal("150"), cat, null, LocalDateTime.now()));
+        movements.add(new Movement(java.util.UUID.randomUUID(), "Lunch", new BigDecimal("150"), cat, null, LocalDateTime.of(2026, java.time.Month.JUNE, 15, 10, 0)));
         BigDecimal totalAmount = new BigDecimal("150");
         String dateRange = "01-06-2026 to 30-06-2026";
 

@@ -1,5 +1,7 @@
 package accounts.account_model;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -44,7 +46,7 @@ class AccountTest {
             incomeAmount, 
             salaryCategory, 
             account, 
-            LocalDateTime.of(2026, 6, 15, 10, 0)
+            LocalDateTime.of(2026, java.time.Month.JUNE, 15, 10, 0)
         );
 
         account.addMovement(income);
@@ -65,7 +67,7 @@ class AccountTest {
             expenseAmount, 
             foodCategory, 
             account, 
-            LocalDateTime.of(2026, 6, 15, 10, 0)
+            LocalDateTime.of(2026, java.time.Month.JUNE, 15, 10, 0)
         );
 
         account.addMovement(expense);
@@ -104,7 +106,7 @@ class AccountTest {
         assertNotNull(account.getGoals());
     }
 
-    @SuppressWarnings("unused")
+
     @Test
     void testAddMovementWithNullType() {
         MovementCategory nullCategory = new MovementCategory("Null", null);
@@ -117,10 +119,6 @@ class AccountTest {
             LocalDateTime.now()
         );
 
-        // the switch statement has a default case for null type (it throws NPE if we are not careful, but the switch allows default if we pass a null? Wait, switch on null throws NPE in Java unless pattern matching is used).
-        // Let's just create a mock if needed, or if MovementType enum can't be null, just skip it.
-        // Actually, Java switch on enum throws NPE if the enum is null.
-        // So the `default` branch might be dead code.
-        // Let's see if we can just skip it.
+        assertThrows(NullPointerException.class, () -> account.addMovement(move), "Should throw NPE on null type");
     }
 }

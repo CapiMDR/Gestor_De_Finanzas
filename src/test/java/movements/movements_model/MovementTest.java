@@ -23,7 +23,7 @@ class MovementTest {
         MovementCategory dummyCategory = new MovementCategory("Gym", MovementType.EXPENSE);
         
         UUID id = UUID.randomUUID();
-        LocalDateTime now = LocalDateTime.of(2026, 6, 15, 10, 0);
+        LocalDateTime now = LocalDateTime.of(2026, java.time.Month.JUNE, 15, 10, 0);
         BigDecimal amount = new BigDecimal("500.00");
         String description = "Pago mensualidad";
 
@@ -42,7 +42,7 @@ class MovementTest {
         
         Account account = new Account(1, "Wallet", AccountType.DIGITAL, Coin.MXN, new BigDecimal("1000"));
         MovementCategory incomeCat = new MovementCategory("Bonus", MovementType.INCOME);
-        Movement income = new Movement(UUID.randomUUID(), "Bono", new BigDecimal("200"), incomeCat, account, LocalDateTime.of(2026, 6, 15, 10, 0));
+        Movement income = new Movement(UUID.randomUUID(), "Bono", new BigDecimal("200"), incomeCat, account, LocalDateTime.of(2026, java.time.Month.JUNE, 15, 10, 0));
 
         account.addMovement(income);
 

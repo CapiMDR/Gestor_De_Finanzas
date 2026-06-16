@@ -253,8 +253,20 @@ public class TutorialManager {
         }
         
         // Evitar que el tooltip se salga de la pantalla
-        x = Math.max(10, Math.min(x, overlayPane.getPrefWidth() - popupWidth - 10));
-        y = Math.max(10, Math.min(y, overlayPane.getPrefHeight() - popupHeight - 10));
+        double maxX = overlayPane.getPrefWidth() - popupWidth - 10;
+        double maxY = overlayPane.getPrefHeight() - popupHeight - 10;
+        
+        if (maxX >= 10) {
+            x = Math.clamp(x, 10, maxX);
+        } else {
+            x = 10;
+        }
+
+        if (maxY >= 10) {
+            y = Math.clamp(y, 10, maxY);
+        } else {
+            y = 10;
+        }
         
         return new double[]{x, y};
     }

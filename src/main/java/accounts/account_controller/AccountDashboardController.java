@@ -171,10 +171,10 @@ public class AccountDashboardController implements AccountObserver, ReportObserv
 
     @Override
     public void onNotify(ReportData reportData) {
-        showCharts(reportData.getPeriodName(), reportData);
+        showCharts(reportData);
     }
     
-    private void showCharts(String periodName, ReportData reportData) {
+    private void showCharts(ReportData reportData) {
         BigDecimal income = reportData.getMovements().stream()
                 .filter(x -> x.getCategory().getType() == MovementCategory.MovementType.INCOME)
                 .map(Movement::getAmount)

@@ -1,5 +1,7 @@
 package reminders.reminder_model;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -44,7 +46,7 @@ class RemindersModelTest {
     @Test
     @DisplayName("addReminder(String, String, LocalDateTime) should add to set and notify")
     void testAddReminderByFields() {
-        LocalDateTime date = LocalDateTime.now().plusDays(1);
+        LocalDateTime date = LocalDateTime.of(2026, java.time.Month.JANUARY, 2, 10, 0);
         remindersModel.addReminder("Test Name", "Test Msg", date);
 
         verify(mockObserver).observeReminders(remindersCaptor.capture());
@@ -59,7 +61,7 @@ class RemindersModelTest {
     @Test
     @DisplayName("addReminder(Reminder) should add to set and notify")
     void testAddReminderByObject() {
-        Reminder r = new Reminder("A", "B", LocalDateTime.now());
+        Reminder r = new Reminder("A", "B", LocalDateTime.of(2026, java.time.Month.JANUARY, 1, 10, 0));
         remindersModel.addReminder(r);
 
         verify(mockObserver).observeReminders(remindersCaptor.capture());
@@ -70,7 +72,7 @@ class RemindersModelTest {
     @Test
     @DisplayName("deleteReminder should remove and notify if present")
     void testDeleteReminder() {
-        Reminder r = new Reminder("A", "B", LocalDateTime.now());
+        Reminder r = new Reminder("A", "B", LocalDateTime.of(2026, java.time.Month.JANUARY, 1, 10, 0));
         remindersModel.addReminder(r);
         clearInvocations(mockObserver);
 
@@ -82,7 +84,7 @@ class RemindersModelTest {
     @Test
     @DisplayName("deleteReminder should notify even if not present, but state is unchanged")
     void testDeleteReminderNotPresent() {
-        Reminder r = new Reminder("A", "B", LocalDateTime.now());
+        Reminder r = new Reminder("A", "B", LocalDateTime.of(2026, java.time.Month.JANUARY, 1, 10, 0));
         remindersModel.deleteReminder(r);
         verify(mockObserver).observeReminders(remindersCaptor.capture());
         assertTrue(remindersCaptor.getValue().isEmpty());
@@ -91,8 +93,8 @@ class RemindersModelTest {
     @Test
     @DisplayName("editReminder should remove old, add new, and notify")
     void testEditReminder() {
-        Reminder oldR = new Reminder("Old", "Msg", LocalDateTime.now());
-        Reminder newR = new Reminder("New", "Msg", LocalDateTime.now());
+        Reminder oldR = new Reminder("Old", "Msg", LocalDateTime.of(2026, java.time.Month.JANUARY, 1, 10, 0));
+        Reminder newR = new Reminder("New", "Msg", LocalDateTime.of(2026, java.time.Month.JANUARY, 1, 10, 0));
         remindersModel.addReminder(oldR);
         clearInvocations(mockObserver);
 
@@ -106,8 +108,8 @@ class RemindersModelTest {
     @Test
     @DisplayName("editReminder should do nothing if old reminder is not present")
     void testEditReminderNotPresent() {
-        Reminder oldR = new Reminder("Old", "Msg", LocalDateTime.now());
-        Reminder newR = new Reminder("New", "Msg", LocalDateTime.now());
+        Reminder oldR = new Reminder("Old", "Msg", LocalDateTime.of(2026, java.time.Month.JANUARY, 1, 10, 0));
+        Reminder newR = new Reminder("New", "Msg", LocalDateTime.of(2026, java.time.Month.JANUARY, 1, 10, 0));
         
         remindersModel.editReminder(oldR, newR);
         verifyNoInteractions(mockObserver);
@@ -117,7 +119,7 @@ class RemindersModelTest {
     @DisplayName("removeObserver should stop notifications for that observer")
     void testRemoveObserver() {
         remindersModel.removeObserver(mockObserver);
-        remindersModel.addReminder("N", "M", LocalDateTime.now());
+        remindersModel.addReminder("N", "M", LocalDateTime.of(2026, java.time.Month.JANUARY, 1, 10, 0));
         verifyNoInteractions(mockObserver);
     }
 
@@ -125,7 +127,7 @@ class RemindersModelTest {
     @DisplayName("removeObserver should not crash if observer not registered")
     void testRemoveObserverNotPresent() {
         ReminderObserver tempObs = mock(ReminderObserver.class);
-        remindersModel.removeObserver(tempObs); // Should do nothing
+        assertDoesNotThrow(() -> remindersModel.removeObserver(tempObs)); // Should do nothing
     }
 
     @Test

@@ -13,7 +13,7 @@ class ReminderTest {
     @Test
     @DisplayName("Constructor with date assigns fields correctly")
     void testConstructorWithDate() {
-        LocalDateTime date = LocalDateTime.now().plusDays(1);
+        LocalDateTime date = LocalDateTime.of(2050, java.time.Month.JANUARY, 1, 10, 0);
         Reminder reminder = new Reminder("Name", "Message", date);
 
         assertEquals("Name", reminder.getName());
@@ -49,7 +49,7 @@ class ReminderTest {
     @Test
     @DisplayName("shouldTrigger returns true if date is past and not triggered")
     void testShouldTriggerTrue() {
-        LocalDateTime past = LocalDateTime.now().minusMinutes(5);
+        LocalDateTime past = LocalDateTime.of(2000, java.time.Month.JANUARY, 1, 10, 0);
         Reminder reminder = new Reminder("Name", "Message", past);
         
         assertTrue(reminder.shouldTrigger());
@@ -58,7 +58,7 @@ class ReminderTest {
     @Test
     @DisplayName("shouldTrigger returns false if date is future")
     void testShouldTriggerFalseFuture() {
-        LocalDateTime future = LocalDateTime.now().plusMinutes(5);
+        LocalDateTime future = LocalDateTime.of(2050, java.time.Month.JANUARY, 1, 10, 0);
         Reminder reminder = new Reminder("Name", "Message", future);
         
         assertFalse(reminder.shouldTrigger());
@@ -67,7 +67,7 @@ class ReminderTest {
     @Test
     @DisplayName("shouldTrigger returns false if already triggered")
     void testShouldTriggerFalseAlreadyTriggered() {
-        LocalDateTime past = LocalDateTime.now().minusMinutes(5);
+        LocalDateTime past = LocalDateTime.of(2000, java.time.Month.JANUARY, 1, 10, 0);
         Reminder reminder = new Reminder("Name", "Message", past);
         reminder.setTriggered(true);
         
@@ -77,7 +77,7 @@ class ReminderTest {
     @Test
     @DisplayName("toString format is correct")
     void testToString() {
-        LocalDateTime date = LocalDateTime.of(2025, 1, 1, 10, 30);
+        LocalDateTime date = LocalDateTime.of(2025, java.time.Month.JANUARY, 1, 10, 30);
         Reminder reminder = new Reminder("T", "M", date);
 
         String result = reminder.toString();
