@@ -116,7 +116,7 @@ class AccountTest {
             BigDecimal.TEN, 
             nullCategory, 
             account, 
-            LocalDateTime.now()
+            java.time.LocalDateTime.of(2026, java.time.Month.JANUARY, 1, 12, 0)
         );
 
         assertThrows(NullPointerException.class, () -> account.addMovement(move), "Should throw NPE on null type");

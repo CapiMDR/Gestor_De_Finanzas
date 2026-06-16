@@ -79,10 +79,10 @@ class JsonDataHandlerTest {
         MovementCategory catExpense = new MovementCategory("Food", MovementCategory.MovementType.EXPENSE);
         MovementCategory catIncome = new MovementCategory("Salary", MovementCategory.MovementType.INCOME);
         movements.movement_model.Movement mov1 = new movements.movement_model.Movement(
-            java.util.UUID.randomUUID(), "Tacos", new BigDecimal("50.00"), catExpense, acc, java.time.LocalDateTime.now()
+            java.util.UUID.randomUUID(), "Tacos", new BigDecimal("50.00"), catExpense, acc, java.time.LocalDateTime.of(2026, java.time.Month.JANUARY, 1, 12, 0)
         );
         movements.movement_model.Movement mov2 = new movements.movement_model.Movement(
-            java.util.UUID.randomUUID(), "Paycheck", new BigDecimal("500.00"), catIncome, acc, java.time.LocalDateTime.now()
+            java.util.UUID.randomUUID(), "Paycheck", new BigDecimal("500.00"), catIncome, acc, java.time.LocalDateTime.of(2026, java.time.Month.JANUARY, 1, 12, 0)
         );
         movList.add(mov1);
         movList.add(mov2);
