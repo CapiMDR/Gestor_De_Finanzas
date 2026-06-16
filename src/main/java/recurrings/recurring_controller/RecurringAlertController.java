@@ -1,7 +1,6 @@
 package recurrings.recurring_controller;
 
 import java.util.List;
-
 import accounts.account_model.Account;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ButtonType;

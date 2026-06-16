@@ -1,12 +1,10 @@
 package movements.movement_controller;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.util.UUID;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -298,7 +296,7 @@ public class MovementController implements CategoryObserver {
         List<String> formattedNames = model.getCategories().values().stream()
                 .sorted((c1, c2) -> c1.getName().compareToIgnoreCase(c2.getName()))
                 .map(c -> c.getName() + " - [" + c.getType().name() + "]")
-                .collect(Collectors.toList());
+                .toList();
 
         categoriesView.getListCategories().getItems().setAll(formattedNames);
     }

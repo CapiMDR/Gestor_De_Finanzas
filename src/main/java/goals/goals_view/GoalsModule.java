@@ -1,5 +1,7 @@
 package goals.goals_view;
 
+import java.util.HashMap;
+import java.util.Map;
 import accounts.account_model.Account;
 import goals.goals_controller.GoalDetailControllerFX;
 import goals.goals_controller.GoalEditController;
@@ -8,9 +10,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Main entry point of the Goals module (JavaFX).
  * Integrates the Accounts and Goals modules.
@@ -18,6 +17,7 @@ import java.util.Map;
  * @author Team Integration
  */
 public class GoalsModule {
+    private GoalsModule() {}
 
 
     private static Map<String, Stage> activeStages = new HashMap<>();

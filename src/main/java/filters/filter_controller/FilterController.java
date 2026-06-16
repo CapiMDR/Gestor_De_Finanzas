@@ -4,13 +4,13 @@
  */
 package filters.filter_controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import filters.filter_view.FilterViewFX;
 import accounts.account_model.Account;
 import accounts.account_model.AccountObserver;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 import movements.movement_model.Movement;
 import movements.movement_model.MovementCategory;
 import movements.movement_model.MovementCategory.MovementType;

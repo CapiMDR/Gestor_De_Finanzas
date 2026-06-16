@@ -1,5 +1,6 @@
 package tutorial.tutorial_controller;
 
+import java.util.List;
 import tutorial.tutorial_model.TutorialStep;
 
 import config.AppSettings;
@@ -15,8 +16,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Popup;
 import javafx.stage.Window;
 import javafx.util.Duration;
-
-import java.util.List;
 
 /**
  * Manages the overlay tutorial for first-time users.

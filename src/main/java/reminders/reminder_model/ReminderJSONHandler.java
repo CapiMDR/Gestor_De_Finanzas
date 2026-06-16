@@ -1,5 +1,6 @@
 package reminders.reminder_model;
 
+import java.util.SortedSet;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -42,7 +43,7 @@ public class ReminderJSONHandler {
      * Comparator to sort reminders first by their date,
      * and then by their name.
      */
-    public static Comparator<Reminder> REMINDER_COMPARATOR = Comparator.comparing(Reminder::getDate)
+    public static final Comparator<Reminder> reminderComparator = Comparator.comparing(Reminder::getDate)
             .thenComparing(Reminder::getName);
 
     /**
@@ -50,7 +51,7 @@ public class ReminderJSONHandler {
      * 
      * @param remindersList Sorted set of reminders to be saved.
      */
-    public static void saveReminders(TreeSet<Reminder> remindersList) {
+    public static void saveReminders(SortedSet<Reminder> remindersList) {
         JSONArray arr = new JSONArray();
 
         for (Reminder reminder : remindersList) {
@@ -80,8 +81,8 @@ public class ReminderJSONHandler {
      * @return A {@link TreeSet} with the loaded reminders, sorted
      *         by date and name.
      */
-    public static TreeSet<Reminder> loadReminders() {
-        TreeSet<Reminder> reminders = new TreeSet<>(REMINDER_COMPARATOR);
+    public static SortedSet<Reminder> loadReminders() {
+        SortedSet<Reminder> reminders = new TreeSet<>(reminderComparator);
         java.io.File file = new java.io.File(AppConfig.getRemindersFilePath());
         if (!file.exists() || file.length() == 0) {
             return reminders;

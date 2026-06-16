@@ -2,7 +2,6 @@ package accounts.account_model;
 
 import java.util.ArrayList;
 import java.util.List;
-
 /**
  * Class that implements the Subject pattern from the Observer pattern to handle
  * observers related to changes in the account list.
@@ -10,6 +9,7 @@ import java.util.List;
  * @author Martín Jesús Pool Chuc
  */
 public class AccountManagerSubject {
+    private AccountManagerSubject() {}
 
     /** Static list of registered observers. */
     private static List<AccountObserver> observers = new ArrayList<>();

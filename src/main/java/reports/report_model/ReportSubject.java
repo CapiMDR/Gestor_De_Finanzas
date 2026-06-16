@@ -1,8 +1,7 @@
 package reports.report_model;
 
-import java.util.List;
 import java.util.ArrayList;
-
+import java.util.List;
 /**
  * Subject that maintains a list of report observers and notifies them of new reports.
  *

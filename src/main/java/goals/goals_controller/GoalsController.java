@@ -1,8 +1,7 @@
 package goals.goals_controller;
 
-import java.math.BigDecimal;
 import java.util.List;
-
+import java.math.BigDecimal;
 import notifications.notification_controller.NotificationManager;
 
 import org.slf4j.Logger;

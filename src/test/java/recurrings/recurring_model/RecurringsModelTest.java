@@ -12,7 +12,7 @@ import org.mockito.MockedStatic;
 import java.math.BigDecimal;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
-import java.util.TreeSet;
+import java.util.SortedSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -109,7 +109,7 @@ class RecurringsModelTest {
         AtomicBoolean notified = new AtomicBoolean(false);
         RecurringObserver observer = new RecurringObserver() {
             @Override
-            public void observeRecurrings(TreeSet<RecurringMove> recurrings) {
+            public void observeRecurrings(SortedSet<RecurringMove> recurrings) {
                 notified.set(true);
             }
         };

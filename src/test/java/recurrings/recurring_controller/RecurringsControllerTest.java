@@ -10,7 +10,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.TreeSet;
 
+import recurrings.recurring_model.RecurringJSONHandler;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -84,7 +86,7 @@ class RecurringsControllerTest {
     @Test
     @DisplayName("should refresh view when setView is called")
     void testSetViewRefreshesList() {
-        lenient().when(mockModel.getRecurrings()).thenReturn(new java.util.TreeSet<>(recurrings.recurring_model.RecurringJSONHandler.REMINDER_COMPARATOR));
+        lenient().when(mockModel.getRecurrings()).thenReturn(new TreeSet<>(RecurringJSONHandler.recurringComparator));
         controller.setView(mockView);
     }
 
@@ -95,7 +97,7 @@ class RecurringsControllerTest {
         RecurringMove mockMove = new RecurringMove("Rent", new BigDecimal("500"), "Desc", 
                 LocalDateTime.of(2026, 6, 15, 10, 0).minusMinutes(5), RecurrenceType.Mensual, mockCat);
         
-        java.util.TreeSet<RecurringMove> set = new java.util.TreeSet<>(recurrings.recurring_model.RecurringJSONHandler.REMINDER_COMPARATOR);
+        TreeSet<RecurringMove> set = new TreeSet<>(RecurringJSONHandler.recurringComparator);
         set.add(mockMove);
         when(mockModel.getRecurrings()).thenReturn(set);
         

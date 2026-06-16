@@ -15,8 +15,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -126,7 +126,7 @@ class JsonDataHandlerTest {
         Path tempCatFile = Files.createTempFile("test_cats_", ".json");
         mockedAppConfig.when(AppConfig::getCategoriesFilePath).thenReturn(tempCatFile.toString());
         Files.writeString(tempCatFile, "invalid json {");
-        HashMap<String, MovementCategory> loaded = handler.loadCategories();
+        Map<String, MovementCategory> loaded = handler.loadCategories();
         assertTrue(loaded.isEmpty());
         assertTrue(Files.exists(Paths.get(tempCatFile.toString() + ".bak")));
         Files.deleteIfExists(tempCatFile);

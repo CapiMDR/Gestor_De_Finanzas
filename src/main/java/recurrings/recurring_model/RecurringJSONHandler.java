@@ -1,5 +1,6 @@
 package recurrings.recurring_model;
 
+import java.util.SortedSet;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -43,7 +44,7 @@ public class RecurringJSONHandler {
      * Comparator used to sort the reminders by date and then by
      * concept.
      */
-    public static Comparator<RecurringMove> REMINDER_COMPARATOR = Comparator.comparing(RecurringMove::getInitialDate)
+    public static final Comparator<RecurringMove> recurringComparator = Comparator.comparing(RecurringMove::getInitialDate)
             .thenComparing(RecurringMove::getConcept);
 
     /**
@@ -51,7 +52,7 @@ public class RecurringJSONHandler {
      *
      * @param recurrentsList Sorted list of {@link RecurringMove} to save.
      */
-    public static void saveReminders(TreeSet<RecurringMove> recurrentsList) {
+    public static void saveRecurrings(SortedSet<RecurringMove> recurrentsList) {
         JSONArray arr = new JSONArray();
 
         for (RecurringMove recMove : recurrentsList) {
@@ -81,11 +82,11 @@ public class RecurringJSONHandler {
     /**
      * Loads the recurring reminders stored in the JSON file.
      *
-     * @return A {@link TreeSet} sorted by {@link #REMINDER_COMPARATOR}
+     * @return A {@link TreeSet} sorted by {@link #recurringComparator}
      *         containing all loaded {@link RecurringMove} objects.
      */
-    public static TreeSet<RecurringMove> loadRecurrings() {
-        TreeSet<RecurringMove> recMoves = new TreeSet<>(REMINDER_COMPARATOR);
+    public static SortedSet<RecurringMove> loadRecurrings() {
+        TreeSet<RecurringMove> recMoves = new TreeSet<>(recurringComparator);
         java.io.File file = new java.io.File(AppConfig.getRecurringsFilePath());
         if (!file.exists() || file.length() == 0) {
             return recMoves;
@@ -134,3 +135,5 @@ public class RecurringJSONHandler {
         return recMoves;
     }
 }
+
+

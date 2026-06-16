@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.TreeSet;
+import java.util.SortedSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -60,7 +61,7 @@ class RecurringJSONHandlerTest {
      */
     @Test
     void testSaveAndLoadRecurrings() throws IOException {
-        TreeSet<RecurringMove> moves = new TreeSet<>(RecurringJSONHandler.REMINDER_COMPARATOR);
+        TreeSet<RecurringMove> moves = new TreeSet<>(RecurringJSONHandler.recurringComparator);
         MovementCategory cat = new MovementCategory("Suscripciones", MovementType.EXPENSE);
         RecurringMove move1 = new RecurringMove("Netflix", new BigDecimal("15.99"), "Pago mensual",
                 LocalDateTime.of(2026, 1, 1, 10, 0), RecurrenceType.Mensual, cat);
@@ -68,11 +69,11 @@ class RecurringJSONHandlerTest {
         moves.add(move1);
 
         // Save
-        RecurringJSONHandler.saveReminders(moves);
+        RecurringJSONHandler.saveRecurrings(moves);
         assertTrue(new File(tempFilePath).exists());
 
         // Load
-        TreeSet<RecurringMove> loaded = RecurringJSONHandler.loadRecurrings();
+        SortedSet<RecurringMove> loaded = RecurringJSONHandler.loadRecurrings();
         assertEquals(1, loaded.size());
 
         RecurringMove loadedMove = loaded.first();
@@ -90,14 +91,14 @@ class RecurringJSONHandlerTest {
      */
     @Test
     void testLoadEmptyFile() {
-        TreeSet<RecurringMove> loaded = RecurringJSONHandler.loadRecurrings();
+        SortedSet<RecurringMove> loaded = RecurringJSONHandler.loadRecurrings();
         assertTrue(loaded.isEmpty(), "Loading a non-existent file should return an empty set");
     }
 
     @Test
     void testLoadCorruptedFile() throws IOException {
         java.nio.file.Files.writeString(Path.of(tempFilePath), "invalid json {");
-        TreeSet<RecurringMove> loaded = RecurringJSONHandler.loadRecurrings();
+        SortedSet<RecurringMove> loaded = RecurringJSONHandler.loadRecurrings();
         assertTrue(loaded.isEmpty());
         assertTrue(new File(tempFilePath + ".bak").exists());
     }

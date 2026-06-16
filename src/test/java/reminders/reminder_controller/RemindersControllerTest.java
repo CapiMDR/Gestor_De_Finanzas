@@ -11,6 +11,7 @@ import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
+import java.util.TreeSet;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -106,7 +107,7 @@ class RemindersControllerTest {
         Reminder pastReminder = new Reminder("Past", "Msg", LocalDateTime.of(2026, 6, 15, 10, 0).minusMinutes(5));
         Reminder futureReminder = new Reminder("Future", "Msg", LocalDateTime.of(2026, 6, 15, 10, 0).plusDays(1));
         
-        java.util.TreeSet<Reminder> set = new java.util.TreeSet<>(ReminderJSONHandler.REMINDER_COMPARATOR);
+        TreeSet<Reminder> set = new TreeSet<>(ReminderJSONHandler.reminderComparator);
         set.add(pastReminder);
         set.add(futureReminder);
         when(mockModel.getReminders()).thenReturn(set);

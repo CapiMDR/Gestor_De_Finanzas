@@ -1,5 +1,6 @@
 package accounts.account_view;
 
+import java.util.List;
 import accounts.account_model.Account;
 import accounts.account_model.AccountManager;
 import accounts.account_model.AccountObserver;
@@ -128,7 +129,7 @@ public class AccountShell implements AccountObserver {
     // ── AccountObserver ───────────────────────────────────────────────────────
 
     @Override
-    public void onNotify(java.util.List<Account> accountsList) {
+    public void onNotify(List<Account> accountsList) {
         // Refresh balance in the dashboard header when the model changes
         Account actualizada = accountsList.stream()
                 .filter(a -> a.getName().equals(account.getName()))

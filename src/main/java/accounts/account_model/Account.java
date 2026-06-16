@@ -1,9 +1,8 @@
 package accounts.account_model;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.math.BigDecimal;
 import goals.goals_model.Goal;
 import movements.movement_model.Movement;
 

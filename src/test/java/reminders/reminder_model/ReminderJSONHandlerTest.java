@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.TreeSet;
+import java.util.SortedSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mockStatic;
@@ -55,7 +56,7 @@ class ReminderJSONHandlerTest {
      */
     @Test
     void testSaveAndLoadReminders() throws IOException {
-        TreeSet<Reminder> reminders = new TreeSet<>(ReminderJSONHandler.REMINDER_COMPARATOR);
+        TreeSet<Reminder> reminders = new TreeSet<>(ReminderJSONHandler.reminderComparator);
         Reminder r1 = new Reminder("Cita medica", "Ir al doctor", LocalDateTime.of(2026, 6, 15, 10, 0));
         r1.setTriggered(true);
         reminders.add(r1);
@@ -65,7 +66,7 @@ class ReminderJSONHandlerTest {
         assertTrue(new File(tempFilePath).exists());
 
         // Load
-        TreeSet<Reminder> loaded = ReminderJSONHandler.loadReminders();
+        SortedSet<Reminder> loaded = ReminderJSONHandler.loadReminders();
         assertEquals(1, loaded.size());
 
         Reminder loadedReminder = loaded.first();
@@ -81,14 +82,14 @@ class ReminderJSONHandlerTest {
      */
     @Test
     void testLoadEmptyFile() {
-        TreeSet<Reminder> loaded = ReminderJSONHandler.loadReminders();
+        SortedSet<Reminder> loaded = ReminderJSONHandler.loadReminders();
         assertTrue(loaded.isEmpty(), "Loading a non-existent file should return an empty set");
     }
 
     @Test
     void testLoadCorruptedFile() throws IOException {
         java.nio.file.Files.writeString(Path.of(tempFilePath), "invalid json {");
-        TreeSet<Reminder> loaded = ReminderJSONHandler.loadReminders();
+        SortedSet<Reminder> loaded = ReminderJSONHandler.loadReminders();
         assertTrue(loaded.isEmpty());
         assertTrue(new File(tempFilePath + ".bak").exists());
     }

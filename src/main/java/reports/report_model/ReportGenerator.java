@@ -1,9 +1,8 @@
 package reports.report_model;
 
+import java.util.List;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
-
 import accounts.account_model.Account;
 import movements.movement_model.Movement;
 

@@ -1,9 +1,8 @@
 package movements.movement_model;
 
+import java.util.UUID;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
-
 import accounts.account_model.Account;
 
 /**

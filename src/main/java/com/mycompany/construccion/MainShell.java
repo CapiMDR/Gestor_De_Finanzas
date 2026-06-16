@@ -1,5 +1,8 @@
 package com.mycompany.construccion;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.List;
 import accounts.account_model.Account;
 import accounts.account_view.AccountShell;
 import accounts.account_view.AccountsModule;
@@ -17,9 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Controller for the main application shell ({@code main_shell.fxml}).
  *
@@ -146,7 +146,7 @@ public class MainShell {
         }
         
         // Define steps
-        java.util.List<tutorial.tutorial_model.TutorialStep> steps = java.util.Arrays.asList(
+        List<tutorial.tutorial_model.TutorialStep> steps = java.util.Arrays.asList(
             new tutorial.tutorial_model.TutorialStep(
                 "¡Bienvenido!",
                 "Esta es la nueva interfaz. Aquí podrás gestionar todas tus finanzas en un solo lugar de forma sencilla.",
