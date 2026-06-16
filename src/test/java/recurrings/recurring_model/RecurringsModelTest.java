@@ -60,7 +60,7 @@ class RecurringsModelTest {
     @Test
     void testAddRecurring() {
         MovementCategory cat = new MovementCategory("Cat", MovementType.EXPENSE);
-        model.addRecurring("Test1", new BigDecimal("10"), "Desc", LocalDateTime.now(), RecurrenceType.Mensual, cat);
+        model.addRecurring("Test1", new BigDecimal("10"), "Desc", LocalDateTime.of(2026, 6, 15, 10, 0), RecurrenceType.Mensual, cat);
         
         assertEquals(1, model.getRecurrings().size());
         assertEquals("Test1", model.getRecurrings().first().getConcept());
@@ -73,7 +73,7 @@ class RecurringsModelTest {
     @Test
     void testDeleteRecurring() {
         MovementCategory cat = new MovementCategory("Cat", MovementType.EXPENSE);
-        RecurringMove move = new RecurringMove("Test2", new BigDecimal("10"), "Desc", LocalDateTime.now(), RecurrenceType.Mensual, cat);
+        RecurringMove move = new RecurringMove("Test2", new BigDecimal("10"), "Desc", LocalDateTime.of(2026, 6, 15, 10, 0), RecurrenceType.Mensual, cat);
         
         model.addRecurring(move);
         assertEquals(1, model.getRecurrings().size());
@@ -89,8 +89,8 @@ class RecurringsModelTest {
     @Test
     void testEditRecurring() {
         MovementCategory cat = new MovementCategory("Cat", MovementType.EXPENSE);
-        RecurringMove moveOld = new RecurringMove("Old", new BigDecimal("10"), "Desc", LocalDateTime.now(), RecurrenceType.Mensual, cat);
-        RecurringMove moveNew = new RecurringMove("New", new BigDecimal("20"), "Desc", LocalDateTime.now(), RecurrenceType.Mensual, cat);
+        RecurringMove moveOld = new RecurringMove("Old", new BigDecimal("10"), "Desc", LocalDateTime.of(2026, 6, 15, 10, 0), RecurrenceType.Mensual, cat);
+        RecurringMove moveNew = new RecurringMove("New", new BigDecimal("20"), "Desc", LocalDateTime.of(2026, 6, 15, 10, 0), RecurrenceType.Mensual, cat);
         
         model.addRecurring(moveOld);
         model.editRecurring(moveOld, moveNew);
@@ -116,13 +116,13 @@ class RecurringsModelTest {
         
         model.addObserver(observer);
         MovementCategory cat = new MovementCategory("Cat", MovementType.EXPENSE);
-        model.addRecurring("Test3", new BigDecimal("10"), "Desc", LocalDateTime.now(), RecurrenceType.Mensual, cat);
+        model.addRecurring("Test3", new BigDecimal("10"), "Desc", LocalDateTime.of(2026, 6, 15, 10, 0), RecurrenceType.Mensual, cat);
         
         assertTrue(notified.get(), "Observer should have been notified");
         
         model.removeObserver(observer);
         notified.set(false);
-        model.addRecurring("Test4", new BigDecimal("10"), "Desc", LocalDateTime.now(), RecurrenceType.Mensual, cat);
+        model.addRecurring("Test4", new BigDecimal("10"), "Desc", LocalDateTime.of(2026, 6, 15, 10, 0), RecurrenceType.Mensual, cat);
         assertFalse(notified.get(), "Observer should NOT be notified after removal");
     }
 
@@ -134,7 +134,8 @@ class RecurringsModelTest {
     void testSaveRecurrings() {
         // Just verify it doesn't throw errors when saving to the temp file
         MovementCategory cat = new MovementCategory("Cat", MovementType.EXPENSE);
-        model.addRecurring("SaveTest", new BigDecimal("10"), "Desc", LocalDateTime.now(), RecurrenceType.Mensual, cat);
+        model.addRecurring("SaveTest", new BigDecimal("10"), "Desc", LocalDateTime.of(2026, 6, 15, 10, 0), RecurrenceType.Mensual, cat);
         assertDoesNotThrow(() -> model.saveRecurrings());
     }
 }
+

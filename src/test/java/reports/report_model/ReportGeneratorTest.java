@@ -73,7 +73,7 @@ class ReportGeneratorTest {
     @DisplayName("today() should filter only today's movements")
     void testTodayReport() {
         // Arrange
-        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime today = LocalDateTime.of(2026, 6, 15, 10, 0);
         LocalDateTime yesterday = today.minusDays(1);
         
         Movement m1 = createMockMovement("100.50", today);
@@ -102,7 +102,7 @@ class ReportGeneratorTest {
     @DisplayName("weekAgo() should filter movements from the last 7 days")
     void testWeekAgoReport() {
         // Arrange
-        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime today = LocalDateTime.of(2026, 6, 15, 10, 0);
         LocalDateTime threeDaysAgo = today.minusDays(3);
         LocalDateTime eightDaysAgo = today.minusDays(8);
 
@@ -133,7 +133,7 @@ class ReportGeneratorTest {
     @DisplayName("yesterday() should filter only yesterday's movements")
     void testYesterdayReport() {
         // Arrange
-        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime today = LocalDateTime.of(2026, 6, 15, 10, 0);
         LocalDateTime yesterday = today.minusDays(1);
         LocalDateTime twoDaysAgo = today.minusDays(2);
 
@@ -164,7 +164,7 @@ class ReportGeneratorTest {
     @DisplayName("currentWeek() should filter movements from current week (Mon-Sun)")
     void testCurrentWeekReport() {
         // Arrange
-        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime today = LocalDateTime.of(2026, 6, 15, 10, 0);
         LocalDateTime monday = today.toLocalDate().with(java.time.DayOfWeek.MONDAY).atStartOfDay();
         LocalDateTime previousSunday = monday.minusDays(1);
 

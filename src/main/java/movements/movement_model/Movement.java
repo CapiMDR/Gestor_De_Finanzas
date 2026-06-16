@@ -35,7 +35,7 @@ public class Movement {
         this.description = description;
         this.amount = amount;
         this.category = category;
-        this.date = LocalDateTime.now();
+        this.date = LocalDateTime.now(java.time.ZoneId.systemDefault());
         this.account = account;
     }
 

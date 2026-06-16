@@ -44,7 +44,7 @@ class AccountTest {
             incomeAmount, 
             salaryCategory, 
             account, 
-            LocalDateTime.now()
+            LocalDateTime.of(2026, 6, 15, 10, 0)
         );
 
         account.addMovement(income);
@@ -65,7 +65,7 @@ class AccountTest {
             expenseAmount, 
             foodCategory, 
             account, 
-            LocalDateTime.now()
+            LocalDateTime.of(2026, 6, 15, 10, 0)
         );
 
         account.addMovement(expense);

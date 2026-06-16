@@ -76,7 +76,7 @@ class MovementControllerTest {
         when(mockView.getDescriptionIncome()).thenReturn("Salary");
         when(mockView.getAmountIncomeText()).thenReturn("1000");
         when(mockView.getSelectedCategoryIncome()).thenReturn("Job");
-        when(mockView.getIncomeDateAsLocalDateTime()).thenReturn(LocalDateTime.now());
+        when(mockView.getIncomeDateAsLocalDateTime()).thenReturn(LocalDateTime.of(2026, 6, 15, 10, 0));
         
         MovementCategory mockCat = new MovementCategory("Job", MovementType.INCOME);
         when(mockModel.getCategoryByName("Job")).thenReturn(mockCat);
@@ -99,7 +99,7 @@ class MovementControllerTest {
         when(mockView.getDescriptionExpense()).thenReturn("Food");
         when(mockView.getAmountExpenseText()).thenReturn("50");
         when(mockView.getSelectedCategoryExpense()).thenReturn("Restaurant");
-        when(mockView.getExpenseDateAsLocalDateTime()).thenReturn(LocalDateTime.now());
+        when(mockView.getExpenseDateAsLocalDateTime()).thenReturn(LocalDateTime.of(2026, 6, 15, 10, 0));
         
         MovementCategory mockCat = new MovementCategory("Restaurant", MovementType.EXPENSE);
         when(mockModel.getCategoryByName("Restaurant")).thenReturn(mockCat);
@@ -127,3 +127,4 @@ class MovementControllerTest {
         verify(mockAccount, never()).addMovement(any());
     }
 }
+

@@ -93,7 +93,7 @@ class RecurringsControllerTest {
     void testWatchRecurringsTriggersAlert() throws Exception {
         MovementCategory mockCat = new MovementCategory("Egreso", MovementType.EXPENSE);
         RecurringMove mockMove = new RecurringMove("Rent", new BigDecimal("500"), "Desc", 
-                LocalDateTime.now().minusMinutes(5), RecurrenceType.Mensual, mockCat);
+                LocalDateTime.of(2026, 6, 15, 10, 0).minusMinutes(5), RecurrenceType.Mensual, mockCat);
         
         java.util.TreeSet<RecurringMove> set = new java.util.TreeSet<>(recurrings.recurring_model.RecurringJSONHandler.REMINDER_COMPARATOR);
         set.add(mockMove);
@@ -107,3 +107,4 @@ class RecurringsControllerTest {
         // We mainly want to ensure no exceptions and coverage is triggered for the scheduler block
     }
 }
+

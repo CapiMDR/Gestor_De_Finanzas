@@ -113,7 +113,7 @@ public class RecurringMove {
      * @return true if it should trigger, false otherwise
      */
     public boolean shouldTrigger() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now(java.time.ZoneId.systemDefault());
         return !initialDate.isAfter(now) && !hasTriggered;
     }
 

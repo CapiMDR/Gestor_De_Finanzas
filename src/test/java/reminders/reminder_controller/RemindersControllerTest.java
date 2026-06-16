@@ -71,7 +71,7 @@ class RemindersControllerTest {
     @Test
     @DisplayName("should add reminder to model and refresh view")
     void testAddReminder() {
-        LocalDateTime dt = LocalDateTime.now().plusDays(1);
+        LocalDateTime dt = LocalDateTime.of(2026, 6, 15, 10, 0).plusDays(1);
         controller.handleReminderAddition("Test Add", "Msg", dt);
         
         verify(mockModel).addReminder("Test Add", "Msg", dt);
@@ -81,7 +81,7 @@ class RemindersControllerTest {
     @Test
     @DisplayName("should delete reminder from model and refresh view")
     void testDeleteReminder() {
-        Reminder r = new Reminder("Test Delete", "Msg", LocalDateTime.now());
+        Reminder r = new Reminder("Test Delete", "Msg", LocalDateTime.of(2026, 6, 15, 10, 0));
         controller.handleReminderDeletion(r);
         
         verify(mockModel).deleteReminder(r);
@@ -91,8 +91,8 @@ class RemindersControllerTest {
     @Test
     @DisplayName("should edit reminder and refresh view")
     void testEditReminder() {
-        Reminder oldR = new Reminder("Old", "Msg", LocalDateTime.now());
-        Reminder newR = new Reminder("New", "Msg", LocalDateTime.now().plusDays(1));
+        Reminder oldR = new Reminder("Old", "Msg", LocalDateTime.of(2026, 6, 15, 10, 0));
+        Reminder newR = new Reminder("New", "Msg", LocalDateTime.of(2026, 6, 15, 10, 0).plusDays(1));
         
         controller.handleReminderEdit(oldR, newR);
         
@@ -103,8 +103,8 @@ class RemindersControllerTest {
     @Test
     @DisplayName("should trigger past reminders when watch task runs")
     void testWatchRemindersTriggersPastReminders() throws Exception {
-        Reminder pastReminder = new Reminder("Past", "Msg", LocalDateTime.now().minusMinutes(5));
-        Reminder futureReminder = new Reminder("Future", "Msg", LocalDateTime.now().plusDays(1));
+        Reminder pastReminder = new Reminder("Past", "Msg", LocalDateTime.of(2026, 6, 15, 10, 0).minusMinutes(5));
+        Reminder futureReminder = new Reminder("Future", "Msg", LocalDateTime.of(2026, 6, 15, 10, 0).plusDays(1));
         
         java.util.TreeSet<Reminder> set = new java.util.TreeSet<>(ReminderJSONHandler.REMINDER_COMPARATOR);
         set.add(pastReminder);
@@ -122,3 +122,4 @@ class RemindersControllerTest {
         verify(mockModel).saveReminders();
     }
 }
+

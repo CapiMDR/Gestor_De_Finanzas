@@ -209,7 +209,7 @@ public class GoalsController implements AccountObserver {
                         notifications.notification_model.AppNotification.Tipo.META_CUMPLIDA,
                         "¡Meta cumplida!",
                         "Has alcanzado la meta '" + goal.getName() + "' en tu cuenta " + currentAccount.getName() + ".",
-                        java.time.LocalDateTime.now()
+                        java.time.LocalDateTime.now(java.time.ZoneId.systemDefault())
                     )
                 );
                 logger.info("Meta cumplida notificada: {}", goal.getName());

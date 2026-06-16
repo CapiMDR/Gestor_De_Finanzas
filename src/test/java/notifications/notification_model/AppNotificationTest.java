@@ -28,7 +28,7 @@ class AppNotificationTest {
     @Test
     @DisplayName("should mark as read")
     void testMarcar() {
-        AppNotification notification = new AppNotification(AppNotification.Tipo.RECORDATORIO, "Title", "Body", LocalDateTime.now());
+        AppNotification notification = new AppNotification(AppNotification.Tipo.RECORDATORIO, "Title", "Body", LocalDateTime.of(2026, 6, 15, 10, 0));
         assertFalse(notification.isLeida());
         notification.marcar();
         assertTrue(notification.isLeida());
@@ -37,9 +37,9 @@ class AppNotificationTest {
     @Test
     @DisplayName("should return correct icon literal")
     void testGetIconoLiteral() {
-        AppNotification n1 = new AppNotification(AppNotification.Tipo.RECORDATORIO, "", "", LocalDateTime.now());
-        AppNotification n2 = new AppNotification(AppNotification.Tipo.META_CUMPLIDA, "", "", LocalDateTime.now());
-        AppNotification n3 = new AppNotification(AppNotification.Tipo.RECURRENTE_VENCIDO, "", "", LocalDateTime.now());
+        AppNotification n1 = new AppNotification(AppNotification.Tipo.RECORDATORIO, "", "", LocalDateTime.of(2026, 6, 15, 10, 0));
+        AppNotification n2 = new AppNotification(AppNotification.Tipo.META_CUMPLIDA, "", "", LocalDateTime.of(2026, 6, 15, 10, 0));
+        AppNotification n3 = new AppNotification(AppNotification.Tipo.RECURRENTE_VENCIDO, "", "", LocalDateTime.of(2026, 6, 15, 10, 0));
 
         assertEquals("mdi2b-bell-ring", n1.getIconoLiteral());
         assertEquals("mdi2t-trophy", n2.getIconoLiteral());
@@ -54,3 +54,4 @@ class AppNotificationTest {
         assertEquals("[RECORDATORIO] Test — 01/01/2025 14:30", notification.toString());
     }
 }
+
