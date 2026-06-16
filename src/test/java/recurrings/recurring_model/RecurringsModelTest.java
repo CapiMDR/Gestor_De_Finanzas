@@ -137,5 +137,28 @@ class RecurringsModelTest {
         model.addRecurring("SaveTest", new BigDecimal("10"), "Desc", LocalDateTime.of(2026, 6, 15, 10, 0), RecurrenceType.Mensual, cat);
         assertDoesNotThrow(() -> model.saveRecurrings());
     }
+
+    @Test
+    void testEditRecurringNotPresent() {
+        MovementCategory cat = new MovementCategory("Cat", MovementType.EXPENSE);
+        RecurringMove moveOld = new RecurringMove("Old", new BigDecimal("10"), "Desc", LocalDateTime.of(2026, 6, 15, 10, 0), RecurrenceType.Mensual, cat);
+        RecurringMove moveNew = new RecurringMove("New", new BigDecimal("20"), "Desc", LocalDateTime.of(2026, 6, 15, 10, 0), RecurrenceType.Mensual, cat);
+        
+        // Don't add moveOld to the model
+        model.editRecurring(moveOld, moveNew);
+        
+        // Assert state is unchanged
+        assertEquals(0, model.getRecurrings().size());
+    }
+
+    @Test
+    void testRemoveObserverNotPresent() {
+        RecurringObserver observer = new RecurringObserver() {
+            @Override
+            public void observeRecurrings(SortedSet<RecurringMove> recurrings) {}
+        };
+        // Just verify it doesn't throw
+        model.removeObserver(observer);
+    }
 }
 

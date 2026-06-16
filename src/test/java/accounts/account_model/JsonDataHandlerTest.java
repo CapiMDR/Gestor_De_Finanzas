@@ -132,4 +132,95 @@ class JsonDataHandlerTest {
         Files.deleteIfExists(tempCatFile);
         Files.deleteIfExists(Paths.get(tempCatFile.toString() + ".bak"));
     }
+
+    @Test
+    @DisplayName("saveAccounts handles IOException")
+    void testSaveAccountsIOException() {
+        try (MockedStatic<Files> mockedFiles = mockStatic(Files.class)) {
+            mockedFiles.when(() -> Files.writeString(org.mockito.Mockito.any(), org.mockito.Mockito.anyString(), org.mockito.Mockito.any()))
+                    .thenThrow(new IOException("Simulated write error"));
+            
+            // Should not throw, should be caught and logged
+            handler.saveAccounts(new ArrayList<>()); 
+        }
+    }
+
+    @Test
+    @DisplayName("saveCategories handles IOException")
+    void testSaveCategoriesIOException() throws IOException {
+        Path tempCatFile = Files.createTempFile("test_cats_", ".json");
+        mockedAppConfig.when(AppConfig::getCategoriesFilePath).thenReturn(tempCatFile.toString());
+        try (MockedStatic<Files> mockedFiles = mockStatic(Files.class)) {
+            mockedFiles.when(() -> Files.writeString(org.mockito.Mockito.any(), org.mockito.Mockito.anyString(), org.mockito.Mockito.any()))
+                    .thenThrow(new IOException("Simulated write error"));
+            
+            // Should not throw, should be caught and logged
+            handler.saveCategories(new java.util.HashMap<>()); 
+        }
+        Files.deleteIfExists(tempCatFile);
+    }
+
+    @Test
+    @DisplayName("loadAccounts handles IOException")
+    void testLoadAccountsIOException() throws IOException {
+        Files.writeString(tempAccountsFile, "[]");
+        try (MockedStatic<Files> mockedFiles = mockStatic(Files.class)) {
+            mockedFiles.when(() -> Files.readString(org.mockito.Mockito.any(), org.mockito.Mockito.any()))
+                    .thenThrow(new IOException("Simulated read error"));
+            
+            List<Account> loaded = handler.loadAccounts();
+            assertTrue(loaded.isEmpty());
+        }
+    }
+
+    @Test
+    @DisplayName("loadCategories handles IOException")
+    void testLoadCategoriesIOException() throws IOException {
+        Path tempCatFile = Files.createTempFile("test_cats_", ".json");
+        mockedAppConfig.when(AppConfig::getCategoriesFilePath).thenReturn(tempCatFile.toString());
+        Files.writeString(tempCatFile, "[]");
+
+        try (MockedStatic<Files> mockedFiles = mockStatic(Files.class)) {
+            mockedFiles.when(() -> Files.readString(org.mockito.Mockito.any(), org.mockito.Mockito.any()))
+                    .thenThrow(new IOException("Simulated read error"));
+            
+            Map<String, MovementCategory> loaded = handler.loadCategories();
+            assertTrue(loaded.isEmpty());
+        }
+        Files.deleteIfExists(tempCatFile);
+    }
+    
+    @Test
+    @DisplayName("loadAccounts backup fails with IOException")
+    void testLoadAccountsBackupIOException() throws IOException {
+        Files.writeString(tempAccountsFile, "invalid json {");
+        try (MockedStatic<Files> mockedFiles = mockStatic(Files.class)) {
+            mockedFiles.when(() -> Files.readString(org.mockito.Mockito.any(), org.mockito.Mockito.any()))
+                    .thenCallRealMethod();
+            mockedFiles.when(() -> Files.copy((Path)org.mockito.Mockito.any(), (Path)org.mockito.Mockito.any(), org.mockito.Mockito.any()))
+                    .thenThrow(new IOException("Simulated copy error"));
+            
+            List<Account> loaded = handler.loadAccounts();
+            assertTrue(loaded.isEmpty());
+        }
+    }
+
+    @Test
+    @DisplayName("loadCategories backup fails with IOException")
+    void testLoadCategoriesBackupIOException() throws IOException {
+        Path tempCatFile = Files.createTempFile("test_cats_", ".json");
+        mockedAppConfig.when(AppConfig::getCategoriesFilePath).thenReturn(tempCatFile.toString());
+        Files.writeString(tempCatFile, "invalid json {");
+
+        try (MockedStatic<Files> mockedFiles = mockStatic(Files.class)) {
+            mockedFiles.when(() -> Files.readString(org.mockito.Mockito.any(), org.mockito.Mockito.any()))
+                    .thenCallRealMethod();
+            mockedFiles.when(() -> Files.copy((Path)org.mockito.Mockito.any(), (Path)org.mockito.Mockito.any(), org.mockito.Mockito.any()))
+                    .thenThrow(new IOException("Simulated copy error"));
+            
+            Map<String, MovementCategory> loaded = handler.loadCategories();
+            assertTrue(loaded.isEmpty());
+        }
+        Files.deleteIfExists(tempCatFile);
+    }
 }

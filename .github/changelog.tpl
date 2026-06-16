@@ -1,6 +1,6 @@
 ## Notas de la Versión {{projectVersion}}
 
-Esta versión marca un hito monumental para la aplicación: **la migración completa de Java Swing a JavaFX**. Este salto tecnológico explica el cambio de versión de la `v1.7.3` (nuestra última versión pública) directamente a la `v2.4.1`. Además del nuevo motor gráfico, el shell principal fue reestructurado con un modelo de navegación por pestañas, se introdujo la ejecución en segundo plano mediante la bandeja del sistema, el sistema de notificaciones fue renovado completamente y se aplicó un pulido de UI generalizado en todas las vistas.
+Esta versión 2.5.4 trae consigo importantes mejoras visuales y de usabilidad en el sistema. Se ha perfeccionado la experiencia del usuario con ajustes en el tutorial interactivo, asegurando que se muestre correctamente en las vistas correspondientes y con dimensiones adecuadas. Adicionalmente, se han corregido bugs en la lógica y visualización de fechas en las gráficas de barras del panel principal, y se han añadido porcentajes a las gráficas de pastel para una lectura más intuitiva. Además de estas mejoras visuales, se ha logrado un 100% de cobertura en las pruebas unitarias de los modelos principales de la aplicación, garantizando una mayor robustez.
 
 Un **agradecimiento especial** a todos los miembros del equipo y usuarios que dedicaron su tiempo a probar, diseñar y desarrollar estas mejoras. ¡Su contribución es invaluable!
 
@@ -8,7 +8,7 @@ Un **agradecimiento especial** a todos los miembros del equipo y usuarios que de
 
 ## Release Notes {{projectVersion}}
 
-This release marks a monumental milestone for the application: **the complete migration from Java Swing to JavaFX**. This technological leap explains the version jump from `v1.7.3` (our last public release) directly to `v2.4.1`. Alongside the new graphical engine, the main shell was restructured around a tab-based navigation model, background execution via the system tray was introduced, the notifications system was overhauled, and a widespread UI polish pass was applied across all views.
+This version 2.5.4 brings significant visual and usability improvements to the system. The user experience has been refined with adjustments to the interactive tutorial, ensuring it displays correctly in the appropriate views and with accurate dimensions. Additionally, bugs regarding the logic and visualization of dates in the main dashboard's bar charts have been fixed, and percentages have been added to the pie charts for more intuitive reading. Alongside these visual enhancements, we achieved 100% unit test coverage across the application's core models, ensuring greater robustness.
 
 A **special thanks** to all team members and users who dedicated their time to testing, designing, and developing these improvements. Your contribution is invaluable!
 

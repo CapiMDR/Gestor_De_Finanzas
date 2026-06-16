@@ -95,7 +95,6 @@ class RecurringMoveTest {
         // Anual
         RecurringMove anual = new RecurringMove("C", BigDecimal.TEN, "D", baseDate, RecurrenceType.Anual, cat);
         assertEquals(baseDate.plusYears(1), anual.createNextOccurrence().getInitialDate());
-
     }
 }
 

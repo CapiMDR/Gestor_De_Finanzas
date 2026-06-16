@@ -51,4 +51,20 @@ class MovementTest {
         assertEquals(1, account.getMovements().size(), 
             "La cuenta debe tener el movimiento registrado en su lista");
     }
+
+    @Test
+    void testPrimaryConstructorAndSetId() {
+        Account account = new Account(1, "Wallet", AccountType.DIGITAL, Coin.MXN, new BigDecimal("1000"));
+        MovementCategory incomeCat = new MovementCategory("Bonus", MovementType.INCOME);
+        
+        Movement movement = new Movement(null, "Bono", new BigDecimal("200"), incomeCat, account);
+        
+        assertNotNull(movement.getIdMovement());
+        assertNotNull(movement.getDate());
+        assertEquals("Bono", movement.getDescription());
+        
+        UUID newId = UUID.randomUUID();
+        movement.setIdMovement(newId);
+        assertEquals(newId, movement.getIdMovement());
+    }
 }

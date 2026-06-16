@@ -102,4 +102,42 @@ class RecurringJSONHandlerTest {
         assertTrue(loaded.isEmpty());
         assertTrue(new File(tempFilePath + ".bak").exists());
     }
+
+    @Test
+    void testSaveIOException() {
+        TreeSet<RecurringMove> moves = new TreeSet<>(RecurringJSONHandler.recurringComparator);
+        
+        try (MockedStatic<java.nio.file.Files> mockedFiles = mockStatic(java.nio.file.Files.class)) {
+            mockedFiles.when(() -> java.nio.file.Files.writeString(org.mockito.Mockito.any(), org.mockito.Mockito.anyString(), org.mockito.Mockito.any()))
+                    .thenThrow(new IOException("Simulated write error"));
+            
+            RecurringJSONHandler.saveRecurrings(moves); // Should catch and log error
+        }
+    }
+
+    @Test
+    void testLoadIOException() throws IOException {
+        java.nio.file.Files.writeString(Path.of(tempFilePath), "[]");
+        try (MockedStatic<java.nio.file.Files> mockedFiles = mockStatic(java.nio.file.Files.class)) {
+            mockedFiles.when(() -> java.nio.file.Files.readString(org.mockito.Mockito.any(), org.mockito.Mockito.any()))
+                    .thenThrow(new IOException("Simulated read error"));
+            
+            SortedSet<RecurringMove> loaded = RecurringJSONHandler.loadRecurrings();
+            assertTrue(loaded.isEmpty());
+        }
+    }
+
+    @Test
+    void testLoadBackupIOException() throws IOException {
+        java.nio.file.Files.writeString(Path.of(tempFilePath), "invalid json {");
+        try (MockedStatic<java.nio.file.Files> mockedFiles = mockStatic(java.nio.file.Files.class)) {
+            mockedFiles.when(() -> java.nio.file.Files.readString(org.mockito.Mockito.any(), org.mockito.Mockito.any()))
+                    .thenCallRealMethod();
+            mockedFiles.when(() -> java.nio.file.Files.copy((Path)org.mockito.Mockito.any(), (Path)org.mockito.Mockito.any(), org.mockito.Mockito.any()))
+                    .thenThrow(new IOException("Simulated copy backup error"));
+            
+            SortedSet<RecurringMove> loaded = RecurringJSONHandler.loadRecurrings();
+            assertTrue(loaded.isEmpty());
+        }
+    }
 }

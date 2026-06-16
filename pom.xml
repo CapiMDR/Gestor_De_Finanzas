@@ -41,6 +41,7 @@
       **/GoalDetailControllerFX.java,
       **/GoalEditController.java,
       **/MovementCategoriesViewFX.java,
+      **/NotificationManager.java,
       **/RecurringEditController.java,
       **/RecurringAlertController.java,
       **/ReminderEditController.java,

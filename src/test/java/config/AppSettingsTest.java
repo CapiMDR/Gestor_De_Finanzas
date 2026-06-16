@@ -88,4 +88,30 @@ class AppSettingsTest {
         assertFalse(settings.isTutorialMostrado());
         assertEquals(AppSettings.ModoNotificaciones.SOLO_PRIMER_PLANO, settings.getModoNotificaciones());
     }
+
+    @Test
+    @DisplayName("guardar handles IOException")
+    void testGuardarIOException() {
+        try (MockedStatic<Files> mockedFiles = mockStatic(Files.class)) {
+            mockedFiles.when(() -> Files.writeString(org.mockito.Mockito.any(), org.mockito.Mockito.anyString(), org.mockito.Mockito.any()))
+                    .thenThrow(new java.io.IOException("Simulated write error"));
+            
+            // Should not throw, should be caught and logged
+            settings.guardar();
+        }
+    }
+
+    @Test
+    @DisplayName("cargar handles Exception")
+    void testCargarException() throws Exception {
+        Files.writeString(tempSettingsFile, "invalid json {", StandardCharsets.UTF_8);
+
+        Method cargarMethod = AppSettings.class.getDeclaredMethod("cargar");
+        cargarMethod.setAccessible(true);
+        
+        // Should catch JSONException and use defaults
+        cargarMethod.invoke(settings);
+
+        assertFalse(settings.isAutostart());
+    }
 }
