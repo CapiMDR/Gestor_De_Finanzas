@@ -18,6 +18,8 @@ import notifications.notification_controller.NotificationManager;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import javafx.scene.Node;
+
 
 import java.io.IOException;
 /**
@@ -140,9 +142,14 @@ public class MainShell {
         Platform.runLater(this::startTutorial);
     }
 
-    private void startTutorial() {
+    public void startTutorial() {
         if (config.AppSettings.getInstance().isTutorialMostrado()) {
             return;
+        }
+        
+        // Ensure we are on the main accounts tab before running the tutorial
+        if (!mainTabPane.getTabs().isEmpty()) {
+            mainTabPane.getSelectionModel().select(0);
         }
         
         // Define steps
@@ -156,19 +163,23 @@ public class MainShell {
             new tutorial.tutorial_model.TutorialStep(
                 "Tus Cuentas",
                 "Puedes ver y administrar tus cuentas en esta pestaña principal. Al abrir una cuenta, se creará una nueva pestaña.",
-                mainTabPane,
+                () -> {
+                    // Try to find the inner list-panel containing Mis Cuentas
+                    Node listPanel = mainTabPane.lookup(".list-panel");
+                    return listPanel != null ? listPanel : mainTabPane;
+                },
                 javafx.geometry.Pos.BOTTOM_CENTER
             ),
             new tutorial.tutorial_model.TutorialStep(
                 "Notificaciones",
                 "Aquí recibirás recordatorios y alertas cuando cumplas tus metas o venzan pagos recurrentes.",
-                lblBadge.getParent(), // The stack pane holding the bell
+                () -> lblBadge.getParent(), // The stack pane holding the bell
                 javafx.geometry.Pos.BOTTOM_CENTER
             ),
             new tutorial.tutorial_model.TutorialStep(
                 "Configuración y Segundo Plano",
                 "En esta sección puedes ajustar el modo en segundo plano para seguir recibiendo notificaciones aunque cierres la ventana.",
-                ((javafx.scene.layout.Pane)lblBadge.getParent().getParent()).getChildren().get(2), // The settings icon (3rd child of the HBox)
+                () -> ((javafx.scene.layout.Pane)lblBadge.getParent().getParent()).getChildren().get(2), // The settings icon (3rd child of the HBox)
                 javafx.geometry.Pos.BOTTOM_CENTER
             )
         );

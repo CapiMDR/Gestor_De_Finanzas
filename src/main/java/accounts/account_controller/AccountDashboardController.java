@@ -1,13 +1,14 @@
 package accounts.account_controller;
 
-import java.util.LinkedHashSet;
-import java.util.LinkedHashMap;
+import java.util.TreeSet;
 import java.util.Set;
 import java.util.Map;
+import java.util.HashMap;
 import java.util.List;
 import accounts.account_model.Account;
 import accounts.account_model.AccountManagerSubject;
 import accounts.account_model.AccountObserver;
+import java.time.LocalDate;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.chart.BarChart;
@@ -203,16 +204,26 @@ public class AccountDashboardController implements AccountObserver, ReportObserv
             pieChartMovements.getData().add(new PieChart.Data(LABEL_INGRESO, 0));
             pieChartMovements.getData().add(new PieChart.Data(LABEL_EGRESO, 0));
         }
+        
+        double inc = income.doubleValue();
+        double exp = expense.doubleValue();
+        double total = inc + exp;
+        
         for (PieChart.Data d : pieChartMovements.getData()) {
-            if (LABEL_INGRESO.equals(d.getName())) {
-                d.setPieValue(income.doubleValue());
-            } else if (LABEL_EGRESO.equals(d.getName())) {
-                d.setPieValue(expense.doubleValue());
+            if (d.getName().startsWith(LABEL_INGRESO)) {
+                d.setPieValue(inc);
+                double pct = total > 0 ? (inc / total) * 100 : 0;
+                d.setName(String.format("%s (%.1f%%)", LABEL_INGRESO, pct));
+            } else if (d.getName().startsWith(LABEL_EGRESO)) {
+                d.setPieValue(exp);
+                double pct = total > 0 ? (exp / total) * 100 : 0;
+                d.setName(String.format("%s (%.1f%%)", LABEL_EGRESO, pct));
             }
         }
     }
 
     private void updateBarChart(ReportData reportData) {
+        barChartMovements.setAnimated(false);
         barChartMovements.getData().clear();
         
         XYChart.Series<String, Number> incomeSeries = new XYChart.Series<>();
@@ -222,36 +233,39 @@ public class AccountDashboardController implements AccountObserver, ReportObserv
 
         java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd MMM");
         
-        Map<String, BigDecimal> incomesByDate = new LinkedHashMap<>();
-        Map<String, BigDecimal> expensesByDate = new LinkedHashMap<>();
+        Map<java.time.LocalDate, BigDecimal> incomesByDate = new HashMap<>();
+        Map<java.time.LocalDate, BigDecimal> expensesByDate = new HashMap<>();
         
         for (Movement m : reportData.getMovements()) {
-            String dateStr = m.getDate().format(formatter);
+            java.time.LocalDate date = m.getDate().toLocalDate();
             if (m.getCategory().getType() == MovementCategory.MovementType.INCOME) {
-                incomesByDate.put(dateStr, incomesByDate.getOrDefault(dateStr, BigDecimal.ZERO).add(m.getAmount()));
+                incomesByDate.put(date, incomesByDate.getOrDefault(date, BigDecimal.ZERO).add(m.getAmount()));
             } else {
-                expensesByDate.put(dateStr, expensesByDate.getOrDefault(dateStr, BigDecimal.ZERO).add(m.getAmount()));
+                expensesByDate.put(date, expensesByDate.getOrDefault(date, BigDecimal.ZERO).add(m.getAmount()));
             }
         }
         
-        Set<String> allDates = new LinkedHashSet<>();
+        Set<LocalDate> allDates = new TreeSet<>();
         allDates.addAll(incomesByDate.keySet());
         allDates.addAll(expensesByDate.keySet());
         
-        for (String dateStr : allDates) {
-            incomeSeries.getData().add(new XYChart.Data<>(dateStr, incomesByDate.getOrDefault(dateStr, BigDecimal.ZERO).doubleValue()));
-            expenseSeries.getData().add(new XYChart.Data<>(dateStr, expensesByDate.getOrDefault(dateStr, BigDecimal.ZERO).doubleValue()));
+        for (LocalDate date : allDates) {
+            String dateStr = date.format(formatter);
+            incomeSeries.getData().add(new XYChart.Data<>(dateStr, incomesByDate.getOrDefault(date, BigDecimal.ZERO).doubleValue()));
+            expenseSeries.getData().add(new XYChart.Data<>(dateStr, expensesByDate.getOrDefault(date, BigDecimal.ZERO).doubleValue()));
         }
         
         barChartMovements.getData().add(incomeSeries);
         barChartMovements.getData().add(expenseSeries);
+        
+        Platform.runLater(() -> barChartMovements.setAnimated(true));
     }
 
     private void applyPieChartStyles() {
         for (PieChart.Data d : pieChartMovements.getData()) {
             if (d.getNode() != null) {
                 d.getNode().getStyleClass().removeAll(COLOR_INCOME, COLOR_EXPENSE);
-                if (LABEL_INGRESO.equals(d.getName())) {
+                if (d.getName().startsWith(LABEL_INGRESO)) {
                     d.getNode().getStyleClass().add(COLOR_INCOME);
                 } else {
                     d.getNode().getStyleClass().add(COLOR_EXPENSE);
@@ -284,9 +298,9 @@ public class AccountDashboardController implements AccountObserver, ReportObserv
         for (javafx.scene.Node n : pieChartMovements.lookupAll(".chart-legend-item")) {
             if (n instanceof javafx.scene.control.Label label && label.getGraphic() != null) {
                     label.getGraphic().getStyleClass().removeAll(COLOR_INCOME, COLOR_EXPENSE);
-                    if (LABEL_INGRESO.equals(label.getText())) {
+                    if (label.getText().startsWith(LABEL_INGRESO)) {
                         label.getGraphic().getStyleClass().add(COLOR_INCOME);
-                    } else if (LABEL_EGRESO.equals(label.getText())) {
+                    } else if (label.getText().startsWith(LABEL_EGRESO)) {
                         label.getGraphic().getStyleClass().add(COLOR_EXPENSE);
                     }
                 }

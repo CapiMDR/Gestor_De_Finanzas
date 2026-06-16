@@ -44,6 +44,14 @@
                 </HBox>
                 <CheckBox fx:id="chkAutostart" text="Iniciar automáticamente con Windows" />
             </VBox>
+
+            <Separator />
+
+            <!-- Tutorial -->
+            <VBox spacing="8">
+                <Label text="Tutorial Inicial" styleClass="settings-section-title"/>
+                <Button text="Repetir Tutorial Inicial" onAction="#repetirTutorial" />
+            </VBox>
         </VBox>
     </content>
 
