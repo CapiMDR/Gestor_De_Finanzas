@@ -1,9 +1,8 @@
 package reports.report_model;
 
+import java.util.List;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
-
 import accounts.account_model.Account;
 import movements.movement_model.Movement;
 
@@ -99,8 +98,8 @@ public class ReportGenerator {
         LocalDate today = LocalDate.now(java.time.ZoneId.systemDefault());
         // Go back to the most recent Monday
         LocalDate start = today.with(java.time.DayOfWeek.MONDAY);
-        // End is today
-        LocalDate end = today;
+        // End is the Sunday of this week
+        LocalDate end = today.with(java.time.DayOfWeek.SUNDAY);
 
         List<Movement> movements = account.getMovements().stream()
                 .filter(m -> {

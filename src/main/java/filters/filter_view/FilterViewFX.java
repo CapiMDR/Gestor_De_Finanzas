@@ -1,5 +1,7 @@
 package filters.filter_view;
 
+import java.util.ArrayList;
+import java.util.List;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -11,8 +13,6 @@ import movements.movement_model.Movement;
 import movements.movement_model.MovementCategory.MovementType;
 
 import java.time.LocalDate;
-import java.util.List;
-
 /**
  * JavaFX controller for the Filter view.
  * Replaces {@code CategoriesView.java} (Swing).
@@ -117,7 +117,7 @@ public class FilterViewFX {
         LocalDate fromDate = datePickerFrom.getValue();
         LocalDate toDate = datePickerTo.getValue();
 
-        List<Movement> filtered = new java.util.ArrayList<>();
+        List<Movement> filtered = new ArrayList<>();
 
         if (STR_TODAS.equals(selectedCategory) || MovementType.INCOME.name().equals(selectedCategory)) {
             filtered.addAll(currentIncomeMovements);

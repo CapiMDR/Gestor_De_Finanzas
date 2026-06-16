@@ -11,6 +11,7 @@ import recurrings.recurring_controller.RecurringsController;
  * Holds the background controller and provides a method to open the JavaFX UI.
  */
 public class RecurringsModule {
+    private RecurringsModule() {}
     
     // The controller is initialized statically so the ScheduledExecutorService
     // starts monitoring as soon as the application launches, without needing

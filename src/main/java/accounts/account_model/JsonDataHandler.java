@@ -1,5 +1,10 @@
 package accounts.account_model;
 
+import java.util.UUID;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -23,11 +28,6 @@ import java.nio.file.StandardCopyOption;
 import java.nio.charset.StandardCharsets;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
-
 /**
  * Class in charge of serializing and deserializing data related to accounts,
  * movements, goals and categories to and from JSON files.
@@ -35,6 +35,7 @@ import java.util.UUID;
  * @author Martín Jesús Pool Chuc
  */
 public class JsonDataHandler {
+    private static final String KEY_DESCRIPTION = "description";
 
     private static final Logger logger = LoggerFactory.getLogger(JsonDataHandler.class);
 
@@ -76,7 +77,7 @@ public class JsonDataHandler {
         for (Movement movement : movements) {
             JSONObject movementJson = new JSONObject();
             movementJson.put("idMovement", movement.getIdMovement());
-            movementJson.put("description", movement.getDescription());
+            movementJson.put(KEY_DESCRIPTION, movement.getDescription());
             movementJson.put("amount", movement.getAmount().toString());
             movementJson.put("date", movement.getDate().toString());
             movementJson.put("categoryName", movement.getCategory().getName());
@@ -102,7 +103,7 @@ public class JsonDataHandler {
             goalJson.put("targetAmount", goal.getTargetAmount());
             // Removed the put of the current amount, since it is not necessary
             goalJson.put("currentAmount", goal.getCurrentAmount());
-            goalJson.put("description", goal.getDescription());
+            goalJson.put(KEY_DESCRIPTION, goal.getDescription());
 
             jsonArray.put(goalJson);
         }
@@ -116,7 +117,7 @@ public class JsonDataHandler {
      * @param categories map of categories
      * @return JSONArray representing categories
      */
-    public JSONArray categoriesToJson(HashMap<String, MovementCategory> categories) {
+    public JSONArray categoriesToJson(Map<String, MovementCategory> categories) {
         JSONArray jsonArray = new JSONArray();
 
         for (MovementCategory category : categories.values()) {
@@ -189,7 +190,7 @@ public class JsonDataHandler {
             JSONObject movementJson = movementsJson.getJSONObject(i);
 
             UUID idMovement = UUID.fromString(movementJson.getString("idMovement"));
-            String description = movementJson.getString("description");
+            String description = movementJson.getString(KEY_DESCRIPTION);
 
             String amountStr = movementJson.get("amount").toString();
             BigDecimal amount = new BigDecimal(amountStr);
@@ -224,7 +225,7 @@ public class JsonDataHandler {
             BigDecimal targetAmount = new BigDecimal(targetAmountStr);
 
             String currentAmountStr = goalJson.optString("currentAmount", "0");
-            String description = goalJson.getString("description");
+            String description = goalJson.getString(KEY_DESCRIPTION);
 
             Goal goal = new Goal(name, targetAmount, description);
             goal.setCurrentAmount(new BigDecimal(currentAmountStr));
@@ -278,7 +279,7 @@ public class JsonDataHandler {
      *
      * @param categories map of categories
      */
-    public void saveCategories(HashMap<String, MovementCategory> categories) {
+    public void saveCategories(Map<String, MovementCategory> categories) {
         JSONArray jsonArray = categoriesToJson(categories);
         Path target = Paths.get(AppConfig.getCategoriesFilePath());
         Path temp = Paths.get(AppConfig.getCategoriesFilePath() + ".tmp");
@@ -328,7 +329,7 @@ public class JsonDataHandler {
      *
      * @return map of loaded categories or empty map in case of error
      */
-    public HashMap<String, MovementCategory> loadCategories() {
+    public Map<String, MovementCategory> loadCategories() {
         java.io.File file = new java.io.File(AppConfig.getCategoriesFilePath());
         if (!file.exists() || file.length() == 0) {
             return new HashMap<>();

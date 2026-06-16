@@ -13,6 +13,7 @@ import java.io.IOException;
  * Initializes the controller for managing reminders.
  */
 public class RemindersModule {
+    private RemindersModule() {}
     
     // Static controller to keep the scheduler running
     public static final RemindersController controller = new RemindersController();

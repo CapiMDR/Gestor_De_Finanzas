@@ -82,4 +82,32 @@ class CategoryManagerTest {
         MovementCategory result = categoryManager.getCategoryByName("Test");
         assertEquals(MovementType.EXPENSE, result.getType(), "Debería actualizarse la categoría existente");
     }
+
+    @Test
+    void testEmptyConstructor() {
+        CategoryManager emptyManager = new CategoryManager();
+        assertNotNull(emptyManager.getCategories());
+    }
+
+    @Test
+    void testConstructorWithNullCategories() {
+        JsonDataHandler mockHandler = org.mockito.Mockito.mock(JsonDataHandler.class);
+        org.mockito.Mockito.when(mockHandler.loadCategories()).thenReturn(null);
+        
+        CategoryManager nullCategoriesManager = new CategoryManager(mockHandler);
+        assertNotNull(nullCategoriesManager.getCategories());
+        assertTrue(nullCategoriesManager.getCategories().isEmpty());
+    }
+
+    @Test
+    void testAddRemoveObserver() {
+        movements.movement_model.CategoryObserver mockObserver = org.mockito.Mockito.mock(movements.movement_model.CategoryObserver.class);
+        
+        categoryManager.addObserver(mockObserver);
+        categoryManager.notifyObservers();
+        
+        org.mockito.Mockito.verify(mockObserver, org.mockito.Mockito.times(1)).onNotify(org.mockito.Mockito.anyList());
+        
+        categoryManager.removeObserver(mockObserver);
+    }
 }

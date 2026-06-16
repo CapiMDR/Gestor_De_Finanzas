@@ -2,7 +2,6 @@ package movements.movement_model;
 
 import java.util.ArrayList;
 import java.util.List;
-
 /**
  * Class that implements the Observer pattern for the management of movement
  * categories.

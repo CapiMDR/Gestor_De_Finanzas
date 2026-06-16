@@ -23,12 +23,12 @@ class RecurringMoveTest {
     void testGettersAndSetters() {
         MovementCategory cat = new MovementCategory("Sub", MovementType.EXPENSE);
         RecurringMove move = new RecurringMove("Netflix", new BigDecimal("15.99"), "Mensual",
-                LocalDateTime.of(2026, 1, 1, 10, 0), RecurrenceType.Mensual, cat);
+                LocalDateTime.of(2026, java.time.Month.JANUARY, 1, 10, 0), RecurrenceType.Mensual, cat);
 
         assertEquals("Netflix", move.getConcept());
         assertEquals(new BigDecimal("15.99"), move.getAmount());
         assertEquals("Mensual", move.getDescription());
-        assertEquals(LocalDateTime.of(2026, 1, 1, 10, 0), move.getInitialDate());
+        assertEquals(LocalDateTime.of(2026, java.time.Month.JANUARY, 1, 10, 0), move.getInitialDate());
         assertEquals(RecurrenceType.Mensual, move.getRecurrence());
         assertEquals(cat, move.getCategory());
 
@@ -54,7 +54,7 @@ class RecurringMoveTest {
         MovementCategory cat = new MovementCategory("Sub", MovementType.EXPENSE);
         // Past date
         RecurringMove move1 = new RecurringMove("Past", BigDecimal.TEN, "Desc",
-                LocalDateTime.now().minusDays(1), RecurrenceType.Diario, cat);
+                LocalDateTime.of(2026, java.time.Month.JUNE, 15, 10, 0).minusDays(1), RecurrenceType.Diario, cat);
         assertTrue(move1.shouldTrigger());
 
         move1.setTriggered(true);
@@ -62,7 +62,7 @@ class RecurringMoveTest {
 
         // Future date
         RecurringMove move2 = new RecurringMove("Future", BigDecimal.TEN, "Desc",
-                LocalDateTime.now().plusDays(1), RecurrenceType.Diario, cat);
+                LocalDateTime.of(2026, java.time.Month.JUNE, 15, 10, 0).plusDays(1), RecurrenceType.Diario, cat);
         assertFalse(move2.shouldTrigger(), "Should not trigger future dates");
     }
 
@@ -73,7 +73,7 @@ class RecurringMoveTest {
     @Test
     void testCreateNextOccurrence() {
         MovementCategory cat = new MovementCategory("Sub", MovementType.EXPENSE);
-        LocalDateTime baseDate = LocalDateTime.of(2026, 1, 1, 10, 0);
+        LocalDateTime baseDate = LocalDateTime.of(2026, java.time.Month.JANUARY, 1, 10, 0);
 
         // Diario
         RecurringMove diario = new RecurringMove("C", BigDecimal.TEN, "D", baseDate, RecurrenceType.Diario, cat);
@@ -95,6 +95,6 @@ class RecurringMoveTest {
         // Anual
         RecurringMove anual = new RecurringMove("C", BigDecimal.TEN, "D", baseDate, RecurrenceType.Anual, cat);
         assertEquals(baseDate.plusYears(1), anual.createNextOccurrence().getInitialDate());
-
     }
 }
+

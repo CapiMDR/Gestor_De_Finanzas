@@ -1,10 +1,11 @@
 package recurrings.recurring_model;
 
-import java.util.TreeSet;
 
+import java.util.SortedSet;
 /**
  * Interface to observe recurring movement changes.
  */
 public interface RecurringObserver {
-    public void observeRecurrings(TreeSet<RecurringMove> reminders);
+    public void observeRecurrings(SortedSet<RecurringMove> reminders);
 }
+

@@ -49,7 +49,7 @@ public class Reminder {
     public Reminder(String name, String message) {
         this.name = name;
         this.message = message;
-        this.date = LocalDateTime.now();
+        this.date = LocalDateTime.now(java.time.ZoneId.systemDefault());
     }
 
     /**
@@ -125,7 +125,7 @@ public class Reminder {
      * @return {@code true} if it should trigger, otherwise {@code false}.
      */
     public boolean shouldTrigger() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now(java.time.ZoneId.systemDefault());
         return !triggered && date.isBefore(now);
     }
 

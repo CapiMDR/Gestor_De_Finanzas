@@ -1,8 +1,7 @@
 package goals.goals_controller;
 
-import java.math.BigDecimal;
 import java.util.List;
-
+import java.math.BigDecimal;
 import notifications.notification_controller.NotificationManager;
 
 import org.slf4j.Logger;
@@ -209,7 +208,7 @@ public class GoalsController implements AccountObserver {
                         notifications.notification_model.AppNotification.Tipo.META_CUMPLIDA,
                         "¡Meta cumplida!",
                         "Has alcanzado la meta '" + goal.getName() + "' en tu cuenta " + currentAccount.getName() + ".",
-                        java.time.LocalDateTime.now()
+                        java.time.LocalDateTime.now(java.time.ZoneId.systemDefault())
                     )
                 );
                 logger.info("Meta cumplida notificada: {}", goal.getName());

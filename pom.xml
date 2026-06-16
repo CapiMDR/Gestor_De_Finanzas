@@ -6,7 +6,7 @@
 
   <groupId>io.github.capimdr</groupId>
   <artifactId>gestor-finanzas</artifactId>
-  <version>2.5.3</version>
+  <version>2.5.4</version>
 
   <name>Gestor de Finanzas</name>
   <url>https://github.com/CapiMDR/Gestor_De_Finanzas</url>
@@ -17,7 +17,7 @@
     <maven.compiler.target>21</maven.compiler.target>
     <sonar.organization>capimdr</sonar.organization>
     <!-- Default version for local builds. GitHub Actions will override this -->
-    <app.version>2.5.3</app.version>
+    <app.version>2.5.4</app.version>
     <!-- JavaFX version centralizada -->
     <javafx.version>21.0.3</javafx.version>
 
@@ -41,6 +41,7 @@
       **/GoalDetailControllerFX.java,
       **/GoalEditController.java,
       **/MovementCategoriesViewFX.java,
+      **/NotificationManager.java,
       **/RecurringEditController.java,
       **/RecurringAlertController.java,
       **/ReminderEditController.java,

@@ -1,5 +1,7 @@
 package notifications.notification_controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import notifications.notification_model.AppNotification;
 
 import config.AppConfig;
@@ -15,10 +17,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
-
 /**
  * Singleton that centralizes all in-app notifications.
  *

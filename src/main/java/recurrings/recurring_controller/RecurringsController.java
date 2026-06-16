@@ -1,11 +1,11 @@
 package recurrings.recurring_controller;
 
+import java.util.UUID;
+import java.util.List;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.List;
 import notifications.notification_controller.NotificationManager;
-import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -223,7 +223,7 @@ public class RecurringsController {
 
         try {
             BigDecimal amount = new BigDecimal(amountStr);
-            if (!isValidRecurring(concept, amount, concept, date.atStartOfDay(), RecurrenceType.Mensual)) {
+            if (!isValidRecurring(concept, amount, concept, LocalDateTime.of(date, LocalTime.MIDNIGHT), RecurrenceType.Mensual)) {
                 showAlert(AlertType.ERROR, "Datos inválidos", "Asegúrate de que el monto sea mayor a 0 y con máximo 2 decimales.");
                 return;
             }

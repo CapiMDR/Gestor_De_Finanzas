@@ -1,5 +1,6 @@
 package reminders.reminder_view;
 
+import java.util.List;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -59,7 +60,7 @@ public class RemindersViewFX extends AbstractReminderForm {
         this.controller = controller;
     }
 
-    public void refreshList(java.util.List<Reminder> reminders) {
+    public void refreshList(List<Reminder> reminders) {
         listReminders.getItems().clear();
         for (Reminder r : reminders) {
             listReminders.getItems().add(String.format("%s: %s (Fecha: %s)", r.getName(), r.getMessage(), r.getDate().toString()));

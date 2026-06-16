@@ -82,4 +82,21 @@ public class SettingsPanelController {
 
         logger.info("Configuración guardada por el usuario.");
     }
+
+    @FXML
+    private void repetirTutorial(javafx.event.ActionEvent event) {
+        AppSettings.getInstance().setTutorialMostrado(false);
+        // Cerrar el diálogo actual
+        javafx.scene.Node source = (javafx.scene.Node) event.getSource();
+        javafx.stage.Stage stage = (javafx.stage.Stage) source.getScene().getWindow();
+        stage.close();
+        
+        // Lanzar el tutorial de nuevo
+        Platform.runLater(() -> {
+            com.mycompany.construccion.MainShell mainShell = com.mycompany.construccion.MainShell.getInstance();
+            if (mainShell != null) {
+                mainShell.startTutorial();
+            }
+        });
+    }
 }

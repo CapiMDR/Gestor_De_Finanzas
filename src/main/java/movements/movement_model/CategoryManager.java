@@ -1,8 +1,8 @@
 package movements.movement_model;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-
+import java.util.Map;
+import java.util.ArrayList;
 import accounts.account_model.JsonDataHandler;
 
 /**
@@ -18,7 +18,7 @@ public class CategoryManager {
      * Map containing the registered categories, using the category
      * name as the key.
      */
-    private HashMap<String, MovementCategory> categories;
+    private Map<String, MovementCategory> categories;
 
 
     protected JsonDataHandler dataHandler;
@@ -102,9 +102,10 @@ public class CategoryManager {
         MovementManagerSubject.notifyObservers(new ArrayList<>(categories.values()));
     }
 
-    public HashMap<String, MovementCategory> getCategories() {
+    public Map<String, MovementCategory> getCategories() {
         return categories;
     }
 
 
 }
+

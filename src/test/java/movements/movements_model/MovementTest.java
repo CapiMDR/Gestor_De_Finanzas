@@ -23,7 +23,7 @@ class MovementTest {
         MovementCategory dummyCategory = new MovementCategory("Gym", MovementType.EXPENSE);
         
         UUID id = UUID.randomUUID();
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.of(2026, java.time.Month.JUNE, 15, 10, 0);
         BigDecimal amount = new BigDecimal("500.00");
         String description = "Pago mensualidad";
 
@@ -42,7 +42,7 @@ class MovementTest {
         
         Account account = new Account(1, "Wallet", AccountType.DIGITAL, Coin.MXN, new BigDecimal("1000"));
         MovementCategory incomeCat = new MovementCategory("Bonus", MovementType.INCOME);
-        Movement income = new Movement(UUID.randomUUID(), "Bono", new BigDecimal("200"), incomeCat, account, LocalDateTime.now());
+        Movement income = new Movement(UUID.randomUUID(), "Bono", new BigDecimal("200"), incomeCat, account, LocalDateTime.of(2026, java.time.Month.JUNE, 15, 10, 0));
 
         account.addMovement(income);
 
@@ -50,5 +50,21 @@ class MovementTest {
             "El movimiento debe ser compatible con la lógica de saldo de la cuenta");
         assertEquals(1, account.getMovements().size(), 
             "La cuenta debe tener el movimiento registrado en su lista");
+    }
+
+    @Test
+    void testPrimaryConstructorAndSetId() {
+        Account account = new Account(1, "Wallet", AccountType.DIGITAL, Coin.MXN, new BigDecimal("1000"));
+        MovementCategory incomeCat = new MovementCategory("Bonus", MovementType.INCOME);
+        
+        Movement movement = new Movement(null, "Bono", new BigDecimal("200"), incomeCat, account);
+        
+        assertNotNull(movement.getIdMovement());
+        assertNotNull(movement.getDate());
+        assertEquals("Bono", movement.getDescription());
+        
+        UUID newId = UUID.randomUUID();
+        movement.setIdMovement(newId);
+        assertEquals(newId, movement.getIdMovement());
     }
 }

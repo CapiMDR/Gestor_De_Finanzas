@@ -1,7 +1,6 @@
 package accounts.account_view;
 
 import java.util.List;
-
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignC;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignD;

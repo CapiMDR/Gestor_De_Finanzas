@@ -1,5 +1,7 @@
 package reminders.reminder_controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.time.LocalDateTime;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -76,7 +78,7 @@ public class RemindersController {
 
     private void refreshView() {
         if (remindersView != null) {
-            Platform.runLater(() -> remindersView.refreshList(new java.util.ArrayList<>(remindersModel.getReminders())));
+            Platform.runLater(() -> remindersView.refreshList(new ArrayList<>(remindersModel.getReminders())));
         }
     }
 
@@ -140,7 +142,7 @@ public class RemindersController {
      * @param date    Scheduled date and time.
      */
     public void handleReminderAddition(String name, String message, LocalDateTime date) {
-        if (!isValidReminder(name, message, date)) {
+        if (!isValidReminder(name, date)) {
             logger.warn("Invalid reminder data rejected: name='{}', date={}.", name, date);
             showAlert(Alert.AlertType.WARNING, "Datos incompletos", "Debe proporcionar al menos un nombre y la fecha del recordatorio.");
             return;
@@ -160,7 +162,7 @@ public class RemindersController {
      * @param date    Activation date.
      * @return {@code true} if the data is valid, {@code false} otherwise.
      */
-    private boolean isValidReminder(String name, String message, LocalDateTime date) {
+    private boolean isValidReminder(String name, LocalDateTime date) {
         if (name == null || name.isEmpty())
             return false;
         if (date == null)
@@ -181,7 +183,7 @@ public class RemindersController {
     }
 
     public void deleteReminderByIndex(int index) {
-        java.util.List<Reminder> list = new java.util.ArrayList<>(remindersModel.getReminders());
+        List<Reminder> list = new ArrayList<>(remindersModel.getReminders());
         if (index >= 0 && index < list.size()) {
             handleReminderDeletion(list.get(index));
         }
@@ -202,7 +204,7 @@ public class RemindersController {
     }
 
     public void editReminderByIndex(int index) {
-        java.util.List<Reminder> list = new java.util.ArrayList<>(remindersModel.getReminders());
+        List<Reminder> list = new ArrayList<>(remindersModel.getReminders());
         if (index >= 0 && index < list.size()) {
             onEditRequest(list.get(index));
         }
@@ -239,7 +241,7 @@ public class RemindersController {
                         int m = Integer.parseInt(editController.getCmbMinute().getValue());
                         LocalDateTime dateTime = LocalDateTime.of(d, java.time.LocalTime.of(h, m));
 
-                        if (!isValidReminder(name, msg, dateTime)) {
+                        if (!isValidReminder(name, dateTime)) {
                             Alert alert = new Alert(Alert.AlertType.ERROR, "Datos inválidos");
                             alert.showAndWait();
                             return null;

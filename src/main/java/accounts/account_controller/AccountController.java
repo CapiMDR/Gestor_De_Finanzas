@@ -1,8 +1,7 @@
 package accounts.account_controller;
 
-import java.math.BigDecimal;
 import java.util.List;
-
+import java.math.BigDecimal;
 import accounts.account_model.Account;
 import accounts.account_model.AccountManager;
 import accounts.account_model.AccountObserver;

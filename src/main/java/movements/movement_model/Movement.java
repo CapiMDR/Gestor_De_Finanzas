@@ -1,9 +1,8 @@
 package movements.movement_model;
 
+import java.util.UUID;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
-
 import accounts.account_model.Account;
 
 /**
@@ -35,7 +34,7 @@ public class Movement {
         this.description = description;
         this.amount = amount;
         this.category = category;
-        this.date = LocalDateTime.now();
+        this.date = LocalDateTime.now(java.time.ZoneId.systemDefault());
         this.account = account;
     }
 

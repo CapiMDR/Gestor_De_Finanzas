@@ -1,9 +1,8 @@
 package movements.movement_view;
 
+import java.util.List;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
-
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;

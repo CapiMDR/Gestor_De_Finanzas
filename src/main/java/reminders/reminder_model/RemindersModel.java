@@ -1,5 +1,6 @@
 package reminders.reminder_model;
 
+import java.util.SortedSet;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.TreeSet;
@@ -16,7 +17,7 @@ public class RemindersModel {
     // Keeping reminders in a TreeSet for fast sorting on
     // insertion/deletion and efficiency when checking existence
     /** Main collection of reminders, sorted by date and name. */
-    private final TreeSet<Reminder> allReminders = ReminderJSONHandler.loadReminders();
+    private final SortedSet<Reminder> allReminders = ReminderJSONHandler.loadReminders();
 
     /**
      * List of observers that will be notified when reminders change.
@@ -110,7 +111,7 @@ public class RemindersModel {
      *
      * @return {@link TreeSet} with the reminders
      */
-    public TreeSet<Reminder> getReminders() {
+    public SortedSet<Reminder> getReminders() {
         return allReminders;
     }
 
@@ -121,3 +122,4 @@ public class RemindersModel {
         ReminderJSONHandler.saveReminders(allReminders);
     }
 }
+

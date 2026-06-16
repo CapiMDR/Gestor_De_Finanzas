@@ -1,5 +1,7 @@
 package accounts.account_model;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -44,7 +46,7 @@ class AccountTest {
             incomeAmount, 
             salaryCategory, 
             account, 
-            LocalDateTime.now()
+            LocalDateTime.of(2026, java.time.Month.JUNE, 15, 10, 0)
         );
 
         account.addMovement(income);
@@ -65,7 +67,7 @@ class AccountTest {
             expenseAmount, 
             foodCategory, 
             account, 
-            LocalDateTime.now()
+            LocalDateTime.of(2026, java.time.Month.JUNE, 15, 10, 0)
         );
 
         account.addMovement(expense);
@@ -79,5 +81,44 @@ class AccountTest {
     void testListsAreInitialized() {
         assertNotNull(account.getMovements(), "La lista de movimientos no debería ser nula");
         assertNotNull(account.getGoals(), "La lista de metas no debería ser nula");
+    }
+
+    @Test
+    void testGettersAndSetters() {
+        assertEquals(1, account.getId());
+        assertEquals("Test Wallet", account.getName());
+        assertEquals(AccountType.CASH, account.getType());
+        assertEquals(Coin.MXN, account.getCoin());
+        assertEquals(new BigDecimal("1000.00"), account.getInitialBalance());
+
+        account.setName("New Name");
+        account.setType(AccountType.DIGITAL);
+        account.setCoin(Coin.USD);
+
+        assertEquals("New Name", account.getName());
+        assertEquals(AccountType.DIGITAL, account.getType());
+        assertEquals(Coin.USD, account.getCoin());
+
+        account.setMovements(new java.util.ArrayList<>());
+        assertNotNull(account.getMovements());
+
+        account.setGoals(new java.util.ArrayList<>());
+        assertNotNull(account.getGoals());
+    }
+
+
+    @Test
+    void testAddMovementWithNullType() {
+        MovementCategory nullCategory = new MovementCategory("Null", null);
+        Movement move = new Movement(
+            UUID.randomUUID(), 
+            "Null move", 
+            BigDecimal.TEN, 
+            nullCategory, 
+            account, 
+            java.time.LocalDateTime.of(2026, java.time.Month.JANUARY, 1, 12, 0)
+        );
+
+        assertThrows(NullPointerException.class, () -> account.addMovement(move), "Should throw NPE on null type");
     }
 }

@@ -1,9 +1,9 @@
 package recurrings.recurring_model;
 
+import java.util.SortedSet;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.TreeSet;
 
 import movements.movement_model.MovementCategory;
 
@@ -20,7 +20,7 @@ public class RecurringsModel {
      * 
      * Loaded from JSON on startup.
      */
-    private final TreeSet<RecurringMove> allRecurrings = RecurringJSONHandler.loadRecurrings();
+    private final SortedSet<RecurringMove> allRecurrings = RecurringJSONHandler.loadRecurrings();
 
     /** List of observers subscribed to the model changes. */
     private final HashSet<RecurringObserver> observerList = new HashSet<>();
@@ -116,7 +116,7 @@ public class RecurringsModel {
      *
      * @return TreeSet with all RecurringMoves.
      */
-    public TreeSet<RecurringMove> getRecurrings() {
+    public SortedSet<RecurringMove> getRecurrings() {
         return allRecurrings;
     }
 
@@ -124,6 +124,8 @@ public class RecurringsModel {
      * Saves all recurring reminders in the JSON file.
      */
     public void saveRecurrings() {
-        RecurringJSONHandler.saveReminders(allRecurrings);
+        RecurringJSONHandler.saveRecurrings(allRecurrings);
     }
 }
+
+

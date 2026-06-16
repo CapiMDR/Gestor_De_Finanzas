@@ -1,5 +1,7 @@
 package movements.movement_view;
 
+import java.util.HashMap;
+import java.util.Map;
 import accounts.account_model.Account;
 import accounts.account_model.JsonDataHandler;
 import movements.movement_controller.MovementController;
@@ -8,9 +10,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Entry point for the Movements JavaFX module.
  * Loads {@code movements.fxml}, instantiates {@link MovementsViewFX} via FXMLLoader,
@@ -23,6 +22,7 @@ import java.util.Map;
  * @author Capi Madera de Regil
  */
 public class MovementsModule {
+    private MovementsModule() {}
 
     private static Map<String, Stage> activeStages = new HashMap<>();
 

@@ -57,7 +57,7 @@ class NotificationManagerTest {
     void testAgregarNotificacion() {
         // Arrange
         manager.setCallbackNuevaNotificacion(() -> callbackFired = true);
-        AppNotification notification = new AppNotification(AppNotification.Tipo.RECORDATORIO, "Test", "Test body", LocalDateTime.now());
+        AppNotification notification = new AppNotification(AppNotification.Tipo.RECORDATORIO, "Test", "Test body", LocalDateTime.of(2026, java.time.Month.JUNE, 15, 10, 0));
 
         // Act
         manager.agregarNotificacion(notification);
@@ -70,12 +70,11 @@ class NotificationManagerTest {
 
     @Test
     @DisplayName("should return notifications sorted by newest first")
-    void testGetPendientesSorted() throws InterruptedException {
+    void testGetPendientesSorted() {
         // Arrange
-        AppNotification oldNotification = new AppNotification(AppNotification.Tipo.RECORDATORIO, "Old", "Body", LocalDateTime.now());
+        AppNotification oldNotification = new AppNotification(AppNotification.Tipo.RECORDATORIO, "Old", "Body", LocalDateTime.of(2026, java.time.Month.JUNE, 15, 10, 0));
         // Ensure timestamp is strictly different
-        Thread.sleep(10);
-        AppNotification newNotification = new AppNotification(AppNotification.Tipo.META_CUMPLIDA, "New", "Body", LocalDateTime.now());
+        AppNotification newNotification = new AppNotification(AppNotification.Tipo.META_CUMPLIDA, "New", "Body", LocalDateTime.of(2026, java.time.Month.JUNE, 15, 10, 5));
 
         // Act
         manager.agregarNotificacion(oldNotification);
@@ -91,8 +90,8 @@ class NotificationManagerTest {
     @DisplayName("should correctly count unread notifications")
     void testGetConteoNoLeidas() {
         // Arrange
-        AppNotification n1 = new AppNotification(AppNotification.Tipo.RECORDATORIO, "T1", "C1", LocalDateTime.now());
-        AppNotification n2 = new AppNotification(AppNotification.Tipo.RECORDATORIO, "T2", "C2", LocalDateTime.now());
+        AppNotification n1 = new AppNotification(AppNotification.Tipo.RECORDATORIO, "T1", "C1", LocalDateTime.of(2026, java.time.Month.JUNE, 15, 10, 0));
+        AppNotification n2 = new AppNotification(AppNotification.Tipo.RECORDATORIO, "T2", "C2", LocalDateTime.of(2026, java.time.Month.JUNE, 15, 10, 0));
         manager.agregarNotificacion(n1);
         manager.agregarNotificacion(n2);
 
@@ -108,8 +107,8 @@ class NotificationManagerTest {
     void testMarcarTodasLeidas() {
         // Arrange
         manager.setCallbackNuevaNotificacion(() -> callbackFired = true);
-        manager.agregarNotificacion(new AppNotification(AppNotification.Tipo.RECORDATORIO, "T1", "C1", LocalDateTime.now()));
-        manager.agregarNotificacion(new AppNotification(AppNotification.Tipo.RECORDATORIO, "T2", "C2", LocalDateTime.now()));
+        manager.agregarNotificacion(new AppNotification(AppNotification.Tipo.RECORDATORIO, "T1", "C1", LocalDateTime.of(2026, java.time.Month.JUNE, 15, 10, 0)));
+        manager.agregarNotificacion(new AppNotification(AppNotification.Tipo.RECORDATORIO, "T2", "C2", LocalDateTime.of(2026, java.time.Month.JUNE, 15, 10, 0)));
         callbackFired = false; // Reset after additions
 
         // Act
@@ -124,8 +123,8 @@ class NotificationManagerTest {
     @DisplayName("should save and load unread notifications from file")
     void testPersistence() {
         // Arrange
-        AppNotification n1 = new AppNotification(AppNotification.Tipo.RECORDATORIO, "Unread", "Body", LocalDateTime.now());
-        AppNotification n2 = new AppNotification(AppNotification.Tipo.META_CUMPLIDA, "Read", "Body", LocalDateTime.now());
+        AppNotification n1 = new AppNotification(AppNotification.Tipo.RECORDATORIO, "Unread", "Body", LocalDateTime.of(2026, java.time.Month.JUNE, 15, 10, 0));
+        AppNotification n2 = new AppNotification(AppNotification.Tipo.META_CUMPLIDA, "Read", "Body", LocalDateTime.of(2026, java.time.Month.JUNE, 15, 10, 0));
         n2.marcar(); // Mark n2 as read
 
         manager.agregarNotificacion(n1);
@@ -146,3 +145,4 @@ class NotificationManagerTest {
         assertEquals("Unread", manager.getPendientes().get(0).getTitulo());
     }
 }
+

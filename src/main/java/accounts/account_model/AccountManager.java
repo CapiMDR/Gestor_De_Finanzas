@@ -1,9 +1,8 @@
 package accounts.account_model;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.math.BigDecimal;
 import accounts.account_model.Account.AccountType;
 import accounts.account_model.Account.Coin;
 import org.slf4j.Logger;

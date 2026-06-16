@@ -1,5 +1,7 @@
 package filters.filter_model;
 
+import java.util.HashMap;
+import java.util.Map;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -8,13 +10,11 @@ import accounts.account_model.Account;
 import filters.filter_controller.FilterController;
 import filters.filter_view.FilterViewFX;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Initializes and manages the Categories (Filters) module.
  */
 public class CategoriesModule {
+    private CategoriesModule() {}
     
     private static Map<String, Stage> activeStages = new HashMap<>();
 

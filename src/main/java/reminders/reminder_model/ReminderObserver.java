@@ -1,10 +1,10 @@
 package reminders.reminder_model;
 
-import java.util.TreeSet;
-
+import java.util.SortedSet;
 /**
  * Interface to observe reminder changes.
  */
 public interface ReminderObserver {
-    public void observeReminders(TreeSet<Reminder> reminders);
+    public void observeReminders(SortedSet<Reminder> reminders);
 }
+

@@ -166,13 +166,15 @@ class ReportGeneratorTest {
         // Arrange
         LocalDateTime today = LocalDateTime.now();
         LocalDateTime monday = today.toLocalDate().with(java.time.DayOfWeek.MONDAY).atStartOfDay();
+        LocalDateTime sundayThisWeek = today.toLocalDate().with(java.time.DayOfWeek.SUNDAY).atStartOfDay();
         LocalDateTime previousSunday = monday.minusDays(1);
 
         Movement m1 = createMockMovement("40.00", today);
         Movement m2 = createMockMovement("20.00", monday);
-        Movement m3 = createMockMovement("100.00", previousSunday);
+        Movement m3 = createMockMovement("100.00", previousSunday); // Not included
+        Movement m4 = createMockMovement("15.00", sundayThisWeek); // Included (future in same week)
 
-        when(account.getMovements()).thenReturn(Arrays.asList(m1, m2, m3));
+        when(account.getMovements()).thenReturn(Arrays.asList(m1, m2, m3, m4));
 
         // Act
         reportGenerator.currentWeek();
@@ -182,9 +184,9 @@ class ReportGeneratorTest {
         ReportData data = reportDataCaptor.getValue();
 
         assertEquals("Semana Actual", data.getPeriodName());
-        assertEquals(2, data.getMovements().size());
-        assertEquals(new BigDecimal("60.00"), data.getTotalAmount());
-        assertTrue(data.getMovements().containsAll(Arrays.asList(m1, m2)));
+        assertEquals(3, data.getMovements().size());
+        assertEquals(new BigDecimal("75.00"), data.getTotalAmount());
+        assertTrue(data.getMovements().containsAll(Arrays.asList(m1, m2, m4)));
     }
 
     /**
@@ -206,5 +208,21 @@ class ReportGeneratorTest {
 
         assertTrue(data.getMovements().isEmpty());
         assertEquals(new BigDecimal("0"), data.getTotalAmount());
+    }
+
+    @Test
+    @DisplayName("addObserver() delegates to subject")
+    void testAddObserver() {
+        ReportObserver obs = mock(ReportObserver.class);
+        reportGenerator.addObserver(obs);
+        verify(reportSubject).add(obs);
+    }
+
+    @Test
+    @DisplayName("removeObserver() delegates to subject")
+    void testRemoveObserver() {
+        ReportObserver obs = mock(ReportObserver.class);
+        reportGenerator.removeObserver(obs);
+        verify(reportSubject).remove(obs);
     }
 }

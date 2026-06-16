@@ -17,6 +17,7 @@ import accounts.account_model.Account.Coin;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -90,5 +91,42 @@ class AccountManagerTest {
         Account a2 = AccountManager.getAccounts().get(1);
         
         assertNotEquals(a1.getId(), a2.getId(), "Las cuentas deben tener IDs diferentes");
+    }
+
+    @Test
+    void testGetAccountByIdInvalid(){
+        Account result = AccountManager.getAccountById(999);
+        assertNull(result, "Debería devolver null si el ID no existe");
+    }
+
+    @Test
+    void testInitAndLoadData(){
+        // initAccountManager calls dataHandler.loadAccounts() which will load the temp file we created (empty)
+        AccountManager.initAccountManager();
+        assertEquals(0, AccountManager.getAccounts().size());
+
+        // loadInitialData just notifies observers
+        AccountManager.loadInitialData();
+    }
+
+    @Test
+    void testAddRemoveObserver(){
+        AccountObserver mockObserver = org.mockito.Mockito.mock(AccountObserver.class);
+        
+        AccountManager.addObserver(mockObserver);
+        AccountManager.addAccount("Test Obs", AccountType.CASH, Coin.MXN, BigDecimal.ZERO);
+        org.mockito.Mockito.verify(mockObserver, org.mockito.Mockito.times(1)).onNotify(org.mockito.Mockito.anyList());
+        
+        AccountManager.removeObserver(mockObserver);
+        AccountManager.addAccount("Test Obs 2", AccountType.CASH, Coin.MXN, BigDecimal.ZERO);
+        org.mockito.Mockito.verify(mockObserver, org.mockito.Mockito.times(1)).onNotify(org.mockito.Mockito.anyList()); // should not have incremented
+    }
+
+    @Test
+    void testPrivateConstructor() throws Exception {
+        java.lang.reflect.Constructor<AccountManager> constructor = AccountManager.class.getDeclaredConstructor();
+        assertTrue(java.lang.reflect.Modifier.isPrivate(constructor.getModifiers()));
+        constructor.setAccessible(true);
+        constructor.newInstance();
     }
 }
