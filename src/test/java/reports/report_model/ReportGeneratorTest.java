@@ -10,6 +10,8 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import java.time.Month;
+import java.time.ZoneId;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -73,12 +75,13 @@ class ReportGeneratorTest {
      */
     @Test
     @DisplayName("today() should filter only today's movements")
+    @SuppressWarnings("java:S5973")
     void testTodayReport() {
-        LocalDateTime fixedNow = LocalDateTime.of(2023, 10, 18, 12, 0);
+        LocalDateTime fixedNow = LocalDateTime.of(2023, Month.OCTOBER, 18, 12, 0);
         LocalDate fixedToday = fixedNow.toLocalDate();
 
         try (MockedStatic<LocalDate> mockedLocalDate = mockStatic(LocalDate.class)) {
-            mockedLocalDate.when(() -> LocalDate.now(any(java.time.ZoneId.class))).thenReturn(fixedToday);
+            mockedLocalDate.when(() -> LocalDate.now(any(ZoneId.class))).thenReturn(fixedToday);
 
             // Arrange
             LocalDateTime today = fixedNow;
@@ -109,12 +112,13 @@ class ReportGeneratorTest {
      */
     @Test
     @DisplayName("weekAgo() should filter movements from the last 7 days")
+    @SuppressWarnings("java:S5973")
     void testWeekAgoReport() {
-        LocalDateTime fixedNow = LocalDateTime.of(2023, 10, 18, 12, 0);
+        LocalDateTime fixedNow = LocalDateTime.of(2023, Month.OCTOBER, 18, 12, 0);
         LocalDate fixedToday = fixedNow.toLocalDate();
 
         try (MockedStatic<LocalDate> mockedLocalDate = mockStatic(LocalDate.class)) {
-            mockedLocalDate.when(() -> LocalDate.now(any(java.time.ZoneId.class))).thenReturn(fixedToday);
+            mockedLocalDate.when(() -> LocalDate.now(any(ZoneId.class))).thenReturn(fixedToday);
 
             // Arrange
             LocalDateTime today = fixedNow;
@@ -147,12 +151,13 @@ class ReportGeneratorTest {
      */
     @Test
     @DisplayName("yesterday() should filter only yesterday's movements")
+    @SuppressWarnings("java:S5973")
     void testYesterdayReport() {
-        LocalDateTime fixedNow = LocalDateTime.of(2023, 10, 18, 12, 0);
+        LocalDateTime fixedNow = LocalDateTime.of(2023, Month.OCTOBER, 18, 12, 0);
         LocalDate fixedToday = fixedNow.toLocalDate();
 
         try (MockedStatic<LocalDate> mockedLocalDate = mockStatic(LocalDate.class)) {
-            mockedLocalDate.when(() -> LocalDate.now(any(java.time.ZoneId.class))).thenReturn(fixedToday);
+            mockedLocalDate.when(() -> LocalDate.now(any(ZoneId.class))).thenReturn(fixedToday);
 
             // Arrange
             LocalDateTime today = fixedNow;
@@ -185,12 +190,13 @@ class ReportGeneratorTest {
      */
     @Test
     @DisplayName("currentWeek() should filter movements from current week (Mon-Sun)")
+    @SuppressWarnings("java:S5973")
     void testCurrentWeekReport() {
-        LocalDateTime fixedNow = LocalDateTime.of(2023, 10, 18, 12, 0); // Wednesday
+        LocalDateTime fixedNow = LocalDateTime.of(2023, Month.OCTOBER, 18, 12, 0); // Wednesday
         LocalDate fixedToday = fixedNow.toLocalDate();
 
         try (MockedStatic<LocalDate> mockedLocalDate = mockStatic(LocalDate.class)) {
-            mockedLocalDate.when(() -> LocalDate.now(any(java.time.ZoneId.class))).thenReturn(fixedToday);
+            mockedLocalDate.when(() -> LocalDate.now(any(ZoneId.class))).thenReturn(fixedToday);
 
             // Arrange
             LocalDateTime today = fixedNow;

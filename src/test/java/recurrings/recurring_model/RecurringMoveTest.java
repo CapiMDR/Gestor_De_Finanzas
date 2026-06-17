@@ -50,6 +50,7 @@ class RecurringMoveTest {
      * its start date, and that it doesn't fire repeatedly if already triggered.
      */
     @Test
+    @SuppressWarnings("java:S5973")
     void testShouldTrigger() {
         MovementCategory cat = new MovementCategory("Sub", MovementType.EXPENSE);
         // Past date
@@ -76,8 +77,8 @@ class RecurringMoveTest {
         LocalDateTime baseDate = LocalDateTime.of(2026, java.time.Month.JANUARY, 1, 10, 0);
 
         // DIARIO
-        RecurringMove DIARIO = new RecurringMove("C", BigDecimal.TEN, "D", baseDate, RecurrenceType.DIARIO, cat);
-        RecurringMove nextDiario = DIARIO.createNextOccurrence();
+        RecurringMove diarioMove = new RecurringMove("C", BigDecimal.TEN, "D", baseDate, RecurrenceType.DIARIO, cat);
+        RecurringMove nextDiario = diarioMove.createNextOccurrence();
         assertEquals(baseDate.plusDays(1), nextDiario.getInitialDate());
 
         // Semanal
