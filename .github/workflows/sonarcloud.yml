@@ -5,6 +5,9 @@ on:
       - main
   pull_request:
     types: [opened, synchronize, reopened]
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true # Forza el uso de Node 24 en GitHub Actions
+
 jobs:
   build:
     name: Build and analyze
