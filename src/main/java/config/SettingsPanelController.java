@@ -76,7 +76,7 @@ public class SettingsPanelController {
         // or apply it immediately to the SystemTray.
         if (modoCambiado && nuevoModo == AppSettings.ModoNotificaciones.SEGUNDO_PLANO) {
             notifications.SystemTrayManager.getInstance().enableTray();
-        } else if (modoCambiado && nuevoModo == AppSettings.ModoNotificaciones.SOLO_PRIMER_PLANO) {
+        } else if (modoCambiado) {
             notifications.SystemTrayManager.getInstance().disableTray();
         }
 

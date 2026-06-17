@@ -11,7 +11,7 @@
 | Name | Gestor de Finanzas |
 | Domain | Personal finance desktop application |
 | Architecture | Java Desktop · MVC + Observer · Local JSON persistence |
-| Current stage | Active migration Swing → JavaFX |
+| Current stage | Active development — JavaFX (migration complete) |
 | Distribution | Executable JAR · Native installer (.exe) via jpackage |
 | Repository | [github.com/CapiMDR/Gestor_De_Finanzas](https://github.com/CapiMDR/Gestor_De_Finanzas) |
 
@@ -38,25 +38,32 @@ gestorFinanzas/
 │   │   │   ├── accounts/        ← Accounts module (model / view / controller)
 │   │   │   ├── movements/       ← Movements module
 │   │   │   ├── goals/           ← Financial goals module
-│   │   │   ├── recurringMoves/  ← Recurring movements module
+│   │   │   ├── recurrings/      ← Recurring movements module
 │   │   │   ├── reminders/       ← Reminders module
+│   │   │   ├── notifications/   ← In-app notification system (NotificationManager, SystemTrayManager)
 │   │   │   ├── reports/         ← Reports and data generation module (model only)
 │   │   │   ├── filters/         ← Category and date filters module
+│   │   │   ├── tutorial/        ← Interactive onboarding guide (TutorialManager, TutorialStep)
 │   │   │   ├── utils/           ← Shared utilities (UIUtils, etc.)
-│   │   │   ├── config/          ← Central configuration (AppConfig.java)
-│   │   │   └── com/mycompany/construccion/  ← Entry point (Main.java / MainApp.java)
+│   │   │   ├── config/          ← Central configuration (AppConfig, AppSettings, SingleInstanceGuard, WinRegistryHelper)
+│   │   │   └── com/mycompany/construccion/  ← Entry point (Main.java / MainShell.java / AppLauncher.java)
 │   │   └── resources/
 │   │       ├── fxml/            ← Declarative JavaFX layouts (*.fxml)
 │   │       ├── styles/          ← JavaFX stylesheets (app.css)
+│   │       ├── fonts/           ← Application fonts (Poppins-Bold.ttf)
 │   │       └── images/          ← Image resources and icons
 │   └── test/
 │       └── java/                ← Unit tests (mirrors src/main/java)
 │           ├── accounts/
 │           ├── goals/
 │           ├── movements/
-│           └── reports/
+│           ├── recurrings/
+│           ├── reminders/
+│           ├── reports/
+│           ├── notifications/
+│           └── config/
 │
-├── lib/                         ← Local dependency JARs (legacy)
+├── lib/                         ← Local dependency JARs (legacy, kept for reference only)
 ├── .github/workflows/           ← CI/CD pipelines (SonarCloud, Release)
 ├── pom.xml                      ← Maven project definition
 └── jreleaser.yml                ← Packaging and release configuration
@@ -89,16 +96,12 @@ The project implements the **Model-View-Controller** pattern combined with the
 changes register themselves as `Observer` and are notified automatically when the model changes.
 
 **Critical rule when implementing a new view:** If a Controller registers as an Observer,
-it **must** unregister when its window closes to prevent memory leaks:
+it **must** unregister when the JavaFX stage/scene is disposed to prevent memory leaks:
 
 ```java
-// ✅ Required in every Controller that implements Observer
-addWindowListener(new WindowAdapter() {
-    @Override
-    public void windowClosed(WindowEvent e) {
-        AccountManager.removeObserver(MyController.this);
-    }
-});
+// ✅ Required in every Controller that implements AccountObserver
+// Use JavaFX's Platform.runLater or stage.setOnHidden to unregister:
+stage.setOnHidden(e -> AccountManager.removeObserver(this));
 ```
 
 ### 3.2 SOLID principles applied
@@ -192,13 +195,14 @@ Log level guidelines:
 | Technology | Version | Role |
 |---|---|---|
 | Java | 21 (LTS) | Primary language |
-| JavaFX | 21.0.3 | UI framework (migration from Swing) |
+| JavaFX | 21.0.3 | UI framework (Swing migration complete) |
 | Ikonli + Material Design 2 | 12.3.1 | Scalable vector icons for JavaFX |
 | Maven | 3.9+ | Dependency management and build |
 | SLF4J + Logback | 2.0.13 / 1.5.6 | Logging system |
 | org.json | 20250517 | JSON serialization/deserialization |
 | JUnit Jupiter | 5.11.4 | Unit testing |
-| Mockito | 5.11.0 | Mocking in tests |
+| Mockito | 5.15.2 | Mocking in tests |
+| TestFX | 4.0.18 | JavaFX UI testing |
 | JaCoCo | 0.8.12 | Code coverage |
 | SonarCloud | — | Static code quality analysis |
 
@@ -365,7 +369,7 @@ Verify every point before opening a PR:
 - ❌ Exposing mutable internal collections from the Model.
 - ❌ Hardcoding file paths outside `AppConfig.java`.
 - ❌ Adding dependencies to `pom.xml` without prior agreement and documentation.
-- ❌ Mixing Swing and JavaFX in the same view — each module uses one or the other, never both.
+- ❌ Mixing Swing and JavaFX in the same view — the application uses JavaFX exclusively.
 
 ---
 
@@ -384,7 +388,7 @@ metas financieras, movimientos recurrentes y recordatorios. Todos los datos se g
 localmente en el directorio `home` del usuario — sin servidores, sin nube, sin autenticación.
 
 **Arquitectura:** Java Desktop · MVC + Observer · Persistencia JSON local  
-**Etapa actual:** Migración activa Swing → JavaFX
+**Etapa actual:** Desarrollo activo — JavaFX (migración completa)
 
 ---
 

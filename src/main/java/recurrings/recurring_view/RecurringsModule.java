@@ -43,9 +43,7 @@ public class RecurringsModule {
 
             // When the window is closed, we un-inject the view to avoid memory leaks,
             // but the controller stays alive to keep monitoring in the background.
-            activeStage.setOnCloseRequest(e -> {
-                controller.setView(null);
-            });
+            activeStage.setOnCloseRequest(e -> controller.setView(null));
 
             activeStage.show();
         } catch (Exception e) {

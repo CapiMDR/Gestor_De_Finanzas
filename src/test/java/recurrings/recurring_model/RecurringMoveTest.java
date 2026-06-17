@@ -23,24 +23,24 @@ class RecurringMoveTest {
     void testGettersAndSetters() {
         MovementCategory cat = new MovementCategory("Sub", MovementType.EXPENSE);
         RecurringMove move = new RecurringMove("Netflix", new BigDecimal("15.99"), "Mensual",
-                LocalDateTime.of(2026, java.time.Month.JANUARY, 1, 10, 0), RecurrenceType.Mensual, cat);
+                LocalDateTime.of(2026, java.time.Month.JANUARY, 1, 10, 0), RecurrenceType.MENSUAL, cat);
 
         assertEquals("Netflix", move.getConcept());
         assertEquals(new BigDecimal("15.99"), move.getAmount());
         assertEquals("Mensual", move.getDescription());
         assertEquals(LocalDateTime.of(2026, java.time.Month.JANUARY, 1, 10, 0), move.getInitialDate());
-        assertEquals(RecurrenceType.Mensual, move.getRecurrence());
+        assertEquals(RecurrenceType.MENSUAL, move.getRecurrence());
         assertEquals(cat, move.getCategory());
 
         move.setConcept("Spotify");
         move.setAmount(new BigDecimal("9.99"));
         move.setDescription("Musica");
-        move.setRecurrence(RecurrenceType.Diario);
+        move.setRecurrence(RecurrenceType.DIARIO);
 
         assertEquals("Spotify", move.getConcept());
         assertEquals(new BigDecimal("9.99"), move.getAmount());
         assertEquals("Musica", move.getDescription());
-        assertEquals(RecurrenceType.Diario, move.getRecurrence());
+        assertEquals(RecurrenceType.DIARIO, move.getRecurrence());
         
         assertTrue(move.toString().contains("Spotify"));
     }
@@ -50,11 +50,12 @@ class RecurringMoveTest {
      * its start date, and that it doesn't fire repeatedly if already triggered.
      */
     @Test
+    @SuppressWarnings("java:S5973")
     void testShouldTrigger() {
         MovementCategory cat = new MovementCategory("Sub", MovementType.EXPENSE);
         // Past date
         RecurringMove move1 = new RecurringMove("Past", BigDecimal.TEN, "Desc",
-                LocalDateTime.of(2026, java.time.Month.JUNE, 15, 10, 0).minusDays(1), RecurrenceType.Diario, cat);
+                LocalDateTime.now().minusDays(1), RecurrenceType.DIARIO, cat); // NOSONAR
         assertTrue(move1.shouldTrigger());
 
         move1.setTriggered(true);
@@ -62,7 +63,7 @@ class RecurringMoveTest {
 
         // Future date
         RecurringMove move2 = new RecurringMove("Future", BigDecimal.TEN, "Desc",
-                LocalDateTime.of(2026, java.time.Month.JUNE, 15, 10, 0).plusDays(1), RecurrenceType.Diario, cat);
+                LocalDateTime.now().plusDays(1), RecurrenceType.DIARIO, cat); // NOSONAR
         assertFalse(move2.shouldTrigger(), "Should not trigger future dates");
     }
 
@@ -75,25 +76,25 @@ class RecurringMoveTest {
         MovementCategory cat = new MovementCategory("Sub", MovementType.EXPENSE);
         LocalDateTime baseDate = LocalDateTime.of(2026, java.time.Month.JANUARY, 1, 10, 0);
 
-        // Diario
-        RecurringMove diario = new RecurringMove("C", BigDecimal.TEN, "D", baseDate, RecurrenceType.Diario, cat);
-        RecurringMove nextDiario = diario.createNextOccurrence();
+        // DIARIO
+        RecurringMove diarioMove = new RecurringMove("C", BigDecimal.TEN, "D", baseDate, RecurrenceType.DIARIO, cat);
+        RecurringMove nextDiario = diarioMove.createNextOccurrence();
         assertEquals(baseDate.plusDays(1), nextDiario.getInitialDate());
 
         // Semanal
-        RecurringMove semanal = new RecurringMove("C", BigDecimal.TEN, "D", baseDate, RecurrenceType.Semanal, cat);
+        RecurringMove semanal = new RecurringMove("C", BigDecimal.TEN, "D", baseDate, RecurrenceType.SEMANAL, cat);
         assertEquals(baseDate.plusWeeks(1), semanal.createNextOccurrence().getInitialDate());
 
         // Quincenal
-        RecurringMove quincenal = new RecurringMove("C", BigDecimal.TEN, "D", baseDate, RecurrenceType.Quincenal, cat);
+        RecurringMove quincenal = new RecurringMove("C", BigDecimal.TEN, "D", baseDate, RecurrenceType.QUINCENAL, cat);
         assertEquals(baseDate.plusWeeks(2), quincenal.createNextOccurrence().getInitialDate());
 
         // Mensual
-        RecurringMove mensual = new RecurringMove("C", BigDecimal.TEN, "D", baseDate, RecurrenceType.Mensual, cat);
+        RecurringMove mensual = new RecurringMove("C", BigDecimal.TEN, "D", baseDate, RecurrenceType.MENSUAL, cat);
         assertEquals(baseDate.plusMonths(1), mensual.createNextOccurrence().getInitialDate());
 
         // Anual
-        RecurringMove anual = new RecurringMove("C", BigDecimal.TEN, "D", baseDate, RecurrenceType.Anual, cat);
+        RecurringMove anual = new RecurringMove("C", BigDecimal.TEN, "D", baseDate, RecurrenceType.ANUAL, cat);
         assertEquals(baseDate.plusYears(1), anual.createNextOccurrence().getInitialDate());
     }
 }

@@ -28,7 +28,7 @@
 
 **Personal Finance Manager** is a desktop application built with **JavaFX** and Maven. It allows users to manage multiple financial accounts, register income and expense transactions, track savings goals, schedule recurring payments, set date-based reminders, and generate financial reports with charts powered by JFreeChart.
 
-> **v2.4.1** — The application was fully migrated from Java Swing to JavaFX in Phase 3 of the improvement plan, and this release introduces tab navigation, system tray background execution, and enhanced notifications. See [docs/MIGRATION_JAVAFX.md](docs/MIGRATION_JAVAFX.md) for the full migration log.
+> **v2.5.4** — The application was fully migrated from Java Swing to JavaFX in Phase 3 of the improvement plan. This version adds a tutorial system, single-instance guard, persistent settings, and an expanded notification system. See [docs/MIGRATION_JAVAFX.md](docs/MIGRATION_JAVAFX.md) for the full migration log.
 
 ---
 
@@ -38,12 +38,12 @@
 |---|---|---|
 | ![Java](https://img.shields.io/badge/Java_21_LTS-ED8B00?style=flat-square&logo=openjdk&logoColor=white) | 21 LTS | Core language — all application logic is written in Java |
 | ![Maven](https://img.shields.io/badge/Apache_Maven-C71A36?style=flat-square&logo=apachemaven&logoColor=white) | 3.x | Build tool and dependency manager |
-| ![JavaFX](https://img.shields.io/badge/JavaFX_21-007396?style=flat-square&logo=openjdk&logoColor=white) | 21.0.3 | Modern desktop GUI framework — replaced Java Swing in v2.0.0 (Now v2.4.1) |
+| ![JavaFX](https://img.shields.io/badge/JavaFX_21-007396?style=flat-square&logo=openjdk&logoColor=white) | 21.0.3 | Modern desktop GUI framework — replaced Java Swing in v2.0.0 (Now v2.5.4) |
 | ![Ikonli](https://img.shields.io/badge/Ikonli-grey?style=flat-square&logoColor=white) | 12.3.1 | Vector icon library — Material Design 2 icon pack |
 | ![JFreeChart](https://img.shields.io/badge/JFreeChart-4285F4?style=flat-square&logoColor=white) | 1.5.4 | Chart rendering library used in the reports module |
-| ![JCalendar](https://img.shields.io/badge/JCalendar-grey?style=flat-square&logoColor=white) | 1.4 | Date picker widget used in forms (local JAR in `lib/`) |
 | ![JUnit 5](https://img.shields.io/badge/JUnit_5-25A162?style=flat-square&logo=junit5&logoColor=white) | 5.11.4 | Unit testing framework |
-| ![Mockito](https://img.shields.io/badge/Mockito-78A641?style=flat-square&logoColor=white) | 5.11.0 | Mocking library used in controller tests |
+| ![Mockito](https://img.shields.io/badge/Mockito-78A641?style=flat-square&logoColor=white) | 5.15.2 | Mocking library used in controller tests |
+| ![TestFX](https://img.shields.io/badge/TestFX-grey?style=flat-square&logoColor=white) | 4.0.18 | JavaFX UI testing framework |
 | ![org.json](https://img.shields.io/badge/org.json-grey?style=flat-square&logoColor=white) | 20250517 | JSON parsing and serialization for data persistence |
 | ![SLF4J](https://img.shields.io/badge/SLF4J_Logback-grey?style=flat-square&logoColor=white) | 2.0.13 / 1.5.6 | Structured application logging |
 
@@ -78,6 +78,8 @@ The following documents were produced during the first project delivery and serv
 | **Notifications** | In-app notification panel with read states, individual/bulk deletion, and type icons. |
 | **Background Mode** | Run silently in the system tray after closing the main window — keeps reminders firing. |
 | **Tab Navigation** | Navigate between account sub-modules (Movements, Goals, Recurring, Reminders, Reports) via tabs. |
+| **Settings** | Persistent user preferences panel (startup behavior, theme, etc.) with registry integration on Windows. |
+| **Tutorial** | Interactive step-by-step usage guide shown to new users on first launch. |
 
 ---
 
@@ -91,12 +93,12 @@ The following documents were produced during the first project delivery and serv
 | Ikonli + Material Design 2 | 12.3.1 | Vector icons |
 | `org.json` | 20250517 | JSON data persistence |
 | JFreeChart | 1.5.4 | Financial charts in reports |
-| JCalendar | 1.4 | Date picker widget (local JAR) |
 | SLF4J + Logback | 2.0.13 / 1.5.6 | Structured logging |
 | JUnit Jupiter | 5.11.4 | Unit testing |
-| Mockito | 5.11.0 | Mocking in unit tests |
+| Mockito | 5.15.2 | Mocking in unit tests |
+| TestFX | 4.0.18 | JavaFX UI testing |
 
-> **Note:** `jcalendar-1.4.jar` is included locally in the `lib/` directory and must be installed into your local Maven repository using the `mvn install:install-file` command before building (see [Setup & Running](#setup--running)).
+> **Note:** Date pickers use the native JavaFX `DatePicker` control. The legacy `JCalendar` dependency has been removed — no local JAR installation is needed.
 
 ---
 
@@ -104,8 +106,6 @@ The following documents were produced during the first project delivery and serv
 
 ```
 gestorFinanzas/
-├── lib/
-│   └── jcalendar-1.4.jar            # Local dependency (date picker)
 ├── src/
 │   ├── main/
 │   │   ├── java/
@@ -121,41 +121,61 @@ gestorFinanzas/
 │   │   │   │   ├── goals_controller/
 │   │   │   │   ├── goals_model/
 │   │   │   │   └── goals_view/      # GoalsViewFX.java (JavaFX)
-│   │   │   ├── recurringMoves/      # Recurring payments module (MVC)
+│   │   │   ├── recurrings/          # Recurring payments module (MVC)
 │   │   │   │   ├── recurring_controller/
 │   │   │   │   ├── recurring_model/
 │   │   │   │   └── recurring_view/  # RecurringsViewFX.java (JavaFX)
-│   │   │   ├── reminders/           # Reminders/notifications module (MVC)
+│   │   │   ├── reminders/           # Reminders module (MVC)
 │   │   │   │   ├── reminder_controller/
 │   │   │   │   ├── reminder_model/
 │   │   │   │   └── reminder_view/   # RemindersViewFX.java (JavaFX)
-│   │   │   ├── reports/             # Financial reports module (Model only, UI in accounts)
+│   │   │   ├── notifications/       # In-app notification system
+│   │   │   │   ├── notification_controller/
+│   │   │   │   ├── notification_model/
+│   │   │   │   └── SystemTrayManager.java
+│   │   │   ├── reports/             # Financial reports module (model only)
 │   │   │   ├── filters/             # Category filters module
+│   │   │   ├── tutorial/            # Interactive onboarding guide
 │   │   │   ├── utils/               # Shared utilities (UIUtils, etc.)
 │   │   │   ├── config/
-│   │   │   │   └── AppConfig.java   # Centralized data paths
+│   │   │   │   ├── AppConfig.java         # Centralized data paths
+│   │   │   │   ├── AppSettings.java       # Persistent user preferences
+│   │   │   │   ├── SettingsPanelController.java
+│   │   │   │   ├── SingleInstanceGuard.java  # Prevents duplicate processes
+│   │   │   │   └── WinRegistryHelper.java    # Windows registry integration
 │   │   │   └── com/mycompany/construccion/
 │   │   │       ├── Main.java        # JavaFX Application entry point
+│   │   │       ├── MainShell.java   # Main window shell (tab navigation)
 │   │   │       └── AppLauncher.java # Fat-jar / installer wrapper
 │   │   └── resources/
 │   │       ├── fxml/                # FXML layout files for all views
 │   │       │   ├── accounts/
 │   │       │   ├── movements/
 │   │       │   ├── goals/
-│   │       │   ├── recurringMoves/
-│   │       │   └── reminders/
+│   │       │   ├── recurrings/
+│   │       │   ├── reminders/
+│   │       │   ├── filters/
+│   │       │   ├── settings/
+│   │       │   └── info/
 │   │       ├── styles/
 │   │       │   └── app.css          # Centralized CSS design system
+│   │       ├── fonts/
+│   │       │   └── Poppins-Bold.ttf # Application font
 │   │       └── images/              # Icon assets
 │   └── test/
 │       └── java/                    # Unit tests (JUnit + Mockito)
 │           ├── accounts/
 │           ├── goals/
-│           └── movements/
+│           ├── movements/
+│           ├── recurrings/
+│           ├── reminders/
+│           ├── reports/
+│           ├── notifications/
+│           └── config/
 ├── docs/
 │   ├── MIGRATION_JAVAFX.md         # JavaFX migration log
-│   ├── FEATURES_UI-UX.md           # UI/UX feature changelog (v2.4.1)
-│   └── APP_FLOW.md                # Technical architecture document
+│   ├── FEATURES_UI-UX.md           # UI/UX feature changelog
+│   └── APP_FLOW.md                 # Technical architecture document
 ├── .github/
 │   └── workflows/
 │       ├── sonarcloud.yml           # SonarCloud static analysis
@@ -184,15 +204,9 @@ git clone https://github.com/CapiMDR/Gestor_De_Finanzas.git
 cd Gestor_De_Finanzas
 ```
 
-### 2. Install local dependencies (Run once per machine)
+### 2. Build
 
-Before compiling, you must install the local `jcalendar` dependency into your local Maven repository:
-
-```bash
-mvn install:install-file "-Dfile=lib/jcalendar-1.4.jar" "-DgroupId=com.toedter" "-DartifactId=jcalendar" "-Dversion=1.4" "-Dpackaging=jar"
-```
-
-> **Important Note:** This command only needs to be executed once per machine.
+All dependencies are managed by Maven and fetched from Maven Central automatically. No local JAR installation is required.
 
 ### 3. Run the application
 
@@ -204,7 +218,7 @@ mvn javafx:run
 **Or via the fat-jar (after packaging):**
 ```bash
 mvn package -DskipTests
-java -jar target/gestor-finanzas-2.4.1.jar
+java -jar target/gestor-finanzas-2.5.4.jar
 ```
 
 > **Data storage:** All JSON data files are saved to `~/.gestor-finanzas/` in the user's home directory, completely independent of the installation or execution path.
@@ -219,14 +233,14 @@ mvn test
 
 Tests are located in `src/test/java/` and cover:
 
-- `AccountTest` — Account model unit tests
-- `AccountManagerTest` — Account manager CRUD operations
-- `MovementTest` — Movement creation and category logic
-- `CategoryManagerTest` — Category management tests
-- `GoalsControllerTest` — Savings goals controller tests
-- `GoalDetailControllerTest` — Goal detail logic tests
-
-> **Note:** The goals module tests currently have compilation issues unrelated to the JavaFX migration. Build with `-DskipTests` to skip them when packaging.
+- `AccountTest`, `AccountManagerTest`, `AccountManagerSubjectTest`, `JsonDataHandlerTest` — Accounts module
+- `MovementTest`, `CategoryManagerTest`, `MovementManagerSubjectTest`, `MovementControllerTest` — Movements module
+- `GoalTest`, `GoalsControllerTest`, `GoalDetailControllerTest` — Goals module
+- `RecurringMoveTest`, `RecurringsModelTest`, `RecurringJSONHandlerTest`, `RecurringsControllerTest` — Recurring moves
+- `ReminderTest`, `RemindersModelTest`, `ReminderJSONHandlerTest`, `RemindersControllerTest` — Reminders
+- `ReportDataTest`, `ReportGeneratorTest`, `ReportSubjectTest` — Reports
+- `AppNotificationTest`, `NotificationManagerTest` — Notifications
+- `AppConfigTest`, `AppSettingsTest`, `WinRegistryHelperTest`, `FilterControllerTest` — Config & filters
 
 ---
 
@@ -324,7 +338,7 @@ See [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) for full contribution guideline
 
 **Gestor de Finanzas** es una aplicación de escritorio desarrollada con **JavaFX** y Maven. Permite al usuario gestionar múltiples cuentas financieras, registrar movimientos de ingreso y gasto, hacer seguimiento de metas de ahorro, programar pagos recurrentes, establecer recordatorios por fecha y generar reportes financieros con gráficas mediante JFreeChart.
 
-> **v2.4.1** — La aplicación fue migrada completamente de Java Swing a JavaFX en la Fase 3 del plan de mejoras, y en esta versión se introduce el sistema de pestañas, el modo en segundo plano y mejoras masivas en notificaciones. Consulta [docs/MIGRATION_JAVAFX.md](docs/MIGRATION_JAVAFX.md) para el registro completo de la migración.
+> **v2.5.4** — La aplicación fue migrada completamente de Java Swing a JavaFX en la Fase 3 del plan de mejoras. Esta versión añade un sistema de tutorial interactivo, guardia de instancia única, ajustes persistentes y un sistema de notificaciones ampliado. Consulta [docs/MIGRATION_JAVAFX.md](docs/MIGRATION_JAVAFX.md) para el registro completo de la migración.
 
 ---
 
@@ -334,12 +348,12 @@ See [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) for full contribution guideline
 |---|---|---|
 | ![Java](https://img.shields.io/badge/Java_21_LTS-ED8B00?style=flat-square&logo=openjdk&logoColor=white) | 21 LTS | Lenguaje principal |
 | ![Maven](https://img.shields.io/badge/Apache_Maven-C71A36?style=flat-square&logo=apachemaven&logoColor=white) | 3.x | Herramienta de construcción y gestión de dependencias |
-| ![JavaFX](https://img.shields.io/badge/JavaFX_21-007396?style=flat-square&logo=openjdk&logoColor=white) | 21.0.3 | Framework moderno de GUI — reemplazó Java Swing en v2.0.0 (Actual v2.4.1) |
+| ![JavaFX](https://img.shields.io/badge/JavaFX_21-007396?style=flat-square&logo=openjdk&logoColor=white) | 21.0.3 | Framework moderno de GUI — reemplazó Java Swing en v2.0.0 (Actual v2.5.4) |
 | ![Ikonli](https://img.shields.io/badge/Ikonli-grey?style=flat-square&logoColor=white) | 12.3.1 | Librería de íconos vectoriales — paquete Material Design 2 |
 | ![JFreeChart](https://img.shields.io/badge/JFreeChart-4285F4?style=flat-square&logoColor=white) | 1.5.4 | Biblioteca de gráficas en el módulo de reportes |
-| ![JCalendar](https://img.shields.io/badge/JCalendar-grey?style=flat-square&logoColor=white) | 1.4 | Selector de fechas (JAR local en `lib/`) |
 | ![JUnit 5](https://img.shields.io/badge/JUnit_5-25A162?style=flat-square&logo=junit5&logoColor=white) | 5.11.4 | Framework de pruebas unitarias |
-| ![Mockito](https://img.shields.io/badge/Mockito-78A641?style=flat-square&logoColor=white) | 5.11.0 | Biblioteca de mocking en pruebas de controladores |
+| ![Mockito](https://img.shields.io/badge/Mockito-78A641?style=flat-square&logoColor=white) | 5.15.2 | Biblioteca de mocking en pruebas de controladores |
+| ![TestFX](https://img.shields.io/badge/TestFX-grey?style=flat-square&logoColor=white) | 4.0.18 | Framework de pruebas de UI para JavaFX |
 | ![org.json](https://img.shields.io/badge/org.json-grey?style=flat-square&logoColor=white) | 20250517 | Parseo y serialización JSON para la persistencia |
 | ![SLF4J](https://img.shields.io/badge/SLF4J_Logback-grey?style=flat-square&logoColor=white) | 2.0.13 / 1.5.6 | Logging estructurado de la aplicación |
 
@@ -371,6 +385,8 @@ Los siguientes documentos fueron producidos durante la primera entrega del proye
 | **Recordatorios** | Programar recordatorios con nombre, mensaje y fecha. Las alertas se disparan automáticamente cuando llega la hora programada. |
 | **Reportes** | Generar reportes de movimientos filtrados por hoy o los últimos 7 días, con totales y gráficas. |
 | **Filtros** | Filtrar movimientos por categorías (ingresos/gastos) dentro de la vista de una cuenta. |
+| **Configuración** | Panel de preferencias del usuario persistentes, con integración al registro de Windows para opciones de inicio. |
+| **Tutorial** | Guía de uso interactiva paso a paso que se muestra a nuevos usuarios al iniciar la aplicación por primera vez. |
 
 ---
 
@@ -384,12 +400,12 @@ Los siguientes documentos fueron producidos durante la primera entrega del proye
 | Ikonli + Material Design 2 | 12.3.1 | Íconos vectoriales |
 | `org.json` | 20250517 | Persistencia de datos en JSON |
 | JFreeChart | 1.5.4 | Gráficas en los reportes financieros |
-| JCalendar | 1.4 | Selector de fechas (JAR local) |
 | SLF4J + Logback | 2.0.13 / 1.5.6 | Logging estructurado |
 | JUnit Jupiter | 5.11.4 | Pruebas unitarias |
-| Mockito | 5.11.0 | Mocking en pruebas unitarias |
+| Mockito | 5.15.2 | Mocking en pruebas unitarias |
+| TestFX | 4.0.18 | Pruebas de UI para JavaFX |
 
-> **Nota:** `jcalendar-1.4.jar` está incluido localmente en la carpeta `lib/` y debe instalarse en el repositorio local de Maven usando el comando `mvn install:install-file` antes de compilar.
+> **Nota:** Los selectores de fecha utilizan el control nativo `DatePicker` de JavaFX. La dependencia `JCalendar` ha sido eliminada — no se requiere instalación de JARs locales.
 
 ---
 
@@ -416,11 +432,9 @@ git clone https://github.com/CapiMDR/Gestor_De_Finanzas.git
 cd Gestor_De_Finanzas
 ```
 
-### 2. Instalar dependencias locales (Ejecutar una vez por máquina)
+### 2. Compilar
 
-```bash
-mvn install:install-file "-Dfile=lib/jcalendar-1.4.jar" "-DgroupId=com.toedter" "-DartifactId=jcalendar" "-Dversion=1.4" "-Dpackaging=jar"
-```
+Todas las dependencias son gestionadas por Maven y descargadas automáticamente desde Maven Central. No se requiere instalación de JARs locales.
 
 ### 3. Ejecutar la aplicación
 
@@ -432,7 +446,7 @@ mvn javafx:run
 **O mediante el fat-jar (después de empaquetar):**
 ```bash
 mvn package -DskipTests
-java -jar target/gestor-finanzas-2.4.1.jar
+java -jar target/gestor-finanzas-2.5.4.jar
 ```
 
 > **Almacenamiento de datos:** Todos los archivos JSON se guardan en `~/.gestor-finanzas/` dentro del directorio `home` del usuario, completamente independiente de la ruta de instalación.
@@ -445,9 +459,7 @@ java -jar target/gestor-finanzas-2.4.1.jar
 mvn test
 ```
 
-Las pruebas están en `src/test/java/` y cubren cuentas, movimientos, categorías y metas de ahorro.
-
-> **Nota:** El módulo de metas tiene errores de compilación en sus pruebas no relacionados con la migración a JavaFX. Usa `-DskipTests` al empaquetar para omitirlas.
+Las pruebas están en `src/test/java/` y cubren: cuentas, movimientos, categorías, metas de ahorro, movimientos recurrentes, recordatorios, reportes, notificaciones y configuración.
 
 ---
 

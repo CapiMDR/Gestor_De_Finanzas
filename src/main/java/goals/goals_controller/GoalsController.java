@@ -159,8 +159,7 @@ public class GoalsController implements AccountObserver {
             }
         }
 
-        List<Movement> movements = currentAccount.getMovements();
-        recalculateGoalsProgress(currentAccount.getGoals(), movements);
+        recalculateGoalsProgress(currentAccount.getGoals());
 
         AccountManager.saveAccountsData();
         refreshView();
@@ -187,7 +186,7 @@ public class GoalsController implements AccountObserver {
         return balance;
     }
 
-    private void recalculateGoalsProgress(List<Goal> goals, List<Movement> movements) {
+    private void recalculateGoalsProgress(List<Goal> goals) {
         BigDecimal totalBalance = calculateActualBalance();
 
         if (goals != null) {

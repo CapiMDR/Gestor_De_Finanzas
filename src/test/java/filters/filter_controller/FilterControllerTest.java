@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Assertions;
 
 import accounts.account_model.Account;
 import filters.filter_view.FilterViewFX;
@@ -245,6 +246,7 @@ class FilterControllerTest {
         latch3.await(2, TimeUnit.SECONDS);
         
         controller.dispose();
+        Assertions.assertNotNull(controller);
     }
 }
 

@@ -163,11 +163,7 @@ public class RemindersController {
      * @return {@code true} if the data is valid, {@code false} otherwise.
      */
     private boolean isValidReminder(String name, LocalDateTime date) {
-        if (name == null || name.isEmpty())
-            return false;
-        if (date == null)
-            return false;
-        return true;
+        return name != null && !name.isEmpty() && date != null;
     }
 
     /**

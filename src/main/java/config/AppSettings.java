@@ -18,7 +18,11 @@ import java.nio.file.StandardCopyOption;
  * - {@code modoNotificaciones} — SOLO_PRIMER_PLANO (default) or SEGUNDO_PLANO
  * - {@code autostart}          — whether to register the app in the Windows startup registry
  * - {@code tutorialMostrado}   — whether the first-run tutorial has already been shown
+ * 
+ * This class uses the Singleton pattern to provide global access to the application settings 
+ * across all modules and ensure consistency in reading/writing the configuration.
  */
+@SuppressWarnings("java:S6548")
 public class AppSettings {
 
     private static final Logger logger = LoggerFactory.getLogger(AppSettings.class);
