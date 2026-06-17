@@ -55,7 +55,7 @@ class RecurringMoveTest {
         MovementCategory cat = new MovementCategory("Sub", MovementType.EXPENSE);
         // Past date
         RecurringMove move1 = new RecurringMove("Past", BigDecimal.TEN, "Desc",
-                LocalDateTime.now().minusDays(1), RecurrenceType.DIARIO, cat);
+                LocalDateTime.now().minusDays(1), RecurrenceType.DIARIO, cat); // NOSONAR
         assertTrue(move1.shouldTrigger());
 
         move1.setTriggered(true);
@@ -63,7 +63,7 @@ class RecurringMoveTest {
 
         // Future date
         RecurringMove move2 = new RecurringMove("Future", BigDecimal.TEN, "Desc",
-                LocalDateTime.now().plusDays(1), RecurrenceType.DIARIO, cat);
+                LocalDateTime.now().plusDays(1), RecurrenceType.DIARIO, cat); // NOSONAR
         assertFalse(move2.shouldTrigger(), "Should not trigger future dates");
     }
 

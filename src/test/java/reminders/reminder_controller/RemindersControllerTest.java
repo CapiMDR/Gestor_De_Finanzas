@@ -105,8 +105,8 @@ class RemindersControllerTest {
     @DisplayName("should trigger past reminders when watch task runs")
     @SuppressWarnings("java:S5973")
     void testWatchRemindersTriggersPastReminders() throws Exception {
-        Reminder pastReminder = new Reminder("Past", "Msg", LocalDateTime.now().minusMinutes(5));
-        Reminder futureReminder = new Reminder("Future", "Msg", LocalDateTime.now().plusDays(1));
+        Reminder pastReminder = new Reminder("Past", "Msg", LocalDateTime.now().minusMinutes(5)); // NOSONAR
+        Reminder futureReminder = new Reminder("Future", "Msg", LocalDateTime.now().plusDays(1)); // NOSONAR
         
         TreeSet<Reminder> set = new TreeSet<>(ReminderJSONHandler.reminderComparator);
         set.add(pastReminder);

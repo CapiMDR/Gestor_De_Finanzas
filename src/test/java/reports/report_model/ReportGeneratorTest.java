@@ -81,7 +81,7 @@ class ReportGeneratorTest {
         LocalDate fixedToday = fixedNow.toLocalDate();
 
         try (MockedStatic<LocalDate> mockedLocalDate = mockStatic(LocalDate.class)) {
-            mockedLocalDate.when(() -> LocalDate.now(any(ZoneId.class))).thenReturn(fixedToday);
+            mockedLocalDate.when(() -> LocalDate.now(any(ZoneId.class))).thenReturn(fixedToday); // NOSONAR
 
             // Arrange
             LocalDateTime today = fixedNow;
@@ -118,7 +118,7 @@ class ReportGeneratorTest {
         LocalDate fixedToday = fixedNow.toLocalDate();
 
         try (MockedStatic<LocalDate> mockedLocalDate = mockStatic(LocalDate.class)) {
-            mockedLocalDate.when(() -> LocalDate.now(any(ZoneId.class))).thenReturn(fixedToday);
+            mockedLocalDate.when(() -> LocalDate.now(any(ZoneId.class))).thenReturn(fixedToday); // NOSONAR
 
             // Arrange
             LocalDateTime today = fixedNow;
@@ -157,7 +157,7 @@ class ReportGeneratorTest {
         LocalDate fixedToday = fixedNow.toLocalDate();
 
         try (MockedStatic<LocalDate> mockedLocalDate = mockStatic(LocalDate.class)) {
-            mockedLocalDate.when(() -> LocalDate.now(any(ZoneId.class))).thenReturn(fixedToday);
+            mockedLocalDate.when(() -> LocalDate.now(any(ZoneId.class))).thenReturn(fixedToday); // NOSONAR
 
             // Arrange
             LocalDateTime today = fixedNow;
@@ -196,7 +196,7 @@ class ReportGeneratorTest {
         LocalDate fixedToday = fixedNow.toLocalDate();
 
         try (MockedStatic<LocalDate> mockedLocalDate = mockStatic(LocalDate.class)) {
-            mockedLocalDate.when(() -> LocalDate.now(any(ZoneId.class))).thenReturn(fixedToday);
+            mockedLocalDate.when(() -> LocalDate.now(any(ZoneId.class))).thenReturn(fixedToday); // NOSONAR
 
             // Arrange
             LocalDateTime today = fixedNow;
