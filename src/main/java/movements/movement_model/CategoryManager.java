@@ -33,7 +33,6 @@ public class CategoryManager {
      */
     public CategoryManager(JsonDataHandler dataHandler) {
         this.dataHandler = dataHandler;
-        this.dataHandler = dataHandler;
         this.categories = dataHandler.loadCategories();
         if (this.categories == null) {
             this.categories = new HashMap<>();

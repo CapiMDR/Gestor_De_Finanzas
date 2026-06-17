@@ -104,12 +104,7 @@ public class RecurringJSONHandler {
                 String description = obj.getString("description");
                 String initialDateStr = obj.getString("initialDate");
 
-                RecurrenceType recurrence;
-                try {
-                    recurrence = RecurrenceType.valueOf(obj.optString("recurrence", "NONE"));
-                } catch (IllegalArgumentException e) {
-                    recurrence = RecurrenceType.Diario;
-                }
+                RecurrenceType recurrence = parseRecurrenceType(obj);
 
                 LocalDateTime date = LocalDateTime.parse(initialDateStr, FORMATTER);
 
@@ -133,6 +128,14 @@ public class RecurringJSONHandler {
 
         logger.info("Recurring movements loaded — {} record(s).", recMoves.size());
         return recMoves;
+    }
+
+    private static RecurrenceType parseRecurrenceType(JSONObject obj) {
+        try {
+            return RecurrenceType.valueOf(obj.optString("recurrence", "NONE"));
+        } catch (IllegalArgumentException e) {
+            return RecurrenceType.DIARIO;
+        }
     }
 }
 

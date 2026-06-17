@@ -66,7 +66,7 @@ class RecurringJSONHandlerTest {
         TreeSet<RecurringMove> moves = new TreeSet<>(RecurringJSONHandler.recurringComparator);
         MovementCategory cat = new MovementCategory("Suscripciones", MovementType.EXPENSE);
         RecurringMove move1 = new RecurringMove("Netflix", new BigDecimal("15.99"), "Pago mensual",
-                LocalDateTime.of(2026, java.time.Month.JANUARY, 1, 10, 0), RecurrenceType.Mensual, cat);
+                LocalDateTime.of(2026, java.time.Month.JANUARY, 1, 10, 0), RecurrenceType.MENSUAL, cat);
         
         moves.add(move1);
 
@@ -82,7 +82,7 @@ class RecurringJSONHandlerTest {
         assertEquals("Netflix", loadedMove.getConcept());
         assertEquals(new BigDecimal("15.99"), loadedMove.getAmount());
         assertEquals("Pago mensual", loadedMove.getDescription());
-        assertEquals(RecurrenceType.Mensual, loadedMove.getRecurrence());
+        assertEquals(RecurrenceType.MENSUAL, loadedMove.getRecurrence());
         assertEquals("Suscripciones", loadedMove.getCategory().getName());
         assertEquals(MovementType.EXPENSE, loadedMove.getCategory().getType());
     }

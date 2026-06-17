@@ -33,7 +33,11 @@ import java.io.IOException;
  * - Opens the Settings and Info dialogs.
  * - Provides the static {@link #openAccountTab(Account)} factory method used
  *   by {@link accounts.account_controller.AccountController}.
+ * 
+ * This class uses the Singleton pattern because it represents the main application window
+ * and provides global access to UI components like tabs and overlays.
  */
+@SuppressWarnings("java:S6548")
 public class MainShell {
 
     private static final Logger logger = LoggerFactory.getLogger(MainShell.class);

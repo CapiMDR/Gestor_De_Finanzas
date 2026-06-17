@@ -72,14 +72,12 @@ public class FilterController implements AccountObserver {
             final double totalIncomeValue = totalIncome.doubleValue();
             final double totalExpenseValue = totalExpense.doubleValue();
 
-            Platform.runLater(() -> {
-                view.updateCategories(
-                    incomeMovements,
-                    expenseMovements,
-                    totalIncomeValue,
-                    totalExpenseValue
-                );
-            });
+            Platform.runLater(() -> view.updateCategories(
+                incomeMovements,
+                expenseMovements,
+                totalIncomeValue,
+                totalExpenseValue
+            ));
         }
     }
 

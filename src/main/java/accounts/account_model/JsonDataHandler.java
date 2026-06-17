@@ -241,8 +241,8 @@ public class JsonDataHandler {
      * @param jsonArray JSONArray with categories
      * @return map of categories
      */
-    public HashMap<String, MovementCategory> jsonToCategories(JSONArray jsonArray) {
-        HashMap<String, MovementCategory> categories = new HashMap<>();
+    public Map<String, MovementCategory> jsonToCategories(JSONArray jsonArray) {
+        Map<String, MovementCategory> categories = new HashMap<>();
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject categoryJson = jsonArray.getJSONObject(i);
 
@@ -329,6 +329,7 @@ public class JsonDataHandler {
      *
      * @return map of loaded categories or empty map in case of error
      */
+    
     public Map<String, MovementCategory> loadCategories() {
         java.io.File file = new java.io.File(AppConfig.getCategoriesFilePath());
         if (!file.exists() || file.length() == 0) {
@@ -338,7 +339,7 @@ public class JsonDataHandler {
         try {
             String content = Files.readString(Paths.get(AppConfig.getCategoriesFilePath()), StandardCharsets.UTF_8);
             JSONArray jsonArray = new JSONArray(content);
-            HashMap<String, MovementCategory> cats = jsonToCategories(jsonArray);
+            Map<String, MovementCategory> cats = jsonToCategories(jsonArray);
             logger.info("Categories loaded successfully — {} category/categories.", cats.size());
             return cats;
         } catch (IOException e) {

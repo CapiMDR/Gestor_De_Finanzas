@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import accounts.account_model.Account;
 import movements.movement_model.Movement;
+import java.time.DayOfWeek;
+import java.time.ZoneId;
 
 /**
  * Generates reports based on the account's movements.
@@ -31,7 +33,7 @@ public class ReportGenerator {
      * Generates a report for today's movements and notifies observers.
      */
     public void today() {
-        LocalDate today = LocalDate.now(java.time.ZoneId.systemDefault());
+        LocalDate today = LocalDate.now(ZoneId.systemDefault());
         List<Movement> movements = account.getMovements().stream()
                 .filter(m -> m.getDate().toLocalDate().isEqual(today))
                 .toList();
@@ -51,8 +53,8 @@ public class ReportGenerator {
      * Generates a report covering the last 7 days and notifies observers.
      */
     public void weekAgo() {
-        LocalDate start = LocalDate.now(java.time.ZoneId.systemDefault()).minusDays(7);
-        LocalDate end = LocalDate.now(java.time.ZoneId.systemDefault());
+        LocalDate start = LocalDate.now(ZoneId.systemDefault()).minusDays(7);
+        LocalDate end = LocalDate.now(ZoneId.systemDefault());
 
         List<Movement> movements = account.getMovements().stream()
                 .filter(m -> {
@@ -75,7 +77,7 @@ public class ReportGenerator {
      * Generates a report for yesterday's movements.
      */
     public void yesterday() {
-        LocalDate yesterday = LocalDate.now(java.time.ZoneId.systemDefault()).minusDays(1);
+        LocalDate yesterday = LocalDate.now(ZoneId.systemDefault()).minusDays(1);
         List<Movement> movements = account.getMovements().stream()
                 .filter(m -> m.getDate().toLocalDate().isEqual(yesterday))
                 .toList();
@@ -95,11 +97,11 @@ public class ReportGenerator {
      * Generates a report covering the current week (from Monday to Sunday).
      */
     public void currentWeek() {
-        LocalDate today = LocalDate.now(java.time.ZoneId.systemDefault());
+        LocalDate today = LocalDate.now(ZoneId.systemDefault());
         // Go back to the most recent Monday
-        LocalDate start = today.with(java.time.DayOfWeek.MONDAY);
+        LocalDate start = today.with(DayOfWeek.MONDAY);
         // End is the Sunday of this week
-        LocalDate end = today.with(java.time.DayOfWeek.SUNDAY);
+        LocalDate end = today.with(DayOfWeek.SUNDAY);
 
         List<Movement> movements = account.getMovements().stream()
                 .filter(m -> {

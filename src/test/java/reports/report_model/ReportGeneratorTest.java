@@ -12,9 +12,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
+import org.mockito.MockedStatic;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -72,26 +74,33 @@ class ReportGeneratorTest {
     @Test
     @DisplayName("today() should filter only today's movements")
     void testTodayReport() {
-        // Arrange
-        LocalDateTime today = LocalDateTime.now();
-        LocalDateTime yesterday = today.minusDays(1);
-        
-        Movement m1 = createMockMovement("100.50", today);
-        Movement m2 = createMockMovement("50.00", yesterday);
+        LocalDateTime fixedNow = LocalDateTime.of(2023, 10, 18, 12, 0);
+        LocalDate fixedToday = fixedNow.toLocalDate();
 
-        when(account.getMovements()).thenReturn(Arrays.asList(m1, m2));
+        try (MockedStatic<LocalDate> mockedLocalDate = mockStatic(LocalDate.class)) {
+            mockedLocalDate.when(() -> LocalDate.now(any(java.time.ZoneId.class))).thenReturn(fixedToday);
 
-        // Act
-        reportGenerator.today();
+            // Arrange
+            LocalDateTime today = fixedNow;
+            LocalDateTime yesterday = today.minusDays(1);
+            
+            Movement m1 = createMockMovement("100.50", today);
+            Movement m2 = createMockMovement("50.00", yesterday);
 
-        // Assert
-        verify(reportSubject).notifyObservers(reportDataCaptor.capture());
-        ReportData data = reportDataCaptor.getValue();
+            when(account.getMovements()).thenReturn(Arrays.asList(m1, m2));
 
-        assertEquals("Hoy", data.getPeriodName());
-        assertEquals(1, data.getMovements().size());
-        assertEquals(new BigDecimal("100.50"), data.getTotalAmount());
-        assertTrue(data.getMovements().contains(m1));
+            // Act
+            reportGenerator.today();
+
+            // Assert
+            verify(reportSubject).notifyObservers(reportDataCaptor.capture());
+            ReportData data = reportDataCaptor.getValue();
+
+            assertEquals("Hoy", data.getPeriodName());
+            assertEquals(1, data.getMovements().size());
+            assertEquals(new BigDecimal("100.50"), data.getTotalAmount());
+            assertTrue(data.getMovements().contains(m1));
+        }
     }
 
     /**
@@ -101,28 +110,35 @@ class ReportGeneratorTest {
     @Test
     @DisplayName("weekAgo() should filter movements from the last 7 days")
     void testWeekAgoReport() {
-        // Arrange
-        LocalDateTime today = LocalDateTime.now();
-        LocalDateTime threeDaysAgo = today.minusDays(3);
-        LocalDateTime eightDaysAgo = today.minusDays(8);
+        LocalDateTime fixedNow = LocalDateTime.of(2023, 10, 18, 12, 0);
+        LocalDate fixedToday = fixedNow.toLocalDate();
 
-        Movement m1 = createMockMovement("200.00", today);
-        Movement m2 = createMockMovement("50.00", threeDaysAgo);
-        Movement m3 = createMockMovement("10.00", eightDaysAgo);
+        try (MockedStatic<LocalDate> mockedLocalDate = mockStatic(LocalDate.class)) {
+            mockedLocalDate.when(() -> LocalDate.now(any(java.time.ZoneId.class))).thenReturn(fixedToday);
 
-        when(account.getMovements()).thenReturn(Arrays.asList(m1, m2, m3));
+            // Arrange
+            LocalDateTime today = fixedNow;
+            LocalDateTime threeDaysAgo = today.minusDays(3);
+            LocalDateTime eightDaysAgo = today.minusDays(8);
 
-        // Act
-        reportGenerator.weekAgo();
+            Movement m1 = createMockMovement("200.00", today);
+            Movement m2 = createMockMovement("50.00", threeDaysAgo);
+            Movement m3 = createMockMovement("10.00", eightDaysAgo);
 
-        // Assert
-        verify(reportSubject).notifyObservers(reportDataCaptor.capture());
-        ReportData data = reportDataCaptor.getValue();
+            when(account.getMovements()).thenReturn(Arrays.asList(m1, m2, m3));
 
-        assertEquals("Ultimos 7 días", data.getPeriodName());
-        assertEquals(2, data.getMovements().size());
-        assertEquals(new BigDecimal("250.00"), data.getTotalAmount());
-        assertTrue(data.getMovements().containsAll(Arrays.asList(m1, m2)));
+            // Act
+            reportGenerator.weekAgo();
+
+            // Assert
+            verify(reportSubject).notifyObservers(reportDataCaptor.capture());
+            ReportData data = reportDataCaptor.getValue();
+
+            assertEquals("Ultimos 7 días", data.getPeriodName());
+            assertEquals(2, data.getMovements().size());
+            assertEquals(new BigDecimal("250.00"), data.getTotalAmount());
+            assertTrue(data.getMovements().containsAll(Arrays.asList(m1, m2)));
+        }
     }
 
     /**
@@ -132,28 +148,35 @@ class ReportGeneratorTest {
     @Test
     @DisplayName("yesterday() should filter only yesterday's movements")
     void testYesterdayReport() {
-        // Arrange
-        LocalDateTime today = LocalDateTime.now();
-        LocalDateTime yesterday = today.minusDays(1);
-        LocalDateTime twoDaysAgo = today.minusDays(2);
+        LocalDateTime fixedNow = LocalDateTime.of(2023, 10, 18, 12, 0);
+        LocalDate fixedToday = fixedNow.toLocalDate();
 
-        Movement m1 = createMockMovement("100.00", today);
-        Movement m2 = createMockMovement("30.00", yesterday);
-        Movement m3 = createMockMovement("10.00", twoDaysAgo);
+        try (MockedStatic<LocalDate> mockedLocalDate = mockStatic(LocalDate.class)) {
+            mockedLocalDate.when(() -> LocalDate.now(any(java.time.ZoneId.class))).thenReturn(fixedToday);
 
-        when(account.getMovements()).thenReturn(Arrays.asList(m1, m2, m3));
+            // Arrange
+            LocalDateTime today = fixedNow;
+            LocalDateTime yesterday = today.minusDays(1);
+            LocalDateTime twoDaysAgo = today.minusDays(2);
 
-        // Act
-        reportGenerator.yesterday();
+            Movement m1 = createMockMovement("100.00", today);
+            Movement m2 = createMockMovement("30.00", yesterday);
+            Movement m3 = createMockMovement("10.00", twoDaysAgo);
 
-        // Assert
-        verify(reportSubject).notifyObservers(reportDataCaptor.capture());
-        ReportData data = reportDataCaptor.getValue();
+            when(account.getMovements()).thenReturn(Arrays.asList(m1, m2, m3));
 
-        assertEquals("Ayer", data.getPeriodName());
-        assertEquals(1, data.getMovements().size());
-        assertEquals(new BigDecimal("30.00"), data.getTotalAmount());
-        assertTrue(data.getMovements().contains(m2));
+            // Act
+            reportGenerator.yesterday();
+
+            // Assert
+            verify(reportSubject).notifyObservers(reportDataCaptor.capture());
+            ReportData data = reportDataCaptor.getValue();
+
+            assertEquals("Ayer", data.getPeriodName());
+            assertEquals(1, data.getMovements().size());
+            assertEquals(new BigDecimal("30.00"), data.getTotalAmount());
+            assertTrue(data.getMovements().contains(m2));
+        }
     }
 
     /**
@@ -163,30 +186,37 @@ class ReportGeneratorTest {
     @Test
     @DisplayName("currentWeek() should filter movements from current week (Mon-Sun)")
     void testCurrentWeekReport() {
-        // Arrange
-        LocalDateTime today = LocalDateTime.now();
-        LocalDateTime monday = today.toLocalDate().with(java.time.DayOfWeek.MONDAY).atStartOfDay();
-        LocalDateTime sundayThisWeek = today.toLocalDate().with(java.time.DayOfWeek.SUNDAY).atStartOfDay();
-        LocalDateTime previousSunday = monday.minusDays(1);
+        LocalDateTime fixedNow = LocalDateTime.of(2023, 10, 18, 12, 0); // Wednesday
+        LocalDate fixedToday = fixedNow.toLocalDate();
 
-        Movement m1 = createMockMovement("40.00", today);
-        Movement m2 = createMockMovement("20.00", monday);
-        Movement m3 = createMockMovement("100.00", previousSunday); // Not included
-        Movement m4 = createMockMovement("15.00", sundayThisWeek); // Included (future in same week)
+        try (MockedStatic<LocalDate> mockedLocalDate = mockStatic(LocalDate.class)) {
+            mockedLocalDate.when(() -> LocalDate.now(any(java.time.ZoneId.class))).thenReturn(fixedToday);
 
-        when(account.getMovements()).thenReturn(Arrays.asList(m1, m2, m3, m4));
+            // Arrange
+            LocalDateTime today = fixedNow;
+            LocalDateTime monday = today.toLocalDate().with(java.time.DayOfWeek.MONDAY).atStartOfDay();
+            LocalDateTime sundayThisWeek = today.toLocalDate().with(java.time.DayOfWeek.SUNDAY).atStartOfDay();
+            LocalDateTime previousSunday = monday.minusDays(1);
 
-        // Act
-        reportGenerator.currentWeek();
+            Movement m1 = createMockMovement("40.00", today);
+            Movement m2 = createMockMovement("20.00", monday);
+            Movement m3 = createMockMovement("100.00", previousSunday); // Not included
+            Movement m4 = createMockMovement("15.00", sundayThisWeek); // Included (future in same week)
 
-        // Assert
-        verify(reportSubject).notifyObservers(reportDataCaptor.capture());
-        ReportData data = reportDataCaptor.getValue();
+            when(account.getMovements()).thenReturn(Arrays.asList(m1, m2, m3, m4));
 
-        assertEquals("Semana Actual", data.getPeriodName());
-        assertEquals(3, data.getMovements().size());
-        assertEquals(new BigDecimal("75.00"), data.getTotalAmount());
-        assertTrue(data.getMovements().containsAll(Arrays.asList(m1, m2, m4)));
+            // Act
+            reportGenerator.currentWeek();
+
+            // Assert
+            verify(reportSubject).notifyObservers(reportDataCaptor.capture());
+            ReportData data = reportDataCaptor.getValue();
+
+            assertEquals("Semana Actual", data.getPeriodName());
+            assertEquals(3, data.getMovements().size());
+            assertEquals(new BigDecimal("75.00"), data.getTotalAmount());
+            assertTrue(data.getMovements().containsAll(Arrays.asList(m1, m2, m4)));
+        }
     }
 
     /**

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.jupiter.api.Assertions;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -87,7 +88,7 @@ class RecurringsControllerTest {
     @DisplayName("should refresh view when setView is called")
     void testSetViewRefreshesList() {
         lenient().when(mockModel.getRecurrings()).thenReturn(new TreeSet<>(RecurringJSONHandler.recurringComparator));
-        controller.setView(mockView);
+        Assertions.assertDoesNotThrow(() -> controller.setView(mockView));
     }
 
     @Test
@@ -95,7 +96,7 @@ class RecurringsControllerTest {
     void testWatchRecurringsTriggersAlert() throws Exception {
         MovementCategory mockCat = new MovementCategory("Egreso", MovementType.EXPENSE);
         RecurringMove mockMove = new RecurringMove("Rent", new BigDecimal("500"), "Desc", 
-                LocalDateTime.of(2026, java.time.Month.JUNE, 15, 10, 0).minusMinutes(5), RecurrenceType.Mensual, mockCat);
+                LocalDateTime.of(2026, java.time.Month.JUNE, 15, 10, 0).minusMinutes(5), RecurrenceType.MENSUAL, mockCat);
         
         TreeSet<RecurringMove> set = new TreeSet<>(RecurringJSONHandler.recurringComparator);
         set.add(mockMove);
@@ -107,6 +108,7 @@ class RecurringsControllerTest {
         
         // Notification should have been dispatched via Platform.runLater or handled by alertController
         // We mainly want to ensure no exceptions and coverage is triggered for the scheduler block
+        Assertions.assertTrue(mockMove.isTriggered());
     }
 }
 

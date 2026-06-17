@@ -13,7 +13,11 @@ import java.awt.event.MouseEvent;
  * Manages the AWT SystemTray integration for background mode.
  * Keeps the application alive when all JavaFX windows are closed,
  * and allows reopening the main shell from the tray icon.
+ * 
+ * This class uses the Singleton pattern because there can only be one SystemTray 
+ * instance per application instance, and its state must be globally accessible.
  */
+@SuppressWarnings("java:S6548")
 public class SystemTrayManager {
 
     private static final Logger logger = LoggerFactory.getLogger(SystemTrayManager.class);

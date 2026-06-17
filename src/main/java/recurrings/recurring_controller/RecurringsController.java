@@ -223,7 +223,7 @@ public class RecurringsController {
 
         try {
             BigDecimal amount = new BigDecimal(amountStr);
-            if (!isValidRecurring(concept, amount, concept, LocalDateTime.of(date, LocalTime.MIDNIGHT), RecurrenceType.Mensual)) {
+            if (!isValidRecurring(concept, amount)) {
                 showAlert(AlertType.ERROR, "Datos inválidos", "Asegúrate de que el monto sea mayor a 0 y con máximo 2 decimales.");
                 return;
             }
@@ -231,10 +231,10 @@ public class RecurringsController {
             String typeEnumStr = "Ingreso".equals(categoryStr) ? "INCOME" : "EXPENSE";
             MovementCategory category = new MovementCategory(typeEnumStr, MovementCategory.MovementType.valueOf(typeEnumStr));
             // Defaulting recurrence to Mensual for MVP, this can be added to UI later
-            recurringsModel.addRecurring(concept, amount, concept, LocalDateTime.of(date, LocalTime.MIDNIGHT), RecurrenceType.Mensual, category);
+            recurringsModel.addRecurring(concept, amount, concept, LocalDateTime.of(date, LocalTime.MIDNIGHT), RecurrenceType.MENSUAL, category);
             recurringsModel.saveRecurrings();
             
-            logger.info("Recurring movement added: '{}' ({}, every {}).", concept, amount, RecurrenceType.Mensual);
+            logger.info("Recurring movement added: '{}' ({}, every {}).", concept, amount, RecurrenceType.MENSUAL);
             refreshView();
             
             // Clear fields
@@ -247,8 +247,7 @@ public class RecurringsController {
         }
     }
 
-    private boolean isValidRecurring(String concept, BigDecimal amount, String description,
-            LocalDateTime initialDate, RecurrenceType recurrence) {
+    private boolean isValidRecurring(String concept, BigDecimal amount) {
         if (concept == null || concept.isEmpty()) return false;
         if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) return false;
         return amount.scale() <= 2;

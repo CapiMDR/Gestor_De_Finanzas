@@ -121,6 +121,10 @@ public class RecurringMove {
         hasTriggered = state;
     }
 
+    public boolean isTriggered() {
+        return hasTriggered;
+    }
+
     public MovementCategory getCategory() {
         return category;
     }
@@ -156,11 +160,11 @@ public class RecurringMove {
      */
     private LocalDateTime computeNextDate(LocalDateTime t, RecurrenceType type) {
         return switch (type) {
-            case Diario -> t.plusDays(1);
-            case Semanal -> t.plusWeeks(1);
-            case Quincenal -> t.plusWeeks(2);
-            case Mensual -> t.plusMonths(1);
-            case Anual -> t.plusYears(1);
+            case DIARIO -> t.plusDays(1);
+            case SEMANAL -> t.plusWeeks(1);
+            case QUINCENAL -> t.plusWeeks(2);
+            case MENSUAL -> t.plusMonths(1);
+            case ANUAL -> t.plusYears(1);
             default -> t;
         };
     }

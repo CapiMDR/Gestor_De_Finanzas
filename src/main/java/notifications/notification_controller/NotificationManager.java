@@ -34,7 +34,11 @@ import java.util.Collections;
  *     nm.setCallbackNuevaNotificacion(() -> Platform.runLater(this::updateBadge));
  *     nm.agregarNotificacion(new AppNotification(...));
  * </pre>
+ * 
+ * This class uses the Singleton pattern because it manages global state for notifications
+ * and coordinates between different background tasks and the UI.
  */
+@SuppressWarnings("java:S6548")
 public class NotificationManager {
 
     private static final Logger logger = LoggerFactory.getLogger(NotificationManager.class);

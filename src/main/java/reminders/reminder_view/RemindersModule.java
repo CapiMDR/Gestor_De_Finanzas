@@ -45,9 +45,7 @@ public class RemindersModule {
             activeStage.setScene(scene);
             
             // Un-inject view when window closes to prevent leak
-            activeStage.setOnCloseRequest(e -> {
-                controller.setView(null);
-            });
+            activeStage.setOnCloseRequest(e -> controller.setView(null));
             
             activeStage.show();
         } catch (IOException e) {
